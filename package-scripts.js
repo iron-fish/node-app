@@ -8,9 +8,10 @@ module.exports = {
       http: `wait-on http://localhost:${PORT}`,
       tcp: `wait-on tcp:${PORT}`,
     },
-    start: {
+    dev: `nps electron.dev`,
+    server: {
       raw: 'react-scripts start',
-      dev: crossEnv(`BROWSER=none PORT=${PORT} nps start.raw`),
+      dev: crossEnv(`BROWSER=none PORT=${PORT} nps server.raw`),
     },
     ts: {
       electron: 'tsc -p electron',
@@ -23,7 +24,7 @@ module.exports = {
       base: 'electron .',
       // dev: 'concurrently "cross-env BROWSER=none yarn start" "wait-on http://localhost:3000 && tsc -p electron -w" "wait-on http://localhost:3000 && tsc -p electron && electron ."',
       dev: concurrent({
-        dev: 'nps start.dev',
+        dev: 'nps server.dev',
         electron: series.nps('wait.tcp', 'electron.base'),
       }),
       build: series('nps build', 'nps ts.electron', 'electron-builder'),
