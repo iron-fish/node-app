@@ -1,0 +1,61 @@
+{
+  "name": "wallet-app",
+  "version": "0.0.0",
+  "description": "Iron Fish Wallet",
+  "main": "public/electron.js",
+  "repository": "https://github.com/iron-fish/wallet-app",
+  "author": "iron-fish",
+  "license": "MPL-2.0",
+  "private": false,
+  "scripts": {
+    "start": "nps start",
+    "dev": "nps start.dev",
+    "build": "nps build",
+    "test": "nps test",
+    "electron": "nps electron.build",
+    "electron:dev": "nps electron.dev"
+  },
+  "devDependencies": {
+    "@ironfish/ui-kit": "^0.0.5",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.2.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "cross-env": "^7.0.3",
+    "electron": "^19.0.2",
+    "electron-builder": "^23.0.3",
+    "electron-is-dev": "^2.0.0",
+    "electron-reload": "^2.0.0-alpha.1",
+    "eslint": "^8.16.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.30.0",
+    "husky": "^8.0.1",
+    "nps": "^5.10.0",
+    "nps-utils": "^1.7.0",
+    "prettier": "^2.6.2",
+    "react-scripts": "^5.0.1",
+    "typescript": "^4.7.2",
+    "wait-on": "^6.0.1"
+  },
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "web-vitals": "^2.1.4"
+  },
+  "build": {
+    "extends": null,
+    "files": ["build/**/*"],
+    "directories": {
+      "buildResources": "assets"
+    }
+  },
+  "browserslist": {
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
