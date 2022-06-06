@@ -1,28 +1,46 @@
 import React from 'react'
-import logo from './logo.svg'
 import './App.css'
-import { IronFishUIProvider, Box, ColorModeSwitcher } from '@ironfish/ui-kit'
+import {
+  NAMED_COLORS,
+  HexFish as Logo,
+  IronFishUIProvider,
+  Flex,
+  Box,
+  ColorModeSwitcher,
+  useColorMode,
+} from '@ironfish/ui-kit'
 
 function App() {
+  const { colorMode } = useColorMode()
   return (
     <IronFishUIProvider>
-      <ColorModeSwitcher />
-      <Box className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <Box
+        position="absolute"
+        top="1rem"
+        zIndex={100}
+        borderRadius="100rem"
+        right="1rem"
+      >
+        <ColorModeSwitcher />
       </Box>
+      <Flex
+        top="0"
+        position="absolute"
+        className="App"
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+        minHeight="100vh"
+        width="100%"
+      >
+        <Logo
+          style={{
+            maxWidth: '10rem',
+            fill:
+              colorMode === 'dark' ? NAMED_COLORS.PALE_GREY : NAMED_COLORS.GREY,
+          }}
+        />
+      </Flex>
     </IronFishUIProvider>
   )
 }

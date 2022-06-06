@@ -6,8 +6,8 @@ import installExtension, {
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 900,
+    height: 700,
     webPreferences: {
       // contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
@@ -23,10 +23,10 @@ function createWindow() {
     win.webContents.openDevTools()
 
     // Hot Reloading on 'node_modules/.bin/electronPath'
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('electron-reload')(__dirname, {
       electron: path.join(
         __dirname,
-        '..',
         '..',
         'node_modules',
         '.bin',
@@ -39,10 +39,11 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  // DevTools
+  /* eslint-disable no-console */
   installExtension(REACT_DEVELOPER_TOOLS)
     .then(name => console.log(`Added Extension:  ${name}`))
     .catch(err => console.log('An error occurred: ', err))
+  /* eslint-enable no-console */
 
   createWindow()
 
