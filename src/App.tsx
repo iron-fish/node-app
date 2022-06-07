@@ -5,24 +5,15 @@ import {
   HexFish as Logo,
   IronFishUIProvider,
   Flex,
-  Box,
-  ColorModeSwitcher,
   useColorMode,
 } from '@ironfish/ui-kit'
+
+import Navbar from './components/Navbar'
 
 function App() {
   const { colorMode } = useColorMode()
   return (
     <IronFishUIProvider>
-      <Box
-        position="absolute"
-        top="1rem"
-        zIndex={100}
-        borderRadius="100rem"
-        right="1rem"
-      >
-        <ColorModeSwitcher />
-      </Box>
       <Flex
         top="0"
         position="absolute"
@@ -33,6 +24,7 @@ function App() {
         minHeight="100vh"
         width="100%"
       >
+        <Navbar />
         <Logo
           style={{
             maxWidth: '10rem',

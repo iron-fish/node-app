@@ -12,7 +12,7 @@
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
-      2,
+      1,
       {
         "varsIgnorePattern": "^_",
         "argsIgnorePattern": "^_"
