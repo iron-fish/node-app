@@ -14,6 +14,7 @@ export const ThemeToggle = () => {
   const Other = isLightMode ? IconLightMode : IconDarkMode
   return (
     <Flex
+      overflow="hidden"
       position="relative"
       bg={isLightMode ? C.LIGHTER_GREY : C.DARKER_GREY}
       borderRadius="5px"
