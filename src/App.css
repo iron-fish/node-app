@@ -1,6 +1,9 @@
 html,
 body {
   font-family: 'favorit-regular';
+  height: 100%;
+  min-height: 100vh;
+  overflow: hidden;
 }
 h1,
 h2,

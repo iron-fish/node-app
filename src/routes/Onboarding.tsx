@@ -1,19 +1,22 @@
 import {
+  Button,
   chakra,
   Box,
   NAMED_COLORS as C,
   Flex,
   useColorMode,
   useColorModeValue,
+  ColorModeSwitcher as Toggle,
 } from '@ironfish/ui-kit'
-import Toggle from 'src/components/ThemeToggle'
 
 import Logo from 'src/svgx/Logo'
 
 export const Onboarding = () => {
   const { colorMode } = useColorMode()
-  const isLightMode = colorMode === 'light'
-  const color = useColorModeValue(C.GREY, C.LIGHTER_GREY)
+  const color = useColorModeValue(
+    { base: C.WHITE, border: C.LIGHTER_GREY, highlight: C.BLACK },
+    { base: C.BLACK, border: C.GREY, highlight: C.YELLOW }
+  )
   return (
     <Flex
       flexDirection="column"
@@ -32,18 +35,29 @@ export const Onboarding = () => {
         height="100%"
         minHeight="100vh"
         width="100%"
-        bg="white"
+        bg={color.base}
         maxWidth="45.25rem"
       >
         <Flex flexDirection="column" p="4rem" pb="0" bg="transparent">
-          <Logo />
-          <h1>Iron Fish Wallet</h1>
-          <Box p="2rem" layerStyle="card" w="100%" maxWidth="36.75rem">
+          <Logo fill={color.highlight} />
+          <chakra.h1 mt="4rem" mb="2rem">
+            Iron Fish Wallet
+          </chakra.h1>
+          <Box
+            p="2rem"
+            layerStyle="card"
+            w="100%"
+            maxWidth="36.75rem"
+            mb="20px"
+          >
             <h2>Create Account</h2>
             <p>
               Choose this option if you don't have an existing Iron Fish account
               or if you'd like to create a new one.
             </p>
+            <Button size="medium" variant="primary" mt="1rem">
+              Create Account
+            </Button>
           </Box>
           <Box p="2rem" layerStyle="card" w="100%" maxWidth="36.75rem">
             <h2>Import Account</h2>
@@ -51,16 +65,19 @@ export const Onboarding = () => {
               Already have an account? Enter your recovery credentials and
               continue using your account.
             </p>
+            <Button size="medium" variant="primary" mt="1rem">
+              Import Account
+            </Button>
           </Box>
         </Flex>
         <Flex
           w="100%"
           h="3.25rem"
-          borderTop={`1px solid ${color}`}
+          borderTop={`1px solid ${color.border}`}
           px="4rem"
           py="0.5rem"
           justifyContent="space-between"
-          bg="white"
+          bg={color.base}
         >
           <a href="https://discord.gg/ironfish">
             <span>Need Help? Find us on Discord</span>
@@ -70,10 +87,9 @@ export const Onboarding = () => {
       </Flex>
       <chakra.img
         position="absolute"
-        w="100%"
-        h="auto"
+        right="0"
         src="/images/onboarding.png"
-        backgroundSize="contain"
+        height="1024"
       />
     </Flex>
   )

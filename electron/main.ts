@@ -6,13 +6,18 @@ import installExtension, {
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 900,
+    width: 570,
     height: 700,
+    maxWidth: 1800,
+    maxHeight: 1024,
+    type: 'desktop',
     webPreferences: {
       // contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
     },
   })
+  // this doesn't appear to work
+  win.setMaximumSize(1800, 1024)
 
   if (app.isPackaged) {
     // 'build/index.html'
