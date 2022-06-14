@@ -1,5 +1,5 @@
 import './App.css'
-import { IronFishUIProvider } from 'src/local-ui-kit'
+import { IronFishUIProvider } from '@ironfish/ui-kit'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { ROUTES } from './routes'
 
