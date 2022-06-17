@@ -9,7 +9,7 @@
   "private": false,
   "scripts": {
     "start": "nps start",
-    "dev": "nps start.dev",
+    "dev": "nps dev",
     "build": "nps build",
     "test": "nps test",
     "electron": "nps electron.build",

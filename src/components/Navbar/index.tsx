@@ -41,12 +41,13 @@ export const Navbar = () => {
       p="1rem"
       w={{ base: '88px', sm: '263px' }}
       transition="width 0.3s ease-out"
-      position="absolute"
+      position="fixed"
       left="0"
       top="0"
       flexDirection="column"
       alignItems="center"
       justifyContent="space-between"
+      zIndex={100}
     >
       <Nav list={primaryNavItems} />
       <Nav list={secondaryNavItems} />

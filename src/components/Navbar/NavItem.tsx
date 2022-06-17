@@ -1,4 +1,4 @@
-import { FC, ReactType, useState } from 'react'
+import { FC, ReactType } from 'react'
 import { Flex, useColorMode, NAMED_COLORS } from '@ironfish/ui-kit'
 import { SVGProps } from 'src/svgx/types'
 import Hotkey from 'src/components/Hotkey'
