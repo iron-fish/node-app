@@ -5,9 +5,9 @@ import {
   useColorModeValue,
   Image,
 } from '@ironfish/ui-kit'
-import Toggle from 'src/components/ThemeToggle'
+import Toggle from 'Components/ThemeToggle'
 
-import Logo from 'src/svgx/Logo'
+import Logo from 'Svgx/Logo'
 
 export const Onboarding = () => {
   const color = useColorModeValue(C.GREY, C.LIGHTER_GREY)

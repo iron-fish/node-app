@@ -1,15 +1,23 @@
-import { Flex, useColorMode, NAMED_COLORS as C } from '@ironfish/ui-kit'
+import {
+  Flex,
+  useColorMode,
+  NAMED_COLORS as C,
+  Box,
+  BoxProps,
+} from '@ironfish/ui-kit'
 
-import IconHome from 'src/svgx/home'
-import IconSend from 'src/svgx/send'
-import IconReceive from 'src/svgx/receive'
-import IconAddressBook from 'src/svgx/address-book'
-import IconResources from 'src/svgx/lightbulb'
-import IconNode from 'src/svgx/node'
-import IconMiner from 'src/svgx/hammer'
-import Toggle from 'src/components/ThemeToggle'
+import IconHome from 'Svgx/home'
+import IconSend from 'Svgx/send'
+import IconReceive from 'Svgx/receive'
+import IconAddressBook from 'Svgx/address-book'
+import IconResources from 'Svgx/lightbulb'
+import IconNode from 'Svgx/node'
+import IconMiner from 'Svgx/hammer'
+import Toggle from 'Components/ThemeToggle'
 
 import Nav from './Nav'
+import IronFishLogo from 'Svgx/IronFishLogo'
+import { FC } from 'react'
 
 const primaryNavItems = [
   { hotkey: 'A', to: '/accounts', label: 'Privacy Accounts', icon: IconHome },
@@ -28,7 +36,7 @@ const secondaryNavItems = [
   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
 ]
 
-const ActiveStats = () => <div />
+const ActiveStats: FC<BoxProps> = props => <Box {...props} />
 
 export const Navbar = () => {
   const { colorMode } = useColorMode()
@@ -45,14 +53,18 @@ export const Navbar = () => {
       left="0"
       top="0"
       flexDirection="column"
-      alignItems="center"
-      justifyContent="space-between"
+      alignItems="start"
       zIndex={100}
     >
-      <Nav list={primaryNavItems} />
-      <Nav list={secondaryNavItems} />
-      <ActiveStats />
-      <Toggle />
+      <IronFishLogo m="0.5rem" />
+      <Box mt="2rem">
+        <Nav list={primaryNavItems} />
+      </Box>
+      <Box marginTop="auto">
+        <Nav my="1rem" list={secondaryNavItems} />
+        <ActiveStats />
+        <Toggle />
+      </Box>
     </Flex>
   )
 }

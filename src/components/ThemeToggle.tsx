@@ -1,12 +1,6 @@
-import {
-  Box,
-  chakra,
-  Flex,
-  useColorMode,
-  NAMED_COLORS as C,
-} from '@ironfish/ui-kit'
-import IconDarkMode from 'src/svgx/icon-darkmode'
-import IconLightMode from 'src/svgx/icon-lightmode'
+import { chakra, Flex, useColorMode, NAMED_COLORS as C } from '@ironfish/ui-kit'
+import IconDarkMode from 'Svgx/icon-darkmode'
+import IconLightMode from 'Svgx/icon-lightmode'
 
 export const ThemeToggle = () => {
   const { colorMode, toggleColorMode } = useColorMode()

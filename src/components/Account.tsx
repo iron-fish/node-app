@@ -2,16 +2,15 @@ import { FC } from 'react'
 import {
   Box,
   Button,
-  DropdownArrow,
   Flex,
   HexFish,
   Icon,
   IconButton,
   NAMED_COLORS,
 } from '@ironfish/ui-kit'
-import Send from 'src/svgx/send'
-import Receive from 'src/svgx/receive'
-import Caret from 'src/svgx/caret-icon'
+import Send from 'Svgx/send'
+import Receive from 'Svgx/receive'
+import Caret from 'Svgx/caret-icon'
 
 export interface AccountProps {
   order: number
@@ -79,7 +78,7 @@ const Account: FC<AccountProps> = ({
 }) => (
   <Flex
     p="0.75rem"
-    m="0.5rem"
+    my="0.5rem"
     border="0.063rem solid"
     borderColor={NAMED_COLORS.LIGHT_GREY}
     borderRadius="0.25rem"
@@ -133,7 +132,7 @@ const Account: FC<AccountProps> = ({
     <Box>
       <h5>{name}</h5>
       <h3>{balance} $IRON</h3>
-      <h5>{address}</h5>
+      <h5 style={{ color: NAMED_COLORS.GREY }}>{address}</h5>
     </Box>
     <Flex ml="auto" alignSelf="center">
       <Button

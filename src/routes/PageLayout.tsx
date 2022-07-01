@@ -22,7 +22,7 @@ export const PageLayout: FC = () => {
       minHeight="100vh"
     >
       <Navbar />
-      <Logo
+      {/* <Logo
         style={{
           position: 'fixed',
           width: '10rem',
@@ -31,8 +31,8 @@ export const PageLayout: FC = () => {
           fill: isLightMode ? C.GREY : C.PALE_GREY,
           zIndex: -1,
         }}
-      />
-      <Box marginLeft={{ base: '6rem', sm: '16rem' }} w="100%">
+      /> */}
+      <Box marginLeft={{ base: '6rem', sm: '17rem' }} w="100%">
         <Outlet />
       </Box>
     </Flex>
