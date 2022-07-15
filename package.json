@@ -2,68 +2,109 @@
   "name": "wallet-app",
   "version": "0.0.0",
   "description": "Iron Fish Wallet",
-  "main": "public/electron.js",
+  "main": ".webpack/main",
   "repository": "https://github.com/iron-fish/wallet-app",
   "author": "iron-fish",
   "license": "MPL-2.0",
   "private": false,
   "scripts": {
     "start": "nps start",
-    "dev": "nps start.dev",
-    "build": "nps build",
-    "test": "nps test",
-    "electron": "nps electron.build",
-    "electron:dev": "nps electron.dev"
+    "lint": "nps lint",
+    "package": "nps package",
+    "build": "nps build"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.64",
+    "@electron-forge/maker-deb": "^6.0.0-beta.64",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.64",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.64",
+    "@electron-forge/maker-zip": "^6.0.0-beta.64",
+    "@electron-forge/plugin-webpack": "6.0.0-beta.64",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/user-event": "^14.2.0",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.27.0",
+    "@vercel/webpack-asset-relocator-loader": "1.7.0",
+    "copy-webpack-plugin": "^11.0.0",
     "cross-env": "^7.0.3",
+    "css-loader": "^6.0.0",
     "electron": "^19.0.2",
-    "electron-builder": "^23.0.3",
     "electron-devtools-installer": "^3.2.0",
     "electron-is-dev": "^2.0.0",
     "electron-reload": "^2.0.0-alpha.1",
+    "enzyme": "3.11.0",
+    "enzyme-adapter-react-16": "1.15.6",
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.30.0",
+    "fork-ts-checker-webpack-plugin": "^7.2.1",
     "husky": "^8.0.1",
+    "node-loader": "^2.0.0",
     "nps": "^5.10.0",
     "nps-utils": "^1.7.0",
     "prettier": "^2.6.2",
     "react-scripts": "^5.0.1",
+    "style-loader": "^3.0.0",
+    "ts-loader": "^9.2.2",
     "typescript": "^4.7.2",
     "wait-on": "^6.0.1"
   },
   "dependencies": {
-    "@ironfish/ui-kit": "^0.0.6",
+    "@ironfish/ui-kit": "0.0.8",
     "date-fns": "^2.28.0",
+    "electron-squirrel-startup": "^1.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-router-dom": "^6.3.0",
     "web-vitals": "^2.1.4"
   },
-  "build": {
-    "extends": null,
-    "files": [
-      "build/**/*"
-    ],
-    "directories": {
-      "buildResources": "assets"
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "Iron_Fish_Wallet"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ],
+      "plugins": [
+        [
+          "@electron-forge/plugin-webpack",
+          {
+            "mainConfig": "./webpack/webpack.main.config.js",
+            "renderer": {
+              "config": "./webpack/webpack.renderer.config.js",
+              "entryPoints": [
+                {
+                  "html": "./public/index.html",
+                  "js": "./electron/renderer.ts",
+                  "name": "wallet"
+                }
+              ]
+            }
+          }
+        ]
+      ]
     }
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }

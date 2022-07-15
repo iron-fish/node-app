@@ -3,33 +3,40 @@ import {
   HexFish as Logo,
   Flex,
   useColorMode,
+  Box,
 } from '@ironfish/ui-kit'
+import { FC } from 'react'
+import { Outlet } from 'react-router-dom'
 
 import Navbar from '../components/Navbar'
 
-export const Overview = () => {
+export const PageLayout: FC = () => {
   const { colorMode } = useColorMode()
   const isLightMode = colorMode === 'light'
   return (
     <Flex
       top="0"
-      position="absolute"
       className="App"
       justifyContent="center"
       alignItems="center"
-      height="100%"
       minHeight="100vh"
-      width="100%"
     >
       <Navbar />
-      <Logo
+      {/* <Logo
         style={{
-          maxWidth: '10rem',
+          position: 'fixed',
+          width: '10rem',
+          left: '50%',
+          top: '50%',
           fill: isLightMode ? C.GREY : C.PALE_GREY,
+          zIndex: -1,
         }}
-      />
+      /> */}
+      <Box marginLeft={{ base: '6rem', sm: '17rem' }} w="100%">
+        <Outlet />
+      </Box>
     </Flex>
   )
 }
 
-export default Overview
+export default PageLayout

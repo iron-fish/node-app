@@ -2,17 +2,17 @@ export * from './data'
 
 import ROUTES from './data'
 
-import Overview from './Overview'
+import PageLayout from './PageLayout'
 
 export const ROUTED_COMPONENTS = [
-  [ROUTES.ONBOARDING, Overview],
-  [ROUTES.ACCOUNTS, Overview],
-  [ROUTES.SEND, Overview],
-  [ROUTES.RECEIVE, Overview],
-  [ROUTES.ADDRESS_BOOK, Overview],
-  [ROUTES.RESOURCES, Overview],
-  [ROUTES.NODE, Overview],
-  [ROUTES.MINER, Overview],
+  [ROUTES.ONBOARDING, PageLayout],
+  [ROUTES.ACCOUNTS, PageLayout],
+  [ROUTES.SEND, PageLayout],
+  [ROUTES.RECEIVE, PageLayout],
+  [ROUTES.ADDRESS_BOOK, PageLayout],
+  [ROUTES.RESOURCES, PageLayout],
+  [ROUTES.NODE, PageLayout],
+  [ROUTES.MINER, PageLayout],
 ]
 
 export default ROUTED_COMPONENTS

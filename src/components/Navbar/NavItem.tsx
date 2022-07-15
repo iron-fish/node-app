@@ -1,13 +1,13 @@
-import { FC, ReactType, useState } from 'react'
+import { FC } from 'react'
 import { Flex, useColorMode, NAMED_COLORS } from '@ironfish/ui-kit'
-import { SVGProps } from 'src/svgx/types'
-import Hotkey from 'src/components/Hotkey'
+import { SVGProps } from 'Svgx/types'
+import Hotkey from 'Components/Hotkey'
 
 export type NavItemProps = {
   active?: boolean
   to: string
   label: string
-  icon: ReactType
+  icon: FC<SVGProps>
   hotkey: string
 }
 

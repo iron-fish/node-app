@@ -1,18 +1,15 @@
 import {
-  chakra,
   Box,
   NAMED_COLORS as C,
   Flex,
-  useColorMode,
   useColorModeValue,
+  Image,
 } from '@ironfish/ui-kit'
-import Toggle from 'src/components/ThemeToggle'
+import Toggle from 'Components/ThemeToggle'
 
-import Logo from 'src/svgx/Logo'
+import Logo from 'Svgx/Logo'
 
 export const Onboarding = () => {
-  const { colorMode } = useColorMode()
-  const isLightMode = colorMode === 'light'
   const color = useColorModeValue(C.GREY, C.LIGHTER_GREY)
   return (
     <Flex
@@ -68,10 +65,11 @@ export const Onboarding = () => {
           <Toggle />
         </Flex>
       </Flex>
-      <chakra.img
+      <Image
         position="absolute"
         w="100%"
-        h="auto"
+        h="100%"
+        autoCapitalize="true"
         src="/images/onboarding.png"
         backgroundSize="contain"
       />
