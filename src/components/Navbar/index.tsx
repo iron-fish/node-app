@@ -1,9 +1,10 @@
 import {
+  chakra,
   Flex,
-  useColorMode,
   NAMED_COLORS as C,
   Box,
   BoxProps,
+  useColorModeValue,
 } from '@ironfish/ui-kit'
 
 import IconHome from 'Svgx/home'
@@ -17,6 +18,7 @@ import Toggle from 'Components/ThemeToggle'
 
 import Nav from './Nav'
 import IronFishLogo from 'Svgx/IronFishLogo'
+import HexFishLogo from 'Svgx/hexfish'
 import { FC } from 'react'
 
 const primaryNavItems = [
@@ -36,14 +38,46 @@ const secondaryNavItems = [
   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
 ]
 
-const ActiveStats: FC<BoxProps> = props => <Box {...props} />
+const ActiveStats: FC<BoxProps> = props => {
+  const colors = useColorModeValue(
+    {
+      text: '#335A48',
+      bg: '#EBFBF4',
+    },
+    {
+      text: '#5FC89A',
+      bg: '#192D23',
+    }
+  )
+  return (
+    <Box my="1rem" {...props}>
+      <Box
+        my="0.5rem"
+        p="0.25rem"
+        bg={colors.bg}
+        borderRadius="0.25rem"
+        textAlign="center"
+      >
+        <chakra.h5 color={colors.text}>Wallet Status: Synced</chakra.h5>
+      </Box>
+      <Box
+        my="0.5rem"
+        p="0.25rem"
+        bg={colors.bg}
+        borderRadius="0.25rem"
+        textAlign="center"
+      >
+        <chakra.h5 color={colors.text}>Miner Running: 300 h/s</chakra.h5>
+      </Box>
+    </Box>
+  )
+}
 
 export const Navbar = () => {
-  const { colorMode } = useColorMode()
-  const isLightMode = colorMode === 'light'
+  const bgColor = useColorModeValue(C.WHITE, C.BLACK)
   return (
     <Flex
-      bg={isLightMode ? C.WHITE : C.BLACK}
+      bg={bgColor}
       height="100%"
       maxHeight="100vh"
       p="1rem"
@@ -56,13 +90,17 @@ export const Navbar = () => {
       alignItems="start"
       zIndex={100}
     >
-      <IronFishLogo m="0.5rem" />
+      <IronFishLogo m="0.5rem" display={{ base: 'none', sm: 'inline-block' }} />
+      <HexFishLogo
+        m="0.5rem 1rem"
+        display={{ base: 'inline-block', sm: 'none' }}
+      />
       <Box mt="2rem">
         <Nav list={primaryNavItems} />
       </Box>
       <Box marginTop="auto">
         <Nav my="1rem" list={secondaryNavItems} />
-        <ActiveStats />
+        <ActiveStats display={{ base: 'none', sm: 'block' }} />
         <Toggle />
       </Box>
     </Flex>

@@ -15,7 +15,8 @@ export const ThemeToggle = () => {
       justifyContent="center"
       alignItems="center"
       w={{ base: '2.125rem', sm: '14.5rem' }}
-      h={{ base: '3.75rem', sm: '2.125rem' }}
+      h={{ base: '4rem', sm: '2.125rem' }}
+      m={{ base: '0.75rem', sm: 'auto' }}
       flexDirection={{ base: 'column', sm: 'row' }}
       onClick={toggleColorMode}
       cursor="pointer"
@@ -28,8 +29,8 @@ export const ThemeToggle = () => {
         transition="top 0.3s ease-out, left 0.2s ease-out, background 0.16s ease-out"
         top={{ base: isLightMode ? '4px' : '30px', sm: '4px' }}
         left={{ base: 'inherit', sm: isLightMode ? '4px' : '50%' }}
-        w={{ base: '26px', sm: 'calc(50% - 6px)' }}
-        h="26px"
+        w={{ base: '1.75rem', sm: 'calc(50% - 6px)' }}
+        h={{ base: '1.75rem', sm: '26px' }}
         bg={isLightMode ? C.WHITE : C.BLACK}
         borderRadius="2px"
         justifyContent="center"
@@ -44,10 +45,10 @@ export const ThemeToggle = () => {
         </chakra.span>
       </Flex>
       <Flex
-        minHeight="26px"
+        h={{ base: '1.75rem', sm: '26px' }}
         m={{ base: '0', sm: '6px' }}
         mr={{ base: '0', sm: '3px' }}
-        w={{ base: '26px', sm: '50%' }}
+        w={{ base: '1.75rem', sm: '50%' }}
         textAlign="center"
         justifyContent="center"
         alignItems="center"
@@ -61,10 +62,10 @@ export const ThemeToggle = () => {
         </chakra.span>
       </Flex>
       <Flex
-        minHeight="26px"
+        h={{ base: '1.75rem', sm: '26px' }}
         m={{ base: '0', sm: '6px' }}
         ml={{ base: '0', sm: '3px' }}
-        w={{ base: '26px', sm: '50%' }}
+        w={{ base: '1.75rem', sm: '50%' }}
         textAlign="center"
         justifyContent="center"
         alignItems="center"

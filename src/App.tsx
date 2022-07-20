@@ -7,9 +7,18 @@ import Onboarding from './routes/Onboarding'
 import PageLayout from './routes/PageLayout'
 import Accounts from './routes/Accounts'
 
+const breakpoints = {
+  sm: '56.25rem',
+  sm1: '57.75rem',
+  md: '72rem',
+  lg: '90rem',
+  xl: '101.25rem',
+  '2xl': '112.5rem',
+}
+
 function App() {
   return (
-    <IronFishUIProvider>
+    <IronFishUIProvider theme={{ breakpoints }}>
       <HashRouter>
         <Routes>
           <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
