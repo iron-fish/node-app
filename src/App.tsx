@@ -6,6 +6,7 @@ import { ROUTES } from './routes'
 import Onboarding from './routes/Onboarding'
 import PageLayout from './routes/PageLayout'
 import Accounts from './routes/Accounts'
+import AddressBook from 'Routes/AddressBook'
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
             <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
             <Route path={ROUTES.SEND} element={null} />
             <Route path={ROUTES.RECEIVE} element={null} />
-            <Route path={ROUTES.ADDRESS_BOOK} element={null} />
+            <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
             <Route path={ROUTES.RESOURCES} element={null} />
             <Route path={ROUTES.NODE} element={null} />
             <Route path={ROUTES.MINER} element={null} />
