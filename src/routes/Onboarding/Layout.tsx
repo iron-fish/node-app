@@ -1,16 +1,10 @@
-import {
-  Box,
-  NAMED_COLORS as C,
-  Flex,
-  useColorModeValue,
-  Image,
-} from '@ironfish/ui-kit'
-import Toggle from 'Components/ThemeToggle'
+import { Flex, Image, NAMED_COLORS, useColorModeValue } from "@ironfish/ui-kit"
+import ThemeToggle from "Components/ThemeToggle"
+import { FC } from "react"
+import { Outlet } from "react-router-dom"
 
-import Logo from 'Svgx/Logo'
-
-export const Onboarding = () => {
-  const color = useColorModeValue(C.GREY, C.LIGHTER_GREY)
+const Layout: FC = () => {
+  const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHTER_GREY)
   return (
     <Flex
       flexDirection="column"
@@ -32,24 +26,7 @@ export const Onboarding = () => {
         bg="white"
         maxWidth="45.25rem"
       >
-        <Flex flexDirection="column" p="4rem" pb="0" bg="transparent">
-          <Logo />
-          <h1>Iron Fish Wallet</h1>
-          <Box p="2rem" layerStyle="card" w="100%" maxWidth="36.75rem">
-            <h2>Create Account</h2>
-            <p>
-              Choose this option if you don't have an existing Iron Fish account
-              or if you'd like to create a new one.
-            </p>
-          </Box>
-          <Box p="2rem" layerStyle="card" w="100%" maxWidth="36.75rem">
-            <h2>Import Account</h2>
-            <p>
-              Already have an account? Enter your recovery credentials and
-              continue using your account.
-            </p>
-          </Box>
-        </Flex>
+        <Outlet />
         <Flex
           w="100%"
           h="3.25rem"
@@ -58,11 +35,12 @@ export const Onboarding = () => {
           py="0.5rem"
           justifyContent="space-between"
           bg="white"
+          marginTop="auto"
         >
           <a href="https://discord.gg/ironfish">
             <span>Need Help? Find us on Discord</span>
           </a>
-          <Toggle />
+          <ThemeToggle />
         </Flex>
       </Flex>
       <Image
@@ -77,4 +55,4 @@ export const Onboarding = () => {
   )
 }
 
-export default Onboarding
+export default Layout
