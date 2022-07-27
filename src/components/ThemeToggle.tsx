@@ -39,7 +39,8 @@ export const ThemeToggle = () => {
       justifyContent="center"
       alignItems="center"
       w={{ base: '2.125rem', sm: '14.5rem' }}
-      h={{ base: '3.75rem', sm: '2.125rem' }}
+      h={{ base: '4rem', sm: '2.125rem' }}
+      m={{ base: '0.75rem', sm: 'auto' }}
       flexDirection={{ base: 'column', sm: 'row' }}
       onClick={toggleColorMode}
       cursor="pointer"
@@ -53,7 +54,7 @@ export const ThemeToggle = () => {
         top={{ base: values.top, sm: '4px' }}
         left={{ base: 'inherit', sm: values.left }}
         w={{ base: '26px', sm: 'calc(50% - 6px)' }}
-        h="26px"
+        h={{ base: '1.75rem', sm: '26px' }}
         bg={values.bg}
         borderRadius="5px"
         justifyContent="center"
@@ -68,10 +69,10 @@ export const ThemeToggle = () => {
         </chakra.span>
       </Flex>
       <Flex
-        minHeight="26px"
+        h={{ base: '1.75rem', sm: '26px' }}
         m={{ base: '0', sm: '6px' }}
         mr={{ base: '0', sm: '3px' }}
-        w={{ base: '26px', sm: '50%' }}
+        w={{ base: '1.75rem', sm: '50%' }}
         textAlign="center"
         justifyContent="center"
         alignItems="center"
@@ -85,10 +86,10 @@ export const ThemeToggle = () => {
         </chakra.span>
       </Flex>
       <Flex
-        minHeight="26px"
+        h={{ base: '1.75rem', sm: '26px' }}
         m={{ base: '0', sm: '6px' }}
         ml={{ base: '0', sm: '3px' }}
-        w={{ base: '26px', sm: '50%' }}
+        w={{ base: '1.75rem', sm: '50%' }}
         textAlign="center"
         justifyContent="center"
         alignItems="center"

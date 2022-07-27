@@ -3,7 +3,9 @@ import {
   Button,
   Flex,
   IconSearch,
-  SearchAutocomplete,
+  Input,
+  InputGroup,
+  InputLeftElement,
   SelectField,
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
@@ -117,11 +119,12 @@ const Accounts = () => {
           </Flex>
         </Flex>
         <Flex justifyContent="space-between" w="100%" alignItems="center">
-          <SearchAutocomplete<string>
-            getOptionLabel={option => option}
-            InputProps={{ mr: '1rem', placeholder: 'Search' }}
-            inputLeftElement={<IconSearch />}
-          />
+          <InputGroup variant="search" mr="1rem">
+            <InputLeftElement pointerEvents="none">
+              <IconSearch />
+            </InputLeftElement>
+            <Input placeholder="Search" />
+          </InputGroup>
           <SelectField
             label="Sort by"
             minWidth="15rem"

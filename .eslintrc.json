@@ -19,6 +19,7 @@
         "argsIgnorePattern": "^_"
       }
     ],
-    "no-restricted-imports": ["error", { "patterns": ["\\.\\./.*"] }]
+    "no-restricted-imports": ["error", { "patterns": ["\\.\\./.*"] }],
+    "prettier/prettier": ["error", { "endOfLine": "auto" }]
   }
 }

@@ -18,7 +18,7 @@ export const PageLayout: FC = () => {
       top="0"
       className="App"
       justifyContent="center"
-      alignItems="center"
+      // alignItems="center"
       minHeight="100vh"
     >
       <Navbar />

@@ -9,10 +9,20 @@ import Accounts from './routes/Accounts'
 import CreateLayout from 'Routes/Onboarding/Layout'
 import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
+import AddressBook from 'Routes/AddressBook'
+
+const breakpoints = {
+  sm: '56.25rem',
+  sm1: '57.75rem',
+  md: '72rem',
+  lg: '90rem',
+  xl: '101.25rem',
+  '2xl': '112.5rem',
+}
 
 function App() {
   return (
-    <IronFishUIProvider>
+    <IronFishUIProvider theme={{ breakpoints }}>
       <HashRouter>
         <Routes>
           <Route element={<CreateLayout />}>
@@ -24,7 +34,7 @@ function App() {
             <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
             <Route path={ROUTES.SEND} element={null} />
             <Route path={ROUTES.RECEIVE} element={null} />
-            <Route path={ROUTES.ADDRESS_BOOK} element={null} />
+            <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
             <Route path={ROUTES.RESOURCES} element={null} />
             <Route path={ROUTES.NODE} element={null} />
             <Route path={ROUTES.MINER} element={null} />

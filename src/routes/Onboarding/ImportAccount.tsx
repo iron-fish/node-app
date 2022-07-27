@@ -146,7 +146,9 @@ const MnemonicPhraseTab: FC = () => {
           as={Link}
           to={ROUTES.ACCOUNTS}
           disabled={
-            !phrase || phrase.length < 12 || phrase.findIndex(word => !word) !== -1
+            !phrase ||
+            phrase.length < 12 ||
+            phrase.findIndex(word => !word) !== -1
           }
           _disabled={{
             pointerEvents: 'none',

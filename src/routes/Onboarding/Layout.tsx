@@ -1,17 +1,17 @@
-import { Flex, Image, NAMED_COLORS, useColorModeValue } from "@ironfish/ui-kit"
-import ThemeToggle from "Components/ThemeToggle"
-import { FC } from "react"
-import { Outlet } from "react-router-dom"
+import { Flex, Image, NAMED_COLORS, useColorModeValue } from '@ironfish/ui-kit'
+import ThemeToggle from 'Components/ThemeToggle'
+import { FC } from 'react'
+import { Outlet } from 'react-router-dom'
 
 const Layout: FC = () => {
   const colors = useColorModeValue(
     {
       color: NAMED_COLORS.GREY,
-      bg: NAMED_COLORS.WHITE
+      bg: NAMED_COLORS.WHITE,
     },
     {
       color: NAMED_COLORS.LIGHTER_GREY,
-      bg: NAMED_COLORS.BLACK
+      bg: NAMED_COLORS.BLACK,
     }
   )
   return (
