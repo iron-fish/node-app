@@ -18,7 +18,7 @@ export const ThemeToggle = () => {
       left: '4px',
       message: 'Light',
       Icon: IconLightMode,
-      iconColor: C.GREY
+      iconColor: C.GREY,
     },
     {
       toggleBg: C.DARKER_GREY,
@@ -27,7 +27,7 @@ export const ThemeToggle = () => {
       left: '50%',
       message: 'Dark',
       Icon: IconDarkMode,
-      iconColor: C.LIGHT_GREY
+      iconColor: C.LIGHT_GREY,
     }
   )
   return (
@@ -81,7 +81,7 @@ export const ThemeToggle = () => {
           fill={C.GREY}
           style={{ width: '14px', height: '14px' }}
         />
-        <chakra.span display={{ base: 'none', sm: 'inline-block' }}  ml="0.4rem">
+        <chakra.span display={{ base: 'none', sm: 'inline-block' }} ml="0.4rem">
           Light
         </chakra.span>
       </Flex>
