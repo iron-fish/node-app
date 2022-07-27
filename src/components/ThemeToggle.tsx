@@ -1,16 +1,40 @@
-import { chakra, Flex, useColorMode, NAMED_COLORS as C } from '@ironfish/ui-kit'
+import {
+  chakra,
+  Flex,
+  useColorMode,
+  NAMED_COLORS as C,
+  useColorModeValue,
+} from '@ironfish/ui-kit'
 import IconDarkMode from 'Svgx/icon-darkmode'
 import IconLightMode from 'Svgx/icon-lightmode'
 
 export const ThemeToggle = () => {
-  const { colorMode, toggleColorMode } = useColorMode()
-  const isLightMode = colorMode === 'light'
-  const Other = isLightMode ? IconLightMode : IconDarkMode
+  const { toggleColorMode } = useColorMode()
+  const values = useColorModeValue(
+    {
+      toggleBg: C.LIGHTER_GREY,
+      bg: C.WHITE,
+      top: '4px',
+      left: '4px',
+      message: 'Light',
+      Icon: IconLightMode,
+      iconColor: C.GREY
+    },
+    {
+      toggleBg: C.DARKER_GREY,
+      bg: C.BLACK,
+      top: '30px',
+      left: '50%',
+      message: 'Dark',
+      Icon: IconDarkMode,
+      iconColor: C.LIGHT_GREY
+    }
+  )
   return (
     <Flex
       overflow="hidden"
       position="relative"
-      bg={isLightMode ? C.LIGHTER_GREY : C.DARKER_GREY}
+      bg={values.toggleBg}
       borderRadius="5px"
       justifyContent="center"
       alignItems="center"
@@ -26,21 +50,21 @@ export const ThemeToggle = () => {
         zIndex="100"
         position="absolute"
         transition="top 0.3s ease-out, left 0.2s ease-out, background 0.16s ease-out"
-        top={{ base: isLightMode ? '4px' : '30px', sm: '4px' }}
-        left={{ base: 'inherit', sm: isLightMode ? '4px' : '50%' }}
+        top={{ base: values.top, sm: '4px' }}
+        left={{ base: 'inherit', sm: values.left }}
         w={{ base: '26px', sm: 'calc(50% - 6px)' }}
         h="26px"
-        bg={isLightMode ? C.WHITE : C.BLACK}
-        borderRadius="2px"
+        bg={values.bg}
+        borderRadius="5px"
         justifyContent="center"
         alignItems="center"
       >
-        <Other
-          fill={isLightMode ? C.BLACK : C.WHITE}
+        <values.Icon
+          fill={values.iconColor}
           style={{ width: '14px', height: '14px' }}
         />
-        <chakra.span display={{ base: 'none', sm: 'inline-block' }}>
-          {isLightMode ? 'Light' : 'Dark'}
+        <chakra.span display={{ base: 'none', sm: 'inline-block' }} ml="0.4rem">
+          {values.message}
         </chakra.span>
       </Flex>
       <Flex
@@ -56,7 +80,7 @@ export const ThemeToggle = () => {
           fill={C.GREY}
           style={{ width: '14px', height: '14px' }}
         />
-        <chakra.span display={{ base: 'none', sm: 'inline-block' }}>
+        <chakra.span display={{ base: 'none', sm: 'inline-block' }}  ml="0.4rem">
           Light
         </chakra.span>
       </Flex>
@@ -70,7 +94,7 @@ export const ThemeToggle = () => {
         alignItems="center"
       >
         <IconDarkMode fill={C.GREY} style={{ width: '14px', height: '14px' }} />
-        <chakra.span display={{ base: 'none', sm: 'inline-block' }}>
+        <chakra.span display={{ base: 'none', sm: 'inline-block' }} ml="0.4rem">
           Dark
         </chakra.span>
       </Flex>

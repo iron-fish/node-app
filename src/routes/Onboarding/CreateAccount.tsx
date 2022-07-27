@@ -63,8 +63,9 @@ const CreateAccount: FC = () => {
         header="Mnemonic Phrase"
         value={words}
         placeholder={''}
-        onChange={() => { }}
+        onChange={() => null}
         isReadOnly={true}
+        visible={true}
         mb="1rem"
       />
       <Box>
@@ -84,6 +85,10 @@ const CreateAccount: FC = () => {
           disabled={!saved}
           as={Link}
           to={ROUTES.ACCOUNTS}
+          _disabled={{
+            pointerEvents: 'none',
+            opacity: '0.4',
+          }}
         >
           Create Account
         </Button>

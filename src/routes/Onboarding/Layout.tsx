@@ -4,7 +4,16 @@ import { FC } from "react"
 import { Outlet } from "react-router-dom"
 
 const Layout: FC = () => {
-  const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHTER_GREY)
+  const colors = useColorModeValue(
+    {
+      color: NAMED_COLORS.GREY,
+      bg: NAMED_COLORS.WHITE
+    },
+    {
+      color: NAMED_COLORS.LIGHTER_GREY,
+      bg: NAMED_COLORS.BLACK
+    }
+  )
   return (
     <Flex
       flexDirection="column"
@@ -23,18 +32,18 @@ const Layout: FC = () => {
         height="100%"
         minHeight="100vh"
         width="100%"
-        bg="white"
+        bg={colors.bg}
         maxWidth="45.25rem"
       >
         <Outlet />
         <Flex
           w="100%"
           h="3.25rem"
-          borderTop={`1px solid ${color}`}
+          borderTop={`1px solid ${colors.color}`}
           px="4rem"
           py="0.5rem"
           justifyContent="space-between"
-          bg="white"
+          bg={colors.bg}
           marginTop="auto"
         >
           <a href="https://discord.gg/ironfish">

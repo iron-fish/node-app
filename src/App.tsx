@@ -8,6 +8,7 @@ import PageLayout from './routes/PageLayout'
 import Accounts from './routes/Accounts'
 import CreateLayout from 'Routes/Onboarding/Layout'
 import CreateAccount from 'Routes/Onboarding/CreateAccount'
+import ImportAccount from 'Routes/Onboarding/ImportAccount'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route element={<CreateLayout />}>
             <Route path={ROUTES.ONBOARDING} element={<Action />} />
             <Route path={ROUTES.CREATE} element={<CreateAccount />} />
+            <Route path={ROUTES.IMPORT} element={<ImportAccount />} />
           </Route>
           <Route element={<PageLayout />}>
             <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
