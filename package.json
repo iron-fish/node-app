@@ -55,7 +55,8 @@
     "wait-on": "^6.0.1"
   },
   "dependencies": {
-    "@ironfish/ui-kit": "0.0.8",
+    "@ironfish/sdk": "0.0.18",
+    "@ironfish/ui-kit": "0.0.9",
     "date-fns": "^2.28.0",
     "electron-squirrel-startup": "^1.0.0",
     "react": "17.0.2",
@@ -99,7 +100,10 @@
                 {
                   "html": "./public/index.html",
                   "js": "./electron/renderer.ts",
-                  "name": "wallet"
+                  "name": "wallet",
+                  "preload": {
+                    "js": "./electron/preload.ts"
+                  }
                 }
               ]
             }
