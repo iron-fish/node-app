@@ -5,6 +5,7 @@ export const ROUTES = {
   SEND: '/send',
   RECEIVE: '/receive',
   ADDRESS_BOOK: '/address-book',
+  ADDRESS_BOOK_DETAILS: '/address-book/:address',
   RESOURCES: '/resources',
   NODE: '/node',
   MINER: '/miner',

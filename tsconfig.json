@@ -17,6 +17,7 @@
       "Components/*": ["src/components/*"],
       "Routes/*": ["src/routes/*"],
       "Svgx/*": ["src/svgx/*"],
+      "Utils/*": ["src/utils/*"],
     },
   },
   "include": ["src/**/*"],

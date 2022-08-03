@@ -7,6 +7,7 @@ import Onboarding from './routes/Onboarding'
 import PageLayout from './routes/PageLayout'
 import Accounts from './routes/Accounts'
 import AddressBook from 'Routes/AddressBook'
+import AddressBookDetails from 'Routes/AddressBookDetails'
 
 const breakpoints = {
   sm: '56.25rem',
@@ -28,6 +29,10 @@ function App() {
             <Route path={ROUTES.SEND} element={null} />
             <Route path={ROUTES.RECEIVE} element={null} />
             <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
+            <Route
+              path={ROUTES.ADDRESS_BOOK_DETAILS}
+              element={<AddressBookDetails />}
+            />
             <Route path={ROUTES.RESOURCES} element={null} />
             <Route path={ROUTES.NODE} element={null} />
             <Route path={ROUTES.MINER} element={null} />

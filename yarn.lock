@@ -2210,17 +2210,17 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@ironfish/ui-kit@0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-0.0.8.tgz#076d12f9b267ed24fd709c8b4758e84f2b35b509"
-  integrity sha512-nBtvP5AFVp226L1b9RYBc9HfMLdy9w6FuswqGBqcF6lWFe8GKxAZoEdZaPdUxbzdUuf/aFt0yk4pCLS3k/M9Tg==
+"@ironfish/ui-kit@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-0.0.9.tgz#b8859c902006f0116498c174235a29db705aa0dd"
+  integrity sha512-+94DWMYRRRUg6pJ5zmEFhlvQ87zMMCWQJGdGudNlDOctJLt4ya5ApJak1Ao8+5cnar0vt2hIhYyQnMt0cYS7wA==
   dependencies:
     "@chakra-ui/icons" "1.1.7"
     "@chakra-ui/react" "1.8.6"
     "@emotion/css" "11.7.1"
     "@emotion/react" "11.8.2"
     "@emotion/styled" "11.8.1"
-    blem "0.0.9"
+    bem-classname "0.1.1"
     colord "2.9.2"
     emotion "11.0.0"
     framer-motion "6.2.8"
@@ -4195,6 +4195,11 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+bem-classname@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/bem-classname/-/bem-classname-0.1.1.tgz#9268c6bee485c8e629f2afc3632660b829258dd6"
+  integrity sha512-p018evftMHuUZRPF4Fy54vM4XETvh4tvfQj3OYv4fEKVKomnVU4CLsk60j7+wO6W1S68jbvx4p3TU+1C5TFeog==
+
 bfj@^7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/bfj/-/bfj-7.0.2.tgz#1988ce76f3add9ac2913fd8ba47aad9e651bfbb2"
@@ -4223,14 +4228,6 @@ bl@^4.1.0:
     buffer "^5.5.0"
     inherits "^2.0.4"
     readable-stream "^3.4.0"
-
-blem@0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/blem/-/blem-0.0.9.tgz#dafa9f1ec4cb2d177cd0f24d663ea62105258b44"
-  integrity sha512-q3j+FVxP+VQswzodF+hlq7w4LEf1AFu1LM7XQY9eYaKhFK6IXDxtceSqKNzbmcI/6cT5jSyCgRvBjhHDIRm2MQ==
-  dependencies:
-    fast-memoize "^2.5.1"
-    ramda "^0.26.1"
 
 bluebird@^3.1.1, bluebird@^3.5.0, bluebird@^3.5.5:
   version "3.7.2"
@@ -6649,11 +6646,6 @@ fast-levenshtein@^2.0.6, fast-levenshtein@~2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
-
-fast-memoize@^2.5.1:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/fast-memoize/-/fast-memoize-2.5.2.tgz#79e3bb6a4ec867ea40ba0e7146816f6cdce9b57e"
-  integrity sha512-Ue0LwpDYErFbmNnZSF0UH6eImUwDmogUO1jyE+JbN2gsQz/jICm1Ve7t9QT0rNSsfJt+Hs4/S3GnsDVjL4HVrw==
 
 fastq@^1.6.0:
   version "1.13.0"
@@ -11060,11 +11052,6 @@ ramda@0.28.0:
   version "0.28.0"
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.28.0.tgz#acd785690100337e8b063cab3470019be427cc97"
   integrity sha512-9QnLuG/kPVgWvMQ4aODhsBUFKOUmnbUnsSXACv+NCQZcHbeb+v8Lodp8OVxtRULN1/xOyYLLaL6npE6dMq5QTA==
-
-ramda@^0.26.1:
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.26.1.tgz#8d41351eb8111c55353617fc3bbffad8e4d35d06"
-  integrity sha512-hLWjpy7EnsDBb0p+Z3B7rPi3GDeRG5ZtiI33kJhTt+ORCd38AbAIjB/9zRIUoeTbE/AVX5ZkU7m6bznsvrf8eQ==
 
 randexp@0.4.6:
   version "0.4.6"
