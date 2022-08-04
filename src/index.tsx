@@ -3,6 +3,13 @@ import * as ReactDOM from 'react-dom'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import './index.css'
+import { IronfishSdk } from '@ironfish/sdk'
+
+declare global {
+  interface Window {
+    Wallet: IronfishSdk
+  }
+}
 
 ReactDOM.render(<App />, document.getElementById('root'))
 
