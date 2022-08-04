@@ -11,8 +11,10 @@ import {
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import Caret from 'Svgx/caret-icon'
+import { Link } from 'react-router-dom'
+import { ROUTES } from '..'
 
-export interface AccountProps {
+export interface AccountPreviewProps {
   order: number
   name: string
   balance: number
@@ -70,7 +72,7 @@ const ORDER_COLOR = [
   },
 ]
 
-const Account: FC<AccountProps> = ({
+const AccountPreview: FC<AccountPreviewProps> = ({
   order = 0,
   name,
   balance = 0,
@@ -163,8 +165,11 @@ const Account: FC<AccountProps> = ({
         aria-label="account-details"
         variant="ghost"
         icon={<Caret />}
+        as={Link}
+        to={ROUTES.ACCOUNT}
+        state={{ accountId: address }}
       />
     </Flex>
   </Flex>
 )
-export default Account
+export default AccountPreview

@@ -32,7 +32,12 @@ export const PageLayout: FC = () => {
           zIndex: -1,
         }}
       /> */}
-      <Box marginLeft={{ base: '6rem', sm: '17rem' }} w="100%">
+      <Box
+        marginLeft={{ base: '6rem', sm: '17rem' }}
+        marginRight="2rem"
+        w="100%"
+        maxWidth="65.5rem"
+      >
         <Outlet />
       </Box>
     </Flex>

@@ -9,7 +9,7 @@ import {
   SelectField,
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
-import Account from 'Components/Account'
+import AccountPreview from 'Routes/Accounts/AccountPreview'
 
 const DEMO_DATA = [
   {
@@ -146,7 +146,7 @@ const Accounts = () => {
         </Flex>
         <Flex direction="column" width="100%">
           {DEMO_DATA.map((data, index) => (
-            <Account {...data} order={index} />
+            <AccountPreview {...data} order={index} />
           ))}
         </Flex>
       </Box>

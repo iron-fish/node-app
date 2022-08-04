@@ -5,8 +5,9 @@ import { ROUTES } from './routes'
 
 import Onboarding from './routes/Onboarding'
 import PageLayout from './routes/PageLayout'
-import Accounts from './routes/Accounts'
+import Accounts from './routes/Accounts/Accounts'
 import AddressBook from 'Routes/AddressBook'
+import AccountDetails from 'Routes/Accounts/AccountDetails'
 
 const breakpoints = {
   sm: '56.25rem',
@@ -24,6 +25,7 @@ function App() {
         <Routes>
           <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
           <Route element={<PageLayout />}>
+            <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
             <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
             <Route path={ROUTES.SEND} element={null} />
             <Route path={ROUTES.RECEIVE} element={null} />
