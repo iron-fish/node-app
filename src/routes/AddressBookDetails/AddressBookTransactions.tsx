@@ -8,20 +8,23 @@ import {
   CommonTable,
   Input,
   NAMED_COLORS,
+  Icon,
 } from '@ironfish/ui-kit'
 import IconSearch from '@ironfish/ui-kit/dist/svgx/icon-search'
 import Caret from 'Svgx/caret-icon'
+import Send from 'Svgx/send'
+import Receive from 'Svgx/receive'
 
 const DEMO_DATA = [
   {
-    action: 'Sent',
+    action: 'Send',
     iron: 21,
     to: 'Frankie Boy',
     date: new Date().toISOString(),
     memo: "Here's the payment",
   },
   {
-    action: 'Sent',
+    action: 'Receive',
     iron: 21,
     to: 'Frankie Boy',
     date: new Date().toISOString(),
@@ -65,8 +68,20 @@ const AddressBookTransactions = () => {
               key: 'action',
               label: 'Action',
               render: address => (
-                <Flex w="1.625rem" h="1.625rem" alignItems="center">
-                  <Box>{address.action}</Box>
+                <Flex align="center" gap="12px">
+                  <Flex
+                    w="26px"
+                    h="26px"
+                    borderRadius="50%"
+                    align="center"
+                    justify="center"
+                    background={NAMED_COLORS.LIGHT_GREY}
+                  >
+                    <Icon h={8}>
+                      {address.action === 'Send' ? <Send /> : <Receive />}
+                    </Icon>
+                  </Flex>
+                  {address.action}
                 </Flex>
               ),
             },
