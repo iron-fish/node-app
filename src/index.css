@@ -1,6 +1,6 @@
-/* body {
+body {
   margin: 0;
-  font-family: 'favorit-regular' !important, sans-serif;
+  font-family: 'favorit-regular' sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -13,4 +13,4 @@ h6 {
   font-family: 'extended-regular', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-} */
+}

@@ -3,9 +3,12 @@ import { IronFishUIProvider } from '@ironfish/ui-kit'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { ROUTES } from './routes'
 
-import Onboarding from './routes/Onboarding'
+import Action from './routes/Onboarding/Action'
 import PageLayout from './routes/PageLayout'
 import Accounts from './routes/Accounts'
+import CreateLayout from 'Routes/Onboarding/Layout'
+import CreateAccount from 'Routes/Onboarding/CreateAccount'
+import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import AddressBook from 'Routes/AddressBook'
 import AddressBookDetails from 'Routes/AddressBookDetails'
 
@@ -23,7 +26,11 @@ function App() {
     <IronFishUIProvider theme={{ breakpoints }}>
       <HashRouter>
         <Routes>
-          <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
+          <Route element={<CreateLayout />}>
+            <Route path={ROUTES.ONBOARDING} element={<Action />} />
+            <Route path={ROUTES.CREATE} element={<CreateAccount />} />
+            <Route path={ROUTES.IMPORT} element={<ImportAccount />} />
+          </Route>
           <Route element={<PageLayout />}>
             <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
             <Route path={ROUTES.SEND} element={null} />
