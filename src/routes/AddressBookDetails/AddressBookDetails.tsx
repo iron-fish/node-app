@@ -10,15 +10,16 @@ import {
   Button,
   Icon,
   NAMED_COLORS,
-  Link,
+  useColorModeValue,
 } from '@ironfish/ui-kit'
-import AddressBookTransactions from './AddressBookTransactions'
+import { useParams } from 'react-router-dom'
+
 import Send from 'Svgx/send'
 import HexFishCircle from 'Components/HexFishCircle'
-import { CaretInCircle } from 'Svgx/caret-in-circle-icon'
-import { useParams, Link as RouterLink } from 'react-router-dom'
-import { ROUTES } from '..'
+import BackButtonLink from 'Components/BackButtonLink'
 import { truncateHash } from 'Utils/hash'
+import { ROUTES } from '..'
+import AddressBookTransactions from './AddressBookTransactions'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -31,33 +32,24 @@ const getIconBg = (address = '') => {
 
 const AddressBookDetails = () => {
   const { address } = useParams()
+  const $color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
 
   return (
     <Flex width="100%" height="100%" direction="column">
-      <Link
-        display={'flex'}
+      <BackButtonLink
         mb="1rem"
-        alignItems="center"
-        cursor="pointer"
-        as={RouterLink}
         to={ROUTES.ADDRESS_BOOK}
-      >
-        <CaretInCircle mr="0.75rem" />
-        Back to address book
-      </Link>
+        label={'Back to address book'}
+      />
       <Flex mb="1rem" align="center">
         <HexFishCircle mr="1rem" bg={getIconBg('Frankie Boy')} />
         <chakra.h3 mr="1rem">{'Frankie Boy'}</chakra.h3>
         <CopyValueToClipboard
-          labelProps={{
-            color: NAMED_COLORS.GREY,
-          }}
-          iconButtonProps={{
-            color: NAMED_COLORS.GREY,
-            'aria-label': 'icon',
+          containerProps={{
+            color: $color,
           }}
           value={address}
-          label={truncateHash(address)}
+          label={<chakra.h5>{truncateHash(address, 3)}</chakra.h5>}
           copyTooltipText="Copy to clipboard"
           copiedTooltipText="Copied"
         />
@@ -67,7 +59,7 @@ const AddressBookDetails = () => {
               <Send fill="currentColor" />
             </Icon>
           }
-          ml="2rem"
+          ml="1.125rem"
           variant="primary"
           size="small"
         >
