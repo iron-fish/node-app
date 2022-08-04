@@ -49,7 +49,7 @@ const DetailsPanel: FC = ({ children }) => {
       >
         <DrawerOverlay />
         <DrawerContent p="2rem 4rem 2rem 2rem" maxWidth="29rem">
-          <DrawerCloseButton border="1px solid" borderRadius="50%" />
+          <DrawerCloseButton border="0.0625rem solid" borderRadius="50%" />
           {children}
         </DrawerContent>
       </Drawer>

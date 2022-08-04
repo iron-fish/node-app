@@ -71,7 +71,7 @@ export const Onboarding = () => {
         <Flex
           w="100%"
           h="3.25rem"
-          borderTop={`1px solid ${color}`}
+          borderTop={`0.0625rem solid ${color}`}
           px="4rem"
           py="0.5rem"
           justifyContent="space-between"

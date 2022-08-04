@@ -9,7 +9,9 @@ import {
   SelectField,
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
+import { Link } from 'react-router-dom'
 import AccountPreview from 'Routes/Accounts/AccountPreview'
+import { ROUTES } from '..'
 
 const DEMO_DATA = [
   {
@@ -106,6 +108,8 @@ const Accounts = () => {
               mr="1rem"
               borderRadius="4rem"
               variant="secondary"
+              as={Link}
+              to={ROUTES.CREATE}
             >
               Create Account
             </Button>
@@ -113,6 +117,8 @@ const Accounts = () => {
               leftIcon={<IconAdd />}
               borderRadius="4rem"
               variant="secondary"
+              as={Link}
+              to={ROUTES.IMPORT}
             >
               Import Account
             </Button>

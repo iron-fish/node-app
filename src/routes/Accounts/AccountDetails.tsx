@@ -32,7 +32,9 @@ const AccountDetails: FC = () => {
         <Button
           mb="1rem"
           variant="link"
-          leftIcon={<ChevronLeftIcon border="1px solid" borderRadius="50%" />}
+          leftIcon={
+            <ChevronLeftIcon border="0.0625rem solid" borderRadius="50%" />
+          }
           as={Link}
           to={ROUTES.ACCOUNTS}
         >

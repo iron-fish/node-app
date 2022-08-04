@@ -81,7 +81,7 @@ export const Navbar = () => {
       height="100%"
       maxHeight="100vh"
       p="1rem"
-      w={{ base: '88px', sm: '263px' }}
+      w={{ base: '5.5rem', sm: '16.4375rem' }}
       transition="width 0.3s ease-out"
       position="fixed"
       left="0"

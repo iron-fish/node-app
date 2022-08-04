@@ -23,7 +23,7 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
         alignItems="center"
         width={{ base: '3.5rem', sm: '14.5rem' }}
         h="2.5rem"
-        borderRadius="4px"
+        borderRadius="0.25rem"
         p="0.5rem"
         bg={
           active
@@ -42,13 +42,13 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
             content: '""',
             width: 0,
             height: 0,
-            border: '10px solid transparent',
+            border: '0.625rem solid transparent',
             borderRightColor: isLightMode ? 'black' : 'white',
             display: { base: 'flex', sm: 'none' },
           },
           '&::after': {
             content: `"${label}"`,
-            borderRadius: '4px',
+            borderRadius: 'o.25rem',
             position: 'absolute',
             justifyContent: 'center',
             alignItems: 'center',
@@ -68,7 +68,7 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
       >
         <Icon
           fill={isLightMode ? NAMED_COLORS.BLACK : NAMED_COLORS.WHITE}
-          style={{ minWidth: '24px' }}
+          style={{ minWidth: '1.5rem' }}
         />
         <Flex
           flexDirection="row"
