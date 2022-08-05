@@ -19,7 +19,7 @@ import HexFishCircle from 'Components/HexFishCircle'
 import BackButtonLink from 'Components/BackButtonLink'
 import { truncateHash } from 'Utils/hash'
 import { ROUTES } from '..'
-import AddressBookTransactions from './AddressBookTransactions'
+import AddressTransactions from './AddressTransactions'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -30,7 +30,7 @@ const getIconBg = (address = '') => {
   return `hsl(${colorNumber % 255}, 100%, 73%)`
 }
 
-const AddressBookDetails = () => {
+const AddressDetails = () => {
   const { address } = useParams()
   const $color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
 
@@ -73,7 +73,7 @@ const AddressBookDetails = () => {
         </TabList>
         <TabPanels>
           <TabPanel pl="0rem">
-            <AddressBookTransactions />
+            <AddressTransactions />
           </TabPanel>
           <TabPanel>
             <p>two!</p>
@@ -84,4 +84,4 @@ const AddressBookDetails = () => {
   )
 }
 
-export default AddressBookDetails
+export default AddressDetails

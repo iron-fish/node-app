@@ -9,6 +9,7 @@ import {
   Input,
   NAMED_COLORS,
   Icon,
+  Link,
 } from '@ironfish/ui-kit'
 import IconSearch from '@ironfish/ui-kit/dist/svgx/icon-search'
 import Caret from 'Svgx/caret-icon'
@@ -32,7 +33,7 @@ const DEMO_DATA = [
   },
 ]
 
-const AddressBookTransactions = () => {
+const AddressTransactions = () => {
   return (
     <Flex direction="column" mt="2rem">
       <chakra.h3 mb="1rem">Transactions</chakra.h3>
@@ -108,14 +109,13 @@ const AddressBookTransactions = () => {
             {
               key: 'actions',
               label: '',
-
               render: () => (
-                <Flex>
-                  <chakra.h5 mr="0.625rem" color={NAMED_COLORS.LIGHT_BLUE}>
+                <Link display="flex">
+                  <chakra.h5 mr="0.3125rem" color={NAMED_COLORS.LIGHT_BLUE}>
                     View Details
                   </chakra.h5>
-                  <Caret fill={NAMED_COLORS.LIGHT_BLUE} />
-                </Flex>
+                  <Caret caretColor={NAMED_COLORS.LIGHT_BLUE} />
+                </Link>
               ),
             },
           ]}
@@ -125,4 +125,4 @@ const AddressBookTransactions = () => {
   )
 }
 
-export default AddressBookTransactions
+export default AddressTransactions
