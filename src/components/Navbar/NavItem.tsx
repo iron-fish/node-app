@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Flex, useColorMode, NAMED_COLORS } from '@ironfish/ui-kit'
+import { Flex, NAMED_COLORS, useColorModeValue } from '@ironfish/ui-kit'
 import { SVGProps } from 'Svgx/types'
 import Hotkey from 'Components/Hotkey'
 
@@ -12,9 +12,29 @@ export type NavItemProps = {
 }
 
 export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
-  const { colorMode } = useColorMode()
   const Icon = icon as FC<SVGProps>
-  const isLightMode = colorMode === 'light'
+  const $colors = useColorModeValue(
+    {
+      bg: NAMED_COLORS.LIGHTER_GREY,
+      bgHover: NAMED_COLORS.LIGHTER_GREY,
+      borderRightColor: NAMED_COLORS.BLACK,
+      afterColor: NAMED_COLORS.WHITE,
+      afterBg: NAMED_COLORS.BLACK,
+      iconColor: NAMED_COLORS.BLACK,
+      fontColor: NAMED_COLORS.GREY,
+      activeFontColor: NAMED_COLORS.BLACK,
+    },
+    {
+      bg: NAMED_COLORS.DARK_GREY,
+      bgHover: NAMED_COLORS.DARK_GREY,
+      borderRightColor: NAMED_COLORS.WHITE,
+      afterColor: NAMED_COLORS.BLACK,
+      afterBg: NAMED_COLORS.WHITE,
+      iconColor: NAMED_COLORS.WHITE,
+      fontColor: NAMED_COLORS.PALE_GREY,
+      activeFontColor: NAMED_COLORS.WHITE,
+    }
+  )
   return (
     <>
       <Flex
@@ -25,17 +45,9 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
         h="2.5rem"
         borderRadius="4px"
         p="0.5rem"
-        bg={
-          active
-            ? isLightMode
-              ? NAMED_COLORS.LIGHTER_GREY
-              : NAMED_COLORS.DARK_GREY
-            : 'transparent'
-        }
+        bg={active ? $colors.bg : 'transparent'}
         _hover={{
-          background: isLightMode
-            ? NAMED_COLORS.LIGHTER_GREY
-            : NAMED_COLORS.DARK_GREY,
+          background: $colors.bgHover,
           '&::before': {
             position: 'absolute',
             left: '4.25rem',
@@ -43,7 +55,7 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
             width: 0,
             height: 0,
             border: '10px solid transparent',
-            borderRightColor: isLightMode ? 'black' : 'white',
+            borderRightColor: $colors.borderRightColor,
             display: { base: 'flex', sm: 'none' },
           },
           '&::after': {
@@ -54,8 +66,8 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
             alignItems: 'center',
             display: { base: 'flex', sm: 'none' },
             left: '5.5rem',
-            bg: isLightMode ? 'black' : 'white',
-            color: isLightMode ? 'white' : 'black',
+            bg: $colors.afterBg,
+            color: $colors.afterColor,
             height: '2.5rem',
             maxWidth: '8rem',
             whiteSpace: 'nowrap',
@@ -66,15 +78,12 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
         }}
         cursor="pointer"
       >
-        <Icon
-          fill={isLightMode ? NAMED_COLORS.BLACK : NAMED_COLORS.WHITE}
-          style={{ minWidth: '24px' }}
-        />
+        <Icon fill={$colors.iconColor} style={{ minWidth: '24px' }} />
         <Flex
           flexDirection="row"
           paddingLeft="1rem"
           fontSize="0.875rem"
-          color={isLightMode ? NAMED_COLORS.GREY : NAMED_COLORS.PALE_GREY}
+          color={active ? $colors.activeFontColor : $colors.fontColor}
           display={{ base: 'none', sm: 'flex' }}
           whiteSpace="nowrap"
           w="100%"
