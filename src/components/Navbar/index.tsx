@@ -80,7 +80,7 @@ export const Navbar = () => {
       bg={bgColor}
       height="100%"
       maxHeight="100vh"
-      p="1rem"
+      p="3rem 1rem 1rem"
       w={{ base: '88px', sm: '263px' }}
       transition="width 0.3s ease-out"
       position="fixed"
