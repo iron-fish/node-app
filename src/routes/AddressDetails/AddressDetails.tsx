@@ -41,7 +41,7 @@ const AddressDetails = () => {
         to={ROUTES.ADDRESS_BOOK}
         label={'Back to address book'}
       />
-      <Flex mb="1rem" align="center">
+      <Flex mb="0.5rem" align="center">
         <HexFishCircle mr="1rem" bg={getIconBg('Frankie Boy')} />
         <chakra.h3 mr="1rem">{'Frankie Boy'}</chakra.h3>
         <CopyValueToClipboard
