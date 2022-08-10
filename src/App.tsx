@@ -11,6 +11,7 @@ import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import AddressBook from 'Routes/AddressBook'
 import AccountDetails from 'Routes/Accounts/AccountDetails'
+import Miner from 'Routes/Miner'
 
 const breakpoints = {
   sm: '56.25rem',
@@ -39,7 +40,7 @@ function App() {
             <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
             <Route path={ROUTES.RESOURCES} element={null} />
             <Route path={ROUTES.NODE} element={null} />
-            <Route path={ROUTES.MINER} element={null} />
+            <Route path={ROUTES.MINER} element={<Miner />} />
           </Route>
         </Routes>
       </HashRouter>
