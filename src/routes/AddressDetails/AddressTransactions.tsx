@@ -108,7 +108,7 @@ const AddressTransactions = () => {
             },
             {
               key: 'actions',
-              label: '',
+              label: <>&nbsp;</>,
               render: () => (
                 <Link display="flex">
                   <chakra.h5 mr="0.3125rem" color={NAMED_COLORS.LIGHT_BLUE}>
