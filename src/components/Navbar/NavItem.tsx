@@ -44,7 +44,7 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
         width={{ base: '3.5rem', sm: '14.5rem' }}
         h="2.5rem"
         borderRadius="4px"
-        p="0.5rem"
+        p="0.5rem 0.5rem 0.5rem 1rem"
         bg={active ? $colors.bg : 'transparent'}
         _hover={{
           background: $colors.bgHover,
