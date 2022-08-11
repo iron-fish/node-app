@@ -110,11 +110,17 @@ const AddressTransactions = () => {
               key: 'actions',
               label: <>&nbsp;</>,
               render: () => (
-                <Link display="flex">
-                  <chakra.h5 mr="0.3125rem" color={NAMED_COLORS.LIGHT_BLUE}>
-                    View Details
-                  </chakra.h5>
-                  <Caret caretColor={NAMED_COLORS.LIGHT_BLUE} />
+                <Link
+                  display="flex"
+                  sx={{
+                    color: NAMED_COLORS.LIGHT_BLUE,
+                    _hover: {
+                      color: NAMED_COLORS.LIGHT_BLUE,
+                    },
+                  }}
+                >
+                  <chakra.h5 mr="0.3125rem">View Details</chakra.h5>
+                  <Caret />
                 </Link>
               ),
             },
