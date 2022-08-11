@@ -50,7 +50,7 @@ const ActiveStats: FC<BoxProps> = props => {
     }
   )
   return (
-    <Box my="1rem" {...props}>
+    <Box mt="1rem" mb="1.5rem" {...props}>
       <Box
         my="0.5rem"
         p="0.25rem"
