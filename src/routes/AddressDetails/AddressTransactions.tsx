@@ -35,7 +35,7 @@ const DEMO_DATA = [
 
 const AddressTransactions = () => {
   return (
-    <Flex direction="column" mt="2rem">
+    <Flex direction="column" mt="1rem">
       <chakra.h3 mb="1rem">Transactions</chakra.h3>
       <Flex>
         <InputGroup variant="search" mr="1rem" mb="1rem">
@@ -108,7 +108,7 @@ const AddressTransactions = () => {
             },
             {
               key: 'actions',
-              label: '',
+              label: <>&nbsp;</>,
               render: () => (
                 <Link display="flex">
                   <chakra.h5 mr="0.3125rem" color={NAMED_COLORS.LIGHT_BLUE}>

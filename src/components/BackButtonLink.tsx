@@ -30,7 +30,8 @@ const BackButtonLink: FC<BackButtonLinkProps> = ({ to, label, ...rest }) => {
   )
   return (
     <Link
-      display={'flex'}
+      display="flex"
+      w="max-content"
       alignItems="center"
       cursor="pointer"
       as={RouterLink}
