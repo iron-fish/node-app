@@ -23,8 +23,8 @@ import { FC } from 'react'
 
 const primaryNavItems = [
   { hotkey: 'A', to: '/accounts', label: 'Privacy Accounts', icon: IconHome },
-  { hotkey: 'S', to: '/send', label: 'Send $', icon: IconSend },
-  { hotkey: 'R', to: '/receive', label: 'Receive $', icon: IconReceive },
+  { hotkey: 'S', to: '/send', label: 'Send $IRON', icon: IconSend },
+  { hotkey: 'R', to: '/receive', label: 'Receive $IRON', icon: IconReceive },
   {
     hotkey: 'B',
     to: '/address-book',
