@@ -48,6 +48,14 @@ const AddressDetails = () => {
           containerProps={{
             color: $color,
           }}
+          iconButtonProps={{
+            justifyContent: 'none',
+            minW: '0.75rem',
+            'aria-label': 'copy',
+          }}
+          labelProps={{
+            mr: '0.5rem',
+          }}
           value={address}
           label={<chakra.h5>{truncateHash(address, 3)}</chakra.h5>}
           copyTooltipText="Copy to clipboard"
