@@ -135,31 +135,34 @@ const Account: FC<AccountProps> = ({
       <h5 style={{ color: NAMED_COLORS.GREY }}>{address}</h5>
     </Box>
     <Flex ml="auto" alignSelf="center">
-      <Button
-        variant="primary"
-        borderRadius="4rem"
-        mr="1rem"
-        leftIcon={
-          <Icon height={8}>
-            <Send fill="currentColor" />
-          </Icon>
-        }
-      >
-        <h5>Send</h5>
-      </Button>
-      <Button
-        variant="primary"
-        borderRadius="4rem"
-        mr="1rem"
-        leftIcon={
-          <Icon height={8}>
-            <Receive fill="currentColor" />
-          </Icon>
-        }
-      >
-        <h5>Receive</h5>
-      </Button>
+      <Flex direction="column" gap="0.75rem">
+        <Button
+          variant="primary"
+          borderRadius="4rem"
+          mr="1rem"
+          leftIcon={
+            <Icon height={8}>
+              <Send fill="currentColor" />
+            </Icon>
+          }
+        >
+          <h5>Send</h5>
+        </Button>
+        <Button
+          variant="primary"
+          borderRadius="4rem"
+          mr="1rem"
+          leftIcon={
+            <Icon height={8}>
+              <Receive fill="currentColor" />
+            </Icon>
+          }
+        >
+          <h5>Receive</h5>
+        </Button>
+      </Flex>
       <IconButton
+        alignSelf="center"
         aria-label="account-details"
         variant="ghost"
         icon={<Caret />}
