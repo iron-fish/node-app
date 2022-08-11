@@ -67,7 +67,7 @@ const AddressDetails = () => {
               <Send fill="currentColor" />
             </Icon>
           }
-          ml="1.125rem"
+          ml="2rem"
           variant="primary"
           size="small"
         >
