@@ -90,7 +90,10 @@ export const Navbar = () => {
       alignItems="start"
       zIndex={100}
     >
-      <IronFishLogo m="0.5rem" display={{ base: 'none', sm: 'inline-block' }} />
+      <IronFishLogo
+        m="0.5rem 1rem"
+        display={{ base: 'none', sm: 'inline-block' }}
+      />
       <HexFishLogo
         m="0.5rem 1rem"
         display={{ base: 'inline-block', sm: 'none' }}
