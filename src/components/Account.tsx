@@ -7,6 +7,7 @@ import {
   Icon,
   IconButton,
   NAMED_COLORS,
+  chakra,
 } from '@ironfish/ui-kit'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
@@ -131,7 +132,7 @@ const Account: FC<AccountProps> = ({
     </Flex>
     <Box>
       <h5>{name}</h5>
-      <h3>{balance} $IRON</h3>
+      <chakra.h3 p="4px 0">{balance} $IRON</chakra.h3>
       <h5 style={{ color: NAMED_COLORS.GREY }}>{address}</h5>
     </Box>
     <Flex ml="auto" alignSelf="center">
