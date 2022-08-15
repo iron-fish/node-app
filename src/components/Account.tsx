@@ -7,10 +7,13 @@ import {
   Icon,
   IconButton,
   NAMED_COLORS,
+  chakra,
+  CopyValueToClipboard,
 } from '@ironfish/ui-kit'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import Caret from 'Svgx/caret-icon'
+import { truncateHash } from 'Utils/hash'
 
 export interface AccountProps {
   order: number
@@ -89,11 +92,12 @@ const Account: FC<AccountProps> = ({
         bg: NAMED_COLORS.DARKER_GREY,
         borderColor: NAMED_COLORS.DARK_GREY,
       },
+      boxShadow: '0px 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)',
       zIndex: 0,
     }}
   >
     <Flex
-      w={{ base: '6rem', md: '12rem' }}
+      w={{ base: '6rem', md: '10.375rem' }}
       h="6rem"
       mr={{
         base: '1.25rem',
@@ -110,7 +114,7 @@ const Account: FC<AccountProps> = ({
       alignItems="center"
       justifyContent="center"
       _before={{
-        w: { base: '6rem', md: '12rem' },
+        w: { base: '6rem', md: '10.375rem' },
         h: '6rem',
         position: 'absolute',
         content: `""`,
@@ -130,36 +134,55 @@ const Account: FC<AccountProps> = ({
       <HexFish style={{ height: '2rem' }} />
     </Flex>
     <Box>
-      <h5>{name}</h5>
-      <h3>{balance} $IRON</h3>
-      <h5 style={{ color: NAMED_COLORS.GREY }}>{address}</h5>
+      <chakra.h5 pt="0.25rem">{name}</chakra.h5>
+      <chakra.h3 p="0.25rem 0">{balance} $IRON</chakra.h3>
+      <CopyValueToClipboard
+        containerProps={{
+          color: NAMED_COLORS.GREY,
+        }}
+        iconButtonProps={{
+          justifyContent: 'none',
+          minW: '0.75rem',
+          'aria-label': 'copy',
+        }}
+        labelProps={{
+          mr: '0.5rem',
+        }}
+        value={address}
+        label={<chakra.h5>{truncateHash(address, 3)}</chakra.h5>}
+        copyTooltipText="Copy to clipboard"
+        copiedTooltipText="Copied"
+      />
     </Box>
     <Flex ml="auto" alignSelf="center">
-      <Button
-        variant="primary"
-        borderRadius="4rem"
-        mr="1rem"
-        leftIcon={
-          <Icon height={8}>
-            <Send fill="currentColor" />
-          </Icon>
-        }
-      >
-        <h5>Send</h5>
-      </Button>
-      <Button
-        variant="primary"
-        borderRadius="4rem"
-        mr="1rem"
-        leftIcon={
-          <Icon height={8}>
-            <Receive fill="currentColor" />
-          </Icon>
-        }
-      >
-        <h5>Receive</h5>
-      </Button>
+      <Flex direction="column" gap="0.75rem">
+        <Button
+          variant="primary"
+          borderRadius="4rem"
+          mr="1rem"
+          leftIcon={
+            <Icon height={8}>
+              <Send fill="currentColor" />
+            </Icon>
+          }
+        >
+          <h5>Send</h5>
+        </Button>
+        <Button
+          variant="primary"
+          borderRadius="4rem"
+          mr="1rem"
+          leftIcon={
+            <Icon height={8}>
+              <Receive fill="currentColor" />
+            </Icon>
+          }
+        >
+          <h5>Receive</h5>
+        </Button>
+      </Flex>
       <IconButton
+        alignSelf="center"
         aria-label="account-details"
         variant="ghost"
         icon={<Caret />}
