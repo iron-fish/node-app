@@ -7,11 +7,14 @@ import {
   Icon,
   IconButton,
   NAMED_COLORS,
+  chakra,
+  CopyValueToClipboard,
   useColorModeValue,
 } from '@ironfish/ui-kit'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import Caret from 'Svgx/caret-icon'
+import { truncateHash } from 'Utils/hash'
 
 export interface AccountProps {
   order: number
@@ -146,9 +149,25 @@ const Account: FC<AccountProps> = ({
         <HexFish style={{ height: '2rem' }} />
       </Flex>
       <Box>
-        <h5>{name}</h5>
-        <h3>{balance} $IRON</h3>
-        <h5 style={{ color: NAMED_COLORS.GREY }}>{address}</h5>
+        <chakra.h5 pt="0.25rem">{name}</chakra.h5>
+        <chakra.h3 p="0.25rem 0">{balance} $IRON</chakra.h3>
+        <CopyValueToClipboard
+          containerProps={{
+            color: NAMED_COLORS.GREY,
+          }}
+          iconButtonProps={{
+            justifyContent: 'none',
+            minW: '0.75rem',
+            'aria-label': 'copy',
+          }}
+          labelProps={{
+            mr: '0.5rem',
+          }}
+          value={address}
+          label={<chakra.h5>{truncateHash(address, 3)}</chakra.h5>}
+          copyTooltipText="Copy to clipboard"
+          copiedTooltipText="Copied"
+        />
       </Box>
       <Flex ml="auto" alignSelf="center">
         <Flex direction="column" gap="0.75rem">
