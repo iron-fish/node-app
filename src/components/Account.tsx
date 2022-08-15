@@ -9,6 +9,7 @@ import {
   NAMED_COLORS,
   chakra,
   CopyValueToClipboard,
+  useColorModeValue,
 } from '@ironfish/ui-kit'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
@@ -78,116 +79,133 @@ const Account: FC<AccountProps> = ({
   name,
   balance = 0,
   address,
-}) => (
-  <Flex
-    p="0.75rem"
-    my="0.5rem"
-    border="0.063rem solid"
-    borderColor={NAMED_COLORS.LIGHT_GREY}
-    borderRadius="0.25rem"
-    sx={{
-      bg: NAMED_COLORS.WHITE,
-      borderColor: NAMED_COLORS.LIGHT_GREY,
-      '.chakra-ui-dark &': {
-        bg: NAMED_COLORS.DARKER_GREY,
-        borderColor: NAMED_COLORS.DARK_GREY,
-      },
-      boxShadow: '0px 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)',
-      zIndex: 0,
-    }}
-  >
+}) => {
+  const $colors = useColorModeValue(
+    { hoverBorder: NAMED_COLORS.DEEP_BLUE },
+    { hoverBorder: NAMED_COLORS.WHITE }
+  )
+  return (
     <Flex
-      w={{ base: '6rem', md: '10.375rem' }}
-      h="6rem"
-      mr={{
-        base: '1.25rem',
-        sm: '1.25rem',
-        lg: '2.75rem',
-      }}
-      bg={`linear-gradient(89.56deg, ${
-        ORDER_COLOR[order % ORDER_COLOR.length].from
-      } 0.38%, ${ORDER_COLOR[order % ORDER_COLOR.length].to} 99.64%)`}
-      borderColor={NAMED_COLORS.BLACK}
-      borderRadius="0.25rem"
+      p="0.75rem"
+      my="0.5rem"
       border="0.063rem solid"
-      float="right"
-      alignItems="center"
-      justifyContent="center"
-      _before={{
-        w: { base: '6rem', md: '10.375rem' },
-        h: '6rem',
-        position: 'absolute',
-        content: `""`,
-        borderColor: NAMED_COLORS.BLACK,
-        borderRadius: '0.25rem',
-        border: '0.063rem solid',
-        bg: `linear-gradient(89.56deg, ${NAMED_COLORS.WHITE} 0.38%, ${
-          ORDER_COLOR[order % ORDER_COLOR.length].to
-        } 99.64%)`,
-        mr: '-0.25rem',
-        mb: '-0.25rem',
-        mt: '0.25rem',
-        ml: '0.25rem',
-        zIndex: -1,
+      borderColor={NAMED_COLORS.LIGHT_GREY}
+      borderRadius="0.25rem"
+      sx={{
+        bg: NAMED_COLORS.WHITE,
+        borderColor: NAMED_COLORS.LIGHT_GREY,
+        '.chakra-ui-dark &': {
+          bg: NAMED_COLORS.DARKER_GREY,
+          borderColor: NAMED_COLORS.DARK_GREY,
+        },
+        boxShadow: '0px 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)',
+        '[aria-label="account-details"]': {
+          color: NAMED_COLORS.GREY,
+        },
+        _hover: {
+          '[aria-label="account-details"]': {
+            color: $colors.hoverBorder,
+          },
+          borderColor: $colors.hoverBorder,
+        },
+        zIndex: 0,
       }}
     >
-      <HexFish style={{ height: '2rem' }} />
-    </Flex>
-    <Box>
-      <chakra.h5 pt="0.25rem">{name}</chakra.h5>
-      <chakra.h3 p="0.25rem 0">{balance} $IRON</chakra.h3>
-      <CopyValueToClipboard
-        containerProps={{
-          color: NAMED_COLORS.GREY,
+      <Flex
+        w={{ base: '6rem', md: '10.375rem' }}
+        h="6rem"
+        mr={{
+          base: '1.25rem',
+          sm: '1.25rem',
+          lg: '2.75rem',
         }}
-        iconButtonProps={{
-          justifyContent: 'none',
-          minW: '0.75rem',
-          'aria-label': 'copy',
+        bg={`linear-gradient(89.56deg, ${
+          ORDER_COLOR[order % ORDER_COLOR.length].from
+        } 0.38%, ${ORDER_COLOR[order % ORDER_COLOR.length].to} 99.64%)`}
+        borderColor={NAMED_COLORS.BLACK}
+        borderRadius="0.25rem"
+        border="0.063rem solid"
+        float="right"
+        alignItems="center"
+        justifyContent="center"
+        _before={{
+          w: { base: '6rem', md: '10.375rem' },
+          h: '6rem',
+          position: 'absolute',
+          content: `""`,
+          borderColor: NAMED_COLORS.BLACK,
+          borderRadius: '0.25rem',
+          border: '0.063rem solid',
+          bg: `linear-gradient(89.56deg, ${NAMED_COLORS.WHITE} 0.38%, ${
+            ORDER_COLOR[order % ORDER_COLOR.length].to
+          } 99.64%)`,
+          mr: '-0.25rem',
+          mb: '-0.25rem',
+          mt: '0.25rem',
+          ml: '0.25rem',
+          zIndex: -1,
         }}
-        labelProps={{
-          mr: '0.5rem',
-        }}
-        value={address}
-        label={<chakra.h5>{truncateHash(address, 3)}</chakra.h5>}
-        copyTooltipText="Copy to clipboard"
-        copiedTooltipText="Copied"
-      />
-    </Box>
-    <Flex ml="auto" alignSelf="center">
-      <Flex direction="column" gap="0.75rem">
-        <Button
-          variant="primary"
-          borderRadius="4rem"
-          mr="1rem"
-          leftIcon={
-            <Icon height={8}>
-              <Send fill="currentColor" />
-            </Icon>
-          }
-        >
-          <h5>Send</h5>
-        </Button>
-        <Button
-          variant="primary"
-          borderRadius="4rem"
-          mr="1rem"
-          leftIcon={
-            <Icon height={8}>
-              <Receive fill="currentColor" />
-            </Icon>
-          }
-        >
-          <h5>Receive</h5>
-        </Button>
+      >
+        <HexFish style={{ height: '2rem' }} />
       </Flex>
-      <IconButton
-        alignSelf="center"
-        aria-label="account-details"
-        variant="ghost"
-        icon={<Caret />}
-      />
+      <Box>
+        <chakra.h5 pt="0.25rem">{name}</chakra.h5>
+        <chakra.h3 p="0.25rem 0">{balance} $IRON</chakra.h3>
+        <CopyValueToClipboard
+          containerProps={{
+            color: NAMED_COLORS.GREY,
+          }}
+          iconButtonProps={{
+            justifyContent: 'none',
+            minW: '0.75rem',
+            'aria-label': 'copy',
+          }}
+          labelProps={{
+            mr: '0.5rem',
+          }}
+          value={address}
+          label={<chakra.h5>{truncateHash(address, 3)}</chakra.h5>}
+          copyTooltipText="Copy to clipboard"
+          copiedTooltipText="Copied"
+        />
+      </Box>
+      <Flex ml="auto" alignSelf="center">
+        <Flex direction="column" gap="0.75rem">
+          <Button
+            variant="primary"
+            borderRadius="4rem"
+            mr="1rem"
+            leftIcon={
+              <Icon height={8}>
+                <Send fill="currentColor" />
+              </Icon>
+            }
+          >
+            <h5>Send</h5>
+          </Button>
+          <Button
+            variant="primary"
+            borderRadius="4rem"
+            mr="1rem"
+            leftIcon={
+              <Icon height={8}>
+                <Receive fill="currentColor" />
+              </Icon>
+            }
+          >
+            <h5>Receive</h5>
+          </Button>
+        </Flex>
+        <IconButton
+          alignSelf="center"
+          aria-label="account-details"
+          variant="ghost"
+          _active={{ bg: 'none' }}
+          _hover={{ bg: 'none' }}
+          icon={<Caret />}
+        />
+      </Flex>
     </Flex>
-  </Flex>
-)
+  )
+}
 export default Account
