@@ -16,7 +16,7 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
   const $colors = useColorModeValue(
     {
       bg: NAMED_COLORS.LIGHTER_GREY,
-      bgHover: NAMED_COLORS.LIGHTER_GREY,
+      hover: NAMED_COLORS.DEEP_BLUE,
       borderRightColor: NAMED_COLORS.BLACK,
       afterColor: NAMED_COLORS.WHITE,
       afterBg: NAMED_COLORS.BLACK,
@@ -26,7 +26,7 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
     },
     {
       bg: NAMED_COLORS.DARK_GREY,
-      bgHover: NAMED_COLORS.DARK_GREY,
+      hover: NAMED_COLORS.WHITE,
       borderRightColor: NAMED_COLORS.WHITE,
       afterColor: NAMED_COLORS.BLACK,
       afterBg: NAMED_COLORS.WHITE,
@@ -47,7 +47,9 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
         p="0.5rem 0.5rem 0.5rem 1rem"
         bg={active ? $colors.bg : 'transparent'}
         _hover={{
-          background: $colors.bgHover,
+          '&>div': {
+            color: $colors.hover,
+          },
           '&::before': {
             position: 'absolute',
             left: '4.25rem',
