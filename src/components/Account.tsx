@@ -81,26 +81,31 @@ const Account: FC<AccountProps> = ({
   address,
 }) => {
   const $colors = useColorModeValue(
-    { hoverBorder: NAMED_COLORS.DEEP_BLUE },
-    { hoverBorder: NAMED_COLORS.WHITE }
+    {
+      bg: NAMED_COLORS.WHITE,
+      borderColor: NAMED_COLORS.LIGHT_GREY,
+      hoverBorder: NAMED_COLORS.DEEP_BLUE,
+      caretColor: NAMED_COLORS.PALE_GREY,
+    },
+    {
+      bg: NAMED_COLORS.DARKER_GREY,
+      borderColor: NAMED_COLORS.DARK_GREY,
+      hoverBorder: NAMED_COLORS.WHITE,
+      caretColor: NAMED_COLORS.PALE_GREY,
+    }
   )
   return (
     <Flex
       p="0.75rem"
       my="0.5rem"
       border="0.063rem solid"
-      borderColor={NAMED_COLORS.LIGHT_GREY}
+      bg={$colors.bg}
+      borderColor={$colors.borderColor}
       borderRadius="0.25rem"
       sx={{
-        bg: NAMED_COLORS.WHITE,
-        borderColor: NAMED_COLORS.LIGHT_GREY,
-        '.chakra-ui-dark &': {
-          bg: NAMED_COLORS.DARKER_GREY,
-          borderColor: NAMED_COLORS.DARK_GREY,
-        },
         boxShadow: '0px 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)',
         '[aria-label="account-details"]': {
-          color: NAMED_COLORS.GREY,
+          color: $colors.caretColor,
         },
         _hover: {
           '[aria-label="account-details"]': {
