@@ -14,8 +14,8 @@ export const ThemeToggle = () => {
     {
       toggleBg: C.LIGHTER_GREY,
       bg: C.WHITE,
-      top: '0.25rem',
-      left: '0.25rem',
+      top: '0.3125rem',
+      left: '0.3125rem',
       message: 'Light',
       Icon: IconLightMode,
       iconColor: C.GREY,
@@ -23,7 +23,7 @@ export const ThemeToggle = () => {
     {
       toggleBg: C.DARKER_GREY,
       bg: C.BLACK,
-      top: '1.875rem',
+      top: '2.6875rem',
       left: '50%',
       message: 'Dark',
       Icon: IconDarkMode,
@@ -38,23 +38,23 @@ export const ThemeToggle = () => {
       borderRadius="0.3125rem"
       justifyContent="center"
       alignItems="center"
-      w={{ base: '2.125rem', sm: '14.5rem' }}
-      h={{ base: '4rem', sm: '2.125rem' }}
-      m={{ base: '0.75rem', sm: 'auto' }}
+      w={{ base: '2.75rem', sm: '14.5rem' }}
+      h={{ base: '5.25rem', sm: '2.125rem' }}
+      m={{ base: '0.375rem', sm: 'auto' }}
       flexDirection={{ base: 'column', sm: 'row' }}
       onClick={toggleColorMode}
       cursor="pointer"
       fontSize="0.875rem"
     >
       <Flex
-        p="0.875rem"
+        p="0.375rem"
         zIndex="100"
         position="absolute"
         transition="top 0.3s ease-out, left 0.2s ease-out, background 0.16s ease-out"
         top={{ base: values.top, sm: '0.25rem' }}
         left={{ base: 'inherit', sm: values.left }}
-        w={{ base: '1.625rem', sm: 'calc(50% - 0.375rem)' }}
-        h={{ base: '1.75rem', sm: '1.625rem' }}
+        w={{ base: '2.125rem', sm: 'calc(50% - 6px)' }}
+        h={{ base: '2.25rem', sm: '1.625rem' }}
         bg={values.bg}
         borderRadius="0.3125rem"
         justifyContent="center"
@@ -62,41 +62,41 @@ export const ThemeToggle = () => {
       >
         <values.Icon
           fill={values.iconColor}
-          style={{ width: '0.875rem', height: '0.875rem' }}
+          style={{ width: '1.125rem', height: '1.125rem' }}
         />
         <chakra.span display={{ base: 'none', sm: 'inline-block' }} ml="0.4rem">
           {values.message}
         </chakra.span>
       </Flex>
       <Flex
-        h={{ base: '1.75rem', sm: '1.625rem' }}
+        h={{ base: '2.25rem', sm: '1.625rem' }}
         m={{ base: '0', sm: '0.375rem' }}
         mr={{ base: '0', sm: '0.1875rem' }}
-        w={{ base: '1.75rem', sm: '50%' }}
+        w={{ base: '2.25rem', sm: '50%' }}
         textAlign="center"
         justifyContent="center"
         alignItems="center"
       >
         <IconLightMode
           fill={C.GREY}
-          style={{ width: '0.875rem', height: '0.875rem' }}
+          style={{ width: '1.125rem', height: '1.125rem' }}
         />
         <chakra.span display={{ base: 'none', sm: 'inline-block' }} ml="0.4rem">
           Light
         </chakra.span>
       </Flex>
       <Flex
-        h={{ base: '1.75rem', sm: '1.625rem' }}
+        h={{ base: '2.25rem', sm: '1.625rem' }}
         m={{ base: '0', sm: '0.375rem' }}
-        mr={{ base: '0', sm: '0.1875rem' }}
-        w={{ base: '1.75rem', sm: '50%' }}
+        ml={{ base: '0', sm: '0.1875rem' }}
+        w={{ base: '2.25rem', sm: '50%' }}
         textAlign="center"
         justifyContent="center"
         alignItems="center"
       >
         <IconDarkMode
           fill={C.GREY}
-          style={{ width: '0.875rem', height: '0.875rem' }}
+          style={{ width: '1.125rem', height: '1.125rem' }}
         />
         <chakra.span display={{ base: 'none', sm: 'inline-block' }} ml="0.4rem">
           Dark

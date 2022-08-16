@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = function override(config, env) {
   //do stuff with the webpack config...
@@ -13,6 +13,6 @@ module.exports = function override(config, env) {
         Utils: path.join(__dirname, './src/utils'),
         Types: path.join(__dirname, './src/types'),
       },
-    }
-  };
+    },
+  }
 }

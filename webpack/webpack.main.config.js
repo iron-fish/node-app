@@ -1,5 +1,5 @@
-const { resolve } = require('path');
-const path = require('path');
+const { resolve } = require('path')
+const path = require('path')
 
 module.exports = {
   /**
@@ -22,4 +22,4 @@ module.exports = {
     },
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
   },
-};
+}

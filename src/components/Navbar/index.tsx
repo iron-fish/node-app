@@ -23,8 +23,8 @@ import { FC } from 'react'
 
 const primaryNavItems = [
   { hotkey: 'A', to: '/accounts', label: 'Privacy Accounts', icon: IconHome },
-  { hotkey: 'S', to: '/send', label: 'Send $', icon: IconSend },
-  { hotkey: 'R', to: '/receive', label: 'Receive $', icon: IconReceive },
+  { hotkey: 'S', to: '/send', label: 'Send $IRON', icon: IconSend },
+  { hotkey: 'R', to: '/receive', label: 'Receive $IRON', icon: IconReceive },
   {
     hotkey: 'B',
     to: '/address-book',
@@ -50,7 +50,7 @@ const ActiveStats: FC<BoxProps> = props => {
     }
   )
   return (
-    <Box my="1rem" {...props}>
+    <Box mt="1rem" mb="1.5rem" {...props}>
       <Box
         my="0.5rem"
         p="0.25rem"
@@ -80,8 +80,8 @@ export const Navbar = () => {
       bg={bgColor}
       height="100%"
       maxHeight="100vh"
-      p="1rem"
-      w={{ base: '5.5rem', sm: '16.4375rem' }}
+      p="3rem 1rem 1rem"
+      w={{ base: '88px', sm: '263px' }}
       transition="width 0.3s ease-out"
       position="fixed"
       left="0"
@@ -90,7 +90,10 @@ export const Navbar = () => {
       alignItems="start"
       zIndex={100}
     >
-      <IronFishLogo m="0.5rem" display={{ base: 'none', sm: 'inline-block' }} />
+      <IronFishLogo
+        m="0.5rem 1rem"
+        display={{ base: 'none', sm: 'inline-block' }}
+      />
       <HexFishLogo
         m="0.5rem 1rem"
         display={{ base: 'inline-block', sm: 'none' }}
