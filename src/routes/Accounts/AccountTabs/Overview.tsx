@@ -5,7 +5,12 @@ import {
   CommonTable,
   Flex,
   Icon,
+  IconSearch,
+  Input,
+  InputGroup,
+  InputLeftElement,
   NAMED_COLORS,
+  SelectField,
 } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { FC } from 'react'
@@ -174,6 +179,33 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
           </Box>
         </Box>
       </Flex>
+      <chakra.h3>Transactions</chakra.h3>
+      <Flex justifyContent="space-between" w="100%" alignItems="center">
+        <InputGroup variant="search" mr="1rem">
+          <InputLeftElement pointerEvents="none">
+            <IconSearch />
+          </InputLeftElement>
+          <Input placeholder="Search" />
+        </InputGroup>
+        <SelectField
+          label="Sort by"
+          minWidth="15rem"
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          size="small"
+          options={[
+            {
+              label: 'Highest to lowest balance',
+              value: 'desc',
+            },
+            {
+              label: 'Lowest to highest balance',
+              value: 'asc',
+            },
+          ]}
+          whiteSpace="nowrap"
+        />
+      </Flex>
       <CommonTable
         data={DEMO_DATA}
         columns={[
@@ -215,8 +247,8 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
                 variant="link"
                 color={NAMED_COLORS.LIGHT_BLUE}
                 rightIcon={<ChevronRightIcon />}
-                // as={Link}
-                // to={ROUTES.ACCOUNTS}
+              // as={Link}
+              // to={ROUTES.ACCOUNTS}
               >
                 <chakra.h5>View Details</chakra.h5>
               </Button>
