@@ -91,7 +91,10 @@ const Account: FC<AccountProps> = ({
       border="0.063rem solid"
       borderColor={NAMED_COLORS.LIGHT_GREY}
       borderRadius="0.25rem"
+      cursor="pointer"
+      onClick={() => alert(`Card ${name} ${address} clicked`)}
       sx={{
+        transition: '0.3s',
         bg: NAMED_COLORS.WHITE,
         borderColor: NAMED_COLORS.LIGHT_GREY,
         '.chakra-ui-dark &': {
@@ -175,6 +178,10 @@ const Account: FC<AccountProps> = ({
             variant="primary"
             borderRadius="4rem"
             mr="1rem"
+            onClick={e => {
+              // required to prevent triggering card click event
+              e.stopPropagation()
+            }}
             leftIcon={
               <Icon height={8}>
                 <Send fill="currentColor" />
@@ -187,6 +194,10 @@ const Account: FC<AccountProps> = ({
             variant="primary"
             borderRadius="4rem"
             mr="1rem"
+            onClick={e => {
+              // required to prevent triggering card click event
+              e.stopPropagation()
+            }}
             leftIcon={
               <Icon height={8}>
                 <Receive fill="currentColor" />
