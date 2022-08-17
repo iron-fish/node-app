@@ -96,6 +96,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
         bg: NAMED_COLORS.DARKER_GREY,
         borderColor: NAMED_COLORS.DARK_GREY,
       },
+      boxShadow: '0px 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)',
       zIndex: 0,
     }}
   >
