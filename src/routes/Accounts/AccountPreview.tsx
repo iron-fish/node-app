@@ -139,7 +139,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       <HexFish style={{ height: '2rem' }} />
     </Flex>
     <Box>
-      <h5>{name}</h5>
+      <chakra.h5 pt="0.25rem">{name}</chakra.h5>
       <chakra.h3 p="4px 0">{balance} $IRON</chakra.h3>
       <h5 style={{ color: NAMED_COLORS.GREY }}>{address}</h5>
     </Box>
