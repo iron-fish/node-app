@@ -1,20 +1,16 @@
 import {
   Flex,
   chakra,
-  InputGroup,
-  InputLeftElement,
-  SelectField,
   Box,
   CommonTable,
-  Input,
   NAMED_COLORS,
   Icon,
   Link,
 } from '@ironfish/ui-kit'
-import IconSearch from '@ironfish/ui-kit/dist/svgx/icon-search'
 import Caret from 'Svgx/caret-icon'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
+import SearchSortField from 'Components/Search&Sort'
 
 const DEMO_DATA = [
   {
@@ -37,30 +33,7 @@ const AddressTransactions = () => {
   return (
     <Flex direction="column" mt="1rem">
       <chakra.h3 mb="1rem">Transactions</chakra.h3>
-      <Flex>
-        <InputGroup variant="search" mr="1rem" mb="1rem">
-          <InputLeftElement pointerEvents="none">
-            <IconSearch />
-          </InputLeftElement>
-          <Input placeholder="Search" />
-        </InputGroup>
-        <SelectField
-          label="Sort by"
-          minWidth="15rem"
-          size="small"
-          options={[
-            {
-              label: 'Newest to oldest',
-              value: 'desc',
-            },
-            {
-              label: 'Oldest to newest',
-              value: 'asc',
-            },
-          ]}
-          whiteSpace="nowrap"
-        />
-      </Flex>
+      <SearchSortField />
       <Flex direction="column" width="100%">
         <CommonTable
           data={DEMO_DATA}

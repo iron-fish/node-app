@@ -3472,7 +3472,7 @@
   dependencies:
     "@types/lodash" "*"
 
-"@types/lodash@*":
+"@types/lodash@*", "@types/lodash@^4.14.182":
   version "4.14.182"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.182.tgz#05301a4d5e62963227eaafe0ce04dd77c54ea5c2"
   integrity sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==
@@ -4664,14 +4664,9 @@ bser@2.1.1:
   dependencies:
     node-int64 "^0.4.0"
 
-"bsert@git+https://github.com/chjj/bsert.git#semver:~0.0.10":
+"bsert@git+https://github.com/chjj/bsert.git#semver:~0.0.10", bsert@~0.0.10:
   version "0.0.10"
   resolved "git+https://github.com/chjj/bsert.git#bd09d49eab8644bca08ae8259a3d8756e7d453fc"
-
-bsert@~0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/bsert/-/bsert-0.0.10.tgz#231ac82873a1418c6ade301ab5cd9ae385895597"
-  integrity sha512-NHNwlac+WPy4t2LoNh8pXk8uaIGH3NSaIUbTTRXGpE2WEbq0te/tDykYHkFK57YKLPjv/aGHmbqvnGeVWDz57Q==
 
 buffer-alloc-unsafe@^1.1.0:
   version "1.1.0"

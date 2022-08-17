@@ -51,7 +51,7 @@ export const ThemeToggle = () => {
         zIndex="100"
         position="absolute"
         transition="top 0.3s ease-out, left 0.2s ease-out, background 0.16s ease-out"
-        top={{ base: values.top, sm: '4px' }}
+        top={{ base: values.top, sm: '0.25rem' }}
         left={{ base: 'inherit', sm: values.left }}
         w={{ base: '2.125rem', sm: 'calc(50% - 6px)' }}
         h={{ base: '2.25rem', sm: '1.625rem' }}

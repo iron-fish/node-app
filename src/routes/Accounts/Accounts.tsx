@@ -1,15 +1,7 @@
-import {
-  Box,
-  Button,
-  Flex,
-  IconSearch,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  SelectField,
-} from '@ironfish/ui-kit'
+import { Box, Button, Flex } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
-import Account from 'Components/Account'
+import SearchSortField from 'Components/Search&Sort'
+import AccountPreview from 'Routes/Accounts/AccountPreview'
 
 const DEMO_DATA = [
   {
@@ -111,40 +103,10 @@ const Accounts = () => {
           </Button>
         </Flex>
       </Flex>
-      <Flex
-        justifyContent="space-between"
-        w="100%"
-        alignItems="center"
-        mb="0.5rem"
-      >
-        <InputGroup variant="search" mr="1rem">
-          <InputLeftElement pointerEvents="none">
-            <IconSearch />
-          </InputLeftElement>
-          <Input placeholder="Search" />
-        </InputGroup>
-        <SelectField
-          label="Sort by"
-          minWidth="15rem"
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          size="small"
-          options={[
-            {
-              label: 'Highest to lowest balance',
-              value: 'desc',
-            },
-            {
-              label: 'Lowest to highest balance',
-              value: 'asc',
-            },
-          ]}
-          whiteSpace="nowrap"
-        />
-      </Flex>
+      <SearchSortField />
       <Flex direction="column" width="100%">
         {DEMO_DATA.map((data, index) => (
-          <Account {...data} order={index} />
+          <AccountPreview {...data} order={index} />
         ))}
       </Flex>
     </>
