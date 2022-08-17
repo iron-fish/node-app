@@ -2,7 +2,6 @@ import { FC } from 'react'
 import {
   Box,
   Button,
-  CommonTable,
   Flex,
   Icon,
   IconButton,
@@ -12,12 +11,17 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
+  NAMED_COLORS,
+  CopyValueToClipboard,
+  useBreakpointValue,
 } from '@ironfish/ui-kit'
 import { Link } from 'react-router-dom'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import Send from 'Svgx/send'
 import Caret from 'Svgx/caret-icon'
 import HexFishCircle from 'Components/HexFishCircle'
+import { truncateHash } from 'Utils/hash'
+import SimpleTable from 'Components/SimpleTable'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -26,6 +30,11 @@ const getIconBg = (address = '') => {
   })
 
   return `hsl(${colorNumber % 255}, 100%, 73%)`
+}
+
+interface BookDemoDataType {
+  name: string
+  address: string
 }
 
 const DEMO_DATA = [
@@ -52,6 +61,79 @@ const DEMO_DATA = [
   {
     name: 'Jason',
     address: '789wenft893ntw5v780ntq304wnv5t370q8nt5q340',
+  },
+]
+
+const COLUMNS = [
+  {
+    key: 'contact',
+    label: 'Contact',
+    render: (address: BookDemoDataType) => (
+      <Flex alignItems="center">
+        <HexFishCircle
+          mr="1rem"
+          bg={getIconBg(address.address + address.name)}
+        />
+        <h5>{address.name}</h5>
+      </Flex>
+    ),
+  },
+  {
+    key: 'address',
+    label: 'Address',
+    render: (address: BookDemoDataType) => {
+      const addressLabel = useBreakpointValue({
+        base: truncateHash(address.address, 2, 9),
+        md: address.address,
+      })
+      return (
+        <CopyValueToClipboard
+          iconButtonProps={{
+            justifyContent: 'none',
+            minW: '0.75rem',
+            'aria-label': 'copy',
+            color: NAMED_COLORS.GREY,
+          }}
+          labelProps={{
+            mr: '0.5rem',
+          }}
+          value={address.address}
+          label={<chakra.h5>{addressLabel}</chakra.h5>}
+          copyTooltipText="Copy to clipboard"
+          copiedTooltipText="Copied"
+        />
+      )
+    },
+  },
+  {
+    key: 'actions',
+    label: '',
+    WrapperProps: {
+      width: '13.2rem',
+    },
+    render: (address: BookDemoDataType) => (
+      <Flex>
+        <Button
+          leftIcon={
+            <Icon height={8}>
+              <Send fill="currentColor" />
+            </Icon>
+          }
+          variant="primary"
+          borderRadius="4rem"
+          mr={{ base: '0.75rem', md: '1rem' }}
+        >
+          <h5>Send</h5>
+        </Button>
+        <IconButton
+          aria-label="account-details"
+          variant="ghost"
+          icon={<Caret />}
+          as={Link}
+          to={address.address}
+        />
+      </Flex>
+    ),
   },
 ]
 
@@ -101,88 +183,10 @@ const AddressBook: FC = () => (
       />
     </Flex>
     <Flex direction="column" width="100%">
-      <CommonTable
+      <SimpleTable
         data={DEMO_DATA}
-        columns={[
-          {
-            key: 'contact',
-            label: 'Contact',
-            render: address => (
-              <Flex alignItems="center">
-                <HexFishCircle
-                  mr="1rem"
-                  bg={getIconBg(address.address + address.name)}
-                />
-                <Box>{address.name}</Box>
-              </Flex>
-            ),
-          },
-          {
-            key: 'address',
-            label: 'Address',
-            render: address => (
-              <Box
-                whiteSpace="nowrap"
-                maxWidth="30vw"
-                sx={{
-                  '> span': {
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    verticalAlign: 'middle',
-                  },
-                }}
-              >
-                <chakra.span
-                  display="inline-block"
-                  textOverflow="ellipsis"
-                  width="calc(50% - 0.2rem)"
-                >
-                  {address.address?.slice(0, address.address?.length / 2)}
-                </chakra.span>
-                <chakra.span
-                  display="inline-flex"
-                  width="calc(50% + 0.2rem)"
-                  justifyContent="flex-end"
-                >
-                  {address.address?.slice(
-                    address.address?.length / 2,
-                    address.address?.length
-                  )}
-                </chakra.span>
-              </Box>
-            ),
-          },
-          {
-            key: 'actions',
-            label: '',
-            WrapperProps: {
-              width: '13.2rem',
-            },
-            render: address => (
-              <Flex>
-                <Button
-                  leftIcon={
-                    <Icon height={8}>
-                      <Send fill="currentColor" />
-                    </Icon>
-                  }
-                  variant="primary"
-                  borderRadius="4rem"
-                  mr="1rem"
-                >
-                  Send
-                </Button>
-                <IconButton
-                  aria-label="account-details"
-                  variant="ghost"
-                  icon={<Caret />}
-                  as={Link}
-                  to={address.address}
-                />
-              </Flex>
-            ),
-          },
-        ]}
+        columns={COLUMNS}
+        textTransform="capitalize"
       />
     </Flex>
   </>
