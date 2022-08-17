@@ -44,7 +44,7 @@ const DataPreviewLine: FC<DataPreviewLineProps> = ({
 }) => (
   <VStack
     alignItems="flex-start"
-    borderBottom="1px dotted"
+    borderBottom="0.0625rem dotted"
     borderColor={NAMED_COLORS.LIGHT_GREY}
     pb="1rem"
     {...props}
@@ -68,7 +68,7 @@ const ConfirmStep: FC<StepProps> = ({ onConfirm, onCancel }) => {
   return (
     <>
       <ModalCloseButton
-        border="1px solid"
+        border="0.0625rem solid"
         borderRadius="50%"
         color={NAMED_COLORS.GREY}
         borderColor={NAMED_COLORS.LIGHT_GREY}
@@ -157,9 +157,9 @@ const SendStep: FC<StepProps> = ({ onSend }) => {
         with your details.
       </chakra.h4>
       <Box
-        border="1px solid"
+        border="0.0625rem solid"
         borderColor={NAMED_COLORS.LIGHT_GREY}
-        boxShadow="0px 4px 11px rgba(0, 0, 0, 0.04)"
+        boxShadow="0 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)"
         borderRadius="0.25rem"
         p="2rem"
       >
@@ -190,7 +190,7 @@ const SendStep: FC<StepProps> = ({ onSend }) => {
 const ResultStep: FC<StepProps> = () => (
   <>
     <ModalCloseButton
-      border="1px solid"
+      border="0.0625rem solid"
       borderRadius="50%"
       color={NAMED_COLORS.GREY}
       borderColor={NAMED_COLORS.LIGHT_GREY}
@@ -214,6 +214,7 @@ const ResultStep: FC<StepProps> = () => (
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             isReadOnly: true,
+            cursor: 'pointer',
             onClick: () =>
               window.open(
                 'https://explorer.ironfish.network/transaction/a717490d1d8aa25d8c64ca1ab78934e0b8bc7981b40de33359ec6a8137c26484',
@@ -225,7 +226,7 @@ const ResultStep: FC<StepProps> = () => (
         <Button
           px="1.5rem"
           textColor={NAMED_COLORS.LIGHT_BLUE}
-          rightIcon={<IconCopy w="16px" h="16px" />}
+          rightIcon={<IconCopy w="1rem" h="1rem" />}
         >
           Copy
         </Button>
@@ -250,9 +251,8 @@ const SendFlow: FC<SendFlowProps> = ({ from, to, amount, memo, ...props }) => {
       <Modal {...props} onClose={handleClose}>
         <ModalOverlay />
         <ModalContent
-          w="600px"
-          // minH="600px"
-          maxW="600px"
+          w="37.5rem"
+          maxW="37.5rem"
           p="4rem"
           color={NAMED_COLORS.DEEP_BLUE}
         >
