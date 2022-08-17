@@ -117,7 +117,12 @@ const Accounts = () => {
           </Button>
         </Flex>
       </Flex>
-      <Flex justifyContent="space-between" w="100%" alignItems="center">
+      <Flex
+        justifyContent="space-between"
+        w="100%"
+        alignItems="center"
+        mb="0.5rem"
+      >
         <InputGroup variant="search" mr="1rem">
           <InputLeftElement pointerEvents="none">
             <IconSearch />
