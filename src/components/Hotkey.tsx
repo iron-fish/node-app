@@ -11,7 +11,7 @@ export const Hotkey: FC = ({ children }) => {
       textAlign="center"
       justifyContent="center"
       alignItems="center"
-      borderRadius="2px"
+      borderRadius="0.125rem"
       bg={isLightMode ? NAMED_COLORS.LIGHT_GREY : NAMED_COLORS.DARKER_GREY}
     >
       {children}

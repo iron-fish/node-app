@@ -62,7 +62,7 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
           },
           '&::after': {
             content: `"${label}"`,
-            borderRadius: '4px',
+            borderRadius: 'o.25rem',
             position: 'absolute',
             justifyContent: 'center',
             alignItems: 'center',

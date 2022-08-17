@@ -1,7 +1,7 @@
 export function truncateHash(hash: string, parts = 4, chars = 4): string {
   const result = []
   if (hash && hash.length > chars) {
-    const blockLength = (hash.length - chars) / (parts - 1)
+    const blockLength: number = (hash.length - chars) / (parts - 1)
 
     while (result.length < parts - 1) {
       const startPosition: number = result.length * blockLength

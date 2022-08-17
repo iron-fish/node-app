@@ -4,6 +4,7 @@ export const ROUTES = {
   IMPORT: '/import',
   OVERVIEW: '/overview',
   ACCOUNTS: '/accounts',
+  ACCOUNT: '/account',
   SEND: '/send',
   RECEIVE: '/receive',
   ADDRESS_BOOK: '/address-book',
