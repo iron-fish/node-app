@@ -94,7 +94,7 @@ const ReceiveMoney: FC = () => {
             value={amount.toFixed(2)}
             InputProps={{
               type: 'number',
-              onChange: e => setAmount(Number.parseFloat(e.target.value))
+              onChange: e => setAmount(Number.parseFloat(e.target.value)),
             }}
             mb="1rem"
           />
