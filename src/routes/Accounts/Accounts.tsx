@@ -91,7 +91,7 @@ const Accounts = () => {
           </Box>
           <Box>
             <h5>
-              Total accounts balance: <b>10,456 $IRON</b> USD $10.456
+              Total accounts balance: <b>10,456 $IRON</b>
             </h5>
           </Box>
         </Flex>
