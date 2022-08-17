@@ -19,6 +19,7 @@
       "Types/*": ["src/types/*"],
       "Routes/*": ["src/routes/*"],
       "Svgx/*": ["src/svgx/*"],
+      "Utils/*": ["src/utils/*"],
     },
   },
   "include": ["src/**/*"],
