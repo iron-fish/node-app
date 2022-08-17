@@ -85,7 +85,9 @@ const AccountPreview: FC<AccountPreviewProps> = ({
     borderColor={NAMED_COLORS.LIGHT_GREY}
     borderRadius="0.25rem"
     cursor="pointer"
-    onClick={() => alert(`Card ${name} ${address} clicked`)}
+    as={Link}
+    to={ROUTES.ACCOUNT}
+    state={{ accountId: address }}
     sx={{
       transition: '0.3s',
       bg: NAMED_COLORS.WHITE,
@@ -176,9 +178,6 @@ const AccountPreview: FC<AccountPreviewProps> = ({
         aria-label="account-details"
         variant="ghost"
         icon={<Caret />}
-        as={Link}
-        to={ROUTES.ACCOUNT}
-        state={{ accountId: address }}
       />
     </Flex>
   </Flex>

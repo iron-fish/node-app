@@ -27,7 +27,7 @@ const AccountDetails: FC = () => {
   const location = useLocation()
   const { accountId } = location.state as LocationStateProps
   return (
-    <Flex flexDirection="column" pt="1.5rem" pb="0" bg="transparent" w="100%">
+    <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
         <Button
           mb="1rem"

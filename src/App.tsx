@@ -11,6 +11,7 @@ import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import AddressBook from 'Routes/AddressBook'
 import AccountDetails from 'Routes/Accounts/AccountDetails'
+import Miner from 'Routes/Miner'
 import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressDetails'
 
@@ -45,7 +46,7 @@ function App() {
             />
             <Route path={ROUTES.RESOURCES} element={null} />
             <Route path={ROUTES.NODE} element={null} />
-            <Route path={ROUTES.MINER} element={null} />
+            <Route path={ROUTES.MINER} element={<Miner />} />
           </Route>
         </Routes>
       </HashRouter>
