@@ -123,7 +123,7 @@ const ReceiveMoney: FC = () => {
               <Button
                 px="1.5rem"
                 textColor={NAMED_COLORS.LIGHT_BLUE}
-                rightIcon={<IconCopy w="16px" h="16px" />}
+                rightIcon={<IconCopy w="1rem" h="1rem" />}
               >
                 Copy
               </Button>
