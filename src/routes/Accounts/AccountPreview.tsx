@@ -9,6 +9,7 @@ import {
   NAMED_COLORS,
   chakra,
   CopyValueToClipboard,
+  useColorModeValue,
 } from '@ironfish/ui-kit'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
@@ -82,12 +83,25 @@ const AccountPreview: FC<AccountPreviewProps> = ({
   address,
 }) => {
   const navigate = useNavigate()
+  const $colors = useColorModeValue(
+    {
+      bg: NAMED_COLORS.WHITE,
+      borderColor: NAMED_COLORS.LIGHT_GREY,
+      hoverBorder: NAMED_COLORS.DEEP_BLUE,
+      caretColor: NAMED_COLORS.PALE_GREY,
+    },
+    {
+      bg: NAMED_COLORS.DARKER_GREY,
+      borderColor: NAMED_COLORS.DARK_GREY,
+      hoverBorder: NAMED_COLORS.WHITE,
+      caretColor: NAMED_COLORS.PALE_GREY,
+    }
+  )
   return (
     <Flex
       p="0.75rem"
       my="0.5rem"
       border="0.063rem solid"
-      borderColor={NAMED_COLORS.LIGHT_GREY}
       borderRadius="0.25rem"
       cursor="pointer"
       onClick={() =>
@@ -95,13 +109,18 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       }
       sx={{
         transition: '0.3s',
-        bg: NAMED_COLORS.WHITE,
-        borderColor: NAMED_COLORS.LIGHT_GREY,
-        '.chakra-ui-dark &': {
-          bg: NAMED_COLORS.DARKER_GREY,
-          borderColor: NAMED_COLORS.DARK_GREY,
-        },
+        bg: $colors.bg,
+        borderColor: $colors.borderColor,
         boxShadow: '0px 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)',
+        '[aria-label="account-details"]': {
+          color: $colors.caretColor,
+        },
+        _hover: {
+          '[aria-label="account-details"]': {
+            color: $colors.hoverBorder,
+          },
+          borderColor: $colors.hoverBorder,
+        },
         zIndex: 0,
       }}
     >
@@ -202,6 +221,8 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           alignSelf="center"
           aria-label="account-details"
           variant="ghost"
+          _active={{ bg: 'none' }}
+          _hover={{ bg: 'none' }}
           icon={<Caret />}
         />
       </Flex>
