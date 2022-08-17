@@ -100,7 +100,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
     }}
   >
     <Flex
-      w={{ base: '6rem', md: '12rem' }}
+      w={{ base: '6rem', md: '10.375rem' }}
       h="6rem"
       mr={{
         base: '1.25rem',
@@ -117,7 +117,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       alignItems="center"
       justifyContent="center"
       _before={{
-        w: { base: '6rem', md: '12rem' },
+        w: { base: '6rem', md: '10.375rem' },
         h: '6rem',
         position: 'absolute',
         content: `""`,
