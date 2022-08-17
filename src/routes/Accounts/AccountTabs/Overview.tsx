@@ -13,6 +13,7 @@ import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import AccountKeysImage from 'Svgx/AccountBalance'
 import { truncateHash } from 'Utils/hash'
+import SearchSortField from 'Components/Search&Sort'
 
 interface AccountOverviewProps {
   id: string
@@ -174,6 +175,8 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
           </Box>
         </Box>
       </Flex>
+      <chakra.h3>Transactions</chakra.h3>
+      <SearchSortField />
       <CommonTable
         data={DEMO_DATA}
         columns={[
@@ -210,13 +213,15 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
           {
             key: 'transaction-details-column',
             label: '',
+            ItemProps: {
+              height: '100%',
+              justifyContent: 'flex-end',
+            },
             render: data => (
               <Button
                 variant="link"
                 color={NAMED_COLORS.LIGHT_BLUE}
                 rightIcon={<ChevronRightIcon />}
-                // as={Link}
-                // to={ROUTES.ACCOUNTS}
               >
                 <chakra.h5>View Details</chakra.h5>
               </Button>
