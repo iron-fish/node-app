@@ -131,7 +131,7 @@ const Miner: FC = props => {
   const checkChanges: () => boolean = () => isRunning !== true
 
   return (
-    <Flex>
+    <Flex mb="2rem">
       <Flex direction="column">
         <chakra.h2 mb="1.25rem">Miner</chakra.h2>
         <VStack spacing="2rem" w="37.25rem" align="flex-start">
