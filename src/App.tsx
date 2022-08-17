@@ -5,11 +5,13 @@ import { ROUTES } from './routes'
 
 import Action from './routes/Onboarding/Action'
 import PageLayout from './routes/PageLayout'
-import Accounts from './routes/Accounts'
+import Accounts from './routes/Accounts/Accounts'
 import CreateLayout from 'Routes/Onboarding/Layout'
 import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import AddressBook from 'Routes/AddressBook'
+import AccountDetails from 'Routes/Accounts/AccountDetails'
+import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressDetails'
 
 const breakpoints = {
@@ -32,8 +34,9 @@ function App() {
             <Route path={ROUTES.IMPORT} element={<ImportAccount />} />
           </Route>
           <Route element={<PageLayout />}>
+            <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
             <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
-            <Route path={ROUTES.SEND} element={null} />
+            <Route path={ROUTES.SEND} element={<Send />} />
             <Route path={ROUTES.RECEIVE} element={null} />
             <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
             <Route

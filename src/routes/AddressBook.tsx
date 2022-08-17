@@ -6,18 +6,14 @@ import {
   Flex,
   Icon,
   IconButton,
-  IconSearch,
-  SelectField,
   chakra,
-  InputGroup,
-  InputLeftElement,
-  Input,
 } from '@ironfish/ui-kit'
 import { Link } from 'react-router-dom'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import Send from 'Svgx/send'
 import Caret from 'Svgx/caret-icon'
 import HexFishCircle from 'Components/HexFishCircle'
+import SearchSortField from 'Components/Search&Sort'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -74,32 +70,7 @@ const AddressBook: FC = () => (
         </Button>
       </Flex>
     </Flex>
-    <Flex justifyContent="space-between" w="100%" alignItems="center">
-      <InputGroup variant="search" mr="1rem">
-        <InputLeftElement pointerEvents="none">
-          <IconSearch />
-        </InputLeftElement>
-        <Input placeholder="Search" />
-      </InputGroup>
-      <SelectField
-        label="Sort by"
-        minWidth="15rem"
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        size="small"
-        options={[
-          {
-            label: 'Highest to lowest balance',
-            value: 'desc',
-          },
-          {
-            label: 'Lowest to highest balance',
-            value: 'asc',
-          },
-        ]}
-        whiteSpace="nowrap"
-      />
-    </Flex>
+    <SearchSortField />
     <Flex direction="column" width="100%">
       <CommonTable
         data={DEMO_DATA}
