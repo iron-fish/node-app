@@ -43,7 +43,7 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
         alignItems="center"
         width={{ base: '3.5rem', sm: '14.5rem' }}
         h="2.5rem"
-        borderRadius="4px"
+        borderRadius="0.25rem"
         p="0.5rem 0.5rem 0.5rem 1rem"
         bg={active ? $colors.bg : 'transparent'}
         _hover={{
@@ -56,13 +56,13 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
             content: '""',
             width: 0,
             height: 0,
-            border: '10px solid transparent',
+            border: '0.625rem solid transparent',
             borderRightColor: $colors.borderRightColor,
             display: { base: 'flex', sm: 'none' },
           },
           '&::after': {
             content: `"${label}"`,
-            borderRadius: 'o.25rem',
+            borderRadius: '0.25rem',
             position: 'absolute',
             justifyContent: 'center',
             alignItems: 'center',
@@ -80,7 +80,7 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
         }}
         cursor="pointer"
       >
-        <Icon fill={$colors.iconColor} style={{ minWidth: '24px' }} />
+        <Icon fill={$colors.iconColor} style={{ minWidth: '1.5rem' }} />
         <Flex
           flexDirection="row"
           paddingLeft="1rem"
