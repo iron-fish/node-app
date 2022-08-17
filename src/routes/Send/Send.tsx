@@ -100,7 +100,7 @@ const Send: FC = () => {
   const [notes, setNotes] = useState('Paying you back, Derek - B.')
   const [startSendFlow, setStart] = useState(false)
   return (
-    <Flex flexDirection="column" pt="1.5rem" pb="0" bg="transparent" w="100%">
+    <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
         <chakra.h2 mb="1rem">Send $IRON</chakra.h2>
       </Box>
