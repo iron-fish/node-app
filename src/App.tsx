@@ -12,6 +12,7 @@ import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import AddressBook from 'Routes/AddressBook'
 import AccountDetails from 'Routes/Accounts/AccountDetails'
 import AddressDetails from 'Routes/AddressDetails'
+import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 
 const breakpoints = {
   sm: '56.25rem',
@@ -36,7 +37,7 @@ function App() {
             <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
             <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
             <Route path={ROUTES.SEND} element={null} />
-            <Route path={ROUTES.RECEIVE} element={null} />
+            <Route path={ROUTES.RECEIVE} element={<ReceiveMoney />} />
             <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
             <Route
               path={ROUTES.ADDRESS_BOOK_DETAILS}
