@@ -163,7 +163,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       </Flex>
       <Box>
         <chakra.h5 pt="0.25rem">{name}</chakra.h5>
-        <chakra.h3 p="4px 0">{balance} $IRON</chakra.h3>
+        <chakra.h3 p="0.25rem 0">{balance} $IRON</chakra.h3>
         <CopyValueToClipboard
           containerProps={{
             color: NAMED_COLORS.GREY,
