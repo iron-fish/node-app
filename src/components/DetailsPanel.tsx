@@ -59,12 +59,6 @@ const DetailsPanel: FC = ({ children }) => {
             top="1.5rem"
             right="1.5rem"
             color={NAMED_COLORS.GREY}
-            sx={{
-              '.chakra-icon': {
-                w: '0.875rem',
-                h: '0.875rem',
-              },
-            }}
             _focus={{
               boxShadow: 'none',
             }}
