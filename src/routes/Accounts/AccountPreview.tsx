@@ -111,7 +111,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
         transition: '0.3s',
         bg: $colors.bg,
         borderColor: $colors.borderColor,
-        boxShadow: '0px 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)',
+        boxShadow: '0 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)',
         '[aria-label="account-details"]': {
           color: $colors.caretColor,
         },
