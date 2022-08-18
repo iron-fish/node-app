@@ -48,8 +48,8 @@ const BackButtonLink: FC<BackButtonLinkProps> = ({ to, label, ...rest }) => {
     >
       <ChevronLeftIcon
         mr="0.625rem"
-        w="24px"
-        h="24px"
+        w="1.5rem"
+        h="1.5rem"
         border={$colors.chevronBorder}
         borderRadius="50%"
         color={$colors.chevron}

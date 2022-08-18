@@ -14,9 +14,11 @@ import {
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import Caret from 'Svgx/caret-icon'
+import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '..'
 import { truncateHash } from 'Utils/hash'
 
-export interface AccountProps {
+export interface AccountPreviewProps {
   order: number
   name: string
   balance: number
@@ -74,33 +76,44 @@ const ORDER_COLOR = [
   },
 ]
 
-const Account: FC<AccountProps> = ({
+const AccountPreview: FC<AccountPreviewProps> = ({
   order = 0,
   name,
   balance = 0,
   address,
 }) => {
+  const navigate = useNavigate()
   const $colors = useColorModeValue(
-    { hoverBorder: NAMED_COLORS.DEEP_BLUE },
-    { hoverBorder: NAMED_COLORS.WHITE }
+    {
+      bg: NAMED_COLORS.WHITE,
+      borderColor: NAMED_COLORS.LIGHT_GREY,
+      hoverBorder: NAMED_COLORS.DEEP_BLUE,
+      caretColor: NAMED_COLORS.PALE_GREY,
+    },
+    {
+      bg: NAMED_COLORS.DARKER_GREY,
+      borderColor: NAMED_COLORS.DARK_GREY,
+      hoverBorder: NAMED_COLORS.WHITE,
+      caretColor: NAMED_COLORS.PALE_GREY,
+    }
   )
   return (
     <Flex
       p="0.75rem"
       my="0.5rem"
       border="0.063rem solid"
-      borderColor={NAMED_COLORS.LIGHT_GREY}
       borderRadius="0.25rem"
+      cursor="pointer"
+      onClick={() =>
+        navigate(ROUTES.ACCOUNT, { state: { accountId: address } })
+      }
       sx={{
-        bg: NAMED_COLORS.WHITE,
-        borderColor: NAMED_COLORS.LIGHT_GREY,
-        '.chakra-ui-dark &': {
-          bg: NAMED_COLORS.DARKER_GREY,
-          borderColor: NAMED_COLORS.DARK_GREY,
-        },
-        boxShadow: '0px 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)',
+        transition: '0.3s',
+        bg: $colors.bg,
+        borderColor: $colors.borderColor,
+        boxShadow: '0 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)',
         '[aria-label="account-details"]': {
-          color: NAMED_COLORS.GREY,
+          color: $colors.caretColor,
         },
         _hover: {
           '[aria-label="account-details"]': {
@@ -175,6 +188,10 @@ const Account: FC<AccountProps> = ({
             variant="primary"
             borderRadius="4rem"
             mr="1rem"
+            onClick={e => {
+              // required to prevent triggering card click event
+              e.stopPropagation()
+            }}
             leftIcon={
               <Icon height={8}>
                 <Send fill="currentColor" />
@@ -187,6 +204,10 @@ const Account: FC<AccountProps> = ({
             variant="primary"
             borderRadius="4rem"
             mr="1rem"
+            onClick={e => {
+              // required to prevent triggering card click event
+              e.stopPropagation()
+            }}
             leftIcon={
               <Icon height={8}>
                 <Receive fill="currentColor" />
@@ -208,4 +229,5 @@ const Account: FC<AccountProps> = ({
     </Flex>
   )
 }
-export default Account
+
+export default AccountPreview

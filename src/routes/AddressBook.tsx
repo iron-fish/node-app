@@ -5,12 +5,7 @@ import {
   Flex,
   Icon,
   IconButton,
-  IconSearch,
-  SelectField,
   chakra,
-  InputGroup,
-  InputLeftElement,
-  Input,
   NAMED_COLORS,
   CopyValueToClipboard,
   useBreakpointValue,
@@ -22,6 +17,7 @@ import Caret from 'Svgx/caret-icon'
 import HexFishCircle from 'Components/HexFishCircle'
 import { truncateHash } from 'Utils/hash'
 import SimpleTable from 'Components/SimpleTable'
+import SearchSortField from 'Components/Search&Sort'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -156,32 +152,7 @@ const AddressBook: FC = () => (
         </Button>
       </Flex>
     </Flex>
-    <Flex justifyContent="space-between" w="100%" alignItems="center">
-      <InputGroup variant="search" mr="1rem">
-        <InputLeftElement pointerEvents="none">
-          <IconSearch />
-        </InputLeftElement>
-        <Input placeholder="Search" />
-      </InputGroup>
-      <SelectField
-        label="Sort by"
-        minWidth="15rem"
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        size="small"
-        options={[
-          {
-            label: 'Highest to lowest balance',
-            value: 'desc',
-          },
-          {
-            label: 'Lowest to highest balance',
-            value: 'asc',
-          },
-        ]}
-        whiteSpace="nowrap"
-      />
-    </Flex>
+    <SearchSortField />
     <Flex direction="column" width="100%">
       <SimpleTable
         data={DEMO_DATA}
