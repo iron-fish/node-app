@@ -54,15 +54,15 @@ const DetailsPanel: FC = ({ children }) => {
           <DrawerCloseButton
             border={`0.0625rem solid ${NAMED_COLORS.LIGHT_GREY}`}
             borderRadius="50%"
-            w="38px"
-            h="38px"
-            top="24px"
-            right="24px"
+            w="2.375rem"
+            h="2.375rem"
+            top="1.5rem"
+            right="1.5rem"
             color={NAMED_COLORS.GREY}
             sx={{
               '.chakra-icon': {
-                w: '14px',
-                h: '14px',
+                w: '0.875rem',
+                h: '0.875rem',
               },
             }}
             _focus={{
