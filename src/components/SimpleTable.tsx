@@ -21,7 +21,10 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
   onRowClick,
   ...rest
 }) => {
-  const $bg = useColorModeValue(NAMED_COLORS.WHITE, NAMED_COLORS.DARKER_GREY)
+  const $colors = useColorModeValue(
+    { bg: NAMED_COLORS.WHITE, borderColor: NAMED_COLORS.LIGHT_GREY },
+    { bg: NAMED_COLORS.DARKER_GREY, borderColor: NAMED_COLORS.DARK_GREY }
+  )
   return (
     <Table {...rest}>
       <Thead>
@@ -33,11 +36,11 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
           ))}
         </Tr>
       </Thead>
-      <Tbody>
+      <Tbody borderColor={$colors.borderColor}>
         {data?.map((item, index) => (
           <Tr
             key={item?.id || `load-${index}`}
-            bg={$bg}
+            bg={$colors.bg}
             mb="1rem"
             border="0.063rem solid"
             borderRadius="0.25rem"
