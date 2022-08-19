@@ -97,7 +97,7 @@ const Accounts = () => {
         </Flex>
         <Flex>
           <Button
-            leftIcon={<IconAdd />}
+            leftIcon={<IconAdd mr="-0.25rem" />}
             mr="1rem"
             borderRadius="4rem"
             variant="secondary"
@@ -107,7 +107,7 @@ const Accounts = () => {
             Create Account
           </Button>
           <Button
-            leftIcon={<IconAdd />}
+            leftIcon={<IconAdd mr="-0.25rem" />}
             borderRadius="4rem"
             variant="secondary"
             as={Link}
