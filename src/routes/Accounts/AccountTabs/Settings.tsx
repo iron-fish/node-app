@@ -88,7 +88,7 @@ const AccountSettings: FC<AccountSettingsProps> = props => {
           <Button variant="link">Delete Account</Button>
         </Flex>
       </Box>
-      <Box ml="4rem">
+      <Box>
         <DetailsPanel>
           <Information />
         </DetailsPanel>

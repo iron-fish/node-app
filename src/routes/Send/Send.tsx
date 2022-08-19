@@ -194,7 +194,7 @@ const Send: FC = () => {
             <chakra.h4>Send $IRON</chakra.h4>
           </Button>
         </Box>
-        <Box ml="4rem">
+        <Box>
           <DetailsPanel>
             <Information />
           </DetailsPanel>

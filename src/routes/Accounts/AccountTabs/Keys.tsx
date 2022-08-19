@@ -136,7 +136,7 @@ const AccountKeys: FC<AccountKeysProps> = props => {
           <Button variant="link">Export Account</Button>
         </Flex>
       </Box>
-      <Box ml="4rem">
+      <Box>
         <DetailsPanel>
           <Information />
         </DetailsPanel>

@@ -71,7 +71,7 @@ const ContactSettings = () => {
           <Button variant="link">Delete Contact</Button>
         </Flex>
       </Flex>
-      <Box mx={{ base: 0, md: '4rem' }}>
+      <Box>
         <DetailsPanel>
           <Information />
         </DetailsPanel>
