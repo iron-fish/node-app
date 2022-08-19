@@ -7,6 +7,7 @@ import {
   NAMED_COLORS,
   useColorModeValue,
   TextField,
+  Link,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
@@ -68,7 +69,9 @@ const ContactSettings = () => {
           >
             Save Changes
           </Button>
-          <Button variant="link">Delete Contact</Button>
+          <Link alignSelf="center">
+            <h4>Delete Contact</h4>
+          </Link>
         </Flex>
       </Flex>
       <Box>

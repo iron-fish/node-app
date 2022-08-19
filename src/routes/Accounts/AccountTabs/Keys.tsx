@@ -3,6 +3,7 @@ import {
   Button,
   chakra,
   Flex,
+  Link,
   MnemonicView,
   NAMED_COLORS,
   useColorModeValue,
@@ -133,7 +134,9 @@ const AccountKeys: FC<AccountKeysProps> = props => {
           >
             Save Changes
           </Button>
-          <Button variant="link">Export Account</Button>
+          <Link alignSelf="center">
+            <h4>Export Account</h4>
+          </Link>
         </Flex>
       </Box>
       <Box>
