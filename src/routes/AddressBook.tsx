@@ -9,6 +9,7 @@ import {
   NAMED_COLORS,
   CopyValueToClipboard,
   useBreakpointValue,
+  useColorModeValue,
 } from '@ironfish/ui-kit'
 import { Link } from 'react-router-dom'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
@@ -104,11 +105,8 @@ const COLUMNS = [
   {
     key: 'actions',
     label: '',
-    WrapperProps: {
-      width: '13.2rem',
-    },
     render: (address: BookDemoDataType) => (
-      <Flex>
+      <Flex justify="flex-end" mr="-1.0625rem">
         <Button
           leftIcon={
             <Icon height={8}>
@@ -122,45 +120,74 @@ const COLUMNS = [
           <h5>Send</h5>
         </Button>
         <IconButton
-          aria-label="account-details"
+          aria-label="book-details"
           variant="ghost"
           icon={<Caret />}
           as={Link}
           to={address.address}
+          _active={{ bg: 'none' }}
+          _hover={{ bg: 'none' }}
         />
       </Flex>
     ),
   },
 ]
 
-const AddressBook: FC = () => (
-  <>
-    <Flex
-      mb="2.5rem"
-      justifyContent="space-between"
-      w="100%"
-      alignItems="center"
-    >
-      <Flex direction="column">
-        <Box>
-          <h2>Address Book</h2>
-        </Box>
+const AddressBook: FC = () => {
+  const $colors = useColorModeValue(
+    {
+      hoverBorder: NAMED_COLORS.DEEP_BLUE,
+      caretColor: NAMED_COLORS.PALE_GREY,
+    },
+    {
+      hoverBorder: NAMED_COLORS.WHITE,
+      caretColor: NAMED_COLORS.PALE_GREY,
+    }
+  )
+  return (
+    <>
+      <Flex
+        mb="2.5rem"
+        justifyContent="space-between"
+        w="100%"
+        alignItems="center"
+      >
+        <Flex direction="column">
+          <Box>
+            <h2>Address Book</h2>
+          </Box>
+        </Flex>
+        <Flex>
+          <Button
+            leftIcon={<IconAdd />}
+            borderRadius="4rem"
+            variant="secondary"
+          >
+            Import Account
+          </Button>
+        </Flex>
       </Flex>
-      <Flex>
-        <Button leftIcon={<IconAdd />} borderRadius="4rem" variant="secondary">
-          Import Account
-        </Button>
+      <SearchSortField />
+      <Flex direction="column" width="100%">
+        <SimpleTable
+          data={DEMO_DATA}
+          columns={COLUMNS}
+          sx={{
+            tr: {
+              '[aria-label="book-details"]': {
+                color: $colors.caretColor,
+              },
+              _hover: {
+                '[aria-label="book-details"]': {
+                  color: $colors.hoverBorder,
+                },
+              },
+            },
+          }}
+        />
       </Flex>
-    </Flex>
-    <SearchSortField />
-    <Flex direction="column" width="100%">
-      <SimpleTable
-        data={DEMO_DATA}
-        columns={COLUMNS}
-        textTransform="capitalize"
-      />
-    </Flex>
-  </>
-)
+    </>
+  )
+}
 
 export default AddressBook

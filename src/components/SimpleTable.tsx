@@ -53,6 +53,7 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
             {columns.map(column => (
               <Td
                 key={column.key}
+                {...column.WrapperProps}
                 px={{
                   base: '2rem',
                   lg: 'inherit',
@@ -69,7 +70,8 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
                   borderLeft: 'inherit !important',
                 }}
                 _last={{
-                  px: { base: '0.75rem', md: '2rem' },
+                  pr: '2rem',
+                  pl: { base: '0.75rem', md: '2rem' },
                   borderRight: 'inherit !important',
                 }}
               >
