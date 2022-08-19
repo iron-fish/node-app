@@ -171,7 +171,6 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           iconButtonProps={{
             justifyContent: 'none',
             minW: '0.75rem',
-            'aria-label': 'copy',
           }}
           labelProps={{
             mr: '0.5rem',
