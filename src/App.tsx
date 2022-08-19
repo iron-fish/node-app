@@ -11,6 +11,8 @@ import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import AddressBook from 'Routes/AddressBook'
 import AccountDetails from 'Routes/Accounts/AccountDetails'
+import Miner from 'Routes/Miner'
+import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressDetails'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 
@@ -36,8 +38,8 @@ function App() {
           <Route element={<PageLayout />}>
             <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
             <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
-            <Route path={ROUTES.SEND} element={null} />
             <Route path={ROUTES.RECEIVE} element={<ReceiveMoney />} />
+            <Route path={ROUTES.SEND} element={<Send />} />
             <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
             <Route
               path={ROUTES.ADDRESS_BOOK_DETAILS}
@@ -45,7 +47,7 @@ function App() {
             />
             <Route path={ROUTES.RESOURCES} element={null} />
             <Route path={ROUTES.NODE} element={null} />
-            <Route path={ROUTES.MINER} element={null} />
+            <Route path={ROUTES.MINER} element={<Miner />} />
           </Route>
         </Routes>
       </HashRouter>

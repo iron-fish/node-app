@@ -9,6 +9,8 @@ const HexFishCircle = (props: FlexProps) => {
       mr="1rem"
       height="2.8rem"
       width="2.8rem"
+      minH="2.8rem"
+      minW="2.8rem"
       justifyContent="center"
       alignItems="center"
       {...props}

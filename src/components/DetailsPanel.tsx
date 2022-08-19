@@ -8,9 +8,11 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  NAMED_COLORS,
 } from '@ironfish/ui-kit'
 import { FC, useRef } from 'react'
 import InfoIcon from 'Svgx/Info'
+import CloseIcon from 'Svgx/CloseIcon'
 
 const DetailsPanel: FC = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -48,8 +50,24 @@ const DetailsPanel: FC = ({ children }) => {
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
-        <DrawerContent p="2rem 4rem 2rem 2rem" maxWidth="29rem">
-          <DrawerCloseButton border="0.0625rem solid" borderRadius="50%" />
+        <DrawerContent p="4rem 4rem 2rem 4rem" maxWidth="29rem">
+          <DrawerCloseButton
+            border={`0.0625rem solid ${NAMED_COLORS.LIGHT_GREY}`}
+            borderRadius="50%"
+            w="2.375rem"
+            h="2.375rem"
+            top="1.5rem"
+            right="1.5rem"
+            color={NAMED_COLORS.GREY}
+            _focus={{
+              boxShadow: 'none',
+            }}
+            _hover={{
+              bg: 'none',
+            }}
+          >
+            <CloseIcon />
+          </DrawerCloseButton>
           {children}
         </DrawerContent>
       </Drawer>
