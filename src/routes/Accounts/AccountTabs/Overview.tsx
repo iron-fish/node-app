@@ -135,10 +135,12 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
           <Flex justifyContent="space-between" alignItems="center">
             <Box m="2rem">
               <Box>
-                <chakra.h4>$IRON</chakra.h4>
+                <chakra.h4 color={NAMED_COLORS.DEEP_BLUE}>$IRON</chakra.h4>
               </Box>
               <Box mb="0.5rem">
-                <chakra.h2>8,456,435.4563</chakra.h2>
+                <chakra.h2 color={NAMED_COLORS.DEEP_BLUE}>
+                  8,456,435.4563
+                </chakra.h2>
               </Box>
               <Box>
                 <Button
