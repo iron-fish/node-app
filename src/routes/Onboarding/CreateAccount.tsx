@@ -4,15 +4,14 @@ import {
   Flex,
   chakra,
   TextField,
-  useColorModeValue,
   NAMED_COLORS,
   MnemonicView,
   Checkbox,
 } from '@ironfish/ui-kit'
-import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { FC, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '..'
+import BackButtonLink from 'Components/BackButtonLink'
 
 const words = [
   'Carrot',
@@ -30,34 +29,20 @@ const words = [
 ]
 
 const CreateAccount: FC = () => {
-  const textColor = useColorModeValue(
-    NAMED_COLORS.GREY,
-    NAMED_COLORS.LIGHTER_GREY
-  )
   const [saved, setSaved] = useState<boolean>(false)
   return (
     <Flex flexDirection="column" p="4rem" pb="0" bg="transparent" w="100%">
-      <Box>
-        <Button
-          mb="3rem"
-          variant="link"
-          leftIcon={
-            <ChevronLeftIcon border="0.0625rem solid" borderRadius="50%" />
-          }
-          as={Link}
-          to={ROUTES.ONBOARDING}
-        >
-          Go Вack
-        </Button>
-      </Box>
-      <chakra.h1 mb="1rem">Create Account</chakra.h1>
-      <chakra.h3>Internal Account Name</chakra.h3>
-      <chakra.h5 mb="1rem" color={textColor}>
+      <BackButtonLink mb="3rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
+      <chakra.h1 mb="1rem" color={NAMED_COLORS.BLACK}>
+        Create Account
+      </chakra.h1>
+      <chakra.h3 color={NAMED_COLORS.BLACK}>Internal Account Name</chakra.h3>
+      <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
         This account name is only known to you
       </chakra.h5>
       <TextField label="Account Name" mb="2rem" w="100%" />
-      <chakra.h3>Recovery Phrase</chakra.h3>
-      <chakra.h5 mb="1rem" color={textColor}>
+      <chakra.h3 color={NAMED_COLORS.BLACK}>Recovery Phrase</chakra.h3>
+      <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
         Please keep this phrase stored somewhere safe. We will ask you to
         re-enter this.
       </chakra.h5>
@@ -76,7 +61,9 @@ const CreateAccount: FC = () => {
           checked={saved}
           onChange={e => setSaved(e.target.checked)}
         >
-          <chakra.h5>I saved my recovery phrase</chakra.h5>
+          <chakra.h5 color={NAMED_COLORS.BLACK}>
+            I saved my recovery phrase
+          </chakra.h5>
         </Checkbox>
       </Box>
       <Box>
