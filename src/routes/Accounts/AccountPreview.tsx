@@ -99,7 +99,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
   )
   return (
     <Flex
-      p="0.75rem"
+      p="0.75rem 2rem 0.75rem 0.75rem"
       my="0.5rem"
       border="0.063rem solid"
       borderRadius="0.25rem"
@@ -182,7 +182,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           copiedTooltipText="Copied"
         />
       </Box>
-      <Flex ml="auto" alignSelf="center">
+      <Flex ml="auto" alignSelf="center" mr="-1rem">
         <Flex direction="column" gap="0.75rem">
           <Button
             variant="primary"
