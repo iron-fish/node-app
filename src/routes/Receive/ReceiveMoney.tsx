@@ -89,7 +89,8 @@ const ReceiveMoney: FC = () => {
             onSelectOption={setAccount}
             mb="1rem"
           />
-          <TextField
+          {/* Hide amount field while not clarified, should be removed or enabled when with API connection
+           <TextField
             label="Amount"
             value={amount.toFixed(2)}
             InputProps={{
@@ -97,7 +98,7 @@ const ReceiveMoney: FC = () => {
               onChange: e => setAmount(Number.parseFloat(e.target.value)),
             }}
             mb="1rem"
-          />
+          /> */}
           <Box mr="0.25rem">
             <Flex
               layerStyle="card"
