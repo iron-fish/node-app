@@ -11,17 +11,18 @@ import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import AddressBook from 'Routes/AddressBook'
 import AccountDetails from 'Routes/Accounts/AccountDetails'
+import Miner from 'Routes/Miner'
 import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 
 const breakpoints = {
-  sm: '56.25rem',
-  sm1: '57.75rem',
-  md: '72rem',
-  lg: '90rem',
-  xl: '101.25rem',
-  '2xl': '112.5rem',
+  sm: '56.25rem', //900px
+  sm1: '57.75rem', //924px
+  md: '72rem', //1152px',
+  lg: '90rem', //1440px',
+  xl: '101.25rem', //1620px
+  '2xl': '112.5rem', //1800px
 }
 
 function App() {
@@ -46,7 +47,7 @@ function App() {
             />
             <Route path={ROUTES.RESOURCES} element={null} />
             <Route path={ROUTES.NODE} element={<NodeOverview />} />
-            <Route path={ROUTES.MINER} element={null} />
+            <Route path={ROUTES.MINER} element={<Miner />} />
           </Route>
         </Routes>
       </HashRouter>

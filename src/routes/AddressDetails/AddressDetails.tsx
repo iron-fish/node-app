@@ -20,6 +20,7 @@ import BackButtonLink from 'Components/BackButtonLink'
 import { truncateHash } from 'Utils/hash'
 import { ROUTES } from '..'
 import AddressTransactions from './AddressTransactions'
+import ContactSettings from './ContactSettings'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -83,8 +84,8 @@ const AddressDetails = () => {
           <TabPanel pl="0rem">
             <AddressTransactions />
           </TabPanel>
-          <TabPanel>
-            <p>two!</p>
+          <TabPanel p="0rem">
+            <ContactSettings />
           </TabPanel>
         </TabPanels>
       </Tabs>

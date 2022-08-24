@@ -6,6 +6,7 @@ import {
   Flex,
   Icon,
   NAMED_COLORS,
+  useColorModeValue,
 } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { FC } from 'react'
@@ -107,6 +108,16 @@ const DEMO_DATA = [
 ]
 
 const AccountOverview: FC<AccountOverviewProps> = props => {
+  const $colors = useColorModeValue(
+    {
+      borderColor: NAMED_COLORS.DEEP_BLUE,
+      boxShadow: `0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.WHITE}, 0.25rem 0.25rem ${NAMED_COLORS.DEEP_BLUE}`,
+    },
+    {
+      borderColor: `${NAMED_COLORS.WHITE}!important`,
+      boxShadow: `0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.DARKER_GREY}, 0.25rem 0.25rem ${NAMED_COLORS.WHITE} !important`,
+    }
+  )
   return (
     <>
       <Flex w="100%" pb="2rem">
@@ -118,14 +129,18 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
           w="100%"
           minWidth="18rem"
           mr="1rem"
+          borderColor={$colors.borderColor}
+          boxShadow={$colors.boxShadow}
         >
           <Flex justifyContent="space-between" alignItems="center">
             <Box m="2rem">
               <Box>
-                <chakra.h4>$IRON</chakra.h4>
+                <chakra.h4 color={NAMED_COLORS.DEEP_BLUE}>$IRON</chakra.h4>
               </Box>
               <Box mb="0.5rem">
-                <chakra.h2>8,456,435.4563</chakra.h2>
+                <chakra.h2 color={NAMED_COLORS.DEEP_BLUE}>
+                  8,456,435.4563
+                </chakra.h2>
               </Box>
               <Box>
                 <Button
@@ -175,9 +190,10 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
           </Box>
         </Box>
       </Flex>
-      <chakra.h3>Transactions</chakra.h3>
+      <chakra.h3 pb="1rem">Transactions</chakra.h3>
       <SearchSortField />
       <CommonTable
+        textTransform="capitalize"
         data={DEMO_DATA}
         columns={[
           {

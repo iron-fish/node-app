@@ -21,25 +21,20 @@ import LocationStateProps from 'Types/LocationState'
 import AccountOverview from './AccountTabs/Overview'
 import AccountKeys from './AccountTabs/Keys'
 import AccountSettings from './AccountTabs/Settings'
+import BackButtonLink from 'Components/BackButtonLink'
 
 const AccountDetails: FC = () => {
   const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
   const location = useLocation()
   const { accountId } = location.state as LocationStateProps
   return (
-    <Flex flexDirection="column" pt="1.5rem" pb="0" bg="transparent" w="100%">
+    <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
-        <Button
+        <BackButtonLink
           mb="1rem"
-          variant="link"
-          leftIcon={
-            <ChevronLeftIcon border="0.0625rem solid" borderRadius="50%" />
-          }
-          as={Link}
           to={ROUTES.ACCOUNTS}
-        >
-          <chakra.h5>Вack to all accounts</chakra.h5>
-        </Button>
+          label={'Back to all accounts'}
+        />
         <Flex alignItems="end" mb="0.5rem">
           <chakra.h2 mr="1rem">Primary Account</chakra.h2>
           <CopyValueToClipboard
