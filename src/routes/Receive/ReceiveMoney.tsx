@@ -98,37 +98,40 @@ const ReceiveMoney: FC = () => {
             }}
             mb="1rem"
           />
-          <Flex
-            layerStyle="card"
-            w="100%"
-            p="4rem"
-            direction="column"
-            alignItems="center"
-          >
-            <Box mb="2rem">
-              <QRCodeSVG value={url} />
-            </Box>
-            <FieldGroup w="100%">
-              <TextField
-                label="Receive Link"
-                value={url}
-                InputProps={{
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  isReadOnly: true,
-                }}
-                width="100%"
-              />
-              <Button
-                px="1.5rem"
-                textColor={NAMED_COLORS.LIGHT_BLUE}
-                rightIcon={<IconCopy w="1rem" h="1rem" />}
-              >
-                Copy
-              </Button>
-            </FieldGroup>
-          </Flex>
+          <Box mr="0.25rem">
+            <Flex
+              layerStyle="card"
+              w="100%"
+              p="4rem"
+              direction="column"
+              alignItems="center"
+              ml={0}
+            >
+              <Box mb="2rem">
+                <QRCodeSVG value={url} />
+              </Box>
+              <FieldGroup w="100%">
+                <TextField
+                  label="Receive Link"
+                  value={url}
+                  InputProps={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    isReadOnly: true,
+                  }}
+                  width="100%"
+                />
+                <Button
+                  px="1.5rem"
+                  textColor={NAMED_COLORS.LIGHT_BLUE}
+                  rightIcon={<IconCopy w="1rem" h="1rem" />}
+                >
+                  Copy
+                </Button>
+              </FieldGroup>
+            </Flex>
+          </Box>
         </Box>
         <Box ml="4rem">
           <DetailsPanel>
