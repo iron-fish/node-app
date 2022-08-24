@@ -29,7 +29,13 @@ const NodeStat: FC<NodeStatProps> = ({ isLoaded, label, value }) => (
     <StatLabel>
       <chakra.h6 color="#9B7641">{label}</chakra.h6>
     </StatLabel>
-    <Skeleton isLoaded={isLoaded} minW="6rem" minH="2.4rem">
+    <Skeleton
+      isLoaded={isLoaded}
+      minW="6rem"
+      minH="2.4rem"
+      startColor="#F3C174"
+      endColor="#F1B75E"
+    >
       <StatNumber>
         <chakra.h3 textTransform="capitalize">{value}</chakra.h3>
       </StatNumber>
@@ -56,7 +62,14 @@ const NodeStatus: FC<BoxProps> = props => {
         </Box>
         <Flex marginTop="-12rem">
           <Box minW="18.75rem" h="12rem" mr="2rem" overflow="visible">
-            <Skeleton isLoaded={loaded} mb="1rem" minW="10rem" h="2.4rem">
+            <Skeleton
+              isLoaded={loaded}
+              mb="1rem"
+              minW="10rem"
+              h="2.4rem"
+              startColor="#F3C174"
+              endColor="#F1B75E"
+            >
               <chakra.h3 mb="1rem">{data?.node.nodeName}</chakra.h3>
             </Skeleton>
             <HStack spacing="2rem">
