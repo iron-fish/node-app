@@ -1,6 +1,15 @@
 import { GetStatusResponse } from '@ironfish/sdk'
 import { useEffect, useState } from 'react'
 
+interface NodeStatusResponse extends GetStatusResponse {
+  node: {
+    status: 'started' | 'stopped' | 'error'
+    version: string
+    git: string
+    nodeName: 'My Node Name Example'
+  }
+}
+
 const generateStatus = () =>
   ({
     node: {
@@ -58,11 +67,11 @@ const generateStatus = () =>
       change: 0,
       speed: 0,
     },
-  } as GetStatusResponse)
+  } as NodeStatusResponse)
 
 const useNodeStatus = () => {
   const [loaded, setLoaded] = useState<boolean>(false)
-  const [status, setNodeStatus] = useState<GetStatusResponse | undefined>()
+  const [status, setNodeStatus] = useState<NodeStatusResponse | undefined>()
   const [error, setError] = useState()
 
   const loadStatus = () => {
