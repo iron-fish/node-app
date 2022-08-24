@@ -7,7 +7,7 @@ const NodeOverview: FC = () => (
   <>
     <chakra.h2 mb="1rem">Your Node</chakra.h2>
     <NodeStatus mb="2rem" />
-    <chakra.h3 mb="1rem">Connected Peers</chakra.h3>
+    <chakra.h3>Connected Peers</chakra.h3>
     <NodePeers />
   </>
 )

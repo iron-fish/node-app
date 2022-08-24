@@ -57,6 +57,7 @@ const NodeStatus: FC<BoxProps> = props => {
   return (
     <Box
       p="4rem"
+      ml="0 !important"
       layerStyle="card"
       bg={`${NAMED_COLORS.LIGHT_YELLOW} !important`}
       color={NAMED_COLORS.DEEP_BLUE}
