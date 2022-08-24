@@ -74,9 +74,8 @@ const DEMO_ACCOUNTS: OptionType[] = [
 
 const ReceiveMoney: FC = () => {
   const [account, setAccount] = useState(DEMO_ACCOUNTS[0])
-  const [amount, setAmount] = useState(0)
+  // const [amount, setAmount] = useState(0)
 
-  const url = `ironfish-wallet://localhost:3000/wallet#/send?to=${account.value}&amount=${amount}`
   return (
     <>
       <chakra.h2 mb="1rem">Receive $IRON</chakra.h2>
@@ -109,12 +108,12 @@ const ReceiveMoney: FC = () => {
               ml={0}
             >
               <Box mb="2rem">
-                <QRCodeSVG value={url} />
+                <QRCodeSVG value={account.value} />
               </Box>
               <FieldGroup w="100%" zIndex={1}>
                 <TextField
-                  label="Receive Link"
-                  value={url}
+                  label="Public Address"
+                  value={account.value}
                   InputProps={{
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -127,6 +126,7 @@ const ReceiveMoney: FC = () => {
                   px="1.5rem"
                   textColor={NAMED_COLORS.LIGHT_BLUE}
                   rightIcon={<IconCopy w="1rem" h="1rem" />}
+                  onClick={() => navigator.clipboard.writeText(account.value)}
                 >
                   Copy
                 </Button>
