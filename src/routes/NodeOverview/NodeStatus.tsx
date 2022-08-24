@@ -51,15 +51,21 @@ const NodeStatus: FC<BoxProps> = props => {
       layerStyle="card"
       bg={`${NAMED_COLORS.LIGHT_YELLOW} !important`}
       color={NAMED_COLORS.DEEP_BLUE}
-      h="20rem"
+      h="18.75rem"
       overflow="hidden"
       whiteSpace="nowrap"
       {...props}
     >
       <LightMode>
-        <Box marginTop="-2rem" h="14rem">
-          <NodeOverviewImage width="calc(60%)" height="auto" marginLeft="40%" />
-        </Box>
+        <Flex marginTop="-2rem" h="14rem">
+          <NodeOverviewImage
+            width={{ base: '18.125rem', md: '33.25rem' }}
+            height={{ base: '17.5rem', md: '32.1875rem' }}
+            mr={{ base: '-7.5rem', md: '-10.3125rem' }}
+            mt={{ base: '-1.4375rem', md: 0 }}
+            ml="auto"
+          />
+        </Flex>
         <Flex marginTop="-12rem">
           <Box minW="18.75rem" h="12rem" mr="2rem" overflow="visible">
             <Skeleton
