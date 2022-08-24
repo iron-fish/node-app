@@ -72,7 +72,7 @@ const NodeStatus: FC<BoxProps> = props => {
             >
               <chakra.h3 mb="1rem">{data?.node.nodeName}</chakra.h3>
             </Skeleton>
-            <HStack spacing="2rem">
+            <HStack spacing="4rem">
               <VStack spacing="1rem" align="flex-start">
                 <NodeStat
                   isLoaded={loaded}
