@@ -111,7 +111,7 @@ const ReceiveMoney: FC = () => {
               <Box mb="2rem">
                 <QRCodeSVG value={url} />
               </Box>
-              <FieldGroup w="100%">
+              <FieldGroup w="100%" zIndex={1}>
                 <TextField
                   label="Receive Link"
                   value={url}
