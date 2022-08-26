@@ -116,7 +116,9 @@ const MnemonicPhraseTab: FC = () => {
   const [phrase, setPhrase] = useState([])
   return (
     <>
-      <chakra.h3 mt="2rem">Mnemonic Phrase</chakra.h3>
+      <chakra.h3 pb="0.25rem" mt="2rem">
+        Mnemonic Phrase
+      </chakra.h3>
       <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
         Fill out your recovery phrase in the proper order
       </chakra.h5>
@@ -160,7 +162,9 @@ const ImportAccount: FC = () => {
       <chakra.h1 color={NAMED_COLORS.BLACK} mb="1.5rem">
         Import Account
       </chakra.h1>
-      <chakra.h3 color={NAMED_COLORS.BLACK}>Import With</chakra.h3>
+      <chakra.h3 color={NAMED_COLORS.BLACK} pb="0.25rem">
+        Import With
+      </chakra.h3>
       <Tabs>
         <TabList>
           <Tab>Spending Key</Tab>

@@ -36,12 +36,16 @@ const CreateAccount: FC = () => {
       <chakra.h1 mb="1.5rem" color={NAMED_COLORS.BLACK}>
         Create Account
       </chakra.h1>
-      <chakra.h3 color={NAMED_COLORS.BLACK}>Internal Account Name</chakra.h3>
+      <chakra.h3 color={NAMED_COLORS.BLACK} pb="0.25rem">
+        Internal Account Name
+      </chakra.h3>
       <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
         This account name is only known to you
       </chakra.h5>
       <TextField label="Account Name" mb="2rem" w="100%" />
-      <chakra.h3 color={NAMED_COLORS.BLACK}>Recovery Phrase</chakra.h3>
+      <chakra.h3 color={NAMED_COLORS.BLACK} pb="0.25rem">
+        Recovery Phrase
+      </chakra.h3>
       <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
         Please keep this phrase stored somewhere safe. We will ask you to
         re-enter this.
