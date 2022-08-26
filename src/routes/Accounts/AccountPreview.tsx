@@ -15,8 +15,9 @@ import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import Caret from 'Svgx/caret-icon'
 import { useNavigate } from 'react-router-dom'
-import { ROUTES } from '..'
 import { truncateHash } from 'Utils/hash'
+import { Link } from 'react-router-dom'
+import { ROUTES } from '..'
 
 export interface AccountPreviewProps {
   order: number
@@ -224,6 +225,9 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           _active={{ bg: 'none' }}
           _hover={{ bg: 'none' }}
           icon={<Caret />}
+          as={Link}
+          to={ROUTES.ACCOUNT}
+          state={{ accountId: address }}
         />
       </Flex>
     </Flex>
