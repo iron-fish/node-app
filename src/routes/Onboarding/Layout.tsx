@@ -1,4 +1,4 @@
-import { Flex, Box, Image, LightMode, NAMED_COLORS } from '@ironfish/ui-kit'
+import { Flex, Box, LightMode, NAMED_COLORS } from '@ironfish/ui-kit'
 import { FC } from 'react'
 import { Outlet } from 'react-router-dom'
 
@@ -35,13 +35,6 @@ const Layout: FC = () => {
           <Box w="100%" h="52px" marginTop="auto" />
         </LightMode>
       </Flex>
-      {/* <Image
-        position="absolute"
-        w="100%"
-        h="100%"
-        autoCapitalize="true"
-        src="/images/onboarding_fish.png"
-      /> */}
     </Flex>
   )
 }
