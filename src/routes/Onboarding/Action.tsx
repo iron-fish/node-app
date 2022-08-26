@@ -21,7 +21,9 @@ export const Onboarding = () => {
         boxShadow={`0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.WHITE}, 0.25rem 0.25rem ${NAMED_COLORS.LIGHT_GREY} !important`}
         borderColor={`${NAMED_COLORS.LIGHT_GREY} !important`}
       >
-        <chakra.h2 color={NAMED_COLORS.BLACK}>Create Account</chakra.h2>
+        <chakra.h3 pb="0.75rem" color={NAMED_COLORS.BLACK}>
+          Create Account
+        </chakra.h3>
         <chakra.h5 color={NAMED_COLORS.GREY}>
           Choose this option if you don't have an existing Iron Fish account or
           if you'd like to create a new one.
@@ -45,7 +47,9 @@ export const Onboarding = () => {
         boxShadow={`0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.WHITE}, 0.25rem 0.25rem ${NAMED_COLORS.LIGHT_GREY} !important`}
         borderColor={`${NAMED_COLORS.LIGHT_GREY} !important`}
       >
-        <chakra.h2 color={NAMED_COLORS.BLACK}>Import Account</chakra.h2>
+        <chakra.h3 pb="0.75rem" color={NAMED_COLORS.BLACK}>
+          Import Account
+        </chakra.h3>
         <chakra.h5 color={NAMED_COLORS.GREY}>
           Already have an account? Enter your recovery credentials and continue
           using your account.

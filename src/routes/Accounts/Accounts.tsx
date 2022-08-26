@@ -1,14 +1,6 @@
-import {
-  Box,
-  Button,
-  Flex,
-  IconSearch,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  SelectField,
-} from '@ironfish/ui-kit'
+import { Box, Button, Flex } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
+import SearchSortField from 'Components/Search&Sort'
 import { Link } from 'react-router-dom'
 import AccountPreview from 'Routes/Accounts/AccountPreview'
 import { ROUTES } from '..'
@@ -97,7 +89,7 @@ const Accounts = () => {
         </Flex>
         <Flex>
           <Button
-            leftIcon={<IconAdd />}
+            leftIcon={<IconAdd mr="-0.25rem" />}
             mr="1rem"
             borderRadius="4rem"
             variant="secondary"
@@ -107,7 +99,7 @@ const Accounts = () => {
             Create Account
           </Button>
           <Button
-            leftIcon={<IconAdd />}
+            leftIcon={<IconAdd mr="-0.25rem" />}
             borderRadius="4rem"
             variant="secondary"
             as={Link}
@@ -117,37 +109,7 @@ const Accounts = () => {
           </Button>
         </Flex>
       </Flex>
-      <Flex
-        justifyContent="space-between"
-        w="100%"
-        alignItems="center"
-        mb="0.5rem"
-      >
-        <InputGroup variant="search" mr="1rem">
-          <InputLeftElement pointerEvents="none">
-            <IconSearch />
-          </InputLeftElement>
-          <Input placeholder="Search" />
-        </InputGroup>
-        <SelectField
-          label="Sort by"
-          minWidth="15rem"
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          size="small"
-          options={[
-            {
-              label: 'Highest to lowest balance',
-              value: 'desc',
-            },
-            {
-              label: 'Lowest to highest balance',
-              value: 'asc',
-            },
-          ]}
-          whiteSpace="nowrap"
-        />
-      </Flex>
+      <SearchSortField />
       <Flex direction="column" width="100%">
         {DEMO_DATA.map((data, index) => (
           <AccountPreview {...data} order={index} />
