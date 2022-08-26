@@ -55,10 +55,6 @@ const SpendingKeyTab: FC = () => {
           as={Link}
           to={ROUTES.ACCOUNTS}
           disabled={!key}
-          _disabled={{
-            pointerEvents: 'none',
-            opacity: '0.4',
-          }}
         >
           Import Account
         </Button>
@@ -100,10 +96,6 @@ const ImportFileTab: FC = () => {
           as={Link}
           to={ROUTES.ACCOUNTS}
           disabled={!file}
-          _disabled={{
-            pointerEvents: 'none',
-            opacity: '0.4',
-          }}
         >
           Import Account
         </Button>
@@ -143,10 +135,6 @@ const MnemonicPhraseTab: FC = () => {
             phrase.length < 12 ||
             phrase.findIndex(word => !word) !== -1
           }
-          _disabled={{
-            pointerEvents: 'none',
-            opacity: '0.4',
-          }}
         >
           Import Account
         </Button>

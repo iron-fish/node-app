@@ -78,10 +78,6 @@ const CreateAccount: FC = () => {
           disabled={!saved}
           as={Link}
           to={ROUTES.ACCOUNTS}
-          _disabled={{
-            pointerEvents: 'none',
-            opacity: '0.4',
-          }}
         >
           Create Account
         </Button>
