@@ -156,7 +156,7 @@ const MnemonicPhraseTab: FC = () => {
 const ImportAccount: FC = () => {
   return (
     <Flex flexDirection="column" p="4rem" pb="0" bg="transparent" w="100%">
-      <BackButtonLink mb="3rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
+      <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
       <chakra.h1 color={NAMED_COLORS.BLACK} mb="1rem">
         Import Account
       </chakra.h1>
