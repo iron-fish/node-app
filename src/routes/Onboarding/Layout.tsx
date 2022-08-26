@@ -10,7 +10,6 @@ const Layout: FC = () => {
       bg="transparent"
       overflow="hidden"
       height="100%"
-      minHeight="100vh"
       sx={{
         backgroundSize: 'auto 150%',
         backgroundPositionX: 'right',
@@ -20,7 +19,6 @@ const Layout: FC = () => {
     >
       <Flex
         zIndex="100"
-        position="absolute"
         flexDirection="column"
         alignItems="flex-start"
         justifyContent="space-between"
