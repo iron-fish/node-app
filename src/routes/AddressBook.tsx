@@ -88,7 +88,6 @@ const COLUMNS = [
           iconButtonProps={{
             justifyContent: 'none',
             minW: '0.75rem',
-            'aria-label': 'copy',
             color: NAMED_COLORS.GREY,
           }}
           labelProps={{

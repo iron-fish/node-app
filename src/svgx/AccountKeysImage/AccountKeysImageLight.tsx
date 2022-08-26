@@ -1,6 +1,6 @@
 import { Icon, IconProps } from '@ironfish/ui-kit'
 
-export const AccountKeysImage = (props: IconProps) => (
+export const AccountKeysImageLight = (props: IconProps) => (
   <Icon
     height={297}
     width={213}
@@ -51,4 +51,4 @@ export const AccountKeysImage = (props: IconProps) => (
   </Icon>
 )
 
-export default AccountKeysImage
+export default AccountKeysImageLight

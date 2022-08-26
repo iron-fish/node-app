@@ -131,9 +131,9 @@ const Miner: FC = props => {
   const checkChanges: () => boolean = () => isRunning !== true
 
   return (
-    <Flex mb="2rem">
-      <Flex direction="column">
-        <chakra.h2 mb="1.25rem">Miner</chakra.h2>
+    <Flex mb="2rem" direction="column">
+      <chakra.h2 mb="1.25rem">Miner</chakra.h2>
+      <Flex>
         <VStack spacing="2rem" w="37.25rem" align="flex-start">
           <SelectField
             w="100%"
@@ -222,12 +222,12 @@ const Miner: FC = props => {
             Save Changes
           </Button>
         </VStack>
+        <Box>
+          <DetailsPanel>
+            <Information />
+          </DetailsPanel>
+        </Box>
       </Flex>
-      <Box ml={{ base: 0, md: '4rem' }}>
-        <DetailsPanel>
-          <Information />
-        </DetailsPanel>
-      </Box>
     </Flex>
   )
 }
