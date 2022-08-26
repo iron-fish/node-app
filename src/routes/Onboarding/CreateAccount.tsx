@@ -33,7 +33,7 @@ const CreateAccount: FC = () => {
   return (
     <Flex flexDirection="column" p="4rem" pb="0" bg="transparent" w="100%">
       <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
-      <chakra.h1 mb="1rem" color={NAMED_COLORS.BLACK}>
+      <chakra.h1 mb="1.5rem" color={NAMED_COLORS.BLACK}>
         Create Account
       </chakra.h1>
       <chakra.h3 color={NAMED_COLORS.BLACK}>Internal Account Name</chakra.h3>
