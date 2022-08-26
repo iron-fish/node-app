@@ -1,6 +1,7 @@
 import { GetStatusResponse } from '@ironfish/sdk'
 import { useEffect, useState } from 'react'
 
+// Added extended interface to ignore type error, if nodeName not needed - can be removed
 interface NodeStatusResponse extends GetStatusResponse {
   node: {
     status: 'started' | 'stopped' | 'error'
