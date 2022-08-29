@@ -4,7 +4,6 @@ import {
   Flex,
   chakra,
   Input,
-  useColorModeValue,
   NAMED_COLORS,
   TabList,
   Tabs,
@@ -15,12 +14,12 @@ import {
   HStack,
   MnemonicView,
 } from '@ironfish/ui-kit'
-import { ChevronLeftIcon } from '@chakra-ui/icons'
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '..'
 import IconEye from '@ironfish/ui-kit/dist/svgx/icon-eye'
 import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
+import BackButtonLink from 'Components/BackButtonLink'
 
 const SpendingKeyTab: FC = () => {
   const [show, setShow] = useState(false)
@@ -56,10 +55,6 @@ const SpendingKeyTab: FC = () => {
           as={Link}
           to={ROUTES.ACCOUNTS}
           disabled={!key}
-          _disabled={{
-            pointerEvents: 'none',
-            opacity: '0.4',
-          }}
         >
           Import Account
         </Button>
@@ -69,14 +64,10 @@ const SpendingKeyTab: FC = () => {
 }
 
 const ImportFileTab: FC = () => {
-  const textColor = useColorModeValue(
-    NAMED_COLORS.GREY,
-    NAMED_COLORS.LIGHTER_GREY
-  )
   const [file, setFile] = useState<File | null>(null)
   return (
     <>
-      <chakra.h5 mb="1rem" mt="2rem" color={textColor}>
+      <chakra.h5 mb="1rem" mt="2rem" color={NAMED_COLORS.GREY}>
         Upload your JSON file to import your account
       </chakra.h5>
       <Box>
@@ -105,10 +96,6 @@ const ImportFileTab: FC = () => {
           as={Link}
           to={ROUTES.ACCOUNTS}
           disabled={!file}
-          _disabled={{
-            pointerEvents: 'none',
-            opacity: '0.4',
-          }}
         >
           Import Account
         </Button>
@@ -118,20 +105,18 @@ const ImportFileTab: FC = () => {
 }
 
 const MnemonicPhraseTab: FC = () => {
-  const textColor = useColorModeValue(
-    NAMED_COLORS.GREY,
-    NAMED_COLORS.LIGHTER_GREY
-  )
   const [phrase, setPhrase] = useState([])
   return (
     <>
-      <chakra.h3 mt="2rem">Mneminic Phrase</chakra.h3>
-      <chakra.h5 mb="1rem" color={textColor}>
+      <chakra.h3 pb="0.25rem" mt="2rem">
+        Mnemonic Phrase
+      </chakra.h3>
+      <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
         Fill out your recovery phrase in the proper order
       </chakra.h5>
       <MnemonicView
         value={phrase}
-        header="Mneminic Phrase"
+        header="Mnemonic Phrase"
         placeholder="Empty"
         visible={true}
         isReadOnly={false}
@@ -150,10 +135,6 @@ const MnemonicPhraseTab: FC = () => {
             phrase.length < 12 ||
             phrase.findIndex(word => !word) !== -1
           }
-          _disabled={{
-            pointerEvents: 'none',
-            opacity: '0.4',
-          }}
         >
           Import Account
         </Button>
@@ -165,21 +146,13 @@ const MnemonicPhraseTab: FC = () => {
 const ImportAccount: FC = () => {
   return (
     <Flex flexDirection="column" p="4rem" pb="0" bg="transparent" w="100%">
-      <Box>
-        <Button
-          mb="3rem"
-          variant="link"
-          leftIcon={
-            <ChevronLeftIcon border="0.0625rem solid" borderRadius="50%" />
-          }
-          as={Link}
-          to={ROUTES.ONBOARDING}
-        >
-          Go Вack
-        </Button>
-      </Box>
-      <chakra.h1 mb="1rem">Import Account</chakra.h1>
-      <chakra.h3>Import With</chakra.h3>
+      <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
+      <chakra.h1 color={NAMED_COLORS.BLACK} mb="1.5rem">
+        Import Account
+      </chakra.h1>
+      <chakra.h3 color={NAMED_COLORS.BLACK} pb="0.25rem">
+        Import With
+      </chakra.h3>
       <Tabs>
         <TabList>
           <Tab>Spending Key</Tab>

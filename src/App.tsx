@@ -14,14 +14,16 @@ import AccountDetails from 'Routes/Accounts/AccountDetails'
 import Miner from 'Routes/Miner'
 import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressDetails'
+import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 
 const breakpoints = {
-  sm: '56.25rem',
-  sm1: '57.75rem',
-  md: '72rem',
-  lg: '90rem',
-  xl: '101.25rem',
-  '2xl': '112.5rem',
+  sm: '56.25rem', //900px
+  sm1: '57.75rem', //924px
+  md: '72rem', //1152px',
+  md1: '77.5rem', //'1240px',
+  lg: '90rem', //1440px',
+  xl: '101.25rem', //1620px
+  '2xl': '112.5rem', //1800px
 }
 
 function App() {
@@ -37,8 +39,8 @@ function App() {
           <Route element={<PageLayout />}>
             <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
             <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
+            <Route path={ROUTES.RECEIVE} element={<ReceiveMoney />} />
             <Route path={ROUTES.SEND} element={<Send />} />
-            <Route path={ROUTES.RECEIVE} element={null} />
             <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
             <Route
               path={ROUTES.ADDRESS_BOOK_DETAILS}

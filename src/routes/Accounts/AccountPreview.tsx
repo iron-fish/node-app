@@ -15,8 +15,9 @@ import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import Caret from 'Svgx/caret-icon'
 import { useNavigate } from 'react-router-dom'
-import { ROUTES } from '..'
 import { truncateHash } from 'Utils/hash'
+import { Link } from 'react-router-dom'
+import { ROUTES } from '..'
 
 export interface AccountPreviewProps {
   order: number
@@ -99,7 +100,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
   )
   return (
     <Flex
-      p="0.75rem"
+      p="0.75rem 2rem 0.75rem 0.75rem"
       my="0.5rem"
       border="0.063rem solid"
       borderRadius="0.25rem"
@@ -171,7 +172,6 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           iconButtonProps={{
             justifyContent: 'none',
             minW: '0.75rem',
-            'aria-label': 'copy',
           }}
           labelProps={{
             mr: '0.5rem',
@@ -182,7 +182,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           copiedTooltipText="Copied"
         />
       </Box>
-      <Flex ml="auto" alignSelf="center">
+      <Flex ml="auto" alignSelf="center" mr="-1rem">
         <Flex direction="column" gap="0.75rem">
           <Button
             variant="primary"
@@ -224,6 +224,9 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           _active={{ bg: 'none' }}
           _hover={{ bg: 'none' }}
           icon={<Caret />}
+          as={Link}
+          to={ROUTES.ACCOUNT}
+          state={{ accountId: address }}
         />
       </Flex>
     </Flex>
