@@ -55,10 +55,6 @@ const SpendingKeyTab: FC = () => {
           as={Link}
           to={ROUTES.ACCOUNTS}
           disabled={!key}
-          _disabled={{
-            pointerEvents: 'none',
-            opacity: '0.4',
-          }}
         >
           Import Account
         </Button>
@@ -100,10 +96,6 @@ const ImportFileTab: FC = () => {
           as={Link}
           to={ROUTES.ACCOUNTS}
           disabled={!file}
-          _disabled={{
-            pointerEvents: 'none',
-            opacity: '0.4',
-          }}
         >
           Import Account
         </Button>
@@ -116,7 +108,9 @@ const MnemonicPhraseTab: FC = () => {
   const [phrase, setPhrase] = useState([])
   return (
     <>
-      <chakra.h3 mt="2rem">Mnemonic Phrase</chakra.h3>
+      <chakra.h3 pb="0.25rem" mt="2rem">
+        Mnemonic Phrase
+      </chakra.h3>
       <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
         Fill out your recovery phrase in the proper order
       </chakra.h5>
@@ -141,10 +135,6 @@ const MnemonicPhraseTab: FC = () => {
             phrase.length < 12 ||
             phrase.findIndex(word => !word) !== -1
           }
-          _disabled={{
-            pointerEvents: 'none',
-            opacity: '0.4',
-          }}
         >
           Import Account
         </Button>
@@ -156,11 +146,13 @@ const MnemonicPhraseTab: FC = () => {
 const ImportAccount: FC = () => {
   return (
     <Flex flexDirection="column" p="4rem" pb="0" bg="transparent" w="100%">
-      <BackButtonLink mb="3rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
-      <chakra.h1 color={NAMED_COLORS.BLACK} mb="1rem">
+      <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
+      <chakra.h1 color={NAMED_COLORS.BLACK} mb="1.5rem">
         Import Account
       </chakra.h1>
-      <chakra.h3 color={NAMED_COLORS.BLACK}>Import With</chakra.h3>
+      <chakra.h3 color={NAMED_COLORS.BLACK} pb="0.25rem">
+        Import With
+      </chakra.h3>
       <Tabs>
         <TabList>
           <Tab>Spending Key</Tab>
