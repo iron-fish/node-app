@@ -46,6 +46,7 @@
     "fork-ts-checker-webpack-plugin": "^7.2.1",
     "husky": "^8.0.1",
     "lodash": "^4.17.21",
+    "nanoid": "^4.0.0",
     "node-loader": "^2.0.0",
     "nps": "^5.10.0",
     "nps-utils": "^1.7.0",
