@@ -5,6 +5,7 @@ import {
   useColorModeValue,
   Link,
   LinkProps,
+  Flex,
 } from '@ironfish/ui-kit'
 import { Link as RouterLink } from 'react-router-dom'
 
@@ -39,22 +40,27 @@ const BackButtonLink: FC<BackButtonLinkProps> = ({ to, label, ...rest }) => {
       {...rest}
       _hover={{
         color: $colors.linkHover,
-        ':hover>.chakra-icon': {
-          color: NAMED_COLORS.BLACK,
+        ':hover>div': {
           borderColor: $colors.chevronHoverBorder,
           background: NAMED_COLORS.WHITE,
+          '.chakra-icon': {
+            color: NAMED_COLORS.BLACK,
+          },
         },
       }}
     >
-      <ChevronLeftIcon
+      <Flex
+        borderRadius="50%"
         mr="0.625rem"
         w="1.5rem"
         h="1.5rem"
         border={$colors.chevronBorder}
-        borderRadius="50%"
-        color={$colors.chevron}
-      />
-      {label}
+        justifyContent="center"
+        alignItems="center"
+      >
+        <ChevronLeftIcon w="1rem" h="1rem" color={$colors.chevron} />
+      </Flex>
+      <h5>{label}</h5>
     </Link>
   )
 }
