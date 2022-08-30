@@ -162,7 +162,7 @@ const AddressBook: FC = () => {
             borderRadius="4rem"
             variant="secondary"
           >
-            Import Account
+            <h5>Import Account</h5>
           </Button>
         </Flex>
       </Flex>
