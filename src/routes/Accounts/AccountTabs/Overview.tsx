@@ -4,10 +4,13 @@ import {
   chakra,
   CommonTable,
   Flex,
+  VStack,
   Icon,
   NAMED_COLORS,
   useColorModeValue,
+  Link,
 } from '@ironfish/ui-kit'
+import { Link as RouterLink } from 'react-router-dom'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { FC } from 'react'
 import Send from 'Svgx/send'
@@ -15,6 +18,8 @@ import Receive from 'Svgx/receive'
 import AccountKeysImage from 'Svgx/AccountBalance'
 import { truncateHash } from 'Utils/hash'
 import SearchSortField from 'Components/Search&Sort'
+import EmptyOverviewImage from 'Svgx/EmptyOverviewImage'
+import ROUTES from 'Routes/data'
 
 interface AccountOverviewProps {
   id: string
@@ -107,6 +112,41 @@ const DEMO_DATA = [
   },
 ]
 
+const EmptyOverview = () => {
+  const $fontColor = useColorModeValue(
+    NAMED_COLORS.GREY,
+    NAMED_COLORS.PALE_GREY
+  )
+  return (
+    <Flex mt="2rem" justifyContent="center">
+      <VStack w="25rem">
+        <chakra.h3 mb="1rem">You don’t have any transactions</chakra.h3>
+        <chakra.h5 mb="2.5rem !important" textAlign="center" color={$fontColor}>
+          When your account compiles transactions they will be listed here. To
+          produce a transactions, either{' '}
+          <Link
+            as={RouterLink}
+            to={ROUTES.SEND}
+            color={NAMED_COLORS.LIGHT_BLUE}
+          >
+            send
+          </Link>{' '}
+          or{' '}
+          <Link
+            as={RouterLink}
+            to={ROUTES.RECEIVE}
+            color={NAMED_COLORS.LIGHT_BLUE}
+          >
+            receive
+          </Link>{' '}
+          $IRON.
+        </chakra.h5>
+        <EmptyOverviewImage />
+      </VStack>
+    </Flex>
+  )
+}
+
 const AccountOverview: FC<AccountOverviewProps> = props => {
   const $colors = useColorModeValue(
     {
@@ -190,61 +230,67 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
           </Box>
         </Box>
       </Flex>
-      <chakra.h3 pb="1rem">Transactions</chakra.h3>
-      <SearchSortField />
-      <CommonTable
-        textTransform="capitalize"
-        data={DEMO_DATA}
-        columns={[
-          {
-            key: 'transaction-action-column',
-            label: <chakra.h6>Action</chakra.h6>,
-            render: data => <chakra.h5>{data.action}</chakra.h5>,
-          },
-          {
-            key: 'transaction-amount-column',
-            label: <chakra.h6>$IRON</chakra.h6>,
-            render: data => <chakra.h5>{data.amount}</chakra.h5>,
-          },
-          {
-            key: 'transaction-to-column',
-            label: <chakra.h6>To</chakra.h6>,
-            render: data =>
-              data.to ? (
-                <chakra.h5>{truncateHash(data.to, 3)}</chakra.h5>
-              ) : (
-                <chakra.h5 color={NAMED_COLORS.GREY}>n/a</chakra.h5>
-              ),
-          },
-          {
-            key: 'transaction-date-column',
-            label: <chakra.h6>Date</chakra.h6>,
-            render: data => <chakra.h5>{data.date}</chakra.h5>,
-          },
-          {
-            key: 'transaction-memo-column',
-            label: <chakra.h6>Memo</chakra.h6>,
-            render: data => <chakra.h5>"{data.memo}"</chakra.h5>,
-          },
-          {
-            key: 'transaction-details-column',
-            label: '',
-            ItemProps: {
-              height: '100%',
-              justifyContent: 'flex-end',
-            },
-            render: data => (
-              <Button
-                variant="link"
-                color={NAMED_COLORS.LIGHT_BLUE}
-                rightIcon={<ChevronRightIcon />}
-              >
-                <chakra.h5>View Details</chakra.h5>
-              </Button>
-            ),
-          },
-        ]}
-      />
+      {props.id.startsWith('empty') ? (
+        <EmptyOverview />
+      ) : (
+        <>
+          <chakra.h3 pb="1rem">Transactions</chakra.h3>
+          <SearchSortField />
+          <CommonTable
+            textTransform="capitalize"
+            data={DEMO_DATA}
+            columns={[
+              {
+                key: 'transaction-action-column',
+                label: <chakra.h6>Action</chakra.h6>,
+                render: data => <chakra.h5>{data.action}</chakra.h5>,
+              },
+              {
+                key: 'transaction-amount-column',
+                label: <chakra.h6>$IRON</chakra.h6>,
+                render: data => <chakra.h5>{data.amount}</chakra.h5>,
+              },
+              {
+                key: 'transaction-to-column',
+                label: <chakra.h6>To</chakra.h6>,
+                render: data =>
+                  data.to ? (
+                    <chakra.h5>{truncateHash(data.to, 3)}</chakra.h5>
+                  ) : (
+                    <chakra.h5 color={NAMED_COLORS.GREY}>n/a</chakra.h5>
+                  ),
+              },
+              {
+                key: 'transaction-date-column',
+                label: <chakra.h6>Date</chakra.h6>,
+                render: data => <chakra.h5>{data.date}</chakra.h5>,
+              },
+              {
+                key: 'transaction-memo-column',
+                label: <chakra.h6>Memo</chakra.h6>,
+                render: data => <chakra.h5>"{data.memo}"</chakra.h5>,
+              },
+              {
+                key: 'transaction-details-column',
+                label: '',
+                ItemProps: {
+                  height: '100%',
+                  justifyContent: 'flex-end',
+                },
+                render: data => (
+                  <Button
+                    variant="link"
+                    color={NAMED_COLORS.LIGHT_BLUE}
+                    rightIcon={<ChevronRightIcon />}
+                  >
+                    <chakra.h5>View Details</chakra.h5>
+                  </Button>
+                ),
+              },
+            ]}
+          />
+        </>
+      )}
     </>
   )
 }

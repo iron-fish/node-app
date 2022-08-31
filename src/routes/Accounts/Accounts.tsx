@@ -17,9 +17,9 @@ const DEMO_DATA = [
     address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
   },
   {
-    name: 'Account 3',
+    name: 'No transactions',
     balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
+    address: 'emptynft893ntw5v780ntq304wnv5t370q8nt553d5',
   },
   {
     name: 'Account 4',
