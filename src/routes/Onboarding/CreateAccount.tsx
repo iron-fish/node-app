@@ -75,7 +75,7 @@ const CreateAccount: FC = () => {
           variant="primary"
           borderRadius="4rem"
           p="2rem"
-          disabled={!saved}
+          isDisabled={!saved}
           as={Link}
           to={ROUTES.ACCOUNTS}
         >

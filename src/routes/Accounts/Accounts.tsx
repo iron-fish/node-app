@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import { Box, Button, Flex } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SearchSortField from 'Components/Search&Sort'
 import { Link } from 'react-router-dom'
 import AccountPreview from 'Routes/Accounts/AccountPreview'
 import { ROUTES } from '..'
+import CreateAccountModal from './CreateAccountModal'
+import ImportAccountModal from './ImportAccountModal'
 
 const DEMO_DATA = [
   {
@@ -69,6 +72,8 @@ const DEMO_DATA = [
 ]
 
 const Accounts = () => {
+  const [showCreateAccount, setShowCreateAccount] = useState(false)
+  const [showImportAccount, setShowImportAccount] = useState(false)
   return (
     <>
       <Flex
@@ -93,8 +98,7 @@ const Accounts = () => {
             mr="1rem"
             borderRadius="4rem"
             variant="secondary"
-            as={Link}
-            to={ROUTES.CREATE}
+            onClick={() => setShowCreateAccount(true)}
           >
             Create Account
           </Button>
@@ -102,8 +106,7 @@ const Accounts = () => {
             leftIcon={<IconAdd mr="-0.25rem" />}
             borderRadius="4rem"
             variant="secondary"
-            as={Link}
-            to={ROUTES.IMPORT}
+            onClick={() => setShowImportAccount(true)}
           >
             Import Account
           </Button>
@@ -115,6 +118,14 @@ const Accounts = () => {
           <AccountPreview {...data} order={index} />
         ))}
       </Flex>
+      <CreateAccountModal
+        isOpen={showCreateAccount}
+        onClose={() => setShowCreateAccount(false)}
+      />
+      <ImportAccountModal
+        isOpen={showImportAccount}
+        onClose={() => setShowImportAccount(false)}
+      />
     </>
   )
 }
