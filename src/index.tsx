@@ -3,13 +3,17 @@ import * as ReactDOM from 'react-dom'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import './index.css'
+import DemoDataManager from './data/DemoDataManager'
 import { IronfishSdk } from '@ironfish/sdk'
 
 declare global {
   interface Window {
+    DemoDataManager: DemoDataManager
     Wallet: IronfishSdk
   }
 }
+
+window.DemoDataManager = new DemoDataManager()
 
 ReactDOM.render(<App />, document.getElementById('root'))
 

@@ -15,11 +15,12 @@
     "paths": {
       "*": ["node_modules/*"],
       "Components/*": ["src/components/*"],
-      "Utils/*": ["src/utils/*"],
+      "Hooks/*": ["src/hooks/*"],
       "Types/*": ["src/types/*"],
       "Routes/*": ["src/routes/*"],
       "Svgx/*": ["src/svgx/*"],
       "Utils/*": ["src/utils/*"],
+      "Data/*": ["src/data/*"],
     },
   },
   "include": ["src/**/*"],

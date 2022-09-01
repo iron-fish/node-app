@@ -1,6 +1,8 @@
+import { GetStatusResponse, PeerResponse } from '@ironfish/sdk'
 import DemoAccountsManager from './DemoAccountsManager'
 import DemoAddressBookManager from './DemoAddressBookManager'
 import DemoMinerManager from './DemoMinerManager'
+import DemoNodeManager from './DemoNodeManager'
 import DemoTransactionsManager from './DemoTransactionsManager'
 import { Account, AccountKeys, AccountSettings } from './types/Account'
 import {
@@ -16,12 +18,14 @@ class DemoDataManager {
   transactions: DemoTransactionsManager
   addressBook: DemoAddressBookManager
   miner: DemoMinerManager
+  node: DemoNodeManager
 
   constructor() {
     this.accounts = new DemoAccountsManager()
     this.transactions = new DemoTransactionsManager()
     this.addressBook = new DemoAddressBookManager()
     this.miner = new DemoMinerManager()
+    this.node = new DemoNodeManager()
   }
 
   createAccount(
@@ -42,6 +46,10 @@ class DemoDataManager {
     ]
   ): Promise<string> {
     return this.accounts.create(name, mnemonicPhrase)
+  }
+
+  generateMnemonic(): Promise<string[]> {
+    return this.accounts.generateMnemonicPhrase()
   }
 
   importAccountBySpendingKey(spendingKey: string): Promise<string> {
@@ -125,6 +133,10 @@ class DemoDataManager {
     return this.addressBook.delete(identity)
   }
 
+  addContact(name: string, address: string): Promise<string> {
+    return this.addressBook.add(name, address)
+  }
+
   getAccountMinerStatus(accountId: string): Promise<AccountMinerStatus> {
     return this.miner.status(accountId)
   }
@@ -143,6 +155,14 @@ class DemoDataManager {
 
   stopMining(accountId: string): Promise<boolean> {
     return this.miner.stop(accountId)
+  }
+
+  getNodeStatus(): Promise<GetStatusResponse> {
+    return this.node.status()
+  }
+
+  getNodePeers(): Promise<PeerResponse[]> {
+    return this.node.peers()
   }
 }
 

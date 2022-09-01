@@ -1,4 +1,5 @@
 import { Contact } from './types/Contact'
+import { nanoid } from 'nanoid'
 
 const DEMO_ADDRESS_BOOK: Contact[] = [
   {
@@ -56,6 +57,20 @@ class DemoAddressBookManager {
         resolve(
           DEMO_ADDRESS_BOOK.find(contact => contact.identity === identity)
         )
+      }, 500)
+    })
+  }
+
+  add(name: string, address: string): Promise<string> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const id = nanoid(64)
+        DEMO_ADDRESS_BOOK.push({
+          identity: id,
+          address: address,
+          name: name,
+        })
+        resolve(id)
       }, 500)
     })
   }

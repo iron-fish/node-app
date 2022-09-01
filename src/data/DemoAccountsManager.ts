@@ -1,5 +1,6 @@
 import { Account, AccountKeys, AccountSettings } from './types/Account'
 import { nanoid } from 'nanoid'
+import bip39 from 'bip39'
 
 const DEMO_ACCOUNTS: Account[] = [
   {
@@ -129,6 +130,14 @@ class DemoAccountsManager {
           currency: 'USD',
         })
         resolve(id)
+      }, 500)
+    })
+  }
+
+  generateMnemonicPhrase(): Promise<string[]> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(bip39.generateMnemonic().split(' '))
       }, 500)
     })
   }

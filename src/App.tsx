@@ -14,6 +14,7 @@ import AccountDetails from 'Routes/Accounts/AccountDetails'
 import Miner from 'Routes/Miner'
 import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressDetails'
+import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 
 const breakpoints = {
@@ -47,7 +48,7 @@ function App() {
               element={<AddressDetails />}
             />
             <Route path={ROUTES.RESOURCES} element={null} />
-            <Route path={ROUTES.NODE} element={null} />
+            <Route path={ROUTES.NODE} element={<NodeOverview />} />
             <Route path={ROUTES.MINER} element={<Miner />} />
           </Route>
         </Routes>
