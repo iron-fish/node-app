@@ -1,6 +1,6 @@
 import { Account, AccountKeys, AccountSettings } from './types/Account'
 import { nanoid } from 'nanoid'
-import bip39 from 'bip39'
+import { bip39 } from 'bip39'
 
 const DEMO_ACCOUNTS: Account[] = [
   {
