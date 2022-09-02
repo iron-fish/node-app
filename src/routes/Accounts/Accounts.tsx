@@ -111,7 +111,7 @@ const Accounts = () => {
             as={Link}
             to={ROUTES.CREATE}
           >
-            <chakra.h5 mt="2px">Create Account</chakra.h5>
+            <chakra.h5 mt="0.125rem">Create Account</chakra.h5>
           </Button>
           <Button
             leftIcon={<IconAdd mr="-0.25rem" />}
