@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import {
   Box,
-  Button,
   Flex,
   chakra,
   CopyValueToClipboard,
@@ -13,8 +12,7 @@ import {
   TabList,
   Tab,
 } from '@ironfish/ui-kit'
-import { ChevronLeftIcon } from '@chakra-ui/icons'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { ROUTES } from '..'
 import { truncateHash } from 'Utils/hash'
 import LocationStateProps from 'Types/LocationState'
@@ -24,7 +22,7 @@ import AccountSettings from './AccountTabs/Settings'
 import BackButtonLink from 'Components/BackButtonLink'
 
 const AccountDetails: FC = () => {
-  const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
+  const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
   const location = useLocation()
   const { accountId } = location.state as LocationStateProps
   return (

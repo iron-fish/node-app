@@ -1,4 +1,11 @@
-import { Box, Button, Flex } from '@ironfish/ui-kit'
+import {
+  Box,
+  Button,
+  Flex,
+  chakra,
+  NAMED_COLORS,
+  useColorModeValue,
+} from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SearchSortField from 'Components/Search&Sort'
 import { Link } from 'react-router-dom'
@@ -69,6 +76,10 @@ const DEMO_DATA = [
 ]
 
 const Accounts = () => {
+  const $colors = useColorModeValue(
+    { subHeader: NAMED_COLORS.GREY },
+    { subHeader: NAMED_COLORS.PALE_GREY }
+  )
   return (
     <>
       <Flex
@@ -81,11 +92,15 @@ const Accounts = () => {
           <Box>
             <h2>Privacy Accounts</h2>
           </Box>
-          <Box>
+          <Flex>
+            <chakra.h5 color={$colors.subHeader}>
+              Total accounts balance:
+            </chakra.h5>
+            &nbsp;
             <h5>
-              Total accounts balance: <b>10,456 $IRON</b>
+              <b>10,456 $IRON</b>
             </h5>
-          </Box>
+          </Flex>
         </Flex>
         <Flex>
           <Button
@@ -96,7 +111,7 @@ const Accounts = () => {
             as={Link}
             to={ROUTES.CREATE}
           >
-            Create Account
+            <chakra.h5 mt="0.125rem">Create Account</chakra.h5>
           </Button>
           <Button
             leftIcon={<IconAdd mr="-0.25rem" />}
@@ -105,12 +120,12 @@ const Accounts = () => {
             as={Link}
             to={ROUTES.IMPORT}
           >
-            Import Account
+            <chakra.h5 mt="0.125rem">Import Account</chakra.h5>
           </Button>
         </Flex>
       </Flex>
       <SearchSortField />
-      <Flex direction="column" width="100%">
+      <Flex mt="0.5rem" direction="column" width="100%">
         {DEMO_DATA.map((data, index) => (
           <AccountPreview {...data} order={index} />
         ))}
