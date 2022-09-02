@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import {
   Box,
   Button,
@@ -112,6 +113,28 @@ const DEMO_DATA = [
   },
 ]
 
+// used to check no transaction case, should be replaced when demo data manager added
+const useDemoTransactions = (address: string) => {
+  const [result, setResult] = useState({ data: [], loaded: false })
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () =>
+        setResult({
+          loaded: true,
+          data: address.startsWith('empty') ? [] : DEMO_DATA,
+        }),
+      1000
+    )
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [address])
+
+  return result
+}
+
 const EmptyOverview = () => {
   const $fontColor = useColorModeValue(
     NAMED_COLORS.GREY,
@@ -158,6 +181,9 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
       boxShadow: `0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.DARKER_GREY}, 0.25rem 0.25rem ${NAMED_COLORS.WHITE} !important`,
     }
   )
+
+  const { data, loaded } = useDemoTransactions(props.id)
+
   return (
     <>
       <Flex w="100%" pb="2rem">
@@ -230,7 +256,7 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
           </Box>
         </Box>
       </Flex>
-      {props.id.startsWith('empty') ? (
+      {data.length === 0 && loaded ? (
         <EmptyOverview />
       ) : (
         <>
@@ -238,24 +264,28 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
           <SearchSortField />
           <CommonTable
             textTransform="capitalize"
-            data={DEMO_DATA}
+            data={loaded ? data : [...Array(10)].fill(null)}
             columns={[
               {
                 key: 'transaction-action-column',
                 label: <chakra.h6>Action</chakra.h6>,
-                render: data => <chakra.h5>{data.action}</chakra.h5>,
+                render: transaction => (
+                  <chakra.h5>{transaction.action}</chakra.h5>
+                ),
               },
               {
                 key: 'transaction-amount-column',
                 label: <chakra.h6>$IRON</chakra.h6>,
-                render: data => <chakra.h5>{data.amount}</chakra.h5>,
+                render: transaction => (
+                  <chakra.h5>{transaction.amount}</chakra.h5>
+                ),
               },
               {
                 key: 'transaction-to-column',
                 label: <chakra.h6>To</chakra.h6>,
-                render: data =>
-                  data.to ? (
-                    <chakra.h5>{truncateHash(data.to, 3)}</chakra.h5>
+                render: transaction =>
+                  transaction.to ? (
+                    <chakra.h5>{truncateHash(transaction.to, 3)}</chakra.h5>
                   ) : (
                     <chakra.h5 color={NAMED_COLORS.GREY}>n/a</chakra.h5>
                   ),
@@ -263,12 +293,16 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
               {
                 key: 'transaction-date-column',
                 label: <chakra.h6>Date</chakra.h6>,
-                render: data => <chakra.h5>{data.date}</chakra.h5>,
+                render: transaction => (
+                  <chakra.h5>{transaction.date}</chakra.h5>
+                ),
               },
               {
                 key: 'transaction-memo-column',
                 label: <chakra.h6>Memo</chakra.h6>,
-                render: data => <chakra.h5>"{data.memo}"</chakra.h5>,
+                render: transaction => (
+                  <chakra.h5>"{transaction.memo}"</chakra.h5>
+                ),
               },
               {
                 key: 'transaction-details-column',
@@ -277,7 +311,7 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
                   height: '100%',
                   justifyContent: 'flex-end',
                 },
-                render: data => (
+                render: () => (
                   <Button
                     variant="link"
                     color={NAMED_COLORS.LIGHT_BLUE}
