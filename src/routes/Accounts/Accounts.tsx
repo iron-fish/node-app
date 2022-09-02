@@ -120,7 +120,7 @@ const Accounts = () => {
             as={Link}
             to={ROUTES.IMPORT}
           >
-            <chakra.h5 mt="2px">Import Account</chakra.h5>
+            <chakra.h5 mt="0.125rem">Import Account</chakra.h5>
           </Button>
         </Flex>
       </Flex>
