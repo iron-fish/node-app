@@ -95,8 +95,12 @@ class DemoDataManager {
     return this.accounts.settings(accountId)
   }
 
-  findTransactionsByAddress(address: string): Promise<Transaction[]> {
-    return this.transactions.findByAddress(address)
+  findTransactionsByAddress(
+    address: string,
+    search?: string,
+    sort?: 'asc' | 'desc'
+  ): Promise<Transaction[]> {
+    return this.transactions.findByAddress(address, search, sort)
   }
 
   calculateFee(amount: number): Promise<number> {
@@ -113,8 +117,8 @@ class DemoDataManager {
     return this.transactions.send(from, to, amount, memo, fee)
   }
 
-  getAddressBook(search: string): Promise<Contact[]> {
-    return this.addressBook.list(search)
+  getAddressBook(search: string, sort?: 'asc' | 'desc'): Promise<Contact[]> {
+    return this.addressBook.list(search, sort)
   }
 
   getContact(identity: string): Promise<Contact> {

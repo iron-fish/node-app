@@ -90,18 +90,28 @@ const DEMO_TRANSACTIONS: Transaction[] = [
 ]
 
 class DemoTransactionsManager {
-  findByAddress(address: string): Promise<Transaction[]> {
+  findByAddress(
+    address: string,
+    searchTerm?: string,
+    sort?: 'asc' | 'desc'
+  ): Promise<Transaction[]> {
     return new Promise(resolve => {
-      setTimeout(
-        () =>
-          resolve(
-            DEMO_TRANSACTIONS.filter(
-              transaction =>
-                transaction.from === address || transaction.to === address
-            )
-          ),
-        500
-      )
+      setTimeout(() => {
+        const transactions = DEMO_TRANSACTIONS.filter(
+          transaction =>
+            (transaction.from === address || transaction.to === address) &&
+            (!searchTerm ||
+              transaction.hash.includes(searchTerm) ||
+              transaction.from.includes(searchTerm) ||
+              transaction.to.includes(searchTerm))
+        )
+        transactions.sort(
+          (a, b) =>
+            (Date.parse(a.created) - Date.parse(b.created)) *
+            (sort === 'asc' ? 1 : -1)
+        )
+        resolve(transactions)
+      }, 500)
     })
   }
 

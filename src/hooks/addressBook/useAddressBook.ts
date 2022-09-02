@@ -2,15 +2,15 @@ import { useEffect } from 'react'
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
 import { Contact } from 'Data/types/Contact'
 
-const useAddressBook = (searchTerm: string) => {
+const useAddressBook = (searchTerm: string, sort?: 'asc' | 'desc') => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Contact[]>()
 
-  const loadAddressBook = (search: string) =>
-    promiseWrapper(window.DemoDataManager.getAddressBook(search))
+  const loadAddressBook = () =>
+    promiseWrapper(window.DemoDataManager.getAddressBook(searchTerm, sort))
 
   useEffect(() => {
-    loadAddressBook(searchTerm)
-  }, [searchTerm])
+    loadAddressBook()
+  }, [searchTerm, sort])
 
   return [result, window.DemoDataManager.addressBook.add]
 }

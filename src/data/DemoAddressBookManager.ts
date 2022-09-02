@@ -35,7 +35,7 @@ const DEMO_ADDRESS_BOOK: Contact[] = [
 ]
 
 class DemoAddressBookManager {
-  list(search: string): Promise<Contact[]> {
+  list(search: string, sort?: 'asc' | 'desc'): Promise<Contact[]> {
     return new Promise(resolve => {
       setTimeout(
         () =>
@@ -44,6 +44,9 @@ class DemoAddressBookManager {
               contact =>
                 contact.name.includes(search || '') ||
                 contact.address.includes(search || '')
+            ).sort(
+              (a, b) =>
+                a.name.localeCompare(b.name) * (sort === 'desc' ? -1 : 1)
             )
           ),
         500
