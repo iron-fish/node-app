@@ -2,11 +2,10 @@ import { useState } from 'react'
 import { Box, Button, Flex } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SearchSortField from 'Components/Search&Sort'
-import { Link } from 'react-router-dom'
 import AccountPreview from 'Routes/Accounts/AccountPreview'
-import { ROUTES } from '..'
-import CreateAccountModal from './CreateAccountModal'
-import ImportAccountModal from './ImportAccountModal'
+import ModalWindow from 'Components/ModalWindow'
+import ImportAccount from 'Routes/Onboarding/ImportAccount'
+import CreateAccount from 'Routes/Onboarding/CreateAccount'
 
 const DEMO_DATA = [
   {
@@ -118,14 +117,24 @@ const Accounts = () => {
           <AccountPreview {...data} order={index} />
         ))}
       </Flex>
-      <CreateAccountModal
+      <ModalWindow
         isOpen={showCreateAccount}
         onClose={() => setShowCreateAccount(false)}
-      />
-      <ImportAccountModal
+      >
+        <CreateAccount
+          desktopMode={false}
+          onCreate={() => setShowCreateAccount(false)}
+        />
+      </ModalWindow>
+      <ModalWindow
         isOpen={showImportAccount}
         onClose={() => setShowImportAccount(false)}
-      />
+      >
+        <ImportAccount
+          desktopMode={false}
+          onImport={() => setShowImportAccount(false)}
+        />
+      </ModalWindow>
     </>
   )
 }
