@@ -15,15 +15,19 @@ import {
   MnemonicView,
 } from '@ironfish/ui-kit'
 import { FC, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { ROUTES } from '..'
 import IconEye from '@ironfish/ui-kit/dist/svgx/icon-eye'
 import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
 import BackButtonLink from 'Components/BackButtonLink'
+import useImportAccount from 'Hooks/accounts/useImportAccount'
+import { useNavigate } from 'react-router-dom'
+import { MnemonicPhraseType } from 'Types/AsyncDataType'
 
 const SpendingKeyTab: FC = () => {
   const [show, setShow] = useState(false)
   const [key, setKey] = useState('')
+  const navigate = useNavigate()
+  const [importBySpendingKey] = useImportAccount()
 
   return (
     <>
@@ -52,9 +56,10 @@ const SpendingKeyTab: FC = () => {
           variant="primary"
           borderRadius="4rem"
           p="2rem"
-          as={Link}
-          to={ROUTES.ACCOUNTS}
           disabled={!key}
+          onClick={() => {
+            importBySpendingKey(key).then(() => navigate(ROUTES.ACCOUNTS))
+          }}
         >
           Import Account
         </Button>
@@ -65,6 +70,8 @@ const SpendingKeyTab: FC = () => {
 
 const ImportFileTab: FC = () => {
   const [file, setFile] = useState<File | null>(null)
+  const navigate = useNavigate()
+  const [, , importByFile] = useImportAccount()
   return (
     <>
       <chakra.h5 mb="1rem" mt="2rem" color={NAMED_COLORS.GREY}>
@@ -93,9 +100,10 @@ const ImportFileTab: FC = () => {
           borderRadius="4rem"
           mt="2rem"
           p="2rem"
-          as={Link}
-          to={ROUTES.ACCOUNTS}
           disabled={!file}
+          onClick={() => {
+            importByFile(file).then(() => navigate(ROUTES.ACCOUNTS))
+          }}
         >
           Import Account
         </Button>
@@ -106,6 +114,8 @@ const ImportFileTab: FC = () => {
 
 const MnemonicPhraseTab: FC = () => {
   const [phrase, setPhrase] = useState([])
+  const navigate = useNavigate()
+  const [, importByMnemonicPhrase] = useImportAccount()
   return (
     <>
       <chakra.h3 pb="0.25rem" mt="2rem">
@@ -128,8 +138,11 @@ const MnemonicPhraseTab: FC = () => {
           borderRadius="4rem"
           mt="2rem"
           p="2rem"
-          as={Link}
-          to={ROUTES.ACCOUNTS}
+          onClick={() => {
+            importByMnemonicPhrase(phrase as MnemonicPhraseType).then(() =>
+              navigate(ROUTES.ACCOUNTS)
+            )
+          }}
           disabled={
             !phrase ||
             phrase.length < 12 ||

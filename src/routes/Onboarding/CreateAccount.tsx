@@ -12,24 +12,13 @@ import { FC, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '..'
 import BackButtonLink from 'Components/BackButtonLink'
-
-const words = [
-  'Carrot',
-  'Stick',
-  'Papercut',
-  'Phone',
-  'Keyboard',
-  'Walkway',
-  'Uppercut',
-  'Ball',
-  'Pants',
-  'Test',
-  'Grass',
-  'Milk',
-]
+import useCreateAccount from 'Hooks/accounts/useCreateAccount'
+import { MnemonicPhraseType } from 'Types/AsyncDataType'
 
 const CreateAccount: FC = () => {
   const [saved, setSaved] = useState<boolean>(false)
+  const [accountName, setAccountName] = useState<string>('')
+  const [result, createAccount] = useCreateAccount()
   return (
     <Flex flexDirection="column" p="4rem" pb="0" bg="transparent" w="100%">
       <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
@@ -42,7 +31,15 @@ const CreateAccount: FC = () => {
       <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
         This account name is only known to you
       </chakra.h5>
-      <TextField label="Account Name" mb="2rem" w="100%" />
+      <TextField
+        label="Account Name"
+        mb="2rem"
+        w="100%"
+        value={accountName}
+        InputProps={{
+          onChange: e => setAccountName(e.target.value),
+        }}
+      />
       <chakra.h3 color={NAMED_COLORS.BLACK} pb="0.25rem">
         Recovery Phrase
       </chakra.h3>
@@ -52,7 +49,7 @@ const CreateAccount: FC = () => {
       </chakra.h5>
       <MnemonicView
         header="Mnemonic Phrase"
-        value={words}
+        value={result.loaded ? result.data : []}
         placeholder={''}
         onChange={() => null}
         isReadOnly={true}
@@ -73,11 +70,13 @@ const CreateAccount: FC = () => {
       <Box>
         <Button
           variant="primary"
-          borderRadius="4rem"
-          p="2rem"
-          disabled={!saved}
+          size="large"
+          isDisabled={!saved || !accountName}
           as={Link}
           to={ROUTES.ACCOUNTS}
+          onClick={() =>
+            createAccount(accountName, result.data as MnemonicPhraseType)
+          }
         >
           Create Account
         </Button>
