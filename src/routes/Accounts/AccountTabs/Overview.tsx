@@ -9,105 +9,27 @@ import {
   useColorModeValue,
 } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import AccountKeysImage from 'Svgx/AccountBalance'
 import { truncateHash } from 'Utils/hash'
 import SearchSortField from 'Components/Search&Sort'
+import useTransactions from 'Hooks/transactions/useTransactions'
+import { Account } from 'Data/types/Account'
 
 interface AccountOverviewProps {
-  id: string
+  account: Account
 }
 
-const DEMO_DATA = [
-  {
-    action: 'Sent',
-    amount: '21',
-    to: '4321abc23fdabc43ws',
-    date: '2021-05-13 14:04:45',
-    memo: 'Here’s the payment',
-  },
-  {
-    action: 'Received',
-    amount: '4',
-    to: null,
-    date: '2021-05-13 14:04:45',
-    memo: 'ty',
-  },
-  {
-    action: 'Sent',
-    amount: '104',
-    to: 'Curtis',
-    date: '2021-05-13 14:04:45',
-    memo: 'Let me know if you get this',
-  },
-  {
-    action: 'Sent',
-    amount: '21',
-    to: '4321abc23fdabc43ws',
-    date: '2021-05-13 14:04:45',
-    memo: 'Here’s the payment',
-  },
-  {
-    action: 'Received',
-    amount: '4',
-    to: null,
-    date: '2021-05-13 14:04:45',
-    memo: 'ty',
-  },
-  {
-    action: 'Sent',
-    amount: '104',
-    to: 'Curtis',
-    date: '2021-05-13 14:04:45',
-    memo: 'Let me know if you get this',
-  },
-  {
-    action: 'Sent',
-    amount: '21',
-    to: '4321abc23fdabc43ws',
-    date: '2021-05-13 14:04:45',
-    memo: 'Here’s the payment',
-  },
-  {
-    action: 'Received',
-    amount: '4',
-    to: null,
-    date: '2021-05-13 14:04:45',
-    memo: 'ty',
-  },
-  {
-    action: 'Sent',
-    amount: '104',
-    to: 'Curtis',
-    date: '2021-05-13 14:04:45',
-    memo: 'Let me know if you get this',
-  },
-  {
-    action: 'Sent',
-    amount: '21',
-    to: '4321abc23fdabc43ws',
-    date: '2021-05-13 14:04:45',
-    memo: 'Here’s the payment',
-  },
-  {
-    action: 'Received',
-    amount: '4',
-    to: null,
-    date: '2021-05-13 14:04:45',
-    memo: 'ty',
-  },
-  {
-    action: 'Sent',
-    amount: '104',
-    to: 'Curtis',
-    date: '2021-05-13 14:04:45',
-    memo: 'Let me know if you get this',
-  },
-]
-
-const AccountOverview: FC<AccountOverviewProps> = props => {
+const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
+  const [$searchTerm, $setSearchTerm] = useState('')
+  const [$sortOrder, $setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [{ data: transactions, loaded }] = useTransactions(
+    account?.address,
+    $searchTerm,
+    $sortOrder
+  )
   const $colors = useColorModeValue(
     {
       borderColor: NAMED_COLORS.DEEP_BLUE,
@@ -123,7 +45,6 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
       <Flex w="100%" pb="2rem">
         <Box
           layerStyle="card"
-          // p="2rem"
           bg="linear-gradient(92.65deg, #85ADFE 0.41%, #4D88FF 100.03%) !important"
           borderRadius="0.25rem"
           w="100%"
@@ -139,7 +60,7 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
               </Box>
               <Box mb="0.5rem">
                 <chakra.h2 color={NAMED_COLORS.DEEP_BLUE}>
-                  8,456,435.4563
+                  {account?.balance}
                 </chakra.h2>
               </Box>
               <Box>
@@ -186,15 +107,22 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
             <chakra.h4>Pending $IRON</chakra.h4>
           </Box>
           <Box mb="0.5rem">
-            <chakra.h2>143.456</chakra.h2>
+            <chakra.h2>{account?.pending}</chakra.h2>
           </Box>
         </Box>
       </Flex>
       <chakra.h3 pb="1rem">Transactions</chakra.h3>
-      <SearchSortField />
+      <SearchSortField
+        SearchProps={{
+          onChange: e => $setSearchTerm(e.target.value),
+        }}
+        SortSelectProps={{
+          onSelectOption: ({ value }) => $setSortOrder(value),
+        }}
+      />
       <CommonTable
         textTransform="capitalize"
-        data={DEMO_DATA}
+        data={loaded ? transactions : new Array(10).fill(null)}
         columns={[
           {
             key: 'transaction-action-column',
@@ -233,7 +161,7 @@ const AccountOverview: FC<AccountOverviewProps> = props => {
               height: '100%',
               justifyContent: 'flex-end',
             },
-            render: data => (
+            render: () => (
               <Button
                 variant="link"
                 color={NAMED_COLORS.LIGHT_BLUE}

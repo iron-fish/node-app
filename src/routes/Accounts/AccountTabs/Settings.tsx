@@ -11,8 +11,10 @@ import {
 } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import DetailsPanel from 'Components/DetailsPanel'
-import { FC, memo, useState } from 'react'
+import { FC, memo, useState, useEffect } from 'react'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
+import { Account } from 'Data/types/Account'
+import useAccountSettings from 'Hooks/accounts/useAccountSettings'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -32,7 +34,7 @@ const Information: FC = memo(() => {
 })
 
 interface AccountSettingsProps {
-  id: string
+  account: Account
 }
 
 const CURRENCIES = [
@@ -53,11 +55,26 @@ const CURRENCIES = [
   },
 ]
 
-const AccountSettings: FC<AccountSettingsProps> = props => {
-  const [name, setName] = useState<string>('Primary Account')
+const AccountSettings: FC<AccountSettingsProps> = ({ account }) => {
+  const [name, setName] = useState<string>('')
   const [currency, setCurrency] = useState<OptionType>(CURRENCIES[0])
+  const { data: settings, loaded } = useAccountSettings(account?.identity)
+
+  useEffect(() => {
+    if (settings && loaded) {
+      setName(account?.name)
+      const currencyOption = CURRENCIES.find(
+        ({ value }) => value === settings.currency
+      )
+      if (currencyOption) {
+        setCurrency(currencyOption)
+      }
+    }
+  }, [settings, loaded])
+
   const checkChanges: () => boolean = () =>
-    name !== 'Primary Account' || currency.value !== 'USD'
+    (loaded && name !== account?.name) || currency.value !== settings?.currency
+
   return (
     <Flex mb="4rem">
       <Box w="37.25rem">

@@ -18,12 +18,10 @@ import { useNavigate } from 'react-router-dom'
 import { truncateHash } from 'Utils/hash'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '..'
+import { Account } from 'Data/types/Account'
 
-export interface AccountPreviewProps {
+export interface AccountPreviewProps extends Account {
   order: number
-  name: string
-  balance: number
-  address: string
 }
 
 const ORDER_COLOR = [
@@ -82,7 +80,9 @@ const AccountPreview: FC<AccountPreviewProps> = ({
   name,
   balance = 0,
   address,
+  identity,
 }) => {
+  console.log(identity)
   const navigate = useNavigate()
   const $colors = useColorModeValue(
     {
@@ -106,7 +106,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       borderRadius="0.25rem"
       cursor="pointer"
       onClick={() =>
-        navigate(ROUTES.ACCOUNT, { state: { accountId: address } })
+        navigate(ROUTES.ACCOUNT, { state: { accountId: identity } })
       }
       sx={{
         transition: '0.3s',
@@ -224,9 +224,6 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           _active={{ bg: 'none' }}
           _hover={{ bg: 'none' }}
           icon={<Caret />}
-          as={Link}
-          to={ROUTES.ACCOUNT}
-          state={{ accountId: address }}
         />
       </Flex>
     </Flex>

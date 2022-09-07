@@ -1,74 +1,16 @@
+import { useState } from 'react'
 import { Box, Button, Flex } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SearchSortField from 'Components/Search&Sort'
+import useAccounts from 'Hooks/accounts/useAccounts'
 import { Link } from 'react-router-dom'
 import AccountPreview from 'Routes/Accounts/AccountPreview'
 import { ROUTES } from '..'
 
-const DEMO_DATA = [
-  {
-    name: 'Primary Account',
-    balance: 8.456,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Secondary Account',
-    balance: 1.944,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 3',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 4',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 5',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 6',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 7',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 8',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 9',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 10',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 11',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 12',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-]
-
 const Accounts = () => {
+  const [$searchTerm, $setSearchTerm] = useState('')
+  const [$sortOrder, $setSortOrder] = useState('asc')
+  const { data: accounts, loaded } = useAccounts($searchTerm)
   return (
     <>
       <Flex
@@ -109,11 +51,24 @@ const Accounts = () => {
           </Button>
         </Flex>
       </Flex>
-      <SearchSortField />
+      <SearchSortField
+        SearchProps={{
+          onChange: e => $setSearchTerm(e.target.value),
+        }}
+        SortSelectProps={{
+          onSelectOption: ({ value }) => $setSortOrder(value),
+        }}
+      />
       <Flex direction="column" width="100%">
-        {DEMO_DATA.map((data, index) => (
-          <AccountPreview {...data} order={index} />
-        ))}
+        {loaded
+          ? accounts.map((data, index) => (
+              <AccountPreview
+                key={`${data.name}-${index}`}
+                {...data}
+                order={index}
+              />
+            ))
+          : null}
       </Flex>
     </>
   )

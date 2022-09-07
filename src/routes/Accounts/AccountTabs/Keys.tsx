@@ -10,30 +10,14 @@ import {
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
 import PasswordField from 'Components/PasswordField'
-import { FC, memo, useState } from 'react'
+import { FC, memo, useState, useEffect } from 'react'
 import AccountKeysImage from 'Svgx/AccountKeysImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
-
+import { Account } from 'Data/types/Account'
+import useAccountKeys from 'Hooks/accounts/useAccountKeys'
 interface AccountKeysProps {
-  id: string
+  account: Account
 }
-
-const DEMO_PHRASE = [
-  'Carrot',
-  'Stick',
-  'Papercut',
-  'Phone',
-  'Keyboard',
-  'Walkway',
-  'Uppercut',
-  'Ball',
-  'Pants',
-  'Test',
-  'Grass',
-  'Milk',
-]
-const DEMO_KEY =
-  '00000000000700ab5bb09f2129eae83a7c7dd6c8376e2252f4b6b3629affa359'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -65,23 +49,37 @@ const Information: FC = memo(() => {
   )
 })
 
-const AccountKeys: FC<AccountKeysProps> = props => {
-  const [spendingKey, setSpendingKey] = useState<string>(DEMO_KEY)
-  const [nullifierKey, setNullifierKey] = useState<string>(DEMO_KEY)
-  const [authKey, setAuthKey] = useState<string>(DEMO_KEY)
-  const [proofAuthKey, setProofAuthKey] = useState<string>(DEMO_KEY)
-  const [phrase, setMnemomicPhrase] = useState<string[]>(DEMO_PHRASE)
+const AccountKeys: FC<AccountKeysProps> = ({ account }) => {
+  const [spendingKey, setSpendingKey] = useState<string>('')
+  const [nullifierKey, setNullifierKey] = useState<string>('')
+  const [authKey, setAuthKey] = useState<string>('')
+  const [proofAuthKey, setProofAuthKey] = useState<string>('')
+  const [phrase, setMnemonicPhrase] = useState<string[]>([])
+
+  const { data, loaded } = useAccountKeys(account?.identity)
+
+  useEffect(() => {
+    if (data && loaded) {
+      setSpendingKey(data.spendingKey)
+      setNullifierKey(data.nullifierKey)
+      setAuthKey(data.authorizationKey)
+      setProofAuthKey(data.proofAuthorizationKey)
+      setMnemonicPhrase(data.mnemonicPhrase)
+    }
+  }, [data, loaded])
 
   const checkChanges: () => boolean = () => {
     return (
-      spendingKey !== DEMO_KEY ||
-      nullifierKey !== DEMO_KEY ||
-      authKey !== DEMO_KEY ||
-      proofAuthKey !== DEMO_KEY ||
-      !!phrase.find(
-        (word, index) =>
-          index !== DEMO_PHRASE.findIndex(demo_word => demo_word === word)
-      )
+      loaded &&
+      (spendingKey !== data.spendingKey ||
+        nullifierKey !== data.nullifierKey ||
+        authKey !== data.authorizationKey ||
+        proofAuthKey !== data.proofAuthorizationKey ||
+        !!phrase.find(
+          (word, index) =>
+            index !==
+            data.mnemonicPhrase.findIndex(demo_word => demo_word === word)
+        ))
     )
   }
 
@@ -100,7 +98,7 @@ const AccountKeys: FC<AccountKeysProps> = props => {
           value={phrase}
           isReadOnly={true}
           placeholder="Empty"
-          onChange={words => setMnemomicPhrase(words)}
+          onChange={words => setMnemonicPhrase(words)}
           mb="2rem"
         />
         <PasswordField
