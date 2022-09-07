@@ -82,7 +82,6 @@ const AccountPreview: FC<AccountPreviewProps> = ({
   address,
   identity,
 }) => {
-  console.log(identity)
   const navigate = useNavigate()
   const $colors = useColorModeValue(
     {
