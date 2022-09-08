@@ -18,7 +18,7 @@ const getAccountOptions = (accounts: Account[] = []): OptionType[] => {
   }))
 }
 
-const AccountsSelect: FC<AccountsSelectProps> = ({ ...props }) => {
+const AccountsSelect: FC<AccountsSelectProps> = props => {
   const { data, loaded } = useAccounts()
 
   const options = useMemo(() => getAccountOptions(data), [JSON.stringify(data)])
