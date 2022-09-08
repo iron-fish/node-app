@@ -9,8 +9,8 @@ import { ROUTES } from '..'
 
 const Accounts = () => {
   const [$searchTerm, $setSearchTerm] = useState('')
-  const [$sortOrder, $setSortOrder] = useState('asc')
-  const { data: accounts, loaded } = useAccounts($searchTerm)
+  const [$sortOrder, $setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const { data: accounts, loaded } = useAccounts($searchTerm, $sortOrder)
   return (
     <>
       <Flex

@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Account } from 'Data/types/Account'
 import useAsyncDataWrapper from '../useAsyncDataWrapper'
 
-const useAccounts = (searchTerm = '') => {
+const useAccounts = (searchTerm = '', sortOrder = 'asc') => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Account[]>()
 
   const loadAccounts = (search: string) =>
