@@ -18,7 +18,7 @@ const useTransactions = (
     loadTransactions()
   }, [address, search, sort])
 
-  return [result, window.DemoDataManager.addressBook.add]
+  return [result, window.DemoDataManager.addressBook.add] as const
 }
 
 export default useTransactions

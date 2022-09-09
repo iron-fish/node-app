@@ -8,7 +8,7 @@ export const ROUTES = {
   SEND: '/send',
   RECEIVE: '/receive',
   ADDRESS_BOOK: '/address-book',
-  ADDRESS_BOOK_DETAILS: '/address-book/:address',
+  ADDRESS_BOOK_DETAILS: '/address-book/:identity',
   RESOURCES: '/resources',
   NODE: '/node',
   MINER: '/miner',
