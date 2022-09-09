@@ -1,11 +1,4 @@
-import { SVGProps } from './types'
 import { Icon, IconProps } from '@ironfish/ui-kit'
-
-interface Props extends SVGProps {
-  fill?: string
-  width?: number
-  height?: number
-}
 
 function Logo(props: IconProps) {
   return (

@@ -1,4 +1,5 @@
 import { GetStatusResponse, PeerResponse } from '@ironfish/sdk'
+import { MnemonicPhraseType } from 'Types/AsyncDataType'
 import DemoAccountsManager from './DemoAccountsManager'
 import DemoAddressBookManager from './DemoAddressBookManager'
 import DemoMinerManager from './DemoMinerManager'
@@ -30,20 +31,7 @@ class DemoDataManager {
 
   createAccount(
     name: string,
-    mnemonicPhrase: [
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string
-    ]
+    mnemonicPhrase: MnemonicPhraseType
   ): Promise<string> {
     return this.accounts.create(name, mnemonicPhrase)
   }
@@ -57,20 +45,7 @@ class DemoDataManager {
   }
 
   importAccountByMnemonicPhrase(
-    mnemonicPhrase: [
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string
-    ]
+    mnemonicPhrase: MnemonicPhraseType
   ): Promise<string> {
     return this.accounts.importByMnemonicPhrase(mnemonicPhrase)
   }
