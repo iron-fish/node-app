@@ -16,6 +16,7 @@ import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState } from 'react'
 import MinerInfoImage from 'Svgx/MinerInfoImage'
+import AccountsSelect from 'Components/AccountsSelect'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -135,12 +136,11 @@ const Miner: FC = props => {
       <chakra.h2 mb="1.25rem">Miner</chakra.h2>
       <Flex>
         <VStack spacing="2rem" w="37.25rem" align="flex-start">
-          <SelectField
+          <AccountsSelect
             w="100%"
             label="Account"
             value={account}
             onSelectOption={setAccount}
-            options={ACCOUNTS}
           />
           <Flex
             layerStyle="card"

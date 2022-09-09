@@ -6,7 +6,6 @@ import {
   useColorModeValue,
   NAMED_COLORS,
   Button,
-  SelectField,
   TextField,
   FieldGroup,
 } from '@ironfish/ui-kit'
@@ -16,6 +15,7 @@ import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
+import AccountsSelect from 'Components/AccountsSelect'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -44,36 +44,8 @@ const Information: FC = memo(() => {
   )
 })
 
-const DEMO_ACCOUNTS: OptionType[] = [
-  {
-    label: 'Primary Account',
-    helperText: '8.456 $IRON',
-    value: '000000000006084ed8a065122fced71976932343104c1f3e76b36b42e03680e9',
-  },
-  {
-    label: 'Secondary Account',
-    helperText: '1.944 $IRON',
-    value: '00000000000515bce83c4755401d2fab9562a0ed4e8b6b38f361a23075614c97',
-  },
-  {
-    label: 'Account 3',
-    helperText: '56 $IRON',
-    value: '0000000000034b8458a3f330cc95be812cd5a9d5b58fa002232bd5585fbf77ad',
-  },
-  {
-    label: 'Account 4',
-    helperText: '56 $IRON',
-    value: '000000000007db9f646473593dced506c7ffce5455557fe7b93c7a43ca39ffd7',
-  },
-  {
-    label: 'Account 5',
-    helperText: '56 $IRON',
-    value: '0000000000029ae7122d85141a1f1a44164ada8910496d1f1a5d3b9024d9ec0b',
-  },
-]
-
 const ReceiveMoney: FC = () => {
-  const [account, setAccount] = useState(DEMO_ACCOUNTS[0])
+  const [account, setAccount] = useState(null)
   // const [amount, setAmount] = useState(0)
 
   return (
@@ -81,10 +53,9 @@ const ReceiveMoney: FC = () => {
       <chakra.h2 mb="1rem">Receive $IRON</chakra.h2>
       <Flex mb="4rem">
         <Box w="37.25rem">
-          <SelectField
+          <AccountsSelect
             label="Account"
             value={account}
-            options={DEMO_ACCOUNTS}
             onSelectOption={setAccount}
             mb="1rem"
           />
@@ -108,12 +79,12 @@ const ReceiveMoney: FC = () => {
               ml={0}
             >
               <Box mb="2rem">
-                <QRCodeSVG value={account.value} />
+                <QRCodeSVG value={account?.value} />
               </Box>
               <FieldGroup w="100%" zIndex={1}>
                 <TextField
                   label="Public Address"
-                  value={account.value}
+                  value={account?.value}
                   InputProps={{
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -126,7 +97,7 @@ const ReceiveMoney: FC = () => {
                   px="1.5rem"
                   textColor={NAMED_COLORS.LIGHT_BLUE}
                   rightIcon={<IconCopy w="1rem" h="1rem" />}
-                  onClick={() => navigator.clipboard.writeText(account.value)}
+                  onClick={() => navigator.clipboard.writeText(account?.value)}
                 >
                   Copy
                 </Button>
