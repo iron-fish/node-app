@@ -99,6 +99,10 @@ const Send: FC = () => {
   const [contact, setContact] = useState(DEMO_CONTACTS[0])
   const [notes, setNotes] = useState('Paying you back, Derek - B.')
   const [startSendFlow, setStart] = useState(false)
+  const $colors = useColorModeValue(
+    { bg: NAMED_COLORS.DEEP_BLUE, color: NAMED_COLORS.WHITE },
+    { bg: NAMED_COLORS.WHITE, color: NAMED_COLORS.DEEP_BLUE }
+  )
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
@@ -107,14 +111,17 @@ const Send: FC = () => {
       <Flex>
         <Box w="37.25rem">
           <Flex
+            layerStyle="card"
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
             w="inherit"
             h="16rem"
-            bg={NAMED_COLORS.DEEP_BLUE}
-            color={NAMED_COLORS.WHITE}
+            bg={`${$colors.bg} !important`}
+            color={$colors.color}
             mb="2rem"
+            borderRadius="0.25rem"
+            ml="0"
           >
             <chakra.h4>I want to send</chakra.h4>
             <InputGroup
@@ -146,39 +153,41 @@ const Send: FC = () => {
             </InputGroup>
             <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5>
           </Flex>
-          <SelectField
-            label="From Account"
-            mb="2rem"
-            options={DEMO_ACCOUNTS}
-            value={account}
-            onSelectOption={setAccount}
-          />
-          <SelectField
-            label="To"
-            mb="2rem"
-            options={DEMO_CONTACTS}
-            value={contact}
-            onSelectOption={setContact}
-          />
-          <Flex mb="2rem">
-            <TextField
-              w="calc(50% - 1rem)"
-              mr="2rem"
-              label="Fee"
-              value={(amount * 0.01).toFixed(2)}
-              InputProps={{
-                isReadOnly: true,
-              }}
+          <Box mr="-0.25rem">
+            <SelectField
+              label="From Account"
+              mb="2rem"
+              options={DEMO_ACCOUNTS}
+              value={account}
+              onSelectOption={setAccount}
             />
-            <TextField
-              w="calc(50% - 1rem)"
-              label="Memo (32 characters)"
-              value={notes}
-              InputProps={{
-                onChange: e => setNotes(e.target.value.substring(0, 32)),
-              }}
+            <SelectField
+              label="To"
+              mb="2rem"
+              options={DEMO_CONTACTS}
+              value={contact}
+              onSelectOption={setContact}
             />
-          </Flex>
+            <Flex mb="2rem">
+              <TextField
+                w="calc(50% - 1rem)"
+                mr="2rem"
+                label="Fee"
+                value={(amount * 0.01).toFixed(2)}
+                InputProps={{
+                  isReadOnly: true,
+                }}
+              />
+              <TextField
+                w="calc(50% - 1rem)"
+                label="Memo (32 characters)"
+                value={notes}
+                InputProps={{
+                  onChange: e => setNotes(e.target.value.substring(0, 32)),
+                }}
+              />
+            </Flex>
+          </Box>
           <Button
             variant="primary"
             borderRadius="4rem"
@@ -194,7 +203,7 @@ const Send: FC = () => {
             <chakra.h4>Send $IRON</chakra.h4>
           </Button>
         </Box>
-        <Box ml="4rem">
+        <Box>
           <DetailsPanel>
             <Information />
           </DetailsPanel>

@@ -19,8 +19,17 @@ const DetailsPanel: FC = ({ children }) => {
   const btnRef = useRef()
   return (
     <>
-      <Box display={{ base: 'none', lg: 'inline-block' }}>{children}</Box>
-      <Box display={{ base: 'none', md: 'inline-block', lg: 'none' }}>
+      <Box
+        display={{ base: 'none', md1: 'inline-block' }}
+        p={{ md1: '0 2rem', lg: 0 }}
+        ml={{ md1: '2rem', lg: '4rem' }}
+      >
+        {children}
+      </Box>
+      <Box
+        display={{ base: 'none', md: 'inline-block', md1: 'none' }}
+        ml="4rem"
+      >
         <Button
           ref={btnRef}
           variant="secondary"

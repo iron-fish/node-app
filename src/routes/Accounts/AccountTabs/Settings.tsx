@@ -7,6 +7,7 @@ import {
   TextField,
   useColorModeValue,
   chakra,
+  Link,
 } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import DetailsPanel from 'Components/DetailsPanel'
@@ -85,10 +86,12 @@ const AccountSettings: FC<AccountSettingsProps> = props => {
           >
             Save Changes
           </Button>
-          <Button variant="link">Delete Account</Button>
+          <Link alignSelf="center">
+            <h4>Delete Account</h4>
+          </Link>
         </Flex>
       </Box>
-      <Box ml="4rem">
+      <Box>
         <DetailsPanel>
           <Information />
         </DetailsPanel>

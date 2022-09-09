@@ -33,7 +33,7 @@ const getIconBg = (address = '') => {
 
 const AddressDetails = () => {
   const { address } = useParams()
-  const $color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
+  const $color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
 
   return (
     <Flex width="100%" height="100%" direction="column">
@@ -52,13 +52,14 @@ const AddressDetails = () => {
           iconButtonProps={{
             justifyContent: 'none',
             minW: '0.75rem',
-            'aria-label': 'copy',
           }}
           labelProps={{
             mr: '0.5rem',
           }}
           value={address}
-          label={<chakra.h5>{truncateHash(address, 3)}</chakra.h5>}
+          label={
+            <chakra.h5 color={$color}>{truncateHash(address, 3)}</chakra.h5>
+          }
           copyTooltipText="Copy to clipboard"
           copiedTooltipText="Copied"
         />

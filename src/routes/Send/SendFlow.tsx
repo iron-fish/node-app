@@ -19,9 +19,11 @@ import {
   StyleProps,
   TextField,
   VStack,
+  Icon,
 } from '@ironfish/ui-kit'
 import SendImage from 'Svgx/SendImage'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
+import SendIcon from 'Svgx/send'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
 
@@ -74,6 +76,9 @@ const ConfirmStep: FC<StepProps> = ({ onConfirm, onCancel }) => {
         borderColor={NAMED_COLORS.LIGHT_GREY}
         top="1.5rem"
         right="1.5rem"
+        _focus={{
+          boxShadow: 'none',
+        }}
       />
       <ModalBody p={0}>
         <chakra.h2 mb="2rem">Confirm Transaction Details</chakra.h2>
@@ -135,6 +140,11 @@ const ConfirmStep: FC<StepProps> = ({ onConfirm, onCancel }) => {
           p="2rem"
           borderRadius="4.5rem"
           onClick={onConfirm}
+          leftIcon={
+            <Icon height={26} width={26}>
+              <SendIcon fill="currentColor" />
+            </Icon>
+          }
         >
           Confirm & Send
         </Button>
@@ -196,6 +206,9 @@ const ResultStep: FC<StepProps> = () => (
       borderColor={NAMED_COLORS.LIGHT_GREY}
       top="1.5rem"
       right="1.5rem"
+      _focus={{
+        boxShadow: 'none',
+      }}
     />
     <ModalBody p={0}>
       <chakra.h2 mb="1rem">Transaction Sent!</chakra.h2>

@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react'
 
 import { HStack, StyleProps, TextField } from '@ironfish/ui-kit'
-import IconEye from '@ironfish/ui-kit/dist/svgx/icon-eye'
+import IconBlinkingEye from '@ironfish/ui-kit/dist/svgx/icon-blinkingEye'
 import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
 import debounce from 'lodash/debounce'
 
@@ -44,9 +44,9 @@ const PasswordField: FC<PasswordFieldProps> = ({
       w="100%"
       RightAddons={
         <HStack marginLeft={'2.5rem'} spacing={'0.875rem'}>
-          <IconEye
+          <IconBlinkingEye
             cursor="pointer"
-            crossed={show}
+            closed={show}
             onClick={() => setShow(!show)}
           />
           <IconInfo cursor={'pointer'} />

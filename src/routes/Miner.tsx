@@ -131,9 +131,9 @@ const Miner: FC = props => {
   const checkChanges: () => boolean = () => isRunning !== true
 
   return (
-    <Flex mb="2rem">
-      <Flex direction="column">
-        <chakra.h2 mb="1.25rem">Miner</chakra.h2>
+    <Flex mb="2rem" direction="column">
+      <chakra.h2 mb="1.25rem">Miner</chakra.h2>
+      <Flex>
         <VStack spacing="2rem" w="37.25rem" align="flex-start">
           <SelectField
             w="100%"
@@ -145,11 +145,11 @@ const Miner: FC = props => {
           <Flex
             layerStyle="card"
             w="100%"
-            maxWidth="36.75rem"
+            maxWidth="37rem"
             h="14.375rem"
             p="2rem"
           >
-            <VStack w="50%" align="flex-start" spacing="32px">
+            <VStack w="50%" align="flex-start" spacing="2rem">
               <chakra.h4>$IRON Mined</chakra.h4>
               <chakra.h1>143.453</chakra.h1>
               <chakra.h6>USD $ --</chakra.h6>
@@ -163,7 +163,7 @@ const Miner: FC = props => {
               size="small"
             />
           </Flex>
-          <HStack w="100%" spacing="32px">
+          <HStack w="calc(100% - 0.25rem)" spacing="2rem">
             <VStack
               layerStyle="card"
               w="100%"
@@ -171,6 +171,7 @@ const Miner: FC = props => {
               h="14.375rem"
               p="2rem"
               spacing="2rem"
+              ml="0"
             >
               <chakra.h4>Miner Status</chakra.h4>
               <chakra.h1>Running</chakra.h1>
@@ -204,6 +205,7 @@ const Miner: FC = props => {
               maxWidth="36.75rem"
               h="14.375rem"
               px="1rem"
+              ml={0}
             >
               <chakra.h4 my="2rem">Hashes Per Second</chakra.h4>
               <chakra.h1>300</chakra.h1>
@@ -222,12 +224,12 @@ const Miner: FC = props => {
             Save Changes
           </Button>
         </VStack>
+        <Box>
+          <DetailsPanel>
+            <Information />
+          </DetailsPanel>
+        </Box>
       </Flex>
-      <Box ml={{ base: 0, md: '4rem' }}>
-        <DetailsPanel>
-          <Information />
-        </DetailsPanel>
-      </Box>
     </Flex>
   )
 }

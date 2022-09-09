@@ -88,7 +88,6 @@ const COLUMNS = [
           iconButtonProps={{
             justifyContent: 'none',
             minW: '0.75rem',
-            'aria-label': 'copy',
             color: NAMED_COLORS.GREY,
           }}
           labelProps={{
@@ -163,7 +162,7 @@ const AddressBook: FC = () => {
             borderRadius="4rem"
             variant="secondary"
           >
-            Import Account
+            <h5>Add Contact</h5>
           </Button>
         </Flex>
       </Flex>
