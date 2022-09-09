@@ -44,7 +44,7 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
             {
               key: 'action',
               label: 'Action',
-              render: address => (
+              render: transaction => (
                 <Flex align="center" position="relative">
                   <Flex
                     w="1.625rem"
@@ -56,32 +56,32 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
                     background={NAMED_COLORS.LIGHT_GREY}
                   >
                     <Icon h={8}>
-                      {address.action === 'Send' ? <Send /> : <Receive />}
+                      {transaction.action === 'Send' ? <Send /> : <Receive />}
                     </Icon>
                   </Flex>
-                  <chakra.h5 ml="2.375rem">{address.action}</chakra.h5>
+                  <chakra.h5 ml="2.375rem">{transaction.action}</chakra.h5>
                 </Flex>
               ),
             },
             {
               key: 'iron',
               label: '$IRON',
-              render: address => <h5>{address.iron}</h5>,
+              render: transaction => <h5>{transaction.iron}</h5>,
             },
             {
               key: 'to',
               label: 'To',
-              render: address => <h5>{address.to}</h5>,
+              render: transaction => <h5>{transaction.to}</h5>,
             },
             {
               key: 'date',
               label: 'Date',
-              render: address => <h5>{address.date}</h5>,
+              render: transaction => <h5>{transaction.date}</h5>,
             },
             {
               key: 'memo',
               label: 'Memo',
-              render: address => <h5>{address.memo}</h5>,
+              render: transaction => <h5>{transaction.memo}</h5>,
             },
             {
               key: 'actions',
