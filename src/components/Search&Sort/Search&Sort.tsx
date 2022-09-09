@@ -6,9 +6,22 @@ import SortSelect, { SelectFieldProps } from './SortSelect'
 interface SearchSortFieldProps extends SearchInputProps {
   ContainerProps?: FlexProps
   SortSelectProps?: SelectFieldProps
+  sortValue?: 'asc' | 'desc'
 }
 
+const OPTIONS = [
+  {
+    label: 'Highest to lowest balance',
+    value: 'desc',
+  },
+  {
+    label: 'Lowest to highest balance',
+    value: 'asc',
+  },
+]
+
 const SearchSortField: FC<SearchSortFieldProps> = ({
+  sortValue,
   ContainerProps,
   SortSelectProps,
   ...SearchProps
@@ -20,7 +33,11 @@ const SearchSortField: FC<SearchSortFieldProps> = ({
     {...ContainerProps}
   >
     <SearchInput {...SearchProps} />
-    <SortSelect {...SortSelectProps} />
+    <SortSelect
+      {...SortSelectProps}
+      options={OPTIONS}
+      value={OPTIONS.find(({ value }) => value === sortValue)}
+    />
   </Flex>
 )
 

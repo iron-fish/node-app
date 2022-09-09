@@ -20,16 +20,6 @@ const SortSelect: FC<SelectFieldProps> = props => (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     size="small"
-    options={[
-      {
-        label: 'Highest to lowest balance',
-        value: 'desc',
-      },
-      {
-        label: 'Lowest to highest balance',
-        value: 'asc',
-      },
-    ]}
     whiteSpace="nowrap"
     {...props}
   />

@@ -16,14 +16,11 @@ import Receive from 'Svgx/receive'
 import Caret from 'Svgx/caret-icon'
 import { useNavigate } from 'react-router-dom'
 import { truncateHash } from 'Utils/hash'
-import { Link } from 'react-router-dom'
 import { ROUTES } from '..'
+import { Account } from 'Data/types/Account'
 
-export interface AccountPreviewProps {
+export interface AccountPreviewProps extends Account {
   order: number
-  name: string
-  balance: number
-  address: string
 }
 
 const ORDER_COLOR = [
@@ -82,6 +79,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
   name,
   balance = 0,
   address,
+  identity,
 }) => {
   const navigate = useNavigate()
   const $colors = useColorModeValue(
@@ -106,7 +104,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       borderRadius="0.25rem"
       cursor="pointer"
       onClick={() =>
-        navigate(ROUTES.ACCOUNT, { state: { accountId: address } })
+        navigate(ROUTES.ACCOUNT, { state: { accountId: identity } })
       }
       sx={{
         transition: '0.3s',
@@ -174,10 +172,11 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             minW: '0.75rem',
           }}
           labelProps={{
+            as: 'h5',
             mr: '0.5rem',
           }}
           value={address}
-          label={<chakra.h5>{truncateHash(address, 3)}</chakra.h5>}
+          label={truncateHash(address, 3)}
           copyTooltipText="Copy to clipboard"
           copiedTooltipText="Copied"
         />
@@ -224,9 +223,6 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           _active={{ bg: 'none' }}
           _hover={{ bg: 'none' }}
           icon={<Caret />}
-          as={Link}
-          to={ROUTES.ACCOUNT}
-          state={{ accountId: address }}
         />
       </Flex>
     </Flex>

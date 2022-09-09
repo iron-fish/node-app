@@ -89,3 +89,6 @@ typings/
 # Electron-Forge
 out/
 dist/
+
+# VScode
+.vscode/
