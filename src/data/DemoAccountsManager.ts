@@ -1,8 +1,6 @@
 import { Account, AccountKeys, AccountSettings } from './types/Account'
 import { nanoid } from 'nanoid'
-// seems that it can't be used on front-end
-// import { generateMnemonic } from 'bip39'
-import randomWords from 'random-words'
+import { generateMnemonic } from 'bip39'
 
 const DEMO_ACCOUNTS: Account[] = [
   {
@@ -139,7 +137,7 @@ class DemoAccountsManager {
   generateMnemonicPhrase(): Promise<string[]> {
     return new Promise(resolve => {
       setTimeout(() => {
-        resolve(randomWords({ exactly: 12, maxLength: 8 }))
+        resolve(generateMnemonic().split(' '))
       }, 500)
     })
   }
