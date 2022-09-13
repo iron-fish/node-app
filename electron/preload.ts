@@ -1,4 +1,4 @@
-import { contextBridge } from 'electron'
-import DemoDataManager from '../src/data/DemoDataManager'
+import { contextBridge, ipcRenderer } from 'electron'
+import { IronfishSdk } from '@ironfish/sdk'
 
-contextBridge.exposeInMainWorld('DemoDataManager', new DemoDataManager())
+contextBridge.exposeInMainWorld('Wallet', IronfishSdk)
