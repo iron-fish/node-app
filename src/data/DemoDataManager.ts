@@ -132,7 +132,7 @@ class DemoDataManager {
     identity: string,
     name: string,
     address: string
-  ): Promise<string> {
+  ): Promise<string> => {
     return this.addressBook.update(identity, name, address)
   }
 
