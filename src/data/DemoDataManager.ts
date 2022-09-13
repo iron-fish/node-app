@@ -13,7 +13,7 @@ import {
 import { Contact } from './types/Contact'
 import { Transaction } from './types/Transaction'
 
-export default class DemoDataManager {
+class DemoDataManager {
   accounts: DemoAccountsManager
   transactions: DemoTransactionsManager
   addressBook: DemoAddressBookManager
@@ -44,7 +44,7 @@ export default class DemoDataManager {
       string,
       string
     ]
-  ): Promise<string> {
+  ): Promise<string> => {
     return this.accounts.create(name, mnemonicPhrase)
   }
 
@@ -56,7 +56,7 @@ export default class DemoDataManager {
     return this.accounts.importBySpendingKey(spendingKey)
   }
 
-  importAccountByMnemonicPhrase(
+  importAccountByMnemonicPhrase = (
     mnemonicPhrase: [
       string,
       string,
@@ -71,7 +71,7 @@ export default class DemoDataManager {
       string,
       string
     ]
-  ): Promise<string> {
+  ): Promise<string> => {
     return this.accounts.importByMnemonicPhrase(mnemonicPhrase)
   }
 
@@ -174,3 +174,5 @@ export default class DemoDataManager {
     return this.node.peers()
   }
 }
+
+export default DemoDataManager
