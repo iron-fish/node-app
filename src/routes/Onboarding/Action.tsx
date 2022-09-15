@@ -18,7 +18,7 @@ export const Onboarding = () => {
         maxWidth="36.75rem"
         mb="2rem"
         bg={`${NAMED_COLORS.WHITE} !important`}
-        boxShadow={`0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.WHITE}, 0.25rem 0.25rem ${NAMED_COLORS.LIGHT_GREY} !important`}
+        boxShadow={`0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.WHITE}, 0.25rem 0.25rem ${NAMED_COLORS.LIGHT_GREY}, 0 0.25rem 0.6875rem rgba(0, 0, 0, 0.04) !important`}
         borderColor={`${NAMED_COLORS.LIGHT_GREY} !important`}
       >
         <chakra.h3 pb="0.75rem" color={NAMED_COLORS.BLACK}>
@@ -44,7 +44,7 @@ export const Onboarding = () => {
         w="100%"
         maxWidth="36.75rem"
         bg={`${NAMED_COLORS.WHITE} !important`}
-        boxShadow={`0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.WHITE}, 0.25rem 0.25rem ${NAMED_COLORS.LIGHT_GREY} !important`}
+        boxShadow={`0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.WHITE}, 0.25rem 0.25rem ${NAMED_COLORS.LIGHT_GREY}, 0 0.25rem 0.6875rem rgba(0, 0, 0, 0.04) !important`}
         borderColor={`${NAMED_COLORS.LIGHT_GREY} !important`}
       >
         <chakra.h3 pb="0.75rem" color={NAMED_COLORS.BLACK}>

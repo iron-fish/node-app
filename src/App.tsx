@@ -16,6 +16,7 @@ import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
+import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 
 const breakpoints = {
   sm: '56.25rem', //900px
