@@ -1,3 +1,4 @@
+import { FC, memo, useState, useEffect, useMemo } from 'react'
 import {
   Box,
   Flex,
@@ -11,69 +12,34 @@ import {
   TextField,
   Button,
   Icon,
+  Skeleton,
 } from '@ironfish/ui-kit'
-import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
+import { useLocation } from 'react-router-dom'
 import DetailsPanel from 'Components/DetailsPanel'
-import { FC, memo, useState } from 'react'
+import useAccounts from 'Hooks/accounts/useAccounts'
+import useAddressBook from 'Hooks/addressBook/useAddressBook'
+import useFee from 'Hooks/transactions/useFee'
 import FeesImage from 'Svgx/FeesImage'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow'
+import { Account } from 'Data/types/Account'
+import { Contact } from 'Data/types/Contact'
+import { truncateHash } from 'Utils/hash'
+import LocationStateProps from 'Types/LocationState'
 
-const DEMO_ACCOUNTS: OptionType[] = [
-  {
-    label: 'Primary Account',
-    helperText: '8.456 $IRON',
-    value: '000000000006084ed8a065122fced71976932343104c1f3e76b36b42e03680e9',
-  },
-  {
-    label: 'Secondary Account',
-    helperText: '1.944 $IRON',
-    value: '00000000000515bce83c4755401d2fab9562a0ed4e8b6b38f361a23075614c97',
-  },
-  {
-    label: 'Account 3',
-    helperText: '56 $IRON',
-    value: '0000000000034b8458a3f330cc95be812cd5a9d5b58fa002232bd5585fbf77ad',
-  },
-  {
-    label: 'Account 4',
-    helperText: '56 $IRON',
-    value: '000000000007db9f646473593dced506c7ffce5455557fe7b93c7a43ca39ffd7',
-  },
-  {
-    label: 'Account 5',
-    helperText: '56 $IRON',
-    value: '0000000000029ae7122d85141a1f1a44164ada8910496d1f1a5d3b9024d9ec0b',
-  },
-]
+const getAccountOptions = (accounts: Account[] = []) =>
+  accounts.map((account: Account) => ({
+    label: account.name,
+    helperText: `${account.balance} $IRON`,
+    value: account.address,
+  }))
 
-const DEMO_CONTACTS: OptionType[] = [
-  {
-    label: 'Frankie Boy',
-    helperText: '0000...80e9',
-    value: '000000000006084ed8a065122fced71976932343104c1f3e76b36b42e03680e9',
-  },
-  {
-    label: 'Tweetie',
-    helperText: '0000...4c97',
-    value: '00000000000515bce83c4755401d2fab9562a0ed4e8b6b38f361a23075614c97',
-  },
-  {
-    label: 'Rox1923',
-    helperText: '0000...77ad',
-    value: '0000000000034b8458a3f330cc95be812cd5a9d5b58fa002232bd5585fbf77ad',
-  },
-  {
-    label: 'Alfred A',
-    helperText: '0000...ffd7',
-    value: '000000000007db9f646473593dced506c7ffce5455557fe7b93c7a43ca39ffd7',
-  },
-  {
-    label: 'Derek',
-    helperText: '0000...ec0b',
-    value: '0000000000029ae7122d85141a1f1a44164ada8910496d1f1a5d3b9024d9ec0b',
-  },
-]
+const getContactOptions = (contacts: Contact[] = []) =>
+  contacts.map((contact: Contact) => ({
+    label: contact.name,
+    helperText: truncateHash(contact.address, 2, 4),
+    value: contact.address,
+  }))
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -94,11 +60,35 @@ const Information: FC = memo(() => {
 })
 
 const Send: FC = () => {
+  const location = useLocation()
+  const state = location.state as LocationStateProps
   const [amount, setAmount] = useState(0)
-  const [account, setAccount] = useState(DEMO_ACCOUNTS[0])
-  const [contact, setContact] = useState(DEMO_CONTACTS[0])
+  const [account, setAccount] = useState(null)
+  const [contact, setContact] = useState(null)
   const [notes, setNotes] = useState('Paying you back, Derek - B.')
   const [startSendFlow, setStart] = useState(false)
+  const { data: accounts, loaded: accountsLoaded } = useAccounts()
+  const [{ data: contacts, loaded: contactsLoaded }] = useAddressBook()
+  const { data: fee, loaded: feeCalculated } = useFee(amount)
+
+  const accountOptions = useMemo(
+    () => getAccountOptions(accounts),
+    [JSON.stringify(accounts)]
+  )
+
+  const contactOptions = useMemo(
+    () => getContactOptions(contacts),
+    [JSON.stringify(contacts)]
+  )
+
+  useEffect(() => {
+    if (accountsLoaded) {
+      const selectedAccount =
+        state && accountOptions.find(({ value }) => value === state.accountId)
+      setAccount(selectedAccount ? selectedAccount : accountOptions[0])
+    }
+  }, [accountsLoaded])
+
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
@@ -146,26 +136,48 @@ const Send: FC = () => {
             </InputGroup>
             <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5>
           </Flex>
-          <SelectField
-            label="From Account"
-            mb="2rem"
-            options={DEMO_ACCOUNTS}
-            value={account}
-            onSelectOption={setAccount}
-          />
-          <SelectField
-            label="To"
-            mb="2rem"
-            options={DEMO_CONTACTS}
-            value={contact}
-            onSelectOption={setContact}
-          />
+          {accountsLoaded ? (
+            <SelectField
+              label="From Account"
+              mb="2rem"
+              options={accountOptions}
+              value={account}
+              onSelectOption={setAccount}
+            />
+          ) : (
+            <Skeleton
+              w="100%"
+              h="70px"
+              mb="2rem"
+              borderRadius="4px"
+              startColor={NAMED_COLORS.PALE_GREY}
+              endColor={NAMED_COLORS.LIGHT_GREY}
+            />
+          )}
+          {contactsLoaded ? (
+            <SelectField
+              label="To"
+              mb="2rem"
+              options={contactOptions}
+              value={contact}
+              onSelectOption={setContact}
+            />
+          ) : (
+            <Skeleton
+              w="100%"
+              h="70px"
+              mb="2rem"
+              borderRadius="4px"
+              startColor={NAMED_COLORS.PALE_GREY}
+              endColor={NAMED_COLORS.LIGHT_GREY}
+            />
+          )}
           <Flex mb="2rem">
             <TextField
               w="calc(50% - 1rem)"
               mr="2rem"
               label="Fee"
-              value={(amount * 0.01).toFixed(2)}
+              value={(fee || 0).toFixed(2)}
               InputProps={{
                 isReadOnly: true,
               }}
@@ -184,6 +196,7 @@ const Send: FC = () => {
             borderRadius="4rem"
             mb="2rem"
             p="2rem"
+            isDisabled={!(feeCalculated && account && contact && amount)}
             leftIcon={
               <Icon height={26} width={26}>
                 <SendIcon fill="currentColor" />
@@ -204,9 +217,10 @@ const Send: FC = () => {
         isOpen={startSendFlow}
         onClose={() => setStart(false)}
         amount={amount}
-        from={account.label.toString()}
-        to={contact.label.toString()}
+        from={accounts?.find(({ address }) => account?.value == address)}
+        to={contacts?.find(({ address }) => contact?.value === address)}
         memo={notes}
+        fee={fee}
       />
     </Flex>
   )

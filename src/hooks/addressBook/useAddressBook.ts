@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
 import { Contact } from 'Data/types/Contact'
 
-const useAddressBook = (searchTerm: string, sort?: 'asc' | 'desc') => {
+const useAddressBook = (searchTerm?: string, sort?: 'asc' | 'desc') => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Contact[]>()
 
   const loadAddressBook = () =>
@@ -12,7 +12,7 @@ const useAddressBook = (searchTerm: string, sort?: 'asc' | 'desc') => {
     loadAddressBook()
   }, [searchTerm, sort])
 
-  return [result, window.DemoDataManager.addressBook.add]
+  return [result, window.DemoDataManager.addressBook.add] as const
 }
 
 export default useAddressBook
