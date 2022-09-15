@@ -12,7 +12,7 @@ const useAddressBook = (searchTerm: string, sort?: 'asc' | 'desc') => {
     loadAddressBook()
   }, [searchTerm, sort])
 
-  return [result, window.DemoDataManager.addressBook.add]
+  return [result, window.DemoDataManager.addressBook.add] as const
 }
 
 export default useAddressBook

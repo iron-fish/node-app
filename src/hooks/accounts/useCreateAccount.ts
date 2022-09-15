@@ -11,7 +11,11 @@ const useCreateAccount = () => {
     generateMnemonic()
   }, [])
 
-  return [result, window.DemoDataManager.createAccount, generateMnemonic]
+  return [
+    result,
+    window.DemoDataManager.createAccount,
+    generateMnemonic,
+  ] as const
 }
 
 export default useCreateAccount

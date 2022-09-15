@@ -16,7 +16,7 @@ const useContact = (id: string) => {
     result,
     window.DemoDataManager.addressBook.update,
     window.DemoDataManager.addressBook.delete,
-  ]
+  ] as const
 }
 
 export default useContact

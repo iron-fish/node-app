@@ -1,9 +1,9 @@
 const useImportAccount = () => {
   return [
-    window.DemoDataManager.accounts.importBySpendingKey,
-    window.DemoDataManager.accounts.importByMnemonicPhrase,
-    window.DemoDataManager.accounts.importByFile,
-  ]
+    window.DemoDataManager.importAccountBySpendingKey,
+    window.DemoDataManager.importAccountByMnemonicPhrase,
+    window.DemoDataManager.importAccountByFile,
+  ] as const
 }
 
 export default useImportAccount
