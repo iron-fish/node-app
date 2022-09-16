@@ -54,7 +54,7 @@ const Information: FC = memo(() => {
     NAMED_COLORS.LIGHT_GREY
   )
   return (
-    <>
+    <Box maxWidth="21.5rem">
       <chakra.h3 mb="1rem">About Fees</chakra.h3>
       <chakra.h5 color={textColor}>
         You can change the fee amount you’d like to pay however that will
@@ -62,7 +62,7 @@ const Information: FC = memo(() => {
         the block chain.
       </chakra.h5>
       <FeesImage mt="2rem" />
-    </>
+    </Box>
   )
 })
 
@@ -122,7 +122,7 @@ const Send: FC = () => {
           <AccountsSelect
             label="From Account"
             mb="2rem"
-            value={account}
+            address={account?.value}
             onSelectOption={setAccount}
           />
           <SelectField

@@ -123,7 +123,7 @@ const HashRateChart = () => {
   )
 }
 
-const Miner: FC = props => {
+const Miner: FC = () => {
   const [account, setAccount] = useState<OptionType>(ACCOUNTS[0])
   const [miningPeriod, setMiningPeriod] = useState<OptionType>(
     MINDED_OPTIONS[0]
@@ -139,7 +139,7 @@ const Miner: FC = props => {
           <AccountsSelect
             w="100%"
             label="Account"
-            value={account}
+            address={account?.value}
             onSelectOption={setAccount}
           />
           <Flex
