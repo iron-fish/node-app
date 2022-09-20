@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Box,
   Button,
@@ -8,9 +9,10 @@ import {
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SearchSortField from 'Components/Search&Sort'
-import { Link } from 'react-router-dom'
 import AccountPreview from 'Routes/Accounts/AccountPreview'
-import { ROUTES } from '..'
+import ModalWindow from 'Components/ModalWindow'
+import ImportAccount from 'Routes/Onboarding/ImportAccount'
+import CreateAccount from 'Routes/Onboarding/CreateAccount'
 
 const DEMO_DATA = [
   {
@@ -76,6 +78,8 @@ const DEMO_DATA = [
 ]
 
 const Accounts = () => {
+  const [showCreateAccount, setShowCreateAccount] = useState(false)
+  const [showImportAccount, setShowImportAccount] = useState(false)
   const $colors = useColorModeValue(
     { subHeader: NAMED_COLORS.GREY },
     { subHeader: NAMED_COLORS.PALE_GREY }
@@ -108,8 +112,7 @@ const Accounts = () => {
             mr="1rem"
             borderRadius="4rem"
             variant="secondary"
-            as={Link}
-            to={ROUTES.CREATE}
+            onClick={() => setShowCreateAccount(true)}
           >
             <chakra.h5 mt="0.125rem">Create Account</chakra.h5>
           </Button>
@@ -117,8 +120,7 @@ const Accounts = () => {
             leftIcon={<IconAdd mr="-0.25rem" />}
             borderRadius="4rem"
             variant="secondary"
-            as={Link}
-            to={ROUTES.IMPORT}
+            onClick={() => setShowImportAccount(true)}
           >
             <chakra.h5 mt="0.125rem">Import Account</chakra.h5>
           </Button>
@@ -130,6 +132,24 @@ const Accounts = () => {
           <AccountPreview {...data} order={index} />
         ))}
       </Flex>
+      <ModalWindow
+        isOpen={showCreateAccount}
+        onClose={() => setShowCreateAccount(false)}
+      >
+        <CreateAccount
+          desktopMode={false}
+          onCreate={() => setShowCreateAccount(false)}
+        />
+      </ModalWindow>
+      <ModalWindow
+        isOpen={showImportAccount}
+        onClose={() => setShowImportAccount(false)}
+      >
+        <ImportAccount
+          desktopMode={false}
+          onImport={() => setShowImportAccount(false)}
+        />
+      </ModalWindow>
     </>
   )
 }
