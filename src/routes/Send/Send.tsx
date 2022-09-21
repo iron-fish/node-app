@@ -11,6 +11,7 @@ import {
   TextField,
   Button,
   Icon,
+  Autocomplete,
 } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import DetailsPanel from 'Components/DetailsPanel'
@@ -93,10 +94,18 @@ const Information: FC = memo(() => {
   )
 })
 
+const filterOption = (option: OptionType, searchTerm: string) => {
+  const _label = option.label?.toString().toLowerCase()
+  const _value = option.value?.toString().toLowerCase()
+  const _searchTerm = searchTerm.toLowerCase()
+
+  return _label?.includes(_searchTerm) || _value?.includes(_searchTerm)
+}
+
 const Send: FC = () => {
   const [amount, setAmount] = useState(0)
   const [account, setAccount] = useState(DEMO_ACCOUNTS[0])
-  const [contact, setContact] = useState(DEMO_CONTACTS[0])
+  const [contact, setContact] = useState(null)
   const [notes, setNotes] = useState('Paying you back, Derek - B.')
   const [startSendFlow, setStart] = useState(false)
   const $colors = useColorModeValue(
@@ -161,12 +170,16 @@ const Send: FC = () => {
               value={account}
               onSelectOption={setAccount}
             />
-            <SelectField
+            <Autocomplete
               label="To"
               mb="2rem"
               options={DEMO_CONTACTS}
               value={contact}
               onSelectOption={setContact}
+              filterOption={filterOption}
+              InputProps={{
+                placeholder: 'Input Text',
+              }}
             />
             <Flex mb="2rem">
               <TextField
@@ -214,7 +227,7 @@ const Send: FC = () => {
         onClose={() => setStart(false)}
         amount={amount}
         from={account.label.toString()}
-        to={contact.label.toString()}
+        to={contact?.label.toString()}
         memo={notes}
       />
     </Flex>
