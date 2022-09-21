@@ -18,7 +18,7 @@ import { MnemonicPhraseType } from 'Types/AsyncDataType'
 const CreateAccount: FC = () => {
   const [saved, setSaved] = useState<boolean>(false)
   const [accountName, setAccountName] = useState<string>('')
-  const [result, createAccount] = useCreateAccount()
+  const [{ data: phrase, loaded }, createAccount] = useCreateAccount()
   return (
     <Flex flexDirection="column" p="4rem" pb="0" bg="transparent" w="100%">
       <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
@@ -48,8 +48,9 @@ const CreateAccount: FC = () => {
         re-enter this.
       </chakra.h5>
       <MnemonicView
+        loaded={loaded}
         header="Mnemonic Phrase"
-        value={result.loaded ? result.data : []}
+        value={phrase || []}
         placeholder={''}
         onChange={() => null}
         isReadOnly={true}
@@ -75,7 +76,7 @@ const CreateAccount: FC = () => {
           as={Link}
           to={ROUTES.ACCOUNTS}
           onClick={() =>
-            createAccount(accountName, result.data as MnemonicPhraseType)
+            createAccount(accountName, phrase as MnemonicPhraseType)
           }
         >
           Create Account
