@@ -12,7 +12,6 @@ import {
   TextField,
   Button,
   Icon,
-  Skeleton,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import DetailsPanel from 'Components/DetailsPanel'
@@ -136,42 +135,20 @@ const Send: FC = () => {
             </InputGroup>
             <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5>
           </Flex>
-          {accountsLoaded ? (
-            <SelectField
-              label="From Account"
-              mb="2rem"
-              options={accountOptions}
-              value={account}
-              onSelectOption={setAccount}
-            />
-          ) : (
-            <Skeleton
-              w="100%"
-              h="70px"
-              mb="2rem"
-              borderRadius="4px"
-              startColor={NAMED_COLORS.PALE_GREY}
-              endColor={NAMED_COLORS.LIGHT_GREY}
-            />
-          )}
-          {contactsLoaded ? (
-            <SelectField
-              label="To"
-              mb="2rem"
-              options={contactOptions}
-              value={contact}
-              onSelectOption={setContact}
-            />
-          ) : (
-            <Skeleton
-              w="100%"
-              h="70px"
-              mb="2rem"
-              borderRadius="4px"
-              startColor={NAMED_COLORS.PALE_GREY}
-              endColor={NAMED_COLORS.LIGHT_GREY}
-            />
-          )}
+          <SelectField
+            label="From Account"
+            mb="2rem"
+            options={accountOptions}
+            value={account}
+            onSelectOption={setAccount}
+          />
+          <SelectField
+            label="To"
+            mb="2rem"
+            options={contactOptions}
+            value={contact}
+            onSelectOption={setContact}
+          />
           <Flex mb="2rem">
             <TextField
               w="calc(50% - 1rem)"

@@ -9,7 +9,6 @@ import {
   SelectField,
   TextField,
   FieldGroup,
-  Skeleton,
 } from '@ironfish/ui-kit'
 import { QRCodeSVG } from 'qrcode.react'
 import { useLocation } from 'react-router-dom'
@@ -80,24 +79,13 @@ const ReceiveMoney: FC = () => {
       <chakra.h2 mb="1rem">Receive $IRON</chakra.h2>
       <Flex mb="4rem">
         <Box w="37.25rem">
-          {accountsLoaded ? (
-            <SelectField
-              label="Account"
-              value={account}
-              options={accountOptions}
-              onSelectOption={setAccount}
-              mb="1rem"
-            />
-          ) : (
-            <Skeleton
-              w="100%"
-              h="70px"
-              mb="2rem"
-              borderRadius="4px"
-              startColor={NAMED_COLORS.PALE_GREY}
-              endColor={NAMED_COLORS.LIGHT_GREY}
-            />
-          )}
+          <SelectField
+            label="Account"
+            value={account}
+            options={accountOptions}
+            onSelectOption={setAccount}
+            mb="1rem"
+          />
           {/* Hide amount field while not clarified, should be removed or enabled when with API connection
            <TextField
             label="Amount"
