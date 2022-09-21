@@ -1,5 +1,5 @@
 import { FC, useMemo, useEffect } from 'react'
-import { FlexProps, SelectField, Skeleton } from '@ironfish/ui-kit'
+import { FlexProps, SelectField } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import { Account } from 'Data/types/Account'
 import useAccounts from 'Hooks/accounts/useAccounts'
@@ -23,7 +23,7 @@ const AccountsSelect: FC<AccountsSelectProps> = ({
   onSelectOption,
   ...props
 }) => {
-  const { data, loaded } = useAccounts()
+  const { data } = useAccounts()
 
   const options = useMemo(() => getAccountOptions(data), [JSON.stringify(data)])
 
@@ -33,13 +33,11 @@ const AccountsSelect: FC<AccountsSelectProps> = ({
   }, [options])
 
   return (
-    <Skeleton isLoaded={loaded} borderRadius="0.25rem" variant="ironFish">
-      <SelectField
-        options={options}
-        value={options.find(({ value }) => value === address)}
-        {...props}
-      />
-    </Skeleton>
+    <SelectField
+      options={options}
+      value={options.find(({ value }) => value === address)}
+      {...props}
+    />
   )
 }
 
