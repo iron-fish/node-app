@@ -21,7 +21,12 @@ import IconEye from '@ironfish/ui-kit/dist/svgx/icon-eye'
 import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
 import BackButtonLink from 'Components/BackButtonLink'
 
-const SpendingKeyTab: FC = () => {
+interface DesktopModeProps {
+  desktopMode?: boolean
+  onImport?: VoidFunction
+}
+
+const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [show, setShow] = useState(false)
   const [key, setKey] = useState('')
 
@@ -50,11 +55,12 @@ const SpendingKeyTab: FC = () => {
       <Box>
         <Button
           variant="primary"
-          borderRadius="4rem"
-          p="2rem"
           as={Link}
           to={ROUTES.ACCOUNTS}
-          disabled={!key}
+          isDisabled={!key}
+          size="large"
+          w={desktopMode ? undefined : '100%'}
+          onClick={onImport}
         >
           Import Account
         </Button>
@@ -63,7 +69,7 @@ const SpendingKeyTab: FC = () => {
   )
 }
 
-const ImportFileTab: FC = () => {
+const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [file, setFile] = useState<File | null>(null)
   return (
     <>
@@ -90,12 +96,13 @@ const ImportFileTab: FC = () => {
       <Box>
         <Button
           variant="primary"
-          borderRadius="4rem"
           mt="2rem"
-          p="2rem"
           as={Link}
           to={ROUTES.ACCOUNTS}
-          disabled={!file}
+          isDisabled={!file}
+          size="large"
+          w={desktopMode ? undefined : '100%'}
+          onClick={onImport}
         >
           Import Account
         </Button>
@@ -104,7 +111,7 @@ const ImportFileTab: FC = () => {
   )
 }
 
-const MnemonicPhraseTab: FC = () => {
+const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [phrase, setPhrase] = useState([])
   return (
     <>
@@ -125,16 +132,17 @@ const MnemonicPhraseTab: FC = () => {
       <Box>
         <Button
           variant="primary"
-          borderRadius="4rem"
           mt="2rem"
-          p="2rem"
           as={Link}
           to={ROUTES.ACCOUNTS}
-          disabled={
+          isDisabled={
             !phrase ||
             phrase.length < 12 ||
             phrase.findIndex(word => !word) !== -1
           }
+          size="large"
+          w={desktopMode ? undefined : '100%'}
+          onClick={onImport}
         >
           Import Account
         </Button>
@@ -143,13 +151,26 @@ const MnemonicPhraseTab: FC = () => {
   )
 }
 
-const ImportAccount: FC = () => {
+const ImportAccount: FC<DesktopModeProps> = ({
+  desktopMode = true,
+  onImport,
+}) => {
   return (
-    <Flex flexDirection="column" p="4rem" pb="0" bg="transparent" w="100%">
-      <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
-      <chakra.h1 color={NAMED_COLORS.BLACK} mb="1.5rem">
-        Import Account
-      </chakra.h1>
+    <Flex
+      flexDirection="column"
+      p={desktopMode ? '4rem' : 0}
+      pb="0"
+      bg="transparent"
+      w="100%"
+    >
+      {desktopMode && (
+        <>
+          <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
+          <chakra.h1 color={NAMED_COLORS.BLACK} mb="1.5rem">
+            Import Account
+          </chakra.h1>
+        </>
+      )}
       <chakra.h3 color={NAMED_COLORS.BLACK} pb="0.25rem">
         Import With
       </chakra.h3>
@@ -161,13 +182,13 @@ const ImportAccount: FC = () => {
         </TabList>
         <TabPanels>
           <TabPanel w="100%" p={0}>
-            <SpendingKeyTab />
+            <SpendingKeyTab desktopMode={desktopMode} onImport={onImport} />
           </TabPanel>
           <TabPanel w="100%" p={0}>
-            <MnemonicPhraseTab />
+            <MnemonicPhraseTab desktopMode={desktopMode} onImport={onImport} />
           </TabPanel>
           <TabPanel w="100%" p={0}>
-            <ImportFileTab />
+            <ImportFileTab desktopMode={desktopMode} onImport={onImport} />
           </TabPanel>
         </TabPanels>
       </Tabs>

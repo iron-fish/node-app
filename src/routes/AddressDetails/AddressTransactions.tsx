@@ -88,6 +88,8 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
               label: '',
               WrapperProps: {
                 display: 'flex',
+                textAlign: 'right',
+                justifyContent: 'flex-end',
               },
               ItemProps: {
                 justifyContent: 'flex-end',

@@ -4,6 +4,14 @@ import { Contact } from 'Data/types/Contact'
 
 const useContact = (id: string) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Contact>()
+  const updateContact = useCallback(
+    (name, address) => window.DemoDataManager.updateContact(id, name, address),
+    [id]
+  )
+  const deleteContact = useCallback(
+    () => window.DemoDataManager.deleteContact(id),
+    [id]
+  )
 
   const loadContact = () =>
     promiseWrapper(window.DemoDataManager.getContact(id))
@@ -12,16 +20,7 @@ const useContact = (id: string) => {
     loadContact()
   }, [id])
 
-  const update = useCallback(
-    (identity: string, name: string, address: string) => {
-      return window.DemoDataManager.addressBook
-        .update(identity, name, address)
-        .then(() => loadContact())
-    },
-    [id]
-  )
-
-  return [result, update, window.DemoDataManager.addressBook.delete] as const
+  return [result, updateContact, deleteContact] as const
 }
 
 export default useContact

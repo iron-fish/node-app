@@ -1,9 +1,18 @@
-import { Box, Button, Flex } from '@ironfish/ui-kit'
+import { useState } from 'react'
+import {
+  Box,
+  Button,
+  Flex,
+  chakra,
+  NAMED_COLORS,
+  useColorModeValue,
+} from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SearchSortField from 'Components/Search&Sort'
-import { Link } from 'react-router-dom'
 import AccountPreview from 'Routes/Accounts/AccountPreview'
-import { ROUTES } from '..'
+import ModalWindow from 'Components/ModalWindow'
+import ImportAccount from 'Routes/Onboarding/ImportAccount'
+import CreateAccount from 'Routes/Onboarding/CreateAccount'
 
 const DEMO_DATA = [
   {
@@ -17,9 +26,9 @@ const DEMO_DATA = [
     address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
   },
   {
-    name: 'Account 3',
+    name: 'No transactions',
     balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
+    address: 'emptynft893ntw5v780ntq304wnv5t370q8nt553d5',
   },
   {
     name: 'Account 4',
@@ -69,6 +78,12 @@ const DEMO_DATA = [
 ]
 
 const Accounts = () => {
+  const [showCreateAccount, setShowCreateAccount] = useState(false)
+  const [showImportAccount, setShowImportAccount] = useState(false)
+  const $colors = useColorModeValue(
+    { subHeader: NAMED_COLORS.GREY },
+    { subHeader: NAMED_COLORS.PALE_GREY }
+  )
   return (
     <>
       <Flex
@@ -81,11 +96,15 @@ const Accounts = () => {
           <Box>
             <h2>Privacy Accounts</h2>
           </Box>
-          <Box>
+          <Flex>
+            <chakra.h5 color={$colors.subHeader}>
+              Total accounts balance:
+            </chakra.h5>
+            &nbsp;
             <h5>
-              Total accounts balance: <b>10,456 $IRON</b>
+              <b>10,456 $IRON</b>
             </h5>
-          </Box>
+          </Flex>
         </Flex>
         <Flex>
           <Button
@@ -93,28 +112,44 @@ const Accounts = () => {
             mr="1rem"
             borderRadius="4rem"
             variant="secondary"
-            as={Link}
-            to={ROUTES.CREATE}
+            onClick={() => setShowCreateAccount(true)}
           >
-            Create Account
+            <chakra.h5 mt="0.125rem">Create Account</chakra.h5>
           </Button>
           <Button
             leftIcon={<IconAdd mr="-0.25rem" />}
             borderRadius="4rem"
             variant="secondary"
-            as={Link}
-            to={ROUTES.IMPORT}
+            onClick={() => setShowImportAccount(true)}
           >
-            Import Account
+            <chakra.h5 mt="0.125rem">Import Account</chakra.h5>
           </Button>
         </Flex>
       </Flex>
       <SearchSortField />
-      <Flex direction="column" width="100%">
+      <Flex mt="0.5rem" direction="column" width="100%">
         {DEMO_DATA.map((data, index) => (
           <AccountPreview {...data} order={index} />
         ))}
       </Flex>
+      <ModalWindow
+        isOpen={showCreateAccount}
+        onClose={() => setShowCreateAccount(false)}
+      >
+        <CreateAccount
+          desktopMode={false}
+          onCreate={() => setShowCreateAccount(false)}
+        />
+      </ModalWindow>
+      <ModalWindow
+        isOpen={showImportAccount}
+        onClose={() => setShowImportAccount(false)}
+      >
+        <ImportAccount
+          desktopMode={false}
+          onImport={() => setShowImportAccount(false)}
+        />
+      </ModalWindow>
     </>
   )
 }

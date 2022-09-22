@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
 import { Transaction } from 'Data/types/Transaction'
 
@@ -8,6 +8,11 @@ const useTransactions = (
   sort?: 'asc' | 'desc'
 ) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Transaction[]>()
+  const addContact = useCallback(
+    (name, contactAddress) =>
+      window.DemoDataManager.addContact(name, contactAddress),
+    []
+  )
 
   const loadTransactions = () =>
     promiseWrapper(
@@ -18,7 +23,7 @@ const useTransactions = (
     loadTransactions()
   }, [address, search, sort])
 
-  return [result, window.DemoDataManager.addressBook.add] as const
+  return [result, addContact] as const
 }
 
 export default useTransactions

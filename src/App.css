@@ -1,6 +1,6 @@
 html,
 body {
-  font-family: 'favorit-regular';
+  font-family: 'favorit-regular' !important;
 }
 h1,
 h2,
