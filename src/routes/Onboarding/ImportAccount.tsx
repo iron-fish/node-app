@@ -109,7 +109,6 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, afterImport }) => {
           isDisabled={!file}
           size="large"
           w={desktopMode ? undefined : '100%'}
-          // onClick={onImport}
           onClick={() => {
             importByFile(file).then(() => {
               afterImport()
@@ -151,7 +150,6 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({
         <Button
           variant="primary"
           mt="2rem"
-          p="2rem"
           onClick={() => {
             importByMnemonicPhrase(phrase as MnemonicPhraseType).then(() => {
               afterImport()
@@ -165,7 +163,6 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({
           }
           size="large"
           w={desktopMode ? undefined : '100%'}
-          // onClick={onImport}
         >
           Import Account
         </Button>
