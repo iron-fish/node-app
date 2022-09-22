@@ -1,6 +1,8 @@
 import { Account, AccountKeys, AccountSettings } from './types/Account'
 import { nanoid } from 'nanoid'
-import { generateMnemonic } from 'bip39'
+// seems that it can be used thought preload script
+// import { generateMnemonic } from 'bip39'
+import randomWords from 'random-words'
 
 const DEMO_ACCOUNTS: Account[] = [
   {
@@ -137,7 +139,7 @@ class DemoAccountsManager {
   generateMnemonicPhrase(): Promise<string[]> {
     return new Promise(resolve => {
       setTimeout(() => {
-        resolve(generateMnemonic().split(' '))
+        resolve(randomWords({ exactly: 12, maxLength: 8 }))
       }, 500)
     })
   }
@@ -269,15 +271,15 @@ class DemoAccountsManager {
 
   // export() {}
 
-  list(serchTerm: string): Promise<Account[]> {
+  list(searchTerm: string): Promise<Account[]> {
     return new Promise(resolve =>
       setTimeout(
         () =>
           resolve(
             DEMO_ACCOUNTS.filter(
               account =>
-                account.name.includes(serchTerm) ||
-                account.address.includes(serchTerm)
+                account.name.includes(searchTerm) ||
+                account.address.includes(searchTerm)
             )
           ),
         500

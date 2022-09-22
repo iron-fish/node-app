@@ -145,11 +145,11 @@ const Miner: FC = () => {
           <Flex
             layerStyle="card"
             w="100%"
-            maxWidth="36.75rem"
+            maxWidth="37rem"
             h="14.375rem"
             p="2rem"
           >
-            <VStack w="50%" align="flex-start" spacing="32px">
+            <VStack w="50%" align="flex-start" spacing="2rem">
               <chakra.h4>$IRON Mined</chakra.h4>
               <chakra.h1>143.453</chakra.h1>
               <chakra.h6>USD $ --</chakra.h6>
@@ -163,7 +163,7 @@ const Miner: FC = () => {
               size="small"
             />
           </Flex>
-          <HStack w="100%" spacing="32px">
+          <HStack w="calc(100% - 0.25rem)" spacing="2rem">
             <VStack
               layerStyle="card"
               w="100%"
@@ -171,6 +171,7 @@ const Miner: FC = () => {
               h="14.375rem"
               p="2rem"
               spacing="2rem"
+              ml="0"
             >
               <chakra.h4>Miner Status</chakra.h4>
               <chakra.h1>Running</chakra.h1>
@@ -204,6 +205,7 @@ const Miner: FC = () => {
               maxWidth="36.75rem"
               h="14.375rem"
               px="1rem"
+              ml={0}
             >
               <chakra.h4 my="2rem">Hashes Per Second</chakra.h4>
               <chakra.h1>300</chakra.h1>
@@ -217,7 +219,7 @@ const Miner: FC = () => {
             borderRadius="4.5rem"
             variant="primary"
             mr="2rem"
-            disabled={!checkChanges()}
+            isDisabled={!checkChanges()}
           >
             Save Changes
           </Button>
