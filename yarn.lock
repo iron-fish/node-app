@@ -2495,10 +2495,10 @@
     ws "7.5.1"
     yup "0.29.3"
 
-"@ironfish/ui-kit@0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-0.0.11.tgz#eb3a3409687a707ec3894857d3094802e9601ac7"
-  integrity sha512-e94pFtJMe31k3sCnkd4KLuu+bjLRlcFA9Pe8QWFazCWmtPVYR3/aR7PO6ntoZ6Kqod4Gie9ZV31t0of3qWOKUA==
+"@ironfish/ui-kit@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-0.0.12.tgz#3fa6bdfd9324dba74472ed60fc5807fdc5a952c6"
+  integrity sha512-W8SzyX2+Xj2AklIZNs28mNQ/xGt9ra8LuFohBLs5a/THFIeFZYytNlQ0KqpW4FrLTyp7yMmugH8x2i4Tq7rRMA==
   dependencies:
     "@chakra-ui/icons" "1.1.7"
     "@chakra-ui/react" "1.8.6"
@@ -12394,11 +12394,6 @@ randexp@0.4.6:
   dependencies:
     discontinuous-range "1.0.0"
     ret "~0.1.10"
-
-random-words@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/random-words/-/random-words-1.2.0.tgz#94d0cc8061965efe955d60b80ad93392a7edf2f5"
-  integrity sha512-YP2bXrT19pxtBh22DK9CLcWsmBjUBAGzw3JWJycTNbXm1+0aS6PrKuAJ9aLT0GGaPlPp9LExfJIMVkzhrDZE6g==
 
 randombytes@^2.0.1, randombytes@^2.1.0:
   version "2.1.0"
