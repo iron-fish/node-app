@@ -36,19 +36,6 @@ const Information: FC = memo(() => {
   )
 })
 
-const ACCOUNTS = [
-  {
-    value: 'PrimaryAccountId',
-    label: 'Primary Account',
-    helperText: '8,456 $IRON',
-  },
-  {
-    value: 'AccountId',
-    label: 'Account',
-    helperText: '100 $IRON',
-  },
-]
-
 const MINDED_OPTIONS = [
   { value: 'allTime', label: 'All Time $IRON Mined' },
   { value: 'lastWeek', label: 'Last Week $IRON Mined' },
@@ -124,7 +111,7 @@ const HashRateChart = () => {
 }
 
 const Miner: FC = () => {
-  const [account, setAccount] = useState<OptionType>(ACCOUNTS[0])
+  const [account, setAccount] = useState<OptionType>(null)
   const [miningPeriod, setMiningPeriod] = useState<OptionType>(
     MINDED_OPTIONS[0]
   )
