@@ -17,12 +17,12 @@ import { MnemonicPhraseType } from 'Types/AsyncDataType'
 
 interface CreateAccountProps {
   desktopMode?: boolean
-  onCreate?: VoidFunction
+  afterCreate?: VoidFunction
 }
 
 const CreateAccount: FC<CreateAccountProps> = ({
   desktopMode = true,
-  onCreate,
+  afterCreate = () => ({}),
 }) => {
   const [saved, setSaved] = useState<boolean>(false)
   const [accountName, setAccountName] = useState<string>('')
@@ -89,16 +89,16 @@ const CreateAccount: FC<CreateAccountProps> = ({
       <Box>
         <Button
           variant="primary"
-          size="large"
           isDisabled={!saved || !accountName}
           as={Link}
           to={ROUTES.ACCOUNTS}
           size="large"
           w={desktopMode ? undefined : '100%'}
-          onClick={onCreate}
-          onClick={() =>
-            createAccount(accountName, phrase as MnemonicPhraseType)
-          }
+          onClick={() => {
+            createAccount(accountName, phrase as MnemonicPhraseType).then(() =>
+              afterCreate()
+            )
+          }}
         >
           Create Account
         </Button>

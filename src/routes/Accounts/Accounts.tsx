@@ -138,7 +138,7 @@ const Accounts = () => {
       >
         <CreateAccount
           desktopMode={false}
-          onCreate={() => setShowCreateAccount(false)}
+          afterCreate={() => setShowCreateAccount(false)}
         />
       </ModalWindow>
       <ModalWindow
@@ -147,7 +147,7 @@ const Accounts = () => {
       >
         <ImportAccount
           desktopMode={false}
-          onImport={() => setShowImportAccount(false)}
+          afterImport={() => setShowImportAccount(false)}
         />
       </ModalWindow>
     </>

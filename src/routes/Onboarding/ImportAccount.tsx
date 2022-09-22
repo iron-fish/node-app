@@ -25,10 +25,10 @@ import { MnemonicPhraseType } from 'Types/AsyncDataType'
 
 interface DesktopModeProps {
   desktopMode?: boolean
-  onImport?: VoidFunction
+  afterImport?: VoidFunction
 }
 
-const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
+const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, afterImport }) => {
   const [show, setShow] = useState(false)
   const [key, setKey] = useState('')
   const navigate = useNavigate()
@@ -61,11 +61,13 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           variant="primary"
           isDisabled={!key}
           onClick={() => {
-            importBySpendingKey(key).then(() => navigate(ROUTES.ACCOUNTS))
+            importBySpendingKey(key).then(() => {
+              afterImport()
+              desktopMode && navigate(ROUTES.ACCOUNTS)
+            })
           }}
           size="large"
           w={desktopMode ? undefined : '100%'}
-          onClick={onImport}
         >
           Import Account
         </Button>
@@ -74,7 +76,7 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   )
 }
 
-const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
+const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, afterImport }) => {
   const [file, setFile] = useState<File | null>(null)
   const navigate = useNavigate()
   const [, , importByFile] = useImportAccount()
@@ -107,9 +109,12 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           isDisabled={!file}
           size="large"
           w={desktopMode ? undefined : '100%'}
-          onClick={onImport}
+          // onClick={onImport}
           onClick={() => {
-            importByFile(file).then(() => navigate(ROUTES.ACCOUNTS))
+            importByFile(file).then(() => {
+              afterImport()
+              desktopMode && navigate(ROUTES.ACCOUNTS)
+            })
           }}
         >
           Import Account
@@ -119,7 +124,10 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   )
 }
 
-const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
+const MnemonicPhraseTab: FC<DesktopModeProps> = ({
+  desktopMode,
+  afterImport,
+}) => {
   const [phrase, setPhrase] = useState([])
   const navigate = useNavigate()
   const [, importByMnemonicPhrase] = useImportAccount()
@@ -145,9 +153,10 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           mt="2rem"
           p="2rem"
           onClick={() => {
-            importByMnemonicPhrase(phrase as MnemonicPhraseType).then(() =>
-              navigate(ROUTES.ACCOUNTS)
-            )
+            importByMnemonicPhrase(phrase as MnemonicPhraseType).then(() => {
+              afterImport()
+              desktopMode && navigate(ROUTES.ACCOUNTS)
+            })
           }}
           disabled={
             !phrase ||
@@ -156,7 +165,7 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           }
           size="large"
           w={desktopMode ? undefined : '100%'}
-          onClick={onImport}
+          // onClick={onImport}
         >
           Import Account
         </Button>
@@ -167,7 +176,7 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const ImportAccount: FC<DesktopModeProps> = ({
   desktopMode = true,
-  onImport,
+  afterImport = () => ({}),
 }) => {
   return (
     <Flex
@@ -196,13 +205,22 @@ const ImportAccount: FC<DesktopModeProps> = ({
         </TabList>
         <TabPanels>
           <TabPanel w="100%" p={0}>
-            <SpendingKeyTab desktopMode={desktopMode} onImport={onImport} />
+            <SpendingKeyTab
+              desktopMode={desktopMode}
+              afterImport={afterImport}
+            />
           </TabPanel>
           <TabPanel w="100%" p={0}>
-            <MnemonicPhraseTab desktopMode={desktopMode} onImport={onImport} />
+            <MnemonicPhraseTab
+              desktopMode={desktopMode}
+              afterImport={afterImport}
+            />
           </TabPanel>
           <TabPanel w="100%" p={0}>
-            <ImportFileTab desktopMode={desktopMode} onImport={onImport} />
+            <ImportFileTab
+              desktopMode={desktopMode}
+              afterImport={afterImport}
+            />
           </TabPanel>
         </TabPanels>
       </Tabs>
