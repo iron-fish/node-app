@@ -14,13 +14,18 @@ module.exports = {
   },
   plugins: plugins,
   resolve: {
+    fallback: {
+      stream: false,
+    },
     alias: {
+      stream: ['../node_modules/stream-browserify'],
       Components: path.join(__dirname, '../src/components'),
       Hooks: path.join(__dirname, '../src/hooks'),
       Routes: path.join(__dirname, '../src/routes'),
       Svgx: path.join(__dirname, '../src/svgx'),
       Utils: path.join(__dirname, '../src/utils'),
       Types: path.join(__dirname, '../src/types'),
+      Data: path.join(__dirname, '../src/data'),
       react: resolve('./node_modules/react'),
     },
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],

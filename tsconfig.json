@@ -20,6 +20,7 @@
       "Routes/*": ["src/routes/*"],
       "Svgx/*": ["src/svgx/*"],
       "Utils/*": ["src/utils/*"],
+      "Data/*": ["src/data/*"],
     },
   },
   "include": ["src/**/*"],
