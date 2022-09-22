@@ -1,8 +1,13 @@
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 
 const useCreateAccount = () => {
   const [result, promiseWrapper] = useAsyncDataWrapper<string[]>()
+  const createAccount = useCallback(
+    (name, mnemonicPhrase) =>
+      window.DemoDataManager.createAccount(name, mnemonicPhrase),
+    []
+  )
 
   const generateMnemonic = () =>
     promiseWrapper(window.DemoDataManager.generateMnemonic())
@@ -11,11 +16,7 @@ const useCreateAccount = () => {
     generateMnemonic()
   }, [])
 
-  return [
-    result,
-    window.DemoDataManager.createAccount,
-    generateMnemonic,
-  ] as const
+  return [result, createAccount, generateMnemonic] as const
 }
 
 export default useCreateAccount
