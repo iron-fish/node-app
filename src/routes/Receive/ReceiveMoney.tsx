@@ -144,7 +144,7 @@ const ReceiveMoney: FC = () => {
                 <QRCodeSVG value={account?.value} />
               </Box>
               <ViewField
-                value={account.value}
+                value={account?.value}
                 buttonText="Copy"
                 copiedTooltipText="Copied"
                 copyTooltipText="Copy to clipboard"
