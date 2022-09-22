@@ -136,7 +136,7 @@ const Send: FC = () => {
             <InputGroup
               width="auto"
               fontSize="3rem"
-              alignItems="center"
+              alignItems="baseline"
               my="1rem"
             >
               <Input
@@ -155,7 +155,6 @@ const Send: FC = () => {
                 border="none"
                 color={NAMED_COLORS.GREY}
                 fontSize="3rem"
-                mb="0.8rem"
               >
                 $IRON
               </InputRightAddon>
