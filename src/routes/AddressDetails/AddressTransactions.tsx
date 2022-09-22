@@ -12,6 +12,7 @@ import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useTransactions'
+import SortType from 'Types/SortType'
 
 interface AddressTransactionsProps {
   address: string
@@ -19,7 +20,7 @@ interface AddressTransactionsProps {
 
 const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
-  const [$sortOrder, $setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
   const [{ data: transactions, loaded }] = useTransactions(
     address,
     $searchTerm,

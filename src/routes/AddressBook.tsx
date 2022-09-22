@@ -21,6 +21,7 @@ import SimpleTable from 'Components/SimpleTable'
 import SearchSortField from 'Components/Search&Sort'
 import useAddressBook from 'Hooks/addressBook/useAddressBook'
 import { Contact } from 'Data/types/Contact'
+import SortType from 'Types/SortType'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -115,7 +116,7 @@ const AddressBook: FC = () => {
   )
 
   const [$searchTerm, $setSearchTerm] = useState('')
-  const [$sortOrder, $setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
 
   const [{ data: contacts, loaded }, addContact] = useAddressBook(
     $searchTerm,
