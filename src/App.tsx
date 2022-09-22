@@ -14,8 +14,8 @@ import AccountDetails from 'Routes/Accounts/AccountDetails'
 import Miner from 'Routes/Miner'
 import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressDetails'
-import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
+import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 
 const breakpoints = {
   sm: '56.25rem', //900px
