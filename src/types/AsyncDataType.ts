@@ -4,19 +4,4 @@ export interface AsyncDataProps<T> {
   error?: object
 }
 
-export type MnemonicPhraseType = [
-  string,
-  string,
-  string,
-  string,
-  string,
-  string,
-  string,
-  string,
-  string,
-  string,
-  string,
-  string
-]
-
 export default AsyncDataProps

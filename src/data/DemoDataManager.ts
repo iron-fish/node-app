@@ -1,5 +1,5 @@
 import { GetStatusResponse, PeerResponse } from '@ironfish/sdk'
-import { MnemonicPhraseType } from 'Types/AsyncDataType'
+import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 import DemoAccountsManager from './DemoAccountsManager'
 import DemoAddressBookManager from './DemoAddressBookManager'
 import DemoMinerManager from './DemoMinerManager'

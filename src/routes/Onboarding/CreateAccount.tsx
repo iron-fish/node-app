@@ -13,16 +13,16 @@ import { Link } from 'react-router-dom'
 import { ROUTES } from '..'
 import BackButtonLink from 'Components/BackButtonLink'
 import useCreateAccount from 'Hooks/accounts/useCreateAccount'
-import { MnemonicPhraseType } from 'Types/AsyncDataType'
+import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 
 interface CreateAccountProps {
   desktopMode?: boolean
-  afterCreate?: VoidFunction
+  onCreate?: VoidFunction
 }
 
 const CreateAccount: FC<CreateAccountProps> = ({
   desktopMode = true,
-  afterCreate = () => ({}),
+  onCreate = () => ({}),
 }) => {
   const [saved, setSaved] = useState<boolean>(false)
   const [accountName, setAccountName] = useState<string>('')
@@ -96,7 +96,7 @@ const CreateAccount: FC<CreateAccountProps> = ({
           w={desktopMode ? undefined : '100%'}
           onClick={() => {
             createAccount(accountName, phrase as MnemonicPhraseType).then(() =>
-              afterCreate()
+              onCreate()
             )
           }}
         >

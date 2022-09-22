@@ -21,14 +21,14 @@ import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
 import BackButtonLink from 'Components/BackButtonLink'
 import useImportAccount from 'Hooks/accounts/useImportAccount'
 import { useNavigate } from 'react-router-dom'
-import { MnemonicPhraseType } from 'Types/AsyncDataType'
+import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 
 interface DesktopModeProps {
   desktopMode?: boolean
-  afterImport?: VoidFunction
+  onImport?: VoidFunction
 }
 
-const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, afterImport }) => {
+const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [show, setShow] = useState(false)
   const [key, setKey] = useState('')
   const navigate = useNavigate()
@@ -62,7 +62,7 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, afterImport }) => {
           isDisabled={!key}
           onClick={() => {
             importBySpendingKey(key).then(() => {
-              afterImport()
+              onImport()
               desktopMode && navigate(ROUTES.ACCOUNTS)
             })
           }}
@@ -76,7 +76,7 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, afterImport }) => {
   )
 }
 
-const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, afterImport }) => {
+const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [file, setFile] = useState<File | null>(null)
   const navigate = useNavigate()
   const [, , importByFile] = useImportAccount()
@@ -111,7 +111,7 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, afterImport }) => {
           w={desktopMode ? undefined : '100%'}
           onClick={() => {
             importByFile(file).then(() => {
-              afterImport()
+              onImport()
               desktopMode && navigate(ROUTES.ACCOUNTS)
             })
           }}
@@ -123,10 +123,7 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, afterImport }) => {
   )
 }
 
-const MnemonicPhraseTab: FC<DesktopModeProps> = ({
-  desktopMode,
-  afterImport,
-}) => {
+const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [phrase, setPhrase] = useState([])
   const navigate = useNavigate()
   const [, importByMnemonicPhrase] = useImportAccount()
@@ -152,7 +149,7 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({
           mt="2rem"
           onClick={() => {
             importByMnemonicPhrase(phrase as MnemonicPhraseType).then(() => {
-              afterImport()
+              onImport()
               desktopMode && navigate(ROUTES.ACCOUNTS)
             })
           }}
@@ -173,7 +170,7 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({
 
 const ImportAccount: FC<DesktopModeProps> = ({
   desktopMode = true,
-  afterImport = () => ({}),
+  onImport = () => ({}),
 }) => {
   return (
     <Flex
@@ -202,22 +199,13 @@ const ImportAccount: FC<DesktopModeProps> = ({
         </TabList>
         <TabPanels>
           <TabPanel w="100%" p={0}>
-            <SpendingKeyTab
-              desktopMode={desktopMode}
-              afterImport={afterImport}
-            />
+            <SpendingKeyTab desktopMode={desktopMode} onImport={onImport} />
           </TabPanel>
           <TabPanel w="100%" p={0}>
-            <MnemonicPhraseTab
-              desktopMode={desktopMode}
-              afterImport={afterImport}
-            />
+            <MnemonicPhraseTab desktopMode={desktopMode} onImport={onImport} />
           </TabPanel>
           <TabPanel w="100%" p={0}>
-            <ImportFileTab
-              desktopMode={desktopMode}
-              afterImport={afterImport}
-            />
+            <ImportFileTab desktopMode={desktopMode} onImport={onImport} />
           </TabPanel>
         </TabPanels>
       </Tabs>
