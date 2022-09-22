@@ -7,7 +7,6 @@ import {
   InputGroup,
   InputRightAddon,
   useColorModeValue,
-  SelectField,
   TextField,
   Button,
   Icon,
@@ -135,11 +134,10 @@ const Send: FC = () => {
             <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5>
           </Flex>
           <Box mr="-0.25rem">
-            <SelectField
+            <AccountsSelect
               label="From Account"
               mb="2rem"
-              options={DEMO_ACCOUNTS}
-              value={account}
+              address={account?.value}
               onSelectOption={setAccount}
             />
             <Autocomplete
