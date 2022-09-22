@@ -15,16 +15,34 @@ import BackButtonLink from 'Components/BackButtonLink'
 import useCreateAccount from 'Hooks/accounts/useCreateAccount'
 import { MnemonicPhraseType } from 'Types/AsyncDataType'
 
-const CreateAccount: FC = () => {
+interface CreateAccountProps {
+  desktopMode?: boolean
+  onCreate?: VoidFunction
+}
+
+const CreateAccount: FC<CreateAccountProps> = ({
+  desktopMode = true,
+  onCreate,
+}) => {
   const [saved, setSaved] = useState<boolean>(false)
   const [accountName, setAccountName] = useState<string>('')
   const [{ data: phrase, loaded }, createAccount] = useCreateAccount()
   return (
-    <Flex flexDirection="column" p="4rem" pb="0" bg="transparent" w="100%">
-      <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
-      <chakra.h1 mb="1.5rem" color={NAMED_COLORS.BLACK}>
-        Create Account
-      </chakra.h1>
+    <Flex
+      flexDirection="column"
+      p={desktopMode ? '4rem' : 0}
+      pb="0"
+      bg="transparent"
+      w="100%"
+    >
+      {desktopMode && (
+        <>
+          <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
+          <chakra.h1 mb="1.5rem" color={NAMED_COLORS.BLACK}>
+            Create Account
+          </chakra.h1>
+        </>
+      )}
       <chakra.h3 color={NAMED_COLORS.BLACK} pb="0.25rem">
         Internal Account Name
       </chakra.h3>
@@ -75,6 +93,9 @@ const CreateAccount: FC = () => {
           isDisabled={!saved || !accountName}
           as={Link}
           to={ROUTES.ACCOUNTS}
+          size="large"
+          w={desktopMode ? undefined : '100%'}
+          onClick={onCreate}
           onClick={() =>
             createAccount(accountName, phrase as MnemonicPhraseType)
           }

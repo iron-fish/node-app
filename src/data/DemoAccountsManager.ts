@@ -1,6 +1,6 @@
 import { Account, AccountKeys, AccountSettings } from './types/Account'
 import { nanoid } from 'nanoid'
-// seems that it can't be used on front-end
+// seems that it can be used thought preload script
 // import { generateMnemonic } from 'bip39'
 import randomWords from 'random-words'
 
@@ -271,15 +271,15 @@ class DemoAccountsManager {
 
   // export() {}
 
-  list(serchTerm: string): Promise<Account[]> {
+  list(searchTerm: string): Promise<Account[]> {
     return new Promise(resolve =>
       setTimeout(
         () =>
           resolve(
             DEMO_ACCOUNTS.filter(
               account =>
-                account.name.includes(serchTerm) ||
-                account.address.includes(serchTerm)
+                account.name.includes(searchTerm) ||
+                account.address.includes(searchTerm)
             )
           ),
         500

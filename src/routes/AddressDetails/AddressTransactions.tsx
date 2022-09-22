@@ -85,6 +85,8 @@ const AddressTransactions = () => {
               label: '',
               WrapperProps: {
                 display: 'flex',
+                textAlign: 'right',
+                justifyContent: 'flex-end',
               },
               ItemProps: {
                 justifyContent: 'flex-end',
