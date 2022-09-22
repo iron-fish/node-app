@@ -22,11 +22,16 @@ interface CreateAccountProps {
 
 const CreateAccount: FC<CreateAccountProps> = ({
   desktopMode = true,
-  onCreate = () => ({}),
+  onCreate = () => undefined,
 }) => {
   const [saved, setSaved] = useState<boolean>(false)
   const [accountName, setAccountName] = useState<string>('')
   const [{ data: phrase, loaded }, createAccount] = useCreateAccount()
+
+  const checkChanges: () => boolean = () => {
+    return !saved || !accountName
+  }
+
   return (
     <Flex
       flexDirection="column"
@@ -89,7 +94,7 @@ const CreateAccount: FC<CreateAccountProps> = ({
       <Box>
         <Button
           variant="primary"
-          isDisabled={!saved || !accountName}
+          isDisabled={checkChanges()}
           as={Link}
           to={ROUTES.ACCOUNTS}
           size="large"

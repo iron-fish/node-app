@@ -170,7 +170,7 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const ImportAccount: FC<DesktopModeProps> = ({
   desktopMode = true,
-  onImport = () => ({}),
+  onImport = () => undefined,
 }) => {
   return (
     <Flex
