@@ -17,7 +17,7 @@ import { ROUTES } from '..'
 
 interface ContactSettingsProps {
   contact: Contact
-  onUpdate?: (identity: string, name: string, address: string) => void
+  onUpdate?: (name: string, address: string) => void
   onDelete?: (identity: string) => Promise<boolean>
 }
 
@@ -82,7 +82,7 @@ const ContactSettings: FC<ContactSettingsProps> = ({
             variant="primary"
             mr="2rem"
             disabled={!checkChanges()}
-            onClick={() => onUpdate(contact.identity, name, address)}
+            onClick={() => onUpdate(name, address)}
           >
             Save Changes
           </Button>
