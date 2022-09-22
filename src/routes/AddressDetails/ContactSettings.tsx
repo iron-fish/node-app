@@ -60,7 +60,7 @@ const ContactSettings: FC<ContactSettingsProps> = ({
 
   return (
     <Flex mt="2rem">
-      <Flex width="100%" direction="column" gap="32px">
+      <Flex width="100%" direction="column" gap="2rem">
         <TextField
           label="Contact Name"
           value={name}
@@ -90,7 +90,7 @@ const ContactSettings: FC<ContactSettingsProps> = ({
             alignSelf="center"
             onClick={() => {
               onDelete(contact.identity).then(
-                done => done && navigate(ROUTES.ADDRESS_BOOK)
+                deleted => deleted && navigate(ROUTES.ADDRESS_BOOK)
               )
             }}
           >
