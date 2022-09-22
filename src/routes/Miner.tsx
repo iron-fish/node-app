@@ -16,6 +16,7 @@ import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState } from 'react'
 import MinerInfoImage from 'Svgx/MinerInfoImage'
+import AccountsSelect from 'Components/AccountsSelect'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -34,19 +35,6 @@ const Information: FC = memo(() => {
     </Box>
   )
 })
-
-const ACCOUNTS = [
-  {
-    value: 'PrimaryAccountId',
-    label: 'Primary Account',
-    helperText: '8,456 $IRON',
-  },
-  {
-    value: 'AccountId',
-    label: 'Account',
-    helperText: '100 $IRON',
-  },
-]
 
 const MINDED_OPTIONS = [
   { value: 'allTime', label: 'All Time $IRON Mined' },
@@ -122,8 +110,8 @@ const HashRateChart = () => {
   )
 }
 
-const Miner: FC = props => {
-  const [account, setAccount] = useState<OptionType>(ACCOUNTS[0])
+const Miner: FC = () => {
+  const [account, setAccount] = useState<OptionType>(null)
   const [miningPeriod, setMiningPeriod] = useState<OptionType>(
     MINDED_OPTIONS[0]
   )
@@ -135,12 +123,11 @@ const Miner: FC = props => {
       <chakra.h2 mb="1.25rem">Miner</chakra.h2>
       <Flex>
         <VStack spacing="2rem" w="37.25rem" align="flex-start">
-          <SelectField
+          <AccountsSelect
             w="100%"
             label="Account"
-            value={account}
+            address={account?.value}
             onSelectOption={setAccount}
-            options={ACCOUNTS}
           />
           <Flex
             layerStyle="card"

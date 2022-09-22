@@ -7,46 +7,18 @@ import {
   InputGroup,
   InputRightAddon,
   useColorModeValue,
-  SelectField,
   TextField,
   Button,
   Icon,
   Autocomplete,
 } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
+import AccountsSelect from 'Components/AccountsSelect'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState } from 'react'
 import FeesImage from 'Svgx/FeesImage'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow'
-
-const DEMO_ACCOUNTS: OptionType[] = [
-  {
-    label: 'Primary Account',
-    helperText: '8.456 $IRON',
-    value: '000000000006084ed8a065122fced71976932343104c1f3e76b36b42e03680e9',
-  },
-  {
-    label: 'Secondary Account',
-    helperText: '1.944 $IRON',
-    value: '00000000000515bce83c4755401d2fab9562a0ed4e8b6b38f361a23075614c97',
-  },
-  {
-    label: 'Account 3',
-    helperText: '56 $IRON',
-    value: '0000000000034b8458a3f330cc95be812cd5a9d5b58fa002232bd5585fbf77ad',
-  },
-  {
-    label: 'Account 4',
-    helperText: '56 $IRON',
-    value: '000000000007db9f646473593dced506c7ffce5455557fe7b93c7a43ca39ffd7',
-  },
-  {
-    label: 'Account 5',
-    helperText: '56 $IRON',
-    value: '0000000000029ae7122d85141a1f1a44164ada8910496d1f1a5d3b9024d9ec0b',
-  },
-]
 
 const DEMO_CONTACTS: OptionType[] = [
   {
@@ -82,7 +54,7 @@ const Information: FC = memo(() => {
     NAMED_COLORS.LIGHT_GREY
   )
   return (
-    <>
+    <Box maxWidth="21.5rem">
       <chakra.h3 mb="1rem">About Fees</chakra.h3>
       <chakra.h5 color={textColor}>
         You can change the fee amount you’d like to pay however that will
@@ -90,7 +62,7 @@ const Information: FC = memo(() => {
         the block chain.
       </chakra.h5>
       <FeesImage mt="2rem" />
-    </>
+    </Box>
   )
 })
 
@@ -104,7 +76,7 @@ const filterOption = (option: OptionType, searchTerm: string) => {
 
 const Send: FC = () => {
   const [amount, setAmount] = useState(0)
-  const [account, setAccount] = useState(DEMO_ACCOUNTS[0])
+  const [account, setAccount] = useState(null)
   const [contact, setContact] = useState(null)
   const [notes, setNotes] = useState('Paying you back, Derek - B.')
   const [startSendFlow, setStart] = useState(false)
@@ -162,11 +134,10 @@ const Send: FC = () => {
             <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5>
           </Flex>
           <Box mr="-0.25rem">
-            <SelectField
+            <AccountsSelect
               label="From Account"
               mb="2rem"
-              options={DEMO_ACCOUNTS}
-              value={account}
+              address={account?.value}
               onSelectOption={setAccount}
             />
             <Autocomplete
@@ -225,7 +196,7 @@ const Send: FC = () => {
         isOpen={startSendFlow}
         onClose={() => setStart(false)}
         amount={amount}
-        from={account.label.toString()}
+        from={account?.label.toString()}
         to={contact?.label.toString()}
         memo={notes}
       />
