@@ -8,12 +8,14 @@ import {
   InputGroup,
   InputRightAddon,
   useColorModeValue,
-  SelectField,
   TextField,
   Button,
   Icon,
+  Autocomplete,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
+import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
+import AccountsSelect from 'Components/AccountsSelect'
 import DetailsPanel from 'Components/DetailsPanel'
 import useAccounts from 'Hooks/accounts/useAccounts'
 import useAddressBook from 'Hooks/addressBook/useAddressBook'
@@ -26,12 +28,23 @@ import { Contact } from 'Data/types/Contact'
 import { truncateHash } from 'Utils/hash'
 import LocationStateProps from 'Types/LocationState'
 
-const getAccountOptions = (accounts: Account[] = []) =>
-  accounts.map((account: Account) => ({
-    label: account.name,
-    helperText: `${account.balance} $IRON`,
-    value: account.address,
-  }))
+const Information: FC = memo(() => {
+  const textColor = useColorModeValue(
+    NAMED_COLORS.GREY,
+    NAMED_COLORS.LIGHT_GREY
+  )
+  return (
+    <Box maxWidth="21.5rem">
+      <chakra.h3 mb="1rem">About Fees</chakra.h3>
+      <chakra.h5 color={textColor}>
+        You can change the fee amount you’d like to pay however that will
+        directly correlate the speed with which youe transaction is picked up by
+        the block chain.
+      </chakra.h5>
+      <FeesImage mt="2rem" />
+    </Box>
+  )
+})
 
 const getContactOptions = (contacts: Contact[] = []) =>
   contacts.map((contact: Contact) => ({
@@ -40,23 +53,13 @@ const getContactOptions = (contacts: Contact[] = []) =>
     value: contact.address,
   }))
 
-const Information: FC = memo(() => {
-  const textColor = useColorModeValue(
-    NAMED_COLORS.GREY,
-    NAMED_COLORS.LIGHT_GREY
-  )
-  return (
-    <>
-      <chakra.h3 mb="1rem">About Fees</chakra.h3>
-      <chakra.h5 color={textColor}>
-        You can change the fee amount you’d like to pay however that will
-        directly correlate the speed with which youe transaction is picked up by
-        the block chain.
-      </chakra.h5>
-      <FeesImage mt="2rem" />
-    </>
-  )
-})
+const filterOption = (option: OptionType, searchTerm: string) => {
+  const _label = option.label?.toString().toLowerCase()
+  const _value = option.value?.toString().toLowerCase()
+  const _searchTerm = searchTerm.toLowerCase()
+
+  return _label?.includes(_searchTerm) || _value?.includes(_searchTerm)
+}
 
 const Send: FC = () => {
   const location = useLocation()
@@ -69,11 +72,6 @@ const Send: FC = () => {
   const { data: accounts, loaded: accountsLoaded } = useAccounts()
   const [{ data: contacts, loaded: contactsLoaded }] = useAddressBook()
   const { data: fee, loaded: feeCalculated } = useFee(amount)
-
-  const accountOptions = useMemo(
-    () => getAccountOptions(accounts),
-    [JSON.stringify(accounts)]
-  )
 
   const contactOptions = useMemo(
     () => getContactOptions(contacts),
@@ -88,6 +86,10 @@ const Send: FC = () => {
     }
   }, [accountsLoaded])
 
+  const $colors = useColorModeValue(
+    { bg: NAMED_COLORS.DEEP_BLUE, color: NAMED_COLORS.WHITE },
+    { bg: NAMED_COLORS.WHITE, color: NAMED_COLORS.DEEP_BLUE }
+  )
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
@@ -96,20 +98,23 @@ const Send: FC = () => {
       <Flex>
         <Box w="37.25rem">
           <Flex
+            layerStyle="card"
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
             w="inherit"
             h="16rem"
-            bg={NAMED_COLORS.DEEP_BLUE}
-            color={NAMED_COLORS.WHITE}
+            bg={`${$colors.bg} !important`}
+            color={$colors.color}
             mb="2rem"
+            borderRadius="0.25rem"
+            ml="0"
           >
             <chakra.h4>I want to send</chakra.h4>
             <InputGroup
               width="auto"
               fontSize="3rem"
-              alignItems="center"
+              alignItems="baseline"
               my="1rem"
             >
               <Input
@@ -128,46 +133,50 @@ const Send: FC = () => {
                 border="none"
                 color={NAMED_COLORS.GREY}
                 fontSize="3rem"
-                mb="0.8rem"
               >
                 $IRON
               </InputRightAddon>
             </InputGroup>
             <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5>
           </Flex>
-          <SelectField
-            label="From Account"
-            mb="2rem"
-            options={accountOptions}
-            value={account}
-            onSelectOption={setAccount}
-          />
-          <SelectField
-            label="To"
-            mb="2rem"
-            options={contactOptions}
-            value={contact}
-            onSelectOption={setContact}
-          />
-          <Flex mb="2rem">
-            <TextField
-              w="calc(50% - 1rem)"
-              mr="2rem"
-              label="Fee"
-              value={(fee || 0).toFixed(2)}
+          <Box mr="-0.25rem">
+            <AccountsSelect
+              label="From Account"
+              mb="2rem"
+              address={account?.value}
+              onSelectOption={setAccount}
+            />
+            <Autocomplete
+              label="To"
+              mb="2rem"
+              options={contactOptions}
+              value={contact}
+              onSelectOption={setContact}
+              filterOption={filterOption}
               InputProps={{
-                isReadOnly: true,
+                placeholder: 'Input Text',
               }}
             />
-            <TextField
-              w="calc(50% - 1rem)"
-              label="Memo (32 characters)"
-              value={notes}
-              InputProps={{
-                onChange: e => setNotes(e.target.value.substring(0, 32)),
-              }}
-            />
-          </Flex>
+            <Flex mb="2rem">
+              <TextField
+                w="calc(50% - 1rem)"
+                mr="2rem"
+                label="Fee"
+                value={(amount * 0.01).toFixed(2)}
+                InputProps={{
+                  isReadOnly: true,
+                }}
+              />
+              <TextField
+                w="calc(50% - 1rem)"
+                label="Memo (32 characters)"
+                value={notes}
+                InputProps={{
+                  onChange: e => setNotes(e.target.value.substring(0, 32)),
+                }}
+              />
+            </Flex>
+          </Box>
           <Button
             variant="primary"
             borderRadius="4rem"

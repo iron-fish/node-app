@@ -12,37 +12,57 @@ import { FC, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '..'
 import BackButtonLink from 'Components/BackButtonLink'
+import useCreateAccount from 'Hooks/accounts/useCreateAccount'
+import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 
-const words = [
-  'Carrot',
-  'Stick',
-  'Papercut',
-  'Phone',
-  'Keyboard',
-  'Walkway',
-  'Uppercut',
-  'Ball',
-  'Pants',
-  'Test',
-  'Grass',
-  'Milk',
-]
+interface CreateAccountProps {
+  desktopMode?: boolean
+  onCreate?: VoidFunction
+}
 
-const CreateAccount: FC = () => {
+const CreateAccount: FC<CreateAccountProps> = ({
+  desktopMode = true,
+  onCreate = () => undefined,
+}) => {
   const [saved, setSaved] = useState<boolean>(false)
+  const [accountName, setAccountName] = useState<string>('')
+  const [{ data: phrase, loaded }, createAccount] = useCreateAccount()
+
+  const checkChanges: () => boolean = () => {
+    return !saved || !accountName
+  }
+
   return (
-    <Flex flexDirection="column" p="4rem" pb="0" bg="transparent" w="100%">
-      <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
-      <chakra.h1 mb="1.5rem" color={NAMED_COLORS.BLACK}>
-        Create Account
-      </chakra.h1>
+    <Flex
+      flexDirection="column"
+      p={desktopMode ? '4rem' : 0}
+      pb="0"
+      bg="transparent"
+      w="100%"
+    >
+      {desktopMode && (
+        <>
+          <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
+          <chakra.h1 mb="1.5rem" color={NAMED_COLORS.BLACK}>
+            Create Account
+          </chakra.h1>
+        </>
+      )}
       <chakra.h3 color={NAMED_COLORS.BLACK} pb="0.25rem">
         Internal Account Name
       </chakra.h3>
       <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
         This account name is only known to you
       </chakra.h5>
-      <TextField label="Account Name" mb="2rem" w="100%" />
+      <TextField
+        label="Account Name"
+        mb="2rem"
+        w="100%"
+        value={accountName}
+        InputProps={{
+          onChange: e => setAccountName(e.target.value),
+        }}
+      />
       <chakra.h3 color={NAMED_COLORS.BLACK} pb="0.25rem">
         Recovery Phrase
       </chakra.h3>
@@ -51,8 +71,9 @@ const CreateAccount: FC = () => {
         re-enter this.
       </chakra.h5>
       <MnemonicView
+        loaded={loaded}
         header="Mnemonic Phrase"
-        value={words}
+        value={phrase || []}
         placeholder={''}
         onChange={() => null}
         isReadOnly={true}
@@ -73,11 +94,16 @@ const CreateAccount: FC = () => {
       <Box>
         <Button
           variant="primary"
-          borderRadius="4rem"
-          p="2rem"
-          disabled={!saved}
+          isDisabled={checkChanges()}
           as={Link}
           to={ROUTES.ACCOUNTS}
+          size="large"
+          w={desktopMode ? undefined : '100%'}
+          onClick={() => {
+            createAccount(accountName, phrase as MnemonicPhraseType).then(() =>
+              onCreate()
+            )
+          }}
         >
           Create Account
         </Button>

@@ -90,5 +90,5 @@ typings/
 out/
 dist/
 
-# VScode
+#vscode
 .vscode/

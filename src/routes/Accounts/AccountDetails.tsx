@@ -23,7 +23,7 @@ import BackButtonLink from 'Components/BackButtonLink'
 import useAccount from 'Hooks/accounts/useAccount'
 
 const AccountDetails: FC = () => {
-  const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
+  const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
   const location = useLocation()
   const { accountId } = location.state as LocationStateProps
   const { data: account, loaded } = useAccount(accountId)

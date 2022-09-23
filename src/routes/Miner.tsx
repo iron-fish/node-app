@@ -16,6 +16,7 @@ import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState } from 'react'
 import MinerInfoImage from 'Svgx/MinerInfoImage'
+import AccountsSelect from 'Components/AccountsSelect'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -34,19 +35,6 @@ const Information: FC = memo(() => {
     </Box>
   )
 })
-
-const ACCOUNTS = [
-  {
-    value: 'PrimaryAccountId',
-    label: 'Primary Account',
-    helperText: '8,456 $IRON',
-  },
-  {
-    value: 'AccountId',
-    label: 'Account',
-    helperText: '100 $IRON',
-  },
-]
 
 const MINDED_OPTIONS = [
   { value: 'allTime', label: 'All Time $IRON Mined' },
@@ -122,8 +110,8 @@ const HashRateChart = () => {
   )
 }
 
-const Miner: FC = props => {
-  const [account, setAccount] = useState<OptionType>(ACCOUNTS[0])
+const Miner: FC = () => {
+  const [account, setAccount] = useState<OptionType>(null)
   const [miningPeriod, setMiningPeriod] = useState<OptionType>(
     MINDED_OPTIONS[0]
   )
@@ -135,21 +123,20 @@ const Miner: FC = props => {
       <chakra.h2 mb="1.25rem">Miner</chakra.h2>
       <Flex>
         <VStack spacing="2rem" w="37.25rem" align="flex-start">
-          <SelectField
+          <AccountsSelect
             w="100%"
             label="Account"
-            value={account}
+            address={account?.value}
             onSelectOption={setAccount}
-            options={ACCOUNTS}
           />
           <Flex
             layerStyle="card"
             w="100%"
-            maxWidth="36.75rem"
+            maxWidth="37rem"
             h="14.375rem"
             p="2rem"
           >
-            <VStack w="50%" align="flex-start" spacing="32px">
+            <VStack w="50%" align="flex-start" spacing="2rem">
               <chakra.h4>$IRON Mined</chakra.h4>
               <chakra.h1>143.453</chakra.h1>
               <chakra.h6>USD $ --</chakra.h6>
@@ -163,7 +150,7 @@ const Miner: FC = props => {
               size="small"
             />
           </Flex>
-          <HStack w="100%" spacing="32px">
+          <HStack w="calc(100% - 0.25rem)" spacing="2rem">
             <VStack
               layerStyle="card"
               w="100%"
@@ -171,6 +158,7 @@ const Miner: FC = props => {
               h="14.375rem"
               p="2rem"
               spacing="2rem"
+              ml="0"
             >
               <chakra.h4>Miner Status</chakra.h4>
               <chakra.h1>Running</chakra.h1>
@@ -204,6 +192,7 @@ const Miner: FC = props => {
               maxWidth="36.75rem"
               h="14.375rem"
               px="1rem"
+              ml={0}
             >
               <chakra.h4 my="2rem">Hashes Per Second</chakra.h4>
               <chakra.h1>300</chakra.h1>
@@ -217,7 +206,7 @@ const Miner: FC = props => {
             borderRadius="4.5rem"
             variant="primary"
             mr="2rem"
-            disabled={!checkChanges()}
+            isDisabled={!checkChanges()}
           >
             Save Changes
           </Button>

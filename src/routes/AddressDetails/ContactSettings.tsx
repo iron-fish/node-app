@@ -1,4 +1,4 @@
-import { FC, memo, useState } from 'react'
+import { FC, memo, useState, useEffect } from 'react'
 import {
   Flex,
   chakra,
@@ -11,6 +11,15 @@ import {
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
+import { Contact } from 'Data/types/Contact'
+import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '..'
+
+interface ContactSettingsProps {
+  contact: Contact
+  onUpdate?: (name: string, address: string) => void
+  onDelete?: (identity: string) => Promise<boolean>
+}
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -29,22 +38,29 @@ const Information: FC = memo(() => {
   )
 })
 
-const ContactSettings = () => {
-  const [name, setName] = useState('Frankie Boy')
-  const [address, setAddress] = useState(
-    '456tdgipedGP543DDHJOPahfjsidiwdowoae53d5'
-  )
+const ContactSettings: FC<ContactSettingsProps> = ({
+  contact,
+  onUpdate,
+  onDelete,
+}) => {
+  const [name, setName] = useState('')
+  const [address, setAddress] = useState('')
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (contact) {
+      setName(contact.name)
+      setAddress(contact.address)
+    }
+  }, [JSON.stringify(contact)])
 
   const checkChanges: () => boolean = () => {
-    return (
-      name !== 'Frankie Boy' ||
-      address !== '456tdgipedGP543DDHJOPahfjsidiwdowoae53d5'
-    )
+    return name !== contact?.name || address !== contact?.address
   }
 
   return (
     <Flex mt="2rem">
-      <Flex width="100%" direction="column" gap="32px">
+      <Flex width="100%" direction="column" gap="2rem">
         <TextField
           label="Contact Name"
           value={name}
@@ -66,10 +82,18 @@ const ContactSettings = () => {
             variant="primary"
             mr="2rem"
             disabled={!checkChanges()}
+            onClick={() => onUpdate(name, address)}
           >
             Save Changes
           </Button>
-          <Link alignSelf="center">
+          <Link
+            alignSelf="center"
+            onClick={() => {
+              onDelete(contact.identity).then(
+                deleted => deleted && navigate(ROUTES.ADDRESS_BOOK)
+              )
+            }}
+          >
             <h4>Delete Contact</h4>
           </Link>
         </Flex>

@@ -6,9 +6,9 @@ import {
   useColorModeValue,
   NAMED_COLORS,
   Button,
-  SelectField,
   TextField,
   FieldGroup,
+  Tooltip,
 } from '@ironfish/ui-kit'
 import { QRCodeSVG } from 'qrcode.react'
 import { useLocation } from 'react-router-dom'
@@ -19,6 +19,8 @@ import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import useAccounts from 'Hooks/accounts/useAccounts'
 import { Account } from 'Data/types/Account'
 import LocationStateProps from 'Types/LocationState'
+import AccountsSelect from 'Components/AccountsSelect'
+import IconCheck from '@ironfish/ui-kit/dist/svgx/icon-check'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -46,6 +48,64 @@ const Information: FC = memo(() => {
     </Box>
   )
 })
+
+interface ViewFieldProps {
+  value: string
+  buttonText: string
+  copyTooltipText: string
+  copiedTooltipText: string
+  tooltipDelay?: number
+}
+
+const ViewField: FC<ViewFieldProps> = ({
+  value,
+  buttonText,
+  copyTooltipText,
+  copiedTooltipText,
+  tooltipDelay = 1500,
+}) => {
+  const [$copied, $setCopied] = useState(false)
+
+  useEffect(() => {
+    if ($copied) {
+      setTimeout(() => $setCopied(false), tooltipDelay)
+    }
+  }, [$copied])
+
+  return (
+    <FieldGroup w="100%" zIndex={1}>
+      <TextField
+        label="Public Address"
+        value={value}
+        InputProps={{
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          isReadOnly: true,
+        }}
+        width="100%"
+      />
+      <Button
+        px="1.5rem"
+        textColor={NAMED_COLORS.LIGHT_BLUE}
+        onClick={() => {
+          $setCopied(true)
+          navigator.clipboard.writeText(value)
+        }}
+      >
+        <Tooltip
+          closeDelay={$copied ? tooltipDelay : 0}
+          label={$copied ? copiedTooltipText : copyTooltipText}
+        >
+          <Flex align="center">
+            <chakra.h4 mr="8px">{buttonText}</chakra.h4>
+            {$copied ? <IconCheck color="green" /> : <IconCopy />}
+          </Flex>
+        </Tooltip>
+      </Button>
+    </FieldGroup>
+  )
+}
 
 const getAccountOptions = (accounts: Account[] = []) =>
   accounts.map((account: Account) => ({
@@ -75,14 +135,15 @@ const ReceiveMoney: FC = () => {
   }, [accountsLoaded])
 
   return (
-    <>
-      <chakra.h2 mb="1rem">Receive $IRON</chakra.h2>
+    <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
+      <Box>
+        <chakra.h2 mb="1rem">Receive $IRON</chakra.h2>
+      </Box>
       <Flex mb="4rem">
         <Box w="37.25rem">
-          <SelectField
+          <AccountsSelect
             label="Account"
-            value={account}
-            options={accountOptions}
+            address={account?.value}
             onSelectOption={setAccount}
             mb="1rem"
           />
@@ -108,27 +169,12 @@ const ReceiveMoney: FC = () => {
               <Box mb="2rem">
                 <QRCodeSVG value={account?.value} />
               </Box>
-              <FieldGroup w="100%" zIndex={1}>
-                <TextField
-                  label="Public Address"
-                  value={account?.value}
-                  InputProps={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    isReadOnly: true,
-                  }}
-                  width="100%"
-                />
-                <Button
-                  px="1.5rem"
-                  textColor={NAMED_COLORS.LIGHT_BLUE}
-                  rightIcon={<IconCopy w="1rem" h="1rem" />}
-                  onClick={() => navigator.clipboard.writeText(account?.value)}
-                >
-                  Copy
-                </Button>
-              </FieldGroup>
+              <ViewField
+                value={account?.value}
+                buttonText="Copy"
+                copiedTooltipText="Copied"
+                copyTooltipText="Copy to clipboard"
+              />
             </Flex>
           </Box>
         </Box>
@@ -138,7 +184,7 @@ const ReceiveMoney: FC = () => {
           </DetailsPanel>
         </Box>
       </Flex>
-    </>
+    </Flex>
   )
 }
 
