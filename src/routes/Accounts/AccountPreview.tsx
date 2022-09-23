@@ -190,7 +190,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              navigate(ROUTES.SEND, { state: { accountId: address } })
+              navigate(ROUTES.SEND, { state: { accountId: identity } })
             }}
             leftIcon={
               <Icon height={8}>
@@ -207,7 +207,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              navigate(ROUTES.RECEIVE, { state: { accountId: address } })
+              navigate(ROUTES.RECEIVE, { state: { accountId: identity } })
             }}
             leftIcon={
               <Icon height={8}>

@@ -1,5 +1,7 @@
 interface LocationStateProps {
-  accountId: string
+  accountId?: string
+  address?: string
+  contactId?: string
 }
 
 export default LocationStateProps

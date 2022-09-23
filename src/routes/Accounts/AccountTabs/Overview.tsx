@@ -119,7 +119,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                   }
                   onClick={() =>
                     navigate(ROUTES.SEND, {
-                      state: { accountId: account?.address },
+                      state: { accountId: account?.identity },
                     })
                   }
                 >
@@ -137,7 +137,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                   }
                   onClick={() =>
                     navigate(ROUTES.RECEIVE, {
-                      state: { accountId: account?.address },
+                      state: { accountId: account?.identity },
                     })
                   }
                 >

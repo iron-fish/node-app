@@ -1,4 +1,4 @@
-import { FC, memo, useState, useEffect, useMemo } from 'react'
+import { FC, memo, useState, useEffect } from 'react'
 import {
   Box,
   Flex,
@@ -16,8 +16,6 @@ import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
-import useAccounts from 'Hooks/accounts/useAccounts'
-import { Account } from 'Data/types/Account'
 import LocationStateProps from 'Types/LocationState'
 import AccountsSelect from 'Components/AccountsSelect'
 import IconCheck from '@ironfish/ui-kit/dist/svgx/icon-check'
@@ -107,32 +105,11 @@ const ViewField: FC<ViewFieldProps> = ({
   )
 }
 
-const getAccountOptions = (accounts: Account[] = []) =>
-  accounts.map((account: Account) => ({
-    label: account.name,
-    helperText: `${account.balance} $IRON`,
-    value: account.address,
-  }))
-
 const ReceiveMoney: FC = () => {
   const location = useLocation()
   const state = location.state as LocationStateProps
-  const { data: accounts, loaded: accountsLoaded } = useAccounts()
   const [account, setAccount] = useState(null)
   // const [amount, setAmount] = useState(0)
-
-  const accountOptions = useMemo(
-    () => getAccountOptions(accounts),
-    [JSON.stringify(accounts)]
-  )
-
-  useEffect(() => {
-    if (accountsLoaded) {
-      const selectedAccount =
-        state && accountOptions.find(({ value }) => value === state.accountId)
-      setAccount(selectedAccount ? selectedAccount : accountOptions[0])
-    }
-  }, [accountsLoaded])
 
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
@@ -143,7 +120,7 @@ const ReceiveMoney: FC = () => {
         <Box w="37.25rem">
           <AccountsSelect
             label="Account"
-            address={account?.value}
+            accountId={account?.identity || state?.accountId}
             onSelectOption={setAccount}
             mb="1rem"
           />
@@ -167,10 +144,10 @@ const ReceiveMoney: FC = () => {
               ml={0}
             >
               <Box mb="2rem">
-                <QRCodeSVG value={account?.value} />
+                <QRCodeSVG value={account?.address} />
               </Box>
               <ViewField
-                value={account?.value}
+                value={account?.address}
                 buttonText="Copy"
                 copiedTooltipText="Copied"
                 copyTooltipText="Copy to clipboard"

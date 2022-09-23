@@ -1,4 +1,4 @@
-import { FC, memo, useState, useEffect, useMemo } from 'react'
+import { FC, memo, useState } from 'react'
 import {
   Box,
   Flex,
@@ -11,22 +11,18 @@ import {
   TextField,
   Button,
   Icon,
-  Autocomplete,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
-import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import AccountsSelect from 'Components/AccountsSelect'
 import DetailsPanel from 'Components/DetailsPanel'
-import useAccounts from 'Hooks/accounts/useAccounts'
-import useAddressBook from 'Hooks/addressBook/useAddressBook'
 import useFee from 'Hooks/transactions/useFee'
 import FeesImage from 'Svgx/FeesImage'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow'
 import { Account } from 'Data/types/Account'
 import { Contact } from 'Data/types/Contact'
-import { truncateHash } from 'Utils/hash'
 import LocationStateProps from 'Types/LocationState'
+import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -46,38 +42,15 @@ const Information: FC = memo(() => {
   )
 })
 
-const getContactOptions = (contacts: Contact[] = []) =>
-  contacts.map((contact: Contact) => ({
-    label: contact.name,
-    helperText: truncateHash(contact.address, 2, 4),
-    value: contact.address,
-  }))
-
-const filterOption = (option: OptionType, searchTerm: string) => {
-  const _label = option.label?.toString().toLowerCase()
-  const _value = option.value?.toString().toLowerCase()
-  const _searchTerm = searchTerm.toLowerCase()
-
-  return _label?.includes(_searchTerm) || _value?.includes(_searchTerm)
-}
-
 const Send: FC = () => {
   const location = useLocation()
-  const state = location.state as LocationStateProps //state.accountId
+  const state = location.state as LocationStateProps
   const [amount, setAmount] = useState(0)
-  const [account, setAccount] = useState(null)
-  const [contact, setContact] = useState(null)
+  const [account, setAccount] = useState<Account>(null)
+  const [contact, setContact] = useState<Contact>(null)
   const [notes, setNotes] = useState('Paying you back, Derek - B.')
   const [startSendFlow, setStart] = useState(false)
-  const { data: accounts, loaded: accountsLoaded } = useAccounts()
-  const [{ data: contacts, loaded: contactsLoaded }] = useAddressBook()
   const { data: fee, loaded: feeCalculated } = useFee(amount)
-
-  const contactOptions = useMemo(
-    () => getContactOptions(contacts),
-    [JSON.stringify(contacts)]
-  )
-
   const $colors = useColorModeValue(
     { bg: NAMED_COLORS.DEEP_BLUE, color: NAMED_COLORS.WHITE },
     { bg: NAMED_COLORS.WHITE, color: NAMED_COLORS.DEEP_BLUE }
@@ -135,19 +108,14 @@ const Send: FC = () => {
             <AccountsSelect
               label="From Account"
               mb="2rem"
-              address={account?.value}
+              accountId={account?.identity || state?.accountId}
               onSelectOption={setAccount}
             />
-            <Autocomplete
-              label="To"
-              mb="2rem"
-              options={contactOptions}
-              value={contact}
+            <ContactsAutocomplete
+              label={'To'}
+              contactId={contact?.identity || state?.contactId}
               onSelectOption={setContact}
-              filterOption={filterOption}
-              InputProps={{
-                placeholder: 'Input Text',
-              }}
+              mb="2rem"
             />
             <Flex mb="2rem">
               <TextField
@@ -195,8 +163,8 @@ const Send: FC = () => {
         isOpen={startSendFlow}
         onClose={() => setStart(false)}
         amount={amount}
-        from={accounts?.find(({ address }) => account?.value == address)}
-        to={contacts?.find(({ address }) => contact?.value === address)}
+        from={account}
+        to={contact}
         memo={notes}
         fee={fee}
       />
