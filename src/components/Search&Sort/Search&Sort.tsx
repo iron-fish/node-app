@@ -2,21 +2,22 @@ import { FC } from 'react'
 import { Flex, FlexProps } from '@ironfish/ui-kit'
 import SearchInput, { SearchInputProps } from './SearchInput'
 import SortSelect, { SelectFieldProps } from './SortSelect'
+import SortType from 'Types/SortType'
 
 interface SearchSortFieldProps extends SearchInputProps {
   ContainerProps?: FlexProps
   SortSelectProps?: SelectFieldProps
-  sortValue?: 'asc' | 'desc'
+  sortValue?: SortType
 }
 
 const OPTIONS = [
   {
     label: 'Highest to lowest balance',
-    value: 'desc',
+    value: SortType.DESC,
   },
   {
     label: 'Lowest to highest balance',
-    value: 'asc',
+    value: SortType.ASC,
   },
 ]
 

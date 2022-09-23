@@ -13,7 +13,9 @@ const useAccounts = (searchTerm = '', sortOrder = SortType.ASC) => {
     loadAccounts(searchTerm)
   }, [searchTerm])
 
-  return result
+  const reloadAccounts = () => loadAccounts(searchTerm)
+
+  return [result, reloadAccounts] as const
 }
 
 export default useAccounts

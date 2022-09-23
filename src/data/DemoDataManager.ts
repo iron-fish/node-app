@@ -63,12 +63,31 @@ class DemoDataManager {
     return this.accounts.findById(accountId)
   }
 
+  updateAccount(identity: string, name: string): Promise<Account> {
+    return this.accounts.update(identity, name)
+  }
+
+  deleteAccount(identity: string): Promise<boolean> {
+    return this.accounts.delete(identity)
+  }
+
   getAccountKeys(accountId: string): Promise<AccountKeys> {
     return this.accounts.keys(accountId)
   }
 
+  updateAccountKeys(accountKeys: AccountKeys): Promise<AccountKeys> {
+    return this.accounts.updateKeys(accountKeys)
+  }
+
   getAccountSettings(accountId: string): Promise<AccountSettings> {
     return this.accounts.settings(accountId)
+  }
+
+  updateAccountSettings(
+    accountId: string,
+    currency: string
+  ): Promise<AccountSettings> {
+    return this.accounts.updateSettings(accountId, currency)
   }
 
   findTransactionsByAddress(

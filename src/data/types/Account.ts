@@ -1,3 +1,5 @@
+import MnemonicPhraseType from 'Types/MnemonicPhraseType'
+
 export interface Account {
   identity: string
   name: string
@@ -15,20 +17,7 @@ export interface AccountSettings {
 export interface AccountKeys {
   accountId: string
   spendingKey: string
-  mnemonicPhrase: [
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string
-  ]
+  mnemonicPhrase: MnemonicPhraseType
   nullifierKey: string
   authorizationKey: string
   proofAuthorizationKey: string

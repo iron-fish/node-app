@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { FC, useState } from 'react'
 import {
   Box,
   Button,
@@ -13,7 +13,6 @@ import {
 } from '@ironfish/ui-kit'
 import { Link as RouterLink } from 'react-router-dom'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { FC, useState } from 'react'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import AccountKeysImage from 'Svgx/AccountBalance'
@@ -24,6 +23,7 @@ import { Account } from 'Data/types/Account'
 import { useNavigate } from 'react-router-dom'
 import EmptyOverviewImage from 'Svgx/EmptyOverviewImage'
 import ROUTES from 'Routes/data'
+import SortType from 'Types/SortType'
 
 interface AccountOverviewProps {
   account: Account
@@ -66,7 +66,7 @@ const EmptyOverview = () => {
 
 const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
-  const [$sortOrder, $setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
   const [{ data: transactions, loaded }] = useTransactions(
     account?.address,
     $searchTerm,
@@ -164,82 +164,83 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
           </Box>
         </Box>
       </Flex>
-      {data.length === 0 && loaded ? (
-        <EmptyOverview />
-      ) : (
-        <>
-          <chakra.h3 pb="1rem">Transactions</chakra.h3>
-          <SearchSortField
-            SearchProps={{
-              onChange: e => $setSearchTerm(e.target.value),
-            }}
-            SortSelectProps={{
-              onSelectOption: ({ value }) => $setSortOrder(value),
-            }}
-          />
-          <CommonTable
-            textTransform="capitalize"
-            data={loaded ? data : [...Array(10)].fill(null)}
-            columns={[
-              {
-                key: 'transaction-action-column',
-                label: <chakra.h6>Action</chakra.h6>,
-                render: transaction => (
-                  <chakra.h5>{transaction.action}</chakra.h5>
-                ),
-              },
-              {
-                key: 'transaction-amount-column',
-                label: <chakra.h6>$IRON</chakra.h6>,
-                render: transaction => (
-                  <chakra.h5>{transaction.amount}</chakra.h5>
-                ),
-              },
-              {
-                key: 'transaction-to-column',
-                label: <chakra.h6>To</chakra.h6>,
-                render: transaction =>
-                  transaction.to ? (
-                    <chakra.h5>{truncateHash(transaction.to, 3)}</chakra.h5>
-                  ) : (
-                    <chakra.h5 color={NAMED_COLORS.GREY}>n/a</chakra.h5>
+      {loaded &&
+        (transactions?.length === 0 ? (
+          <EmptyOverview />
+        ) : (
+          <>
+            <chakra.h3 pb="1rem">Transactions</chakra.h3>
+            <SearchSortField
+              SearchProps={{
+                onChange: e => $setSearchTerm(e.target.value),
+              }}
+              SortSelectProps={{
+                onSelectOption: ({ value }) => $setSortOrder(value),
+              }}
+            />
+            <CommonTable
+              textTransform="capitalize"
+              data={loaded ? transactions : new Array(10).fill(null)}
+              columns={[
+                {
+                  key: 'transaction-action-column',
+                  label: <chakra.h6>Action</chakra.h6>,
+                  render: transaction => (
+                    <chakra.h5>{transaction.action}</chakra.h5>
                   ),
-              },
-              {
-                key: 'transaction-date-column',
-                label: <chakra.h6>Date</chakra.h6>,
-                render: transaction => (
-                  <chakra.h5>{transaction.date}</chakra.h5>
-                ),
-              },
-              {
-                key: 'transaction-memo-column',
-                label: <chakra.h6>Memo</chakra.h6>,
-                render: transaction => (
-                  <chakra.h5>"{transaction.memo}"</chakra.h5>
-                ),
-              },
-              {
-                key: 'transaction-details-column',
-                label: '',
-                ItemProps: {
-                  height: '100%',
-                  justifyContent: 'flex-end',
                 },
-                render: () => (
-                  <Button
-                    variant="link"
-                    color={NAMED_COLORS.LIGHT_BLUE}
-                    rightIcon={<ChevronRightIcon />}
-                  >
-                    <chakra.h5>View Details</chakra.h5>
-                  </Button>
-                ),
-              },
-            ]}
-          />
-        </>
-      )}
+                {
+                  key: 'transaction-amount-column',
+                  label: <chakra.h6>$IRON</chakra.h6>,
+                  render: transaction => (
+                    <chakra.h5>{transaction.amount}</chakra.h5>
+                  ),
+                },
+                {
+                  key: 'transaction-to-column',
+                  label: <chakra.h6>To</chakra.h6>,
+                  render: transaction =>
+                    transaction.to ? (
+                      <chakra.h5>{truncateHash(transaction.to, 3)}</chakra.h5>
+                    ) : (
+                      <chakra.h5 color={NAMED_COLORS.GREY}>n/a</chakra.h5>
+                    ),
+                },
+                {
+                  key: 'transaction-date-column',
+                  label: <chakra.h6>Date</chakra.h6>,
+                  render: transaction => (
+                    <chakra.h5>{transaction.date}</chakra.h5>
+                  ),
+                },
+                {
+                  key: 'transaction-memo-column',
+                  label: <chakra.h6>Memo</chakra.h6>,
+                  render: transaction => (
+                    <chakra.h5>"{transaction.memo}"</chakra.h5>
+                  ),
+                },
+                {
+                  key: 'transaction-details-column',
+                  label: '',
+                  ItemProps: {
+                    height: '100%',
+                    justifyContent: 'flex-end',
+                  },
+                  render: () => (
+                    <Button
+                      variant="link"
+                      color={NAMED_COLORS.LIGHT_BLUE}
+                      rightIcon={<ChevronRightIcon />}
+                    >
+                      <chakra.h5>View Details</chakra.h5>
+                    </Button>
+                  ),
+                },
+              ]}
+            />
+          </>
+        ))}
     </>
   )
 }
