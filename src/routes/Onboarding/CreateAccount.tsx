@@ -12,21 +12,8 @@ import { FC, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '..'
 import BackButtonLink from 'Components/BackButtonLink'
-
-const words = [
-  'Carrot',
-  'Stick',
-  'Papercut',
-  'Phone',
-  'Keyboard',
-  'Walkway',
-  'Uppercut',
-  'Ball',
-  'Pants',
-  'Test',
-  'Grass',
-  'Milk',
-]
+import useCreateAccount from 'Hooks/accounts/useCreateAccount'
+import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 
 interface CreateAccountProps {
   desktopMode?: boolean
@@ -35,9 +22,16 @@ interface CreateAccountProps {
 
 const CreateAccount: FC<CreateAccountProps> = ({
   desktopMode = true,
-  onCreate,
+  onCreate = () => undefined,
 }) => {
   const [saved, setSaved] = useState<boolean>(false)
+  const [accountName, setAccountName] = useState<string>('')
+  const [{ data: phrase, loaded }, createAccount] = useCreateAccount()
+
+  const checkChanges: () => boolean = () => {
+    return !saved || !accountName
+  }
+
   return (
     <Flex
       flexDirection="column"
@@ -60,7 +54,15 @@ const CreateAccount: FC<CreateAccountProps> = ({
       <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
         This account name is only known to you
       </chakra.h5>
-      <TextField label="Account Name" mb="2rem" w="100%" />
+      <TextField
+        label="Account Name"
+        mb="2rem"
+        w="100%"
+        value={accountName}
+        InputProps={{
+          onChange: e => setAccountName(e.target.value),
+        }}
+      />
       <chakra.h3 color={NAMED_COLORS.BLACK} pb="0.25rem">
         Recovery Phrase
       </chakra.h3>
@@ -69,8 +71,9 @@ const CreateAccount: FC<CreateAccountProps> = ({
         re-enter this.
       </chakra.h5>
       <MnemonicView
+        loaded={loaded}
         header="Mnemonic Phrase"
-        value={words}
+        value={phrase || []}
         placeholder={''}
         onChange={() => null}
         isReadOnly={true}
@@ -91,12 +94,16 @@ const CreateAccount: FC<CreateAccountProps> = ({
       <Box>
         <Button
           variant="primary"
-          isDisabled={!saved}
+          isDisabled={checkChanges()}
           as={Link}
           to={ROUTES.ACCOUNTS}
           size="large"
           w={desktopMode ? undefined : '100%'}
-          onClick={onCreate}
+          onClick={() => {
+            createAccount(accountName, phrase as MnemonicPhraseType).then(() =>
+              onCreate()
+            )
+          }}
         >
           Create Account
         </Button>

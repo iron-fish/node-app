@@ -16,8 +16,8 @@ const ModalWindow: FC<ModalProps> = ({ children, ...props }) => {
       <Modal closeOnOverlayClick={false} {...props}>
         <ModalOverlay />
         <ModalContent
-          w="45rem"
-          maxW="45rem"
+          w="47rem"
+          maxW="47rem"
           p="4rem"
           color={NAMED_COLORS.DEEP_BLUE}
         >

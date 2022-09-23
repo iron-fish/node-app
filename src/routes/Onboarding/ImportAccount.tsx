@@ -15,11 +15,13 @@ import {
   MnemonicView,
 } from '@ironfish/ui-kit'
 import { FC, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { ROUTES } from '..'
 import IconEye from '@ironfish/ui-kit/dist/svgx/icon-eye'
 import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
 import BackButtonLink from 'Components/BackButtonLink'
+import useImportAccount from 'Hooks/accounts/useImportAccount'
+import { useNavigate } from 'react-router-dom'
+import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 
 interface DesktopModeProps {
   desktopMode?: boolean
@@ -29,6 +31,8 @@ interface DesktopModeProps {
 const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [show, setShow] = useState(false)
   const [key, setKey] = useState('')
+  const navigate = useNavigate()
+  const [importBySpendingKey] = useImportAccount()
 
   return (
     <>
@@ -55,12 +59,15 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
       <Box>
         <Button
           variant="primary"
-          as={Link}
-          to={ROUTES.ACCOUNTS}
           isDisabled={!key}
+          onClick={() => {
+            importBySpendingKey(key).then(() => {
+              onImport()
+              desktopMode && navigate(ROUTES.ACCOUNTS)
+            })
+          }}
           size="large"
           w={desktopMode ? undefined : '100%'}
-          onClick={onImport}
         >
           Import Account
         </Button>
@@ -71,6 +78,8 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [file, setFile] = useState<File | null>(null)
+  const navigate = useNavigate()
+  const [, , importByFile] = useImportAccount()
   return (
     <>
       <chakra.h5 mb="1rem" mt="2rem" color={NAMED_COLORS.GREY}>
@@ -97,12 +106,15 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
         <Button
           variant="primary"
           mt="2rem"
-          as={Link}
-          to={ROUTES.ACCOUNTS}
           isDisabled={!file}
           size="large"
           w={desktopMode ? undefined : '100%'}
-          onClick={onImport}
+          onClick={() => {
+            importByFile(file).then(() => {
+              onImport()
+              desktopMode && navigate(ROUTES.ACCOUNTS)
+            })
+          }}
         >
           Import Account
         </Button>
@@ -113,6 +125,8 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [phrase, setPhrase] = useState([])
+  const navigate = useNavigate()
+  const [, importByMnemonicPhrase] = useImportAccount()
   return (
     <>
       <chakra.h3 pb="0.25rem" mt="2rem">
@@ -133,16 +147,19 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
         <Button
           variant="primary"
           mt="2rem"
-          as={Link}
-          to={ROUTES.ACCOUNTS}
-          isDisabled={
+          onClick={() => {
+            importByMnemonicPhrase(phrase as MnemonicPhraseType).then(() => {
+              onImport()
+              desktopMode && navigate(ROUTES.ACCOUNTS)
+            })
+          }}
+          disabled={
             !phrase ||
             phrase.length < 12 ||
             phrase.findIndex(word => !word) !== -1
           }
           size="large"
           w={desktopMode ? undefined : '100%'}
-          onClick={onImport}
         >
           Import Account
         </Button>
@@ -153,7 +170,7 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const ImportAccount: FC<DesktopModeProps> = ({
   desktopMode = true,
-  onImport,
+  onImport = () => undefined,
 }) => {
   return (
     <Flex
