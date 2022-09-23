@@ -63,7 +63,7 @@ const filterOption = (option: OptionType, searchTerm: string) => {
 
 const Send: FC = () => {
   const location = useLocation()
-  const state = location.state as LocationStateProps
+  const state = location.state as LocationStateProps //state.accountId
   const [amount, setAmount] = useState(0)
   const [account, setAccount] = useState(null)
   const [contact, setContact] = useState(null)
@@ -77,14 +77,6 @@ const Send: FC = () => {
     () => getContactOptions(contacts),
     [JSON.stringify(contacts)]
   )
-
-  useEffect(() => {
-    if (accountsLoaded) {
-      const selectedAccount =
-        state && accountOptions.find(({ value }) => value === state.accountId)
-      setAccount(selectedAccount ? selectedAccount : accountOptions[0])
-    }
-  }, [accountsLoaded])
 
   const $colors = useColorModeValue(
     { bg: NAMED_COLORS.DEEP_BLUE, color: NAMED_COLORS.WHITE },
