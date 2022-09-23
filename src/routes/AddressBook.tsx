@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import {
   Box,
   Button,
@@ -19,6 +19,9 @@ import HexFishCircle from 'Components/HexFishCircle'
 import { truncateHash } from 'Utils/hash'
 import SimpleTable from 'Components/SimpleTable'
 import SearchSortField from 'Components/Search&Sort'
+import useAddressBook from 'Hooks/addressBook/useAddressBook'
+import { Contact } from 'Data/types/Contact'
+import SortType from 'Types/SortType'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -29,59 +32,27 @@ const getIconBg = (address = '') => {
   return `hsl(${colorNumber % 255}, 100%, 73%)`
 }
 
-interface BookDemoDataType {
-  name: string
-  address: string
-}
-
-const DEMO_DATA = [
-  {
-    name: 'Frankie Boy',
-    address: '789wenft893ntw5v780ntq304wnv5t370q8nt5q340',
-  },
-  {
-    name: 'Tweetie',
-    address: '789wenft893ntw5v780ntq304wnv5t370q8nt5q340',
-  },
-  {
-    name: 'Rox1923',
-    address: '789wenft893ntw5v780ntq304wnv5t370q8nt5q340',
-  },
-  {
-    name: 'Alfred A',
-    address: '789wenft893ntw5v780ntq304wnv5t370q8nt5q340',
-  },
-  {
-    name: 'Derek',
-    address: '789wenft893ntw5v780ntq304wnv5t370q8nt5q340',
-  },
-  {
-    name: 'Jason',
-    address: '789wenft893ntw5v780ntq304wnv5t370q8nt5q340',
-  },
-]
-
 const COLUMNS = [
   {
     key: 'contact',
     label: 'Contact',
-    render: (address: BookDemoDataType) => (
+    render: (contact: Contact) => (
       <Flex alignItems="center">
         <HexFishCircle
           mr="1rem"
-          bg={getIconBg(address.address + address.name)}
+          bg={getIconBg(contact.address + contact.name)}
         />
-        <h5>{address.name}</h5>
+        <h5>{contact.name}</h5>
       </Flex>
     ),
   },
   {
     key: 'address',
     label: 'Address',
-    render: (address: BookDemoDataType) => {
+    render: (contact: Contact) => {
       const addressLabel = useBreakpointValue({
-        base: truncateHash(address.address, 2, 9),
-        md: address.address,
+        base: truncateHash(contact.address, 2, 9),
+        md: contact.address,
       })
       return (
         <CopyValueToClipboard
@@ -93,7 +64,7 @@ const COLUMNS = [
           labelProps={{
             mr: '0.5rem',
           }}
-          value={address.address}
+          value={contact.address}
           label={<chakra.h5>{addressLabel}</chakra.h5>}
           copyTooltipText="Copy to clipboard"
           copiedTooltipText="Copied"
@@ -104,7 +75,7 @@ const COLUMNS = [
   {
     key: 'actions',
     label: '',
-    render: (address: BookDemoDataType) => (
+    render: (contact: Contact) => (
       <Flex justify="flex-end" mr="-1.0625rem">
         <Button
           leftIcon={
@@ -123,7 +94,7 @@ const COLUMNS = [
           variant="ghost"
           icon={<Caret />}
           as={Link}
-          to={address.address}
+          to={contact?.identity}
           _active={{ bg: 'none' }}
           _hover={{ bg: 'none' }}
         />
@@ -143,6 +114,15 @@ const AddressBook: FC = () => {
       caretColor: NAMED_COLORS.PALE_GREY,
     }
   )
+
+  const [$searchTerm, $setSearchTerm] = useState('')
+  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
+
+  const [{ data: contacts, loaded }, addContact] = useAddressBook(
+    $searchTerm,
+    $sortOrder
+  )
+
   return (
     <>
       <Flex
@@ -166,10 +146,17 @@ const AddressBook: FC = () => {
           </Button>
         </Flex>
       </Flex>
-      <SearchSortField />
+      <SearchSortField
+        SearchProps={{
+          onChange: e => $setSearchTerm(e.target.value),
+        }}
+        SortSelectProps={{
+          onSelectOption: ({ value }) => $setSortOrder(value),
+        }}
+      />
       <Flex direction="column" width="100%">
         <SimpleTable
-          data={DEMO_DATA}
+          data={loaded ? contacts : new Array(10).fill(null)}
           columns={COLUMNS}
           sx={{
             tr: {

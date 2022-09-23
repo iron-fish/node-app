@@ -1,12 +1,9 @@
 import { useCallback, useEffect } from 'react'
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
 import { Transaction } from 'Data/types/Transaction'
+import SortType from 'Types/SortType'
 
-const useTransactions = (
-  address: string,
-  search?: string,
-  sort?: 'asc' | 'desc'
-) => {
+const useTransactions = (address: string, search?: string, sort?: SortType) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Transaction[]>()
   const addContact = useCallback(
     (name, contactAddress) =>
