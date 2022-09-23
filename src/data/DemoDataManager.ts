@@ -1,5 +1,6 @@
 import { GetStatusResponse, PeerResponse } from '@ironfish/sdk'
 import MnemonicPhraseType from 'Types/MnemonicPhraseType'
+import SortType from 'Types/SortType'
 import DemoAccountsManager from './DemoAccountsManager'
 import DemoAddressBookManager from './DemoAddressBookManager'
 import DemoMinerManager from './DemoMinerManager'
@@ -73,7 +74,7 @@ class DemoDataManager {
   findTransactionsByAddress(
     address: string,
     search?: string,
-    sort?: 'asc' | 'desc'
+    sort?: SortType
   ): Promise<Transaction[]> {
     return this.transactions.findByAddress(address, search, sort)
   }
@@ -92,7 +93,7 @@ class DemoDataManager {
     return this.transactions.send(from, to, amount, memo, fee)
   }
 
-  getAddressBook(search: string, sort?: 'asc' | 'desc'): Promise<Contact[]> {
+  getAddressBook(search: string, sort?: SortType): Promise<Contact[]> {
     return this.addressBook.list(search, sort)
   }
 
