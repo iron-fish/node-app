@@ -23,7 +23,7 @@ const AccountsSelect: FC<AccountsSelectProps> = ({
   onSelectOption,
   ...props
 }) => {
-  const { data } = useAccounts()
+  const [{ data }] = useAccounts()
 
   const options = useMemo(() => getAccountOptions(data), [JSON.stringify(data)])
 
