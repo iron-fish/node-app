@@ -99,7 +99,7 @@ const AccountSettings: FC<AccountSettingsProps> = ({ account }) => {
             borderRadius="4.5rem"
             variant="primary"
             mr="2rem"
-            disabled={!checkChanges()}
+            isDisabled={!checkChanges()}
           >
             Save Changes
           </Button>
