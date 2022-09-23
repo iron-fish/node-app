@@ -296,12 +296,52 @@ class DemoAccountsManager {
     )
   }
 
-  keys(id: string): Promise<AccountKeys> {
+  update(identity: string, name: string): Promise<Account> {
+    return new Promise(resolve =>
+      setTimeout(() => {
+        const currentAccount = DEMO_ACCOUNTS.find(
+          account => account.identity === identity
+        )
+        currentAccount.name = name
+        resolve(currentAccount)
+      }, 500)
+    )
+  }
+
+  delete(identity: string): Promise<boolean> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        DEMO_ACCOUNTS.splice(
+          DEMO_ACCOUNTS.findIndex(account => account.identity === identity),
+          1
+        )
+        resolve(true)
+      }, 500)
+    })
+  }
+
+  keys(accountId: string): Promise<AccountKeys> {
     return new Promise(resolve =>
       setTimeout(
-        () => resolve(ACCOUNT_KEYS.find(keys => keys.accountId === id)),
+        () => resolve(ACCOUNT_KEYS.find(keys => keys.accountId === accountId)),
         500
       )
+    )
+  }
+
+  updateKeys(accountKeys: AccountKeys): Promise<AccountKeys> {
+    return new Promise(resolve =>
+      setTimeout(() => {
+        const currentKeys = ACCOUNT_KEYS.find(
+          key => key.accountId === accountKeys.accountId
+        )
+        currentKeys.authorizationKey = accountKeys.authorizationKey
+        currentKeys.mnemonicPhrase = accountKeys.mnemonicPhrase
+        currentKeys.nullifierKey = accountKeys.nullifierKey
+        currentKeys.proofAuthorizationKey = accountKeys.proofAuthorizationKey
+        currentKeys.spendingKey = accountKeys.spendingKey
+        resolve(currentKeys)
+      }, 500)
     )
   }
 
@@ -312,6 +352,18 @@ class DemoAccountsManager {
           resolve(ACCOUNT_SETTINGS.find(settings => settings.accountId === id)),
         500
       )
+    )
+  }
+
+  updateSettings(id: string, currency: string): Promise<AccountSettings> {
+    return new Promise(resolve =>
+      setTimeout(() => {
+        const currentSettings = ACCOUNT_SETTINGS.find(
+          setting => setting.accountId === id
+        )
+        currentSettings.currency = currency
+        resolve(currentSettings)
+      }, 500)
     )
   }
 }

@@ -96,7 +96,8 @@ class DemoAddressBookManager {
         DEMO_ADDRESS_BOOK.splice(
           DEMO_ADDRESS_BOOK.findIndex(
             contract => contract.identity === identity
-          )
+          ),
+          1
         )
         resolve(true)
       }, 500)

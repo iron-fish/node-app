@@ -10,16 +10,19 @@ import {
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SearchSortField from 'Components/Search&Sort'
 import useAccounts from 'Hooks/accounts/useAccounts'
-import { Link } from 'react-router-dom'
 import AccountPreview from 'Routes/Accounts/AccountPreview'
 import ModalWindow from 'Components/ModalWindow'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import CreateAccount from 'Routes/Onboarding/CreateAccount'
+import SortType from 'Types/SortType'
 
 const Accounts = () => {
   const [$searchTerm, $setSearchTerm] = useState('')
-  const [$sortOrder, $setSortOrder] = useState<'asc' | 'desc'>('asc')
-  const { data: accounts, loaded } = useAccounts($searchTerm, $sortOrder)
+  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
+  const [{ data: accounts, loaded }, reloadAccounts] = useAccounts(
+    $searchTerm,
+    $sortOrder
+  )
   const [showCreateAccount, setShowCreateAccount] = useState(false)
   const [showImportAccount, setShowImportAccount] = useState(false)
   const $colors = useColorModeValue(
@@ -78,10 +81,10 @@ const Accounts = () => {
       />
       <Flex mt="0.5rem" direction="column" width="100%">
         {loaded
-          ? accounts.map((data, index) => (
+          ? accounts.map((account, index) => (
               <AccountPreview
-                key={`${data.name}-${index}`}
-                {...data}
+                key={`${account.name}-${index}`}
+                {...account}
                 order={index}
               />
             ))
@@ -93,7 +96,10 @@ const Accounts = () => {
       >
         <CreateAccount
           desktopMode={false}
-          onCreate={() => setShowCreateAccount(false)}
+          onCreate={() => {
+            setShowCreateAccount(false)
+            reloadAccounts()
+          }}
         />
       </ModalWindow>
       <ModalWindow
@@ -102,7 +108,10 @@ const Accounts = () => {
       >
         <ImportAccount
           desktopMode={false}
-          onImport={() => setShowImportAccount(false)}
+          onImport={() => {
+            setShowImportAccount(false)
+            reloadAccounts()
+          }}
         />
       </ModalWindow>
     </>

@@ -15,6 +15,8 @@ import AccountKeysImage from 'Svgx/AccountKeysImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import { Account } from 'Data/types/Account'
 import useAccountKeys from 'Hooks/accounts/useAccountKeys'
+import MnemonicPhraseType from 'Types/MnemonicPhraseType'
+
 interface AccountKeysProps {
   account: Account
 }
@@ -54,9 +56,9 @@ const AccountKeys: FC<AccountKeysProps> = ({ account }) => {
   const [nullifierKey, setNullifierKey] = useState<string>('')
   const [authKey, setAuthKey] = useState<string>('')
   const [proofAuthKey, setProofAuthKey] = useState<string>('')
-  const [phrase, setMnemonicPhrase] = useState<string[]>([])
+  const [phrase, setMnemonicPhrase] = useState<MnemonicPhraseType>()
 
-  const { data, loaded } = useAccountKeys(account?.identity)
+  const [{ data, loaded }, updateKeys] = useAccountKeys(account?.identity)
 
   useEffect(() => {
     if (data && loaded) {
@@ -71,14 +73,14 @@ const AccountKeys: FC<AccountKeysProps> = ({ account }) => {
   const checkChanges: () => boolean = () => {
     return (
       loaded &&
-      (spendingKey !== data.spendingKey ||
-        nullifierKey !== data.nullifierKey ||
-        authKey !== data.authorizationKey ||
-        proofAuthKey !== data.proofAuthorizationKey ||
+      (spendingKey !== data?.spendingKey ||
+        nullifierKey !== data?.nullifierKey ||
+        authKey !== data?.authorizationKey ||
+        proofAuthKey !== data?.proofAuthorizationKey ||
         !!phrase.find(
           (word, index) =>
             index !==
-            data.mnemonicPhrase.findIndex(demo_word => demo_word === word)
+            data?.mnemonicPhrase.findIndex(demo_word => demo_word === word)
         ))
     )
   }
@@ -98,7 +100,7 @@ const AccountKeys: FC<AccountKeysProps> = ({ account }) => {
           value={phrase}
           isReadOnly={true}
           placeholder="Empty"
-          onChange={words => setMnemonicPhrase(words)}
+          onChange={words => setMnemonicPhrase(words as MnemonicPhraseType)}
           mb="2rem"
         />
         <PasswordField
@@ -129,6 +131,16 @@ const AccountKeys: FC<AccountKeysProps> = ({ account }) => {
             variant="primary"
             mr="2rem"
             isDisabled={!checkChanges()}
+            onClick={() =>
+              updateKeys({
+                accountId: data.accountId,
+                spendingKey: spendingKey,
+                mnemonicPhrase: phrase,
+                nullifierKey: nullifierKey,
+                authorizationKey: authKey,
+                proofAuthorizationKey: proofAuthKey,
+              })
+            }
           >
             Save Changes
           </Button>
