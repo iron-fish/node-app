@@ -23,7 +23,7 @@ import useAddressBook from 'Hooks/addressBook/useAddressBook'
 import { Contact } from 'Data/types/Contact'
 import SortType from 'Types/SortType'
 import { useNavigate } from 'react-router-dom'
-import ROUTES from './data'
+import ROUTES from 'Routes/data'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
