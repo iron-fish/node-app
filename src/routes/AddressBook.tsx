@@ -22,6 +22,8 @@ import SearchSortField from 'Components/Search&Sort'
 import useAddressBook from 'Hooks/addressBook/useAddressBook'
 import { Contact } from 'Data/types/Contact'
 import SortType from 'Types/SortType'
+import { useNavigate } from 'react-router-dom'
+import ROUTES from './data'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -75,31 +77,37 @@ const COLUMNS = [
   {
     key: 'actions',
     label: '',
-    render: (contact: Contact) => (
-      <Flex justify="flex-end" mr="-1.0625rem">
-        <Button
-          leftIcon={
-            <Icon height={8}>
-              <Send fill="currentColor" />
-            </Icon>
-          }
-          variant="primary"
-          borderRadius="4rem"
-          mr={{ base: '0.75rem', md: '1rem' }}
-        >
-          <h5>Send</h5>
-        </Button>
-        <IconButton
-          aria-label="book-details"
-          variant="ghost"
-          icon={<Caret />}
-          as={Link}
-          to={contact?.identity}
-          _active={{ bg: 'none' }}
-          _hover={{ bg: 'none' }}
-        />
-      </Flex>
-    ),
+    render: (contact: Contact) => {
+      const navigate = useNavigate()
+      return (
+        <Flex justify="flex-end" mr="-1.0625rem">
+          <Button
+            leftIcon={
+              <Icon height={8}>
+                <Send fill="currentColor" />
+              </Icon>
+            }
+            variant="primary"
+            borderRadius="4rem"
+            mr={{ base: '0.75rem', md: '1rem' }}
+            onClick={() => {
+              navigate(ROUTES.SEND, { state: { contactId: contact?.identity } })
+            }}
+          >
+            <h5>Send</h5>
+          </Button>
+          <IconButton
+            aria-label="book-details"
+            variant="ghost"
+            icon={<Caret />}
+            as={Link}
+            to={contact?.identity}
+            _active={{ bg: 'none' }}
+            _hover={{ bg: 'none' }}
+          />
+        </Flex>
+      )
+    },
   },
 ]
 

@@ -5,21 +5,21 @@ import { Account } from 'Data/types/Account'
 import useAccounts from 'Hooks/accounts/useAccounts'
 
 interface AccountsSelectProps extends FlexProps {
-  address: string
+  accountId: string
   label: string
-  onSelectOption?: (option: OptionType) => void
+  onSelectOption?: (account: Account) => void
 }
 
 const getAccountOptions = (accounts: Account[] = []): OptionType[] => {
   return accounts.map(account => ({
     label: account.name,
-    value: account.address,
+    value: account,
     helperText: `${account.balance} $IRON`,
   }))
 }
 
 const AccountsSelect: FC<AccountsSelectProps> = ({
-  address,
+  accountId,
   onSelectOption,
   ...props
 }) => {
@@ -28,14 +28,17 @@ const AccountsSelect: FC<AccountsSelectProps> = ({
   const options = useMemo(() => getAccountOptions(data), [JSON.stringify(data)])
 
   useEffect(() => {
-    const selectedOption = options.find(({ value }) => value === address)
-    onSelectOption(selectedOption || options[0])
+    const selectedOption = options.find(
+      ({ value }) => value.identity === accountId
+    )
+    onSelectOption(selectedOption?.value || options[0]?.value)
   }, [options])
 
   return (
     <SelectField
       options={options}
-      value={options.find(({ value }) => value === address)}
+      value={options.find(({ value }) => value.identity === accountId)}
+      onSelectOption={option => onSelectOption(option.value)}
       {...props}
     />
   )

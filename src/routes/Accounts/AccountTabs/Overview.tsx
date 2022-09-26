@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react'
+import { FC, useState } from 'react'
 import {
   Box,
   Button,
@@ -20,6 +20,7 @@ import { truncateHash } from 'Utils/hash'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useTransactions'
 import { Account } from 'Data/types/Account'
+import { useNavigate } from 'react-router-dom'
 import EmptyOverviewImage from 'Svgx/EmptyOverviewImage'
 import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
@@ -81,7 +82,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
       boxShadow: `0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.DARKER_GREY}, 0.25rem 0.25rem ${NAMED_COLORS.WHITE} !important`,
     }
   )
-
+  const navigate = useNavigate()
   return (
     <>
       <Flex w="100%" pb="2rem">
@@ -116,6 +117,11 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                       <Send fill="currentColor" />
                     </Icon>
                   }
+                  onClick={() =>
+                    navigate(ROUTES.SEND, {
+                      state: { accountId: account?.identity },
+                    })
+                  }
                 >
                   <h5>Send</h5>
                 </Button>
@@ -128,6 +134,11 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                     <Icon height={8}>
                       <Receive fill="currentColor" />
                     </Icon>
+                  }
+                  onClick={() =>
+                    navigate(ROUTES.RECEIVE, {
+                      state: { accountId: account?.identity },
+                    })
                   }
                 >
                   <h5>Receive</h5>

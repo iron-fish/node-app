@@ -11,11 +11,12 @@ import {
   Tooltip,
 } from '@ironfish/ui-kit'
 import { QRCodeSVG } from 'qrcode.react'
+import { useLocation } from 'react-router-dom'
 import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
-import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
+import LocationStateProps from 'Types/LocationState'
 import AccountsSelect from 'Components/AccountsSelect'
 import IconCheck from '@ironfish/ui-kit/dist/svgx/icon-check'
 
@@ -105,6 +106,8 @@ const ViewField: FC<ViewFieldProps> = ({
 }
 
 const ReceiveMoney: FC = () => {
+  const location = useLocation()
+  const state = location.state as LocationStateProps
   const [account, setAccount] = useState(null)
   // const [amount, setAmount] = useState(0)
 
@@ -117,7 +120,7 @@ const ReceiveMoney: FC = () => {
         <Box w="37.25rem">
           <AccountsSelect
             label="Account"
-            address={account?.value}
+            accountId={account?.identity || state?.accountId}
             onSelectOption={setAccount}
             mb="1rem"
           />
@@ -141,10 +144,10 @@ const ReceiveMoney: FC = () => {
               ml={0}
             >
               <Box mb="2rem">
-                <QRCodeSVG value={account?.value} />
+                <QRCodeSVG value={account?.address} />
               </Box>
               <ViewField
-                value={account?.value}
+                value={account?.address}
                 buttonText="Copy"
                 copiedTooltipText="Copied"
                 copyTooltipText="Copy to clipboard"

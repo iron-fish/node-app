@@ -12,7 +12,7 @@ import {
   NAMED_COLORS,
   useColorModeValue,
 } from '@ironfish/ui-kit'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
 import Send from 'Svgx/send'
 import HexFishCircle from 'Components/HexFishCircle'
@@ -34,6 +34,7 @@ const getIconBg = (address = '') => {
 
 const AddressDetails = () => {
   const { identity } = useParams()
+  const navigate = useNavigate()
   const $color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
   const [{ data: contact, loaded }, updateContact, deleteContact] =
     useContact(identity)
@@ -74,6 +75,9 @@ const AddressDetails = () => {
           ml="2rem"
           variant="primary"
           size="small"
+          onClick={() => {
+            navigate(ROUTES.SEND, { state: { contactId: contact?.identity } })
+          }}
         >
           Send
         </Button>

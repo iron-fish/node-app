@@ -1,3 +1,4 @@
+import { FC, memo, useState } from 'react'
 import {
   Box,
   Flex,
@@ -10,43 +11,18 @@ import {
   TextField,
   Button,
   Icon,
-  Autocomplete,
 } from '@ironfish/ui-kit'
-import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
+import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
 import DetailsPanel from 'Components/DetailsPanel'
-import { FC, memo, useState } from 'react'
+import useFee from 'Hooks/transactions/useFee'
 import FeesImage from 'Svgx/FeesImage'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow'
-
-const DEMO_CONTACTS: OptionType[] = [
-  {
-    label: 'Frankie Boy',
-    helperText: '0000...80e9',
-    value: '000000000006084ed8a065122fced71976932343104c1f3e76b36b42e03680e9',
-  },
-  {
-    label: 'Tweetie',
-    helperText: '0000...4c97',
-    value: '00000000000515bce83c4755401d2fab9562a0ed4e8b6b38f361a23075614c97',
-  },
-  {
-    label: 'Rox1923',
-    helperText: '0000...77ad',
-    value: '0000000000034b8458a3f330cc95be812cd5a9d5b58fa002232bd5585fbf77ad',
-  },
-  {
-    label: 'Alfred A',
-    helperText: '0000...ffd7',
-    value: '000000000007db9f646473593dced506c7ffce5455557fe7b93c7a43ca39ffd7',
-  },
-  {
-    label: 'Derek',
-    helperText: '0000...ec0b',
-    value: '0000000000029ae7122d85141a1f1a44164ada8910496d1f1a5d3b9024d9ec0b',
-  },
-]
+import { Account } from 'Data/types/Account'
+import { Contact } from 'Data/types/Contact'
+import LocationStateProps from 'Types/LocationState'
+import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -66,20 +42,15 @@ const Information: FC = memo(() => {
   )
 })
 
-const filterOption = (option: OptionType, searchTerm: string) => {
-  const _label = option.label?.toString().toLowerCase()
-  const _value = option.value?.toString().toLowerCase()
-  const _searchTerm = searchTerm.toLowerCase()
-
-  return _label?.includes(_searchTerm) || _value?.includes(_searchTerm)
-}
-
 const Send: FC = () => {
+  const location = useLocation()
+  const state = location.state as LocationStateProps
   const [amount, setAmount] = useState(0)
-  const [account, setAccount] = useState(null)
-  const [contact, setContact] = useState(null)
+  const [account, setAccount] = useState<Account>(null)
+  const [contact, setContact] = useState<Contact>(null)
   const [notes, setNotes] = useState('Paying you back, Derek - B.')
   const [startSendFlow, setStart] = useState(false)
+  const { data: fee, loaded: feeCalculated } = useFee(amount)
   const $colors = useColorModeValue(
     { bg: NAMED_COLORS.DEEP_BLUE, color: NAMED_COLORS.WHITE },
     { bg: NAMED_COLORS.WHITE, color: NAMED_COLORS.DEEP_BLUE }
@@ -137,19 +108,14 @@ const Send: FC = () => {
             <AccountsSelect
               label="From Account"
               mb="2rem"
-              address={account?.value}
+              accountId={account?.identity || state?.accountId}
               onSelectOption={setAccount}
             />
-            <Autocomplete
-              label="To"
-              mb="2rem"
-              options={DEMO_CONTACTS}
-              value={contact}
+            <ContactsAutocomplete
+              label={'To'}
+              contactId={contact?.identity || state?.contactId}
               onSelectOption={setContact}
-              filterOption={filterOption}
-              InputProps={{
-                placeholder: 'Input Text',
-              }}
+              mb="2rem"
             />
             <Flex mb="2rem">
               <TextField
@@ -176,6 +142,7 @@ const Send: FC = () => {
             borderRadius="4rem"
             mb="2rem"
             p="2rem"
+            isDisabled={!(feeCalculated && account && contact && amount)}
             leftIcon={
               <Icon height={26} width={26}>
                 <SendIcon fill="currentColor" />
@@ -196,9 +163,10 @@ const Send: FC = () => {
         isOpen={startSendFlow}
         onClose={() => setStart(false)}
         amount={amount}
-        from={account?.label.toString()}
-        to={contact?.label.toString()}
+        from={account}
+        to={contact}
         memo={notes}
+        fee={fee}
       />
     </Flex>
   )
