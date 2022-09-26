@@ -9,75 +9,20 @@ import {
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SearchSortField from 'Components/Search&Sort'
+import useAccounts from 'Hooks/accounts/useAccounts'
 import AccountPreview from 'Routes/Accounts/AccountPreview'
 import ModalWindow from 'Components/ModalWindow'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import CreateAccount from 'Routes/Onboarding/CreateAccount'
-
-const DEMO_DATA = [
-  {
-    name: 'Primary Account',
-    balance: 8.456,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Secondary Account',
-    balance: 1.944,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'No transactions',
-    balance: 56,
-    address: 'emptynft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 4',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 5',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 6',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 7',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 8',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 9',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 10',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 11',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-  {
-    name: 'Account 12',
-    balance: 56,
-    address: '456tenft893ntw5v780ntq304wnv5t370q8nt553d5',
-  },
-]
+import SortType from 'Types/SortType'
 
 const Accounts = () => {
+  const [$searchTerm, $setSearchTerm] = useState('')
+  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
+  const [{ data: accounts, loaded }, reloadAccounts] = useAccounts(
+    $searchTerm,
+    $sortOrder
+  )
   const [showCreateAccount, setShowCreateAccount] = useState(false)
   const [showImportAccount, setShowImportAccount] = useState(false)
   const $colors = useColorModeValue(
@@ -126,11 +71,24 @@ const Accounts = () => {
           </Button>
         </Flex>
       </Flex>
-      <SearchSortField />
+      <SearchSortField
+        SearchProps={{
+          onChange: e => $setSearchTerm(e.target.value),
+        }}
+        SortSelectProps={{
+          onSelectOption: ({ value }) => $setSortOrder(value),
+        }}
+      />
       <Flex mt="0.5rem" direction="column" width="100%">
-        {DEMO_DATA.map((data, index) => (
-          <AccountPreview {...data} order={index} />
-        ))}
+        {loaded
+          ? accounts.map((account, index) => (
+              <AccountPreview
+                key={`${account.name}-${index}`}
+                {...account}
+                order={index}
+              />
+            ))
+          : null}
       </Flex>
       <ModalWindow
         isOpen={showCreateAccount}
@@ -138,7 +96,10 @@ const Accounts = () => {
       >
         <CreateAccount
           desktopMode={false}
-          onCreate={() => setShowCreateAccount(false)}
+          onCreate={() => {
+            setShowCreateAccount(false)
+            reloadAccounts()
+          }}
         />
       </ModalWindow>
       <ModalWindow
@@ -147,7 +108,10 @@ const Accounts = () => {
       >
         <ImportAccount
           desktopMode={false}
-          onImport={() => setShowImportAccount(false)}
+          onImport={() => {
+            setShowImportAccount(false)
+            reloadAccounts()
+          }}
         />
       </ModalWindow>
     </>

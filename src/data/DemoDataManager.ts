@@ -1,4 +1,6 @@
 import { GetStatusResponse, PeerResponse } from '@ironfish/sdk'
+import MnemonicPhraseType from 'Types/MnemonicPhraseType'
+import SortType from 'Types/SortType'
 import DemoAccountsManager from './DemoAccountsManager'
 import DemoAddressBookManager from './DemoAddressBookManager'
 import DemoMinerManager from './DemoMinerManager'
@@ -30,20 +32,7 @@ class DemoDataManager {
 
   createAccount(
     name: string,
-    mnemonicPhrase: [
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string
-    ]
+    mnemonicPhrase: MnemonicPhraseType
   ): Promise<string> {
     return this.accounts.create(name, mnemonicPhrase)
   }
@@ -57,20 +46,7 @@ class DemoDataManager {
   }
 
   importAccountByMnemonicPhrase(
-    mnemonicPhrase: [
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string,
-      string
-    ]
+    mnemonicPhrase: MnemonicPhraseType
   ): Promise<string> {
     return this.accounts.importByMnemonicPhrase(mnemonicPhrase)
   }
@@ -87,18 +63,37 @@ class DemoDataManager {
     return this.accounts.findById(accountId)
   }
 
+  updateAccount(identity: string, name: string): Promise<Account> {
+    return this.accounts.update(identity, name)
+  }
+
+  deleteAccount(identity: string): Promise<boolean> {
+    return this.accounts.delete(identity)
+  }
+
   getAccountKeys(accountId: string): Promise<AccountKeys> {
     return this.accounts.keys(accountId)
+  }
+
+  updateAccountKeys(accountKeys: AccountKeys): Promise<AccountKeys> {
+    return this.accounts.updateKeys(accountKeys)
   }
 
   getAccountSettings(accountId: string): Promise<AccountSettings> {
     return this.accounts.settings(accountId)
   }
 
+  updateAccountSettings(
+    accountId: string,
+    currency: string
+  ): Promise<AccountSettings> {
+    return this.accounts.updateSettings(accountId, currency)
+  }
+
   findTransactionsByAddress(
     address: string,
     search?: string,
-    sort?: 'asc' | 'desc'
+    sort?: SortType
   ): Promise<Transaction[]> {
     return this.transactions.findByAddress(address, search, sort)
   }
@@ -117,7 +112,7 @@ class DemoDataManager {
     return this.transactions.send(from, to, amount, memo, fee)
   }
 
-  getAddressBook(search: string, sort?: 'asc' | 'desc'): Promise<Contact[]> {
+  getAddressBook(search: string, sort?: SortType): Promise<Contact[]> {
     return this.addressBook.list(search, sort)
   }
 

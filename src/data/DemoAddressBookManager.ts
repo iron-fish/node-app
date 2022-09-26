@@ -1,5 +1,6 @@
 import { Contact } from './types/Contact'
 import { nanoid } from 'nanoid'
+import SortType from 'Types/SortType'
 
 const DEMO_ADDRESS_BOOK: Contact[] = [
   {
@@ -35,7 +36,7 @@ const DEMO_ADDRESS_BOOK: Contact[] = [
 ]
 
 class DemoAddressBookManager {
-  list(search: string, sort?: 'asc' | 'desc'): Promise<Contact[]> {
+  list(search: string, sort?: SortType): Promise<Contact[]> {
     return new Promise(resolve => {
       setTimeout(
         () =>
@@ -46,7 +47,7 @@ class DemoAddressBookManager {
                 contact.address.includes(search || '')
             ).sort(
               (a, b) =>
-                a.name.localeCompare(b.name) * (sort === 'desc' ? -1 : 1)
+                a.name.localeCompare(b.name) * (sort === SortType.DESC ? -1 : 1)
             )
           ),
         500
@@ -95,7 +96,8 @@ class DemoAddressBookManager {
         DEMO_ADDRESS_BOOK.splice(
           DEMO_ADDRESS_BOOK.findIndex(
             contract => contract.identity === identity
-          )
+          ),
+          1
         )
         resolve(true)
       }, 500)

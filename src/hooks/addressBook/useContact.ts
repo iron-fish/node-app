@@ -5,7 +5,10 @@ import { Contact } from 'Data/types/Contact'
 const useContact = (id: string) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Contact>()
   const updateContact = useCallback(
-    (name, address) => window.DemoDataManager.updateContact(id, name, address),
+    (name, address) =>
+      window.DemoDataManager.updateContact(id, name, address).then(() =>
+        loadContact()
+      ),
     [id]
   )
   const deleteContact = useCallback(

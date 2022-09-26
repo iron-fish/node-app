@@ -20,11 +20,14 @@ import AccountOverview from './AccountTabs/Overview'
 import AccountKeys from './AccountTabs/Keys'
 import AccountSettings from './AccountTabs/Settings'
 import BackButtonLink from 'Components/BackButtonLink'
+import useAccount from 'Hooks/accounts/useAccount'
 
 const AccountDetails: FC = () => {
   const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
   const location = useLocation()
   const { accountId } = location.state as LocationStateProps
+  const [{ data: account, loaded }, updateAccount, deleteAccount] =
+    useAccount(accountId)
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
@@ -34,10 +37,10 @@ const AccountDetails: FC = () => {
           label={'Back to all accounts'}
         />
         <Flex alignItems="end" mb="0.5rem">
-          <chakra.h2 mr="1rem">Primary Account</chakra.h2>
+          <chakra.h2 mr="1rem">{account?.name}</chakra.h2>
           <CopyValueToClipboard
-            label={<chakra.h5>{truncateHash(accountId, 3)}</chakra.h5>}
-            value={accountId}
+            label={<chakra.h5>{truncateHash(account?.address, 3)}</chakra.h5>}
+            value={account?.address}
             copyTooltipText="Copy to clipboard"
             copiedTooltipText="Copied"
             containerProps={{
@@ -60,13 +63,17 @@ const AccountDetails: FC = () => {
           </TabList>
           <TabPanels>
             <TabPanel p="0" pt="2rem">
-              <AccountOverview id={accountId} />
+              <AccountOverview account={account} />
             </TabPanel>
             <TabPanel p="0" pt="2rem">
-              <AccountKeys id={accountId} />
+              <AccountKeys account={account} />
             </TabPanel>
             <TabPanel p="0" pt="2rem">
-              <AccountSettings id={accountId} />
+              <AccountSettings
+                account={account}
+                updateAccount={updateAccount}
+                deleteAccount={deleteAccount}
+              />
             </TabPanel>
           </TabPanels>
         </Tabs>

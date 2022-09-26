@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid'
+import SortType from 'Types/SortType'
 
 import { Transaction } from './types/Transaction'
 
@@ -93,7 +94,7 @@ class DemoTransactionsManager {
   findByAddress(
     address: string,
     searchTerm?: string,
-    sort?: 'asc' | 'desc'
+    sort?: SortType
   ): Promise<Transaction[]> {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -108,7 +109,7 @@ class DemoTransactionsManager {
         transactions.sort(
           (a, b) =>
             (Date.parse(a.created) - Date.parse(b.created)) *
-            (sort === 'asc' ? 1 : -1)
+            (sort === SortType.ASC ? 1 : -1)
         )
         resolve(transactions)
       }, 500)
