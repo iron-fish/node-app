@@ -1,4 +1,5 @@
 name: Publish Demo
+permissions: write-all
 on:
   push:
     tags:
