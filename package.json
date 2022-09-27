@@ -77,19 +77,15 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "name": "Iron_Fish_Wallet"
+      },
       "makers": [
         {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "Iron_Fish_Wallet"
-          }
+          "name": "@electron-forge/maker-squirrel"
         },
         {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
+          "name": "@electron-forge/maker-zip"
         },
         {
           "name": "@electron-forge/maker-deb",
