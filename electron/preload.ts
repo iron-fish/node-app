@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron'
-import { IronfishSdk } from '@ironfish/sdk'
+// import { contextBridge } from 'electron'
+// import { IronfishSdk } from '@ironfish/sdk'
 
-contextBridge.exposeInMainWorld('Wallet', IronfishSdk)
+// contextBridge.exposeInMainWorld('Wallet', IronfishSdk)
