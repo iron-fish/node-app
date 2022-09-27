@@ -130,7 +130,8 @@
               "name": "wallet-app",
               "draft": true
             },
-            "prerelease": true
+            "prerelease": true,
+            "tagPrefix": "demo-v"
           }
         }
       ]
