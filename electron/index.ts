@@ -37,8 +37,6 @@ const createWindow = (): void => {
   // and load the index.html of the app.
   mainWindow.loadURL(WALLET_WEBPACK_ENTRY)
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
   mainWindow.webContents.on('new-window', (e, url) => {
     e.preventDefault()
     shell.openExternal(url)
