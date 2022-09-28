@@ -16,6 +16,7 @@ import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
+import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
 
 const breakpoints = {
   sm: '56.25rem', //900px
@@ -30,6 +31,7 @@ const breakpoints = {
 function App() {
   return (
     <IronFishUIProvider theme={{ breakpoints }}>
+      <ElectronThemeChangeHandler />
       <HashRouter>
         <Routes>
           <Route element={<CreateLayout />}>
