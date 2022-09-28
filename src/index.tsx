@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import DemoDataManager from './data/DemoDataManager'
+import noop from 'lodash/noop'
 // import { IronfishSdk } from '@ironfish/sdk'
 
 declare global {
@@ -15,7 +16,7 @@ declare global {
 
 window.DemoDataManager = new DemoDataManager()
 if (!window.setElectronThemeMode) {
-  window.setElectronThemeMode = () => {}
+  window.setElectronThemeMode = noop
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))
