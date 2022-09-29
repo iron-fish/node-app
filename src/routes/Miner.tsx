@@ -17,6 +17,7 @@ import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState } from 'react'
 import MinerInfoImage from 'Svgx/MinerInfoImage'
 import AccountsSelect from 'Components/AccountsSelect'
+import { Account } from 'Data/types/Account'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -111,7 +112,7 @@ const HashRateChart = () => {
 }
 
 const Miner: FC = () => {
-  const [account, setAccount] = useState<OptionType>(null)
+  const [account, setAccount] = useState<Account>(null)
   const [miningPeriod, setMiningPeriod] = useState<OptionType>(
     MINDED_OPTIONS[0]
   )
@@ -126,7 +127,7 @@ const Miner: FC = () => {
           <AccountsSelect
             w="100%"
             label="Account"
-            address={account?.value}
+            accountId={account?.identity}
             onSelectOption={setAccount}
           />
           <Flex

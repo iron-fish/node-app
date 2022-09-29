@@ -23,15 +23,18 @@ import {
 } from '@ironfish/ui-kit'
 import SendImage from 'Svgx/SendImage'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
+import { Account } from 'Data/types/Account'
+import { Contact } from 'Data/types/Contact'
 import SendIcon from 'Svgx/send'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
 
 interface SendProps {
-  from: string
-  to: string
+  from: Account
+  to: Contact
   amount: number
   memo: string
+  fee: number
 }
 
 interface DataPreviewLineProps extends StyleProps {
@@ -66,7 +69,15 @@ interface StepProps extends SendProps {
   onSend: () => void
 }
 
-const ConfirmStep: FC<StepProps> = ({ onConfirm, onCancel }) => {
+const ConfirmStep: FC<StepProps> = ({
+  onConfirm,
+  onCancel,
+  from,
+  to,
+  amount,
+  memo,
+  fee,
+}) => {
   return (
     <>
       <ModalCloseButton
@@ -83,15 +94,13 @@ const ConfirmStep: FC<StepProps> = ({ onConfirm, onCancel }) => {
       <ModalBody p={0}>
         <chakra.h2 mb="2rem">Confirm Transaction Details</chakra.h2>
         <VStack spacing="1rem" w="100%">
-          <DataPreviewLine title="From:" value="Primary Account" w="100%" />
+          <DataPreviewLine title="From:" value={from.name} w="100%" />
           <DataPreviewLine
             title="To:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>Derek</chakra.h4>
-                <chakra.h5 color={NAMED_COLORS.GREY}>
-                  2497r9141br917brf79143br97bq9cdriecqwrcqrc
-                </chakra.h5>
+                <chakra.h4>{to.name}</chakra.h4>
+                <chakra.h5 color={NAMED_COLORS.GREY}>{to.address}</chakra.h5>
               </HStack>
             }
             w="100%"
@@ -100,7 +109,7 @@ const ConfirmStep: FC<StepProps> = ({ onConfirm, onCancel }) => {
             title="Amount:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>1.32 $IRON</chakra.h4>
+                <chakra.h4>{amount}</chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -110,7 +119,7 @@ const ConfirmStep: FC<StepProps> = ({ onConfirm, onCancel }) => {
             title="Fee:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>0.0032 $IRON</chakra.h4>
+                <chakra.h4>{fee} $IRON</chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -120,17 +129,13 @@ const ConfirmStep: FC<StepProps> = ({ onConfirm, onCancel }) => {
             title="Total:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>1.3232 $IRON</chakra.h4>
+                <chakra.h4>{amount + fee} $IRON</chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
             w="100%"
           />
-          <DataPreviewLine
-            title="Memo:"
-            value="Paying you back, Derek - B."
-            w="100%"
-          />
+          <DataPreviewLine title="Memo:" value={memo} w="100%" />
         </VStack>
       </ModalBody>
       <ModalFooter mt="2rem" p="0" justifyContent="flex-start">
@@ -250,7 +255,14 @@ const ResultStep: FC<StepProps> = () => (
 
 const STEPS: FC<StepProps>[] = [ConfirmStep, SendStep, ResultStep]
 
-const SendFlow: FC<SendFlowProps> = ({ from, to, amount, memo, ...props }) => {
+const SendFlow: FC<SendFlowProps> = ({
+  from,
+  to,
+  amount,
+  memo,
+  fee,
+  ...props
+}) => {
   const [currStep, setCurrentStep] = useState<number>(0)
   const Step = STEPS[currStep]
 
@@ -274,6 +286,7 @@ const SendFlow: FC<SendFlowProps> = ({ from, to, amount, memo, ...props }) => {
             to={to}
             amount={amount}
             memo={memo}
+            fee={fee}
             onConfirm={() => {
               setCurrentStep(1)
             }}

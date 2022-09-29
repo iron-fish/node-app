@@ -1,7 +1,6 @@
 import {
   chakra,
   Flex,
-  NAMED_COLORS as C,
   Box,
   BoxProps,
   useColorModeValue,
@@ -74,10 +73,9 @@ const ActiveStats: FC<BoxProps> = props => {
 }
 
 export const Navbar = () => {
-  const bgColor = useColorModeValue(C.WHITE, C.LIGHT_BLACK)
   return (
     <Flex
-      bg={bgColor}
+      bg="inherit"
       height="100%"
       maxHeight="100vh"
       p="3rem 1rem 1rem"

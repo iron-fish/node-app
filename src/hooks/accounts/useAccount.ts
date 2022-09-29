@@ -9,7 +9,7 @@ const useAccount = (id: string) => {
     promiseWrapper(window.DemoDataManager.getAccount(accountId))
 
   const updateAccount = useCallback((identity: string, name: string) => {
-    window.DemoDataManager.updateAccount(identity, name).then(account =>
+    window.DemoDataManager.updateAccount(identity, name).then(() =>
       loadAccount(identity)
     )
   }, [])
