@@ -74,7 +74,7 @@ const ActiveStats: FC<BoxProps> = props => {
 }
 
 export const Navbar = () => {
-  const bgColor = useColorModeValue(C.WHITE, C.BLACK)
+  const bgColor = useColorModeValue(C.WHITE, C.LIGHT_BLACK)
   return (
     <Flex
       bg={bgColor}
