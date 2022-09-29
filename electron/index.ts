@@ -27,17 +27,12 @@ const createWindow = (): void => {
     },
   })
 
-  ipcMain.handle('theme-mode:dark', () => {
-    nativeTheme.themeSource = 'dark'
-  })
-
-  ipcMain.handle('theme-mode:light', () => {
-    nativeTheme.themeSource = 'light'
-  })
-
-  ipcMain.handle('theme-mode:system', () => {
-    nativeTheme.themeSource = 'system'
-  })
+  ipcMain.handle(
+    'theme-mode-change',
+    (e, mode: 'light' | 'dark' | 'system') => {
+      nativeTheme.themeSource = mode
+    }
+  )
 
   mainWindow.maximize()
 

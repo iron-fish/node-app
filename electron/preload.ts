@@ -3,5 +3,5 @@ import { contextBridge, ipcRenderer } from 'electron'
 
 // contextBridge.exposeInMainWorld('Wallet', IronfishSdk)
 contextBridge.exposeInMainWorld('setElectronThemeMode', mode => {
-  ipcRenderer.invoke('theme-mode:' + mode)
+  ipcRenderer.invoke('theme-mode-change', mode)
 })
