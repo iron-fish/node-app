@@ -3,19 +3,19 @@ import {
   Button,
   chakra,
   Flex,
-  Link,
   MnemonicView,
   NAMED_COLORS,
   useColorModeValue,
+  CopyToClipboardButton,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
-import PasswordField from 'Components/PasswordField'
 import { FC, memo, useState, useEffect } from 'react'
 import AccountKeysImage from 'Svgx/AccountKeysImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import { Account } from 'Data/types/Account'
 import useAccountKeys from 'Hooks/accounts/useAccountKeys'
 import MnemonicPhraseType from 'Types/MnemonicPhraseType'
+import DownloadIcon from '@ironfish/ui-kit/dist/svgx/download-icon'
 
 interface AccountKeysProps {
   account: Account
@@ -52,101 +52,51 @@ const Information: FC = memo(() => {
 })
 
 const AccountKeys: FC<AccountKeysProps> = ({ account }) => {
-  const [spendingKey, setSpendingKey] = useState<string>('')
-  const [nullifierKey, setNullifierKey] = useState<string>('')
-  const [authKey, setAuthKey] = useState<string>('')
-  const [proofAuthKey, setProofAuthKey] = useState<string>('')
   const [phrase, setMnemonicPhrase] = useState<MnemonicPhraseType>()
 
-  const [{ data, loaded }, updateKeys] = useAccountKeys(account?.identity)
+  const [{ data, loaded }] = useAccountKeys(account?.identity)
 
   useEffect(() => {
     if (data && loaded) {
-      setSpendingKey(data.spendingKey)
-      setNullifierKey(data.nullifierKey)
-      setAuthKey(data.authorizationKey)
-      setProofAuthKey(data.proofAuthorizationKey)
       setMnemonicPhrase(data.mnemonicPhrase)
     }
   }, [data, loaded])
 
-  const checkChanges: () => boolean = () => {
-    return (
-      loaded &&
-      (spendingKey !== data?.spendingKey ||
-        nullifierKey !== data?.nullifierKey ||
-        authKey !== data?.authorizationKey ||
-        proofAuthKey !== data?.proofAuthorizationKey ||
-        !!phrase.find(
-          (word, index) =>
-            index !==
-            data?.mnemonicPhrase.findIndex(demo_word => demo_word === word)
-        ))
-    )
-  }
-
   return (
     <Flex mb="4rem">
       <Box w="37.25rem">
-        <PasswordField
-          label="Spending Key"
-          placeholder="Enter key"
-          value={spendingKey}
-          onChange={setSpendingKey}
-          mb="2rem"
-        />
         <MnemonicView
-          header="Mnemonic Phrase"
+          header={
+            <Flex gap="0.4375rem" alignItems="baseline">
+              <h6>Mnemonic phrase</h6>
+              <CopyToClipboardButton
+                value={phrase?.join(', ')}
+                copyTooltipText="CopyToClipBoard"
+                copiedTooltipText="Copied"
+              />
+            </Flex>
+          }
           value={phrase}
           isReadOnly={true}
           placeholder="Empty"
           onChange={words => setMnemonicPhrase(words as MnemonicPhraseType)}
           mb="2rem"
         />
-        <PasswordField
-          label="Nullifier Deriving Key"
-          placeholder="Enter key"
-          value={nullifierKey}
-          onChange={setNullifierKey}
-          mb="2rem"
-        />
-        <PasswordField
-          label="Authorization Key"
-          placeholder="Enter key"
-          value={authKey}
-          onChange={setAuthKey}
-          mb="2rem"
-        />
-        <PasswordField
-          label="Proof Authorization Key"
-          placeholder="Enter key"
-          value={proofAuthKey}
-          onChange={setProofAuthKey}
-          mb="2rem"
-        />
         <Flex>
           <Button
-            p="2rem"
-            borderRadius="4.5rem"
             variant="primary"
+            size="medium"
             mr="2rem"
-            isDisabled={!checkChanges()}
-            onClick={() =>
-              updateKeys({
-                accountId: data.accountId,
-                spendingKey: spendingKey,
-                mnemonicPhrase: phrase,
-                nullifierKey: nullifierKey,
-                authorizationKey: authKey,
-                proofAuthorizationKey: proofAuthKey,
-              })
+            as="a"
+            href={
+              'data:text/plain;charset=utf-8,' +
+              encodeURIComponent(JSON.stringify(phrase))
             }
+            download="keys.json"
+            leftIcon={<DownloadIcon />}
           >
-            Save Changes
+            Export Keys
           </Button>
-          <Link alignSelf="center">
-            <h4>Export Account</h4>
-          </Link>
         </Flex>
       </Box>
       <Box>
