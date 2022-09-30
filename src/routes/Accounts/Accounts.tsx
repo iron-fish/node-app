@@ -12,6 +12,7 @@ import {
   MenuList,
   useBreakpointValue,
   Icon,
+  ButtonsGroup,
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SearchSortField from 'Components/Search&Sort'
@@ -50,18 +51,7 @@ const ActionButtons: FC<ActionButtonsProps> = ({ showCreate, showImport }) => {
   )
   const isGroup = useBreakpointValue({ base: true, sm2: false })
   return isGroup ? (
-    <Menu>
-      <MenuButton>
-        <DemoThreeDotsIcon />
-      </MenuButton>
-      <MenuList>
-        {buttons.map(({ key, label, onClick }) => (
-          <MenuItem key={key} onClick={onClick}>
-            {label}
-          </MenuItem>
-        ))}
-      </MenuList>
-    </Menu>
+    <ButtonsGroup menuItems={buttons} />
   ) : (
     <Flex gap="1rem">
       {buttons.map(({ key, label, onClick }) => (
