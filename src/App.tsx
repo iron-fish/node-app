@@ -13,7 +13,7 @@ import AddressBook from 'Routes/AddressBook'
 import AccountDetails from 'Routes/Accounts/AccountDetails'
 import Miner from 'Routes/Miner'
 import Send from 'Routes/Send/Send'
-import AddressDetails from 'Routes/AddressBook/AddressDetails'
+import AddressDetails from 'Routes/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 
