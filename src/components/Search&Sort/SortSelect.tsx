@@ -1,6 +1,12 @@
 import { FC, ReactNode } from 'react'
-import { FlexProps, SelectField } from '@ironfish/ui-kit'
+import {
+  FlexProps,
+  SelectField,
+  useBreakpointValue,
+  Flex,
+} from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
+import ArrowUpArrowDownIcon from '@ironfish/ui-kit/dist/svgx/arrow-up-arrow-down-icon'
 
 //TODO: Need add export of type in ui-kit lib
 export interface SelectFieldProps extends FlexProps {
@@ -13,16 +19,29 @@ export interface SelectFieldProps extends FlexProps {
   onSelectOption?: (option: OptionType) => void
 }
 
-const SortSelect: FC<SelectFieldProps> = props => (
-  <SelectField
-    label="Sort by"
-    minWidth="15rem"
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    size="small"
-    whiteSpace="nowrap"
-    {...props}
-  />
-)
+const renderLabel = (label: string) => {
+  return (
+    <Flex alignItems="center" gap="5px">
+      <ArrowUpArrowDownIcon />
+      {label}
+    </Flex>
+  )
+}
+
+const SortSelect: FC<SelectFieldProps> = props => {
+  const breakpointProps = useBreakpointValue({
+    base: { size: 'compact', renderLabel },
+    sm2: { size: 'small', renderLabel: undefined },
+  })
+  return (
+    <SelectField
+      label="Sort by"
+      minWidth={{ base: 'min-content', sm2: '15rem' }}
+      {...breakpointProps}
+      whiteSpace="nowrap"
+      {...props}
+    />
+  )
+}
 
 export default SortSelect
