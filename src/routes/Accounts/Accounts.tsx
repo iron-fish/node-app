@@ -30,7 +30,7 @@ const ActionButtons: FC<ActionButtonsProps> = ({ showCreate, showImport }) => {
         key: 'accounts-view-create',
         label: (
           <Flex alignItems="center">
-            <IconAdd mr="8px" w="1rem" h="1rem" mb="2px" />
+            <IconAdd mr="0.5rem" w="1rem" h="1rem" mb="0.125rem" />
             Create Account
           </Flex>
         ),
