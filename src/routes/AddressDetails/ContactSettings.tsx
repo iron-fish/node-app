@@ -13,7 +13,7 @@ import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 import { Contact } from 'Data/types/Contact'
 import { useNavigate } from 'react-router-dom'
-import { ROUTES } from '..'
+import { ROUTES } from 'Routes/data'
 
 interface ContactSettingsProps {
   contact: Contact

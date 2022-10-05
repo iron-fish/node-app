@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FC, useState, useMemo } from 'react'
 import {
   Box,
   Button,
@@ -6,6 +6,8 @@ import {
   chakra,
   NAMED_COLORS,
   useColorModeValue,
+  useBreakpointValue,
+  ButtonsGroup,
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SearchSortField from 'Components/Search&Sort'
@@ -15,6 +17,56 @@ import ModalWindow from 'Components/ModalWindow'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import SortType from 'Types/SortType'
+
+interface ActionButtonsProps {
+  showCreate: (show: boolean) => void
+  showImport: (show: boolean) => void
+}
+
+const ActionButtons: FC<ActionButtonsProps> = ({ showCreate, showImport }) => {
+  const buttons = useMemo(
+    () => [
+      {
+        key: 'accounts-view-create',
+        label: (
+          <Flex alignItems="center">
+            <IconAdd mr="0.5rem" w="1rem" h="1rem" mb="0.125rem" />
+            Create Account
+          </Flex>
+        ),
+        onClick: () => showCreate(true),
+      },
+      {
+        key: 'accounts-view-import',
+        label: (
+          <Flex alignItems="center">
+            <IconAdd mr="0.5rem" w="1rem" h="1rem" mb="0.125rem" />
+            Import Account
+          </Flex>
+        ),
+        onClick: () => showImport(true),
+      },
+    ],
+    [showCreate, showImport]
+  )
+  const isGroup = useBreakpointValue({ base: true, sm2: false })
+  return isGroup ? (
+    <ButtonsGroup menuItems={buttons} />
+  ) : (
+    <Flex gap="1rem">
+      {buttons.map(({ key, label, onClick }) => (
+        <Button
+          key={key}
+          borderRadius="4rem"
+          variant="secondary"
+          onClick={onClick}
+        >
+          <chakra.h5 mt="0.125rem">{label}</chakra.h5>
+        </Button>
+      ))}
+    </Flex>
+  )
+}
 
 const Accounts = () => {
   const [$searchTerm, $setSearchTerm] = useState('')
@@ -51,25 +103,10 @@ const Accounts = () => {
             </h5>
           </Flex>
         </Flex>
-        <Flex>
-          <Button
-            leftIcon={<IconAdd mr="-0.25rem" />}
-            mr="1rem"
-            borderRadius="4rem"
-            variant="secondary"
-            onClick={() => setShowCreateAccount(true)}
-          >
-            <chakra.h5 mt="0.125rem">Create Account</chakra.h5>
-          </Button>
-          <Button
-            leftIcon={<IconAdd mr="-0.25rem" />}
-            borderRadius="4rem"
-            variant="secondary"
-            onClick={() => setShowImportAccount(true)}
-          >
-            <chakra.h5 mt="0.125rem">Import Account</chakra.h5>
-          </Button>
-        </Flex>
+        <ActionButtons
+          showCreate={setShowCreateAccount}
+          showImport={setShowImportAccount}
+        />
       </Flex>
       <SearchSortField
         SearchProps={{
