@@ -7,11 +7,7 @@ import DemoMinerManager from './DemoMinerManager'
 import DemoNodeManager from './DemoNodeManager'
 import DemoTransactionsManager from './DemoTransactionsManager'
 import { Account, AccountKeys, AccountSettings } from './types/Account'
-import {
-  AccountMinerSpeed,
-  AccountMinerStatistic,
-  AccountMinerStatus,
-} from './types/AccountMiner'
+import { AccountMinerStatistic, MinerProps } from './types/AccountMiner'
 import { Contact } from './types/Contact'
 import { Transaction } from './types/Transaction'
 
@@ -136,24 +132,28 @@ class DemoDataManager {
     return this.addressBook.add(name, address)
   }
 
-  getAccountMinerStatus(accountId: string): Promise<AccountMinerStatus> {
-    return this.miner.status(accountId)
+  getAccountMinerStatus(): Promise<Pick<MinerProps, 'status'>> {
+    return this.miner.status()
   }
 
-  getAccountMinerStatistic(accountId: string): Promise<AccountMinerStatistic> {
-    return this.miner.statistic(accountId)
+  getAccountMinerStatistic(
+    accountId: string,
+    from?: string,
+    to?: string
+  ): Promise<AccountMinerStatistic> {
+    return this.miner.statistic(accountId, from, to)
   }
 
-  getAccountMinerSpeed(accountId: string): Promise<AccountMinerSpeed> {
-    return this.miner.speed(accountId)
+  getAccountMinerSpeed(): Promise<Pick<MinerProps, 'speed'>> {
+    return this.miner.speed()
   }
 
   startMining(accountId: string): Promise<boolean> {
     return this.miner.start(accountId)
   }
 
-  stopMining(accountId: string): Promise<boolean> {
-    return this.miner.stop(accountId)
+  stopMining(): Promise<boolean> {
+    return this.miner.stop()
   }
 
   getNodeStatus(): Promise<GetStatusResponse> {
