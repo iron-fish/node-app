@@ -67,7 +67,7 @@ const AccountKeys: FC<AccountKeysProps> = ({ account }) => {
       <Box w="37.25rem">
         <MnemonicView
           header={
-            <Flex gap="0.4375rem" mb="-10px">
+            <Flex gap="0.4375rem" mb="-0.4375rem">
               <h6>Mnemonic phrase</h6>
               <CopyToClipboardButton
                 value={phrase?.join(', ')}
