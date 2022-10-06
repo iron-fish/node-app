@@ -5,13 +5,17 @@ import reportWebVitals from './reportWebVitals'
 import './index.css'
 import DemoDataManager from './data/DemoDataManager'
 import { IronfishSdk } from '@ironfish/sdk'
+import AddressBookStorageProps from '../electron/storage/types/AddressBookStorageProps'
 
 declare global {
   interface Window {
     DemoDataManager: DemoDataManager
     Wallet: IronfishSdk
+    AddressBookStorage: AddressBookStorageProps
   }
 }
+
+console.log(window.AddressBookStorage)
 
 window.DemoDataManager = new DemoDataManager()
 
