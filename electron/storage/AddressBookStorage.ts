@@ -1,6 +1,6 @@
 import AbstractStorage from './AbstractStorage'
-import Contact from './types/Contact'
-import SortType from './types/SortType'
+import Contact from 'Types/Contact'
+import SortType from 'Types/SortType'
 
 class AddressBookStorage extends AbstractStorage<Contact> {
   constructor() {

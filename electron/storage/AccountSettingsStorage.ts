@@ -1,6 +1,6 @@
 import AbstractStorage from './AbstractStorage'
-import AccountSettings from './types/AccountSettings'
-import SortType from './types/SortType'
+import AccountSettings from 'Types/AccountSettings'
+import SortType from 'Types/SortType'
 
 class AccountSettingsStorage extends AbstractStorage<AccountSettings> {
   constructor() {

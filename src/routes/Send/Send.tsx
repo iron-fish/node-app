@@ -20,7 +20,7 @@ import FeesImage from 'Svgx/FeesImage'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow'
 import { Account } from 'Data/types/Account'
-import { Contact } from 'Data/types/Contact'
+import Contact from 'Types/Contact'
 import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 
@@ -113,7 +113,7 @@ const Send: FC = () => {
             />
             <ContactsAutocomplete
               label={'To'}
-              contactId={contact?.identity || state?.contactId}
+              contactId={contact?._id || state?.contactId}
               onSelectOption={setContact}
               mb="2rem"
             />

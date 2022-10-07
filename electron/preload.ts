@@ -1,12 +1,11 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { IronfishSdk } from '@ironfish/sdk'
+// import { IronfishSdk } from '@ironfish/sdk'
 import AddressBookStorage from './storage/AddressBookStorage'
 import AccountSettingsStorage from './storage/AccountSettingsStorage'
 
-import SortType from './storage/types/SortType'
-import Contact from './storage/types/Contact'
-import IStorage from './storage/types/IStorage'
-import Entity from './storage/types/Entity'
+import SortType from 'Types/SortType'
+import IStorage from 'Types/IStorage'
+import Entity from 'Types/Entity'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
   storage: IStorage<T>
@@ -26,7 +25,7 @@ function wrapMethodsWithCallbacks<T extends Entity>(
 const addressBookStorage = new AddressBookStorage()
 const accountSettingsStorage = new AccountSettingsStorage()
 
-contextBridge.exposeInMainWorld('Wallet', IronfishSdk)
+// contextBridge.exposeInMainWorld('Wallet', IronfishSdk)
 contextBridge.exposeInMainWorld(
   'AddressBookStorage',
   wrapMethodsWithCallbacks(addressBookStorage)

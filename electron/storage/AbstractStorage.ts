@@ -1,7 +1,7 @@
 import NeDBStorage from 'nedb'
-import Entity from './types/Entity'
-import IStorage from './types/IStorage'
-import SortType from './types/SortType'
+import Entity from 'Types/Entity'
+import IStorage from 'Types/IStorage'
+import SortType from 'Types/SortType'
 
 abstract class AbstractStorage<T extends Entity> implements IStorage<T> {
   protected storage: Nedb
