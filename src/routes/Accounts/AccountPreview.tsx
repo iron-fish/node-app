@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom'
 import { truncateHash } from 'Utils/hash'
 import { ROUTES } from '..'
 import { Account } from 'Data/types/Account'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 export interface AccountPreviewProps extends Account {
   order: number
@@ -82,6 +83,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
   identity,
 }) => {
   const navigate = useNavigate()
+  const { loaded } = useDataSync()
   const $colors = useColorModeValue(
     {
       bg: NAMED_COLORS.WHITE,
@@ -102,9 +104,11 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       my="0.5rem"
       border="0.063rem solid"
       borderRadius="0.25rem"
-      cursor="pointer"
+      cursor={loaded ? 'pointer' : 'not-allowed'}
       onClick={() =>
-        navigate(ROUTES.ACCOUNT, { state: { accountId: identity } })
+        loaded
+          ? navigate(ROUTES.ACCOUNT, { state: { accountId: identity } })
+          : null
       }
       sx={{
         transition: '0.3s',
@@ -197,6 +201,8 @@ const AccountPreview: FC<AccountPreviewProps> = ({
                 <Send fill="currentColor" />
               </Icon>
             }
+            isDisabled={!loaded}
+            disabled={!loaded}
           >
             <h5>Send</h5>
           </Button>
@@ -214,6 +220,8 @@ const AccountPreview: FC<AccountPreviewProps> = ({
                 <Receive fill="currentColor" />
               </Icon>
             }
+            isDisabled={!loaded}
+            disabled={!loaded}
           >
             <h5>Receive</h5>
           </Button>
@@ -225,6 +233,8 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           _active={{ bg: 'none' }}
           _hover={{ bg: 'none' }}
           icon={<Caret />}
+          isDisabled={!loaded}
+          disabled={!loaded}
         />
       </Flex>
     </Flex>

@@ -23,6 +23,7 @@ import { Account } from 'Data/types/Account'
 import { Contact } from 'Data/types/Contact'
 import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -55,6 +56,11 @@ const Send: FC = () => {
     { bg: NAMED_COLORS.DEEP_BLUE, color: NAMED_COLORS.WHITE },
     { bg: NAMED_COLORS.WHITE, color: NAMED_COLORS.DEEP_BLUE }
   )
+  const { loaded } = useDataSync()
+
+  const checkChanges: () => boolean = () =>
+    !loaded || !(feeCalculated && account && contact && amount)
+
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
@@ -142,7 +148,8 @@ const Send: FC = () => {
             borderRadius="4rem"
             mb="2rem"
             p="2rem"
-            isDisabled={!(feeCalculated && account && contact && amount)}
+            isDisabled={checkChanges()}
+            disabled={checkChanges()}
             leftIcon={
               <Icon height={26} width={26}>
                 <SendIcon fill="currentColor" />

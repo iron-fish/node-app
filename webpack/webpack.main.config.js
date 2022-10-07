@@ -23,6 +23,7 @@ module.exports = {
       Utils: path.join(__dirname, '../src/utils'),
       Types: path.join(__dirname, '../src/types'),
       Data: path.join(__dirname, '../src/data'),
+      Providers: path.join(__dirname, '../src/providers'),
       react: resolve('./node_modules/react'),
     },
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
