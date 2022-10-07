@@ -1,5 +1,6 @@
-interface Contact {
-  _id?: string
+import Entity from './Entity'
+
+interface Contact extends Entity {
   name: string
   address: string
 }
