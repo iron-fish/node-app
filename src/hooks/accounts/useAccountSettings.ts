@@ -25,8 +25,6 @@ const useAccountSettings = (id: string) => {
     id && loadAccountSettings(id)
   }, [id])
 
-  console.log(id, result)
-
   return [result, updateSettings] as const
 }
 
