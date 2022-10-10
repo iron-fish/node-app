@@ -33,6 +33,11 @@ const DEMO_ADDRESS_BOOK: Contact[] = [
     name: 'Jason',
     address: 'OSAblUtjE_cda1CD_baWcpiEWBM3qp0SnZXANluiM7G4psf7Z6ojb3nXFIFaQdBx',
   },
+  {
+    identity: '5',
+    name: '',
+    address: 'OSAblUtjE_cda1CD_baWcpiEWBM3qp0SnZXANluiM7G4psf7Z6ojb3nXFIFaQdBx',
+  },
 ]
 
 class DemoAddressBookManager {

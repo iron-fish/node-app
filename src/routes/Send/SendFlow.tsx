@@ -100,11 +100,22 @@ const ConfirmStep: FC<StepProps> = ({
             title="To:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{to.name}</chakra.h4>
-                <chakra.h5 color={NAMED_COLORS.GREY}>{to.address}</chakra.h5>
+                {to.name && (
+                  <chakra.h4 whiteSpace="nowrap">{to.name}</chakra.h4>
+                )}
+                <chakra.h5
+                  pl="4rem"
+                  color={NAMED_COLORS.GREY}
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                >
+                  {to.address}
+                </chakra.h5>
               </HStack>
             }
+            flexDirection={to.name ? 'column' : 'row'}
             w="100%"
+            overflow="hidden"
           />
           <DataPreviewLine
             title="Amount:"
