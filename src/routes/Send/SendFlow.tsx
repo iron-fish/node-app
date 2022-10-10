@@ -196,8 +196,8 @@ const SendStep: FC<StepProps> = ({ onSend }) => {
         />
         <HStack justifyContent="center">
           <Image
-            height="206px"
-            width="136px"
+            height="12.875rem"
+            width="8.5rem"
             mt="2rem"
             src={'/gif/walking.gif'}
           />
