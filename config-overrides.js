@@ -1,21 +1,12 @@
 const path = require('path')
-const CopyPlugin = require('copy-webpack-plugin')
+const { copySync } = require('fs-extra')
+
+copySync(__dirname + '/types', __dirname + '/src/types', { overwrite: true })
 
 module.exports = function override(config, env) {
   //do stuff with the webpack config...
   return {
     ...config,
-    plugins: [
-      ...config.plugins,
-      new CopyPlugin({
-        patterns: [
-          {
-            from: path.join(__dirname, './types'),
-            to: path.join(__dirname, '../src/types'),
-          },
-        ],
-      }),
-    ],
     resolve: {
       ...config?.resolve,
       fallback: {
