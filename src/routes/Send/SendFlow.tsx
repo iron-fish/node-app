@@ -20,6 +20,7 @@ import {
   TextField,
   VStack,
   Icon,
+  Link,
 } from '@ironfish/ui-kit'
 import SendImage from 'Svgx/SendImage'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
@@ -153,9 +154,7 @@ const ConfirmStep: FC<StepProps> = ({
         >
           Confirm & Send
         </Button>
-        <Button variant="link" onClick={onCancel}>
-          Cancel Transaction
-        </Button>
+        <Link onClick={onCancel}>Cancel Transaction</Link>
       </ModalFooter>
     </>
   )
