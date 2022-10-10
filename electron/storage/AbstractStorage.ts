@@ -48,7 +48,7 @@ abstract class AbstractStorage<T extends Entity> implements IStorage<T> {
       this.storage.update(
         { _id: identity },
         { $set: fieldsToUpdate },
-        { returnUpdatedDocs: true },
+        { returnUpdatedDocs: true, upsert: true },
         err => {
           if (err) {
             reject(err)
@@ -74,13 +74,20 @@ abstract class AbstractStorage<T extends Entity> implements IStorage<T> {
 
   find(entity: Partial<Omit<T, '_id'>>): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.storage.findOne({ $or: entity }, (err, contact) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(contact)
+      this.storage.findOne(
+        {
+          $or: Object.entries(entity).map(key_value => ({
+            [key_value[0]]: key_value[1],
+          })),
+        },
+        (err, contact) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(contact)
+          }
         }
-      })
+      )
     })
   }
 }
