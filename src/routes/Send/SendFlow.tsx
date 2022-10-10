@@ -21,6 +21,7 @@ import {
   VStack,
   Icon,
   Image,
+  Link,
 } from '@ironfish/ui-kit'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import { Account } from 'Data/types/Account'
@@ -153,9 +154,7 @@ const ConfirmStep: FC<StepProps> = ({
         >
           Confirm & Send
         </Button>
-        <Button variant="link" onClick={onCancel}>
-          Cancel Transaction
-        </Button>
+        <Link onClick={onCancel}>Cancel Transaction</Link>
       </ModalFooter>
     </>
   )
