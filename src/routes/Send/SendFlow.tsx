@@ -20,9 +20,9 @@ import {
   TextField,
   VStack,
   Icon,
+  Image,
   Link,
 } from '@ironfish/ui-kit'
-import SendImage from 'Svgx/SendImage'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import { Account } from 'Data/types/Account'
 import { Contact } from 'Data/types/Contact'
@@ -191,10 +191,15 @@ const SendStep: FC<StepProps> = ({ onSend }) => {
           borderRadius="2rem"
           isIndeterminate
           bg={NAMED_COLORS.LIGHT_GREY}
-          colorScheme="green"
+          colorScheme="blue"
         />
         <HStack justifyContent="center">
-          <SendImage mt="2rem" />
+          <Image
+            height="12.875rem"
+            width="8.5rem"
+            mt="2rem"
+            src={'/gif/walking.gif'}
+          />
         </HStack>
       </Box>
     </ModalBody>
