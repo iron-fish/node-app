@@ -24,6 +24,7 @@ import { Contact } from 'Data/types/Contact'
 import SortType from 'Types/SortType'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
+import AddContactModal from './AddContactModal'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -111,6 +112,33 @@ const COLUMNS = [
   },
 ]
 
+const AddContactButton: FC<{
+  onAdd: (name: string, address: string) => Promise<void>
+}> = ({ onAdd }) => {
+  const [openAddContactModal, setOpenAddContactModal] = useState<boolean>(false)
+
+  return (
+    <>
+      <Button
+        leftIcon={<IconAdd />}
+        borderRadius="4rem"
+        variant="secondary"
+        onClick={() => setOpenAddContactModal(true)}
+      >
+        <chakra.h5>Add Contact</chakra.h5>
+      </Button>
+      <AddContactModal
+        onAdd={(name, address) => {
+          onAdd(name, address)
+          setOpenAddContactModal(false)
+        }}
+        isOpen={openAddContactModal}
+        onClose={() => setOpenAddContactModal(false)}
+      />
+    </>
+  )
+}
+
 const AddressBook: FC = () => {
   const $colors = useColorModeValue(
     {
@@ -145,13 +173,7 @@ const AddressBook: FC = () => {
           </Box>
         </Flex>
         <Flex>
-          <Button
-            leftIcon={<IconAdd />}
-            borderRadius="4rem"
-            variant="secondary"
-          >
-            <h5>Add Contact</h5>
-          </Button>
+          <AddContactButton onAdd={addContact} />
         </Flex>
       </Flex>
       <SearchSortField
