@@ -1,21 +1,18 @@
 import { Flex, Box, chakra, useBreakpointValue, Link } from '@ironfish/ui-kit'
-import { FC, useState, useMemo } from 'react'
+import { FC, useState } from 'react'
 import { Outlet } from 'react-router-dom'
-import { useDataSync } from 'Providers/DataSyncProvider'
 
 import Navbar from '../components/Navbar'
 import CloseIcon from 'Svgx/CloseIcon'
 
 export const PageLayout: FC = () => {
-  const [hideSync, setHideSync] = useState(false)
-  const { loaded } = useDataSync()
+  const [hideSyncWarning, setHideSyncWarning] = useState(false)
   const message = useBreakpointValue({
     base: 'Account balances might not be accurate while your wallet syncs.',
     sm: 'Account balances might not be accurate while your wallet syncs and certain functions may not be available.',
   })
 
-  const hideSynchWarning = useMemo(() => hideSync || loaded, [hideSync, loaded])
-  const warningHeight = hideSynchWarning ? 0 : 2.625
+  const warningHeight = hideSyncWarning ? 0 : 2.625
 
   return (
     <>
@@ -30,7 +27,7 @@ export const PageLayout: FC = () => {
         <chakra.h5
           ml="auto"
           color="#7E7400"
-          display={hideSynchWarning ? 'none' : 'block'}
+          display={hideSyncWarning ? 'none' : 'block'}
         >
           {message}&nbsp;
           <Link color="inherit">
@@ -38,14 +35,14 @@ export const PageLayout: FC = () => {
           </Link>
         </chakra.h5>
         <CloseIcon
-          display={hideSynchWarning ? 'none' : 'block'}
+          display={hideSyncWarning ? 'none' : 'block'}
           ml="auto"
           mr="1rem"
           color="#7E7400"
           width="0.5625rem"
           height="0.5625rem"
           cursor="pointer"
-          onClick={() => setHideSync(true)}
+          onClick={() => setHideSyncWarning(true)}
         />
       </Flex>
       <Flex

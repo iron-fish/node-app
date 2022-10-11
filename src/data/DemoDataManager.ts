@@ -163,6 +163,10 @@ class DemoDataManager {
   getNodePeers(): Promise<PeerResponse[]> {
     return this.node.peers()
   }
+
+  syncNodeData(): Promise<void> {
+    return this.node.syncData()
+  }
 }
 
 export default DemoDataManager

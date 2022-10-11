@@ -2,21 +2,17 @@ import {
   FC,
   createContext,
   useContext,
-  useCallback,
+  useState,
   ReactNode,
   useEffect,
 } from 'react'
 
-import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
-import AsyncDataProps from 'Types/AsyncDataType'
+import { GetStatusResponse } from '@ironfish/sdk'
 
-interface DataType {
-  total: number
-  hasMore: boolean
-}
-
-interface DataSyncContextProps extends AsyncDataProps<DataType> {
-  syncData?: VoidFunction
+interface DataSyncContextProps {
+  data?: GetStatusResponse | undefined
+  loaded?: boolean
+  error?: unknown
 }
 
 const DataSyncContext = createContext<DataSyncContextProps>({
@@ -27,23 +23,40 @@ interface DataSyncProviderProps {
   children: ReactNode
 }
 
-const fetchData = (): Promise<DataType> =>
-  new Promise(resolve => {
-    setTimeout(() => resolve({ total: 10000, hasMore: true }), 5000)
-  })
-
 const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
-  const [result, promiseWrapper] = useAsyncDataWrapper<DataType>()
+  const [loaded, setLoaded] = useState<boolean>(false)
+  const [status, setNodeStatus] = useState<GetStatusResponse | undefined>()
+  const [error, setError] = useState()
+  const [syncInterval, setSyncInterval] = useState(null)
 
-  const syncData = useCallback(() => {
-    promiseWrapper(fetchData())
-  }, [promiseWrapper])
+  const loadStatus = () => {
+    return window.DemoDataManager.getNodeStatus()
+      .then(setNodeStatus)
+      .catch(setError)
+  }
 
   useEffect(() => {
-    syncData()
+    window.DemoDataManager.syncNodeData().then(() => loadStatus())
   }, [])
 
-  const value = { ...result, syncData }
+  useEffect(() => {
+    if (status?.blockSyncer.status === 'syncing') {
+      setLoaded(false)
+      const infinite = setInterval(() => {
+        loadStatus()
+      }, 1000)
+      setSyncInterval(infinite)
+    } else if (
+      status?.blockSyncer.status === 'idle' ||
+      status?.blockSyncer.status === 'stopped'
+    ) {
+      setLoaded(true)
+      syncInterval && clearInterval(syncInterval)
+    }
+    return () => syncInterval && clearInterval(syncInterval)
+  }, [status?.blockSyncer.status])
+
+  const value = { loaded, data: status, error }
 
   return (
     <DataSyncContext.Provider value={value}>
