@@ -20,7 +20,7 @@ import FeesImage from 'Svgx/FeesImage'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow'
 import { Account } from 'Data/types/Account'
-import { Contact } from 'Data/types/Contact'
+import Contact from 'Types/Contact'
 import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import { useDataSync } from 'Providers/DataSyncProvider'
@@ -119,7 +119,7 @@ const Send: FC = () => {
             />
             <ContactsAutocomplete
               label={'To'}
-              contactId={contact?.identity || state?.contactId}
+              contactId={contact?._id || state?.contactId}
               onSelectOption={setContact}
               mb="2rem"
             />
@@ -135,10 +135,11 @@ const Send: FC = () => {
               />
               <TextField
                 w="calc(50% - 1rem)"
-                label="Memo (32 characters)"
+                label={`Memo (${32 - notes.length} characters)`}
                 value={notes}
                 InputProps={{
                   onChange: e => setNotes(e.target.value.substring(0, 32)),
+                  maxLength: 32,
                 }}
               />
             </Flex>

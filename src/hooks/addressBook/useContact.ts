@@ -1,23 +1,22 @@
 import { useCallback, useEffect } from 'react'
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
-import { Contact } from 'Data/types/Contact'
+import Contact from 'Types/Contact'
 
 const useContact = (id: string) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Contact>()
   const updateContact = useCallback(
     (name, address) =>
-      window.DemoDataManager.updateContact(id, name, address).then(() =>
+      window.AddressBookStorage.update(id, { name, address }).then(() =>
         loadContact()
       ),
     [id]
   )
   const deleteContact = useCallback(
-    () => window.DemoDataManager.deleteContact(id),
+    () => window.AddressBookStorage.delete(id),
     [id]
   )
 
-  const loadContact = () =>
-    promiseWrapper(window.DemoDataManager.getContact(id))
+  const loadContact = () => promiseWrapper(window.AddressBookStorage.get(id))
 
   useEffect(() => {
     loadContact()

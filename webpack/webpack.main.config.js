@@ -21,7 +21,7 @@ module.exports = {
       Routes: path.join(__dirname, '../src/routes'),
       Svgx: path.join(__dirname, '../src/svgx'),
       Utils: path.join(__dirname, '../src/utils'),
-      Types: path.join(__dirname, '../src/types'),
+      Types: path.join(__dirname, '../types'),
       Data: path.join(__dirname, '../src/data'),
       Providers: path.join(__dirname, '../src/providers'),
       react: resolve('./node_modules/react'),
