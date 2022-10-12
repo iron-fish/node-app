@@ -7,6 +7,7 @@ import {
   NAMED_COLORS,
   MnemonicView,
   Checkbox,
+  CopyToClipboardButton,
 } from '@ironfish/ui-kit'
 import { FC, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -72,7 +73,16 @@ const CreateAccount: FC<CreateAccountProps> = ({
       </chakra.h5>
       <MnemonicView
         loaded={loaded}
-        header="Mnemonic Phrase"
+        header={
+          <Flex gap="0.4375rem" mb="-0.4375rem">
+            <h6>Mnemonic phrase</h6>
+            <CopyToClipboardButton
+              value={phrase?.join(', ')}
+              copyTooltipText="CopyToClipBoard"
+              copiedTooltipText="Copied"
+            />
+          </Flex>
+        }
         value={phrase || []}
         placeholder={''}
         onChange={() => null}
