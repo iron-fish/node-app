@@ -22,6 +22,7 @@ import AddressTransactions from './AddressTransactions'
 import ContactSettings from './ContactSettings'
 import useContact from 'Hooks/addressBook/useContact'
 import ROUTES from 'Routes/data'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -38,6 +39,7 @@ const AddressDetails = () => {
   const $color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
   const [{ data: contact, loaded }, updateContact, deleteContact] =
     useContact(identity)
+  const { loaded: synced } = useDataSync()
 
   return (
     <Flex width="100%" height="100%" direction="column">
@@ -78,6 +80,8 @@ const AddressDetails = () => {
           onClick={() => {
             navigate(ROUTES.SEND, { state: { contactId: contact?.identity } })
           }}
+          isDisabled={!synced}
+          disabled={!synced}
         >
           Send
         </Button>

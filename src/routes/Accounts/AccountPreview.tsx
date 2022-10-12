@@ -104,11 +104,9 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       my="0.5rem"
       border="0.063rem solid"
       borderRadius="0.25rem"
-      cursor={loaded ? 'pointer' : 'not-allowed'}
+      cursor="pointer"
       onClick={() =>
-        loaded
-          ? navigate(ROUTES.ACCOUNT, { state: { accountId: identity } })
-          : null
+        navigate(ROUTES.ACCOUNT, { state: { accountId: identity } })
       }
       sx={{
         transition: '0.3s',
@@ -233,8 +231,6 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           _active={{ bg: 'none' }}
           _hover={{ bg: 'none' }}
           icon={<Caret />}
-          isDisabled={!loaded}
-          disabled={!loaded}
         />
       </Flex>
     </Flex>

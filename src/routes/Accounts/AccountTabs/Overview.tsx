@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom'
 import EmptyOverviewImage from 'Svgx/EmptyOverviewImage'
 import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 interface AccountOverviewProps {
   account: Account
@@ -83,6 +84,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
     }
   )
   const navigate = useNavigate()
+  const { loaded: synced } = useDataSync()
   return (
     <>
       <Flex w="100%" pb="2rem">
@@ -122,6 +124,8 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                       state: { accountId: account?.identity },
                     })
                   }
+                  isDisabled={!synced}
+                  disabled={!synced}
                 >
                   <h5>Send</h5>
                 </Button>
@@ -140,6 +144,8 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                       state: { accountId: account?.identity },
                     })
                   }
+                  isDisabled={!synced}
+                  disabled={!synced}
                 >
                   <h5>Receive</h5>
                 </Button>

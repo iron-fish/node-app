@@ -73,7 +73,7 @@ const ActiveStats: FC<BoxProps> = props => {
       <Flex
         my="0.5rem"
         p="0.25rem"
-        bg={colors.bg}
+        bg={loaded ? colors.bg : '#FFF9BC'}
         borderRadius="0.25rem"
         textAlign="center"
         flexDirection="column"
@@ -84,12 +84,20 @@ const ActiveStats: FC<BoxProps> = props => {
         {!loaded && (
           <>
             <chakra.h5 color={'#7E7400'}>
-              {`${(data?.blockSyncer.syncing.progress * 100).toFixed(0)}% | ${(
-                data?.blockSyncer.syncing.blockSpeed / 1000
-              ).toFixed(0)} seconds`}
+              {`${(data?.blockSyncer.syncing.progress * 100).toFixed(0)}%`}
+              {' | '}
+              {`${(data?.blockSyncer.syncing.blockSpeed / 1000).toFixed(0)}`}
+              {' seconds'}
             </chakra.h5>
             <chakra.h5 color={'#7E7400'}>
-              {`${data?.blockSyncer.syncing.speed} blocks per seconds`}
+              {`${Math.floor(
+                data?.blockSyncer.syncing.progress *
+                  data?.blockSyncer.syncing.speed *
+                  100
+              ).toLocaleString()}`}
+              {' / '}
+              {`${(data?.blockSyncer.syncing.speed * 100).toLocaleString()}`}
+              {' blocks'}
             </chakra.h5>
           </>
         )}

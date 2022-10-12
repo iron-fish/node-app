@@ -102,8 +102,6 @@ const COLUMNS = [
           </Button>
           <IconButton
             aria-label="book-details"
-            isDisabled={!loaded}
-            disabled={!loaded}
             variant="ghost"
             icon={<Caret />}
             as={Link}
