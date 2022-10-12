@@ -129,10 +129,11 @@ const Send: FC = () => {
               />
               <TextField
                 w="calc(50% - 1rem)"
-                label="Memo (32 characters)"
+                label={`Memo (${32 - notes.length} characters)`}
                 value={notes}
                 InputProps={{
                   onChange: e => setNotes(e.target.value.substring(0, 32)),
+                  maxLength: 32,
                 }}
               />
             </Flex>
