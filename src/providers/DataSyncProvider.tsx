@@ -9,7 +9,7 @@ import {
 
 import { GetStatusResponse } from '@ironfish/sdk'
 
-interface DataSyncContextProps {
+export interface DataSyncContextProps {
   data?: GetStatusResponse | undefined
   loaded?: boolean
   error?: unknown
