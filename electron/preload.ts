@@ -6,21 +6,21 @@ import IStorage from 'Types/IStorage'
 import Entity from 'Types/Entity'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
-  channelPrefix: string
+  storageName: string
 ): IStorage<T> {
   return {
     list: (searchTerm: string, sort: SortType) =>
-      ipcRenderer.invoke(channelPrefix + '-list', searchTerm, sort),
+      ipcRenderer.invoke(storageName + '-list', searchTerm, sort),
     get: (identity: string) =>
-      ipcRenderer.invoke(channelPrefix + '-get', identity),
+      ipcRenderer.invoke(storageName + '-get', identity),
     add: (contact: Omit<T, '_id'>) =>
-      ipcRenderer.invoke(channelPrefix + '-add', contact),
+      ipcRenderer.invoke(storageName + '-add', contact),
     update: (identity: string, fieldsToUpdate: Partial<Omit<T, '_id'>>) =>
-      ipcRenderer.invoke(channelPrefix + '-update', identity, fieldsToUpdate),
+      ipcRenderer.invoke(storageName + '-update', identity, fieldsToUpdate),
     delete: (identity: string) =>
-      ipcRenderer.invoke(channelPrefix + '-delete', identity),
+      ipcRenderer.invoke(storageName + '-delete', identity),
     find: (fields: Partial<Omit<T, '_id'>>) =>
-      ipcRenderer.invoke(channelPrefix + '-find', fields),
+      ipcRenderer.invoke(storageName + '-find', fields),
   }
 }
 
