@@ -25,7 +25,7 @@ import {
 } from '@ironfish/ui-kit'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import { Account } from 'Data/types/Account'
-import { Contact } from 'Data/types/Contact'
+import Contact from 'Types/Contact'
 import SendIcon from 'Svgx/send'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
