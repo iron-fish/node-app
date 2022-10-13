@@ -1,11 +1,5 @@
-import {
-  chakra,
-  Flex,
-  NAMED_COLORS as C,
-  Box,
-  BoxProps,
-  useColorModeValue,
-} from '@ironfish/ui-kit'
+import { FC } from 'react'
+import { Flex, Box } from '@ironfish/ui-kit'
 
 import IconHome from 'Svgx/home'
 import IconSend from 'Svgx/send'
@@ -19,8 +13,8 @@ import Toggle from 'Components/ThemeToggle'
 import Nav from './Nav'
 import IronFishLogo from 'Svgx/IronFishLogo'
 import HexFishLogo from 'Svgx/hexfish'
-import { FC } from 'react'
-import { useDataSync } from 'Providers/DataSyncProvider'
+
+import ActiveStats from './ActiveSatatus'
 
 const primaryNavItems = [
   { hotkey: 'A', to: '/accounts', label: 'Privacy Accounts', icon: IconHome },
@@ -38,83 +32,6 @@ const secondaryNavItems = [
   { hotkey: 'N', to: '/node', label: 'Your Node', icon: IconNode },
   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
 ]
-
-const getWalletSyncStatus = (
-  status: 'stopped' | 'idle' | 'stopping' | 'syncing'
-) => {
-  switch (status) {
-    case 'stopped':
-      return 'Stropped'
-    case 'idle':
-      return 'Synced'
-    case 'stopping':
-      return 'Stopping'
-    case 'syncing':
-      return 'Syncing'
-    default:
-      return 'Syncing'
-  }
-}
-
-const ActiveStats: FC<BoxProps> = props => {
-  const { loaded, data } = useDataSync()
-  const colors = useColorModeValue(
-    {
-      text: '#335A48',
-      bg: '#EBFBF4',
-    },
-    {
-      text: '#5FC89A',
-      bg: '#192D23',
-    }
-  )
-  return (
-    <Box mt="1rem" mb="1.5rem" {...props}>
-      <Flex
-        my="0.5rem"
-        p="0.25rem"
-        bg={loaded ? colors.bg : '#FFF9BC'}
-        borderRadius="0.25rem"
-        textAlign="center"
-        flexDirection="column"
-      >
-        <chakra.h5 color={loaded ? colors.text : '#7E7400'}>
-          Wallet Status: {getWalletSyncStatus(data?.blockSyncer.status)}
-        </chakra.h5>
-        {!loaded && (
-          <>
-            <chakra.h5 color={'#7E7400'}>
-              {`${(data?.blockSyncer.syncing.progress * 100).toFixed(0)}%`}
-              {' | '}
-              {`${(data?.blockSyncer.syncing.blockSpeed / 1000).toFixed(0)}`}
-              {' seconds'}
-            </chakra.h5>
-            <chakra.h5 color={'#7E7400'}>
-              {`${Math.floor(
-                data?.blockSyncer.syncing.progress *
-                  data?.blockSyncer.syncing.speed *
-                  100
-              ).toLocaleString()}`}
-              {' / '}
-              {`${(data?.blockSyncer.syncing.speed * 100).toLocaleString()}`}
-              {' blocks'}
-            </chakra.h5>
-          </>
-        )}
-      </Flex>
-      <Box
-        my="0.5rem"
-        p="0.25rem"
-        bg={colors.bg}
-        borderRadius="0.25rem"
-        textAlign="center"
-      >
-        <chakra.h5 color={colors.text}>Miner Running: 300 h/s</chakra.h5>
-      </Box>
-    </Box>
-  )
-}
-
 interface NavbarProps {
   offsetTop?: number
 }
@@ -149,7 +66,7 @@ export const Navbar: FC<NavbarProps> = ({ offsetTop = 0 }) => {
       </Box>
       <Box marginTop="auto">
         <Nav my="1rem" list={secondaryNavItems} />
-        <ActiveStats display={{ base: 'none', sm: 'block' }} />
+        <ActiveStats />
         <Toggle />
       </Box>
     </Flex>
