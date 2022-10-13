@@ -1,7 +1,6 @@
 import {
   chakra,
   Flex,
-  NAMED_COLORS as C,
   Box,
   BoxProps,
   useColorModeValue,

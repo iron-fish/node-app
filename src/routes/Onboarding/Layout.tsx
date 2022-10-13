@@ -14,7 +14,7 @@ const Layout: FC = () => {
         backgroundSize: 'auto 150%',
         backgroundPositionX: 'right',
         background:
-          'url(/images/onboarding_fish.png) no-repeat center center fixed',
+          'url(images/onboarding_fish.png) no-repeat center center fixed',
       }}
     >
       <Flex

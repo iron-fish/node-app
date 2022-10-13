@@ -13,9 +13,13 @@ declare global {
     // Wallet: IronfishSdk
     AddressBookStorage: IStorage<Contact>
     AccountSettingsStorage: IStorage<AccountSettings>
+    setElectronThemeMode: (mode: string) => void
   }
 }
 window.DemoDataManager = new DemoDataManager()
+if (!window.setElectronThemeMode) {
+  window.setElectronThemeMode = noop
+}
 
 if (!window.AddressBookStorage) {
   window.AddressBookStorage = {
@@ -92,8 +96,3 @@ if (!window.AccountSettingsStorage) {
       })),
   }
 }
-
-window.AddressBookStorage.add({
-  name: 'test',
-  address: nanoid(64),
-})

@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron'
 // import { IronfishSdk } from '@ironfish/sdk'
 
+// contextBridge.exposeInMainWorld('Wallet', IronfishSdk)
 import SortType from 'Types/SortType'
 import IStorage from 'Types/IStorage'
 import Entity from 'Types/Entity'
@@ -25,6 +26,9 @@ function wrapMethodsWithCallbacks<T extends Entity>(
 }
 
 // contextBridge.exposeInMainWorld('Wallet', IronfishSdk)
+contextBridge.exposeInMainWorld('setElectronThemeMode', mode => {
+  ipcRenderer.invoke('theme-mode-change', mode)
+})
 contextBridge.exposeInMainWorld(
   'AddressBookStorage',
   wrapMethodsWithCallbacks('address-book')
