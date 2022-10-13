@@ -8,7 +8,7 @@ import {
   useBreakpointValue,
 } from '@ironfish/ui-kit'
 import { useDataSync, DataSyncContextProps } from 'Providers/DataSyncProvider'
-import IconCheck from '@ironfish/ui-kit/dist/svgx/icon-check'
+import ConfirmedIcon from 'Svgx/ConfirmedIcon'
 
 const LIGHT_COLORS = {
   text: '#335A48',
@@ -158,7 +158,7 @@ const ActiveStats: FC<FlexProps> = props => {
         fullSize={<SyncStatus data={data} loaded={loaded} />}
         minified={
           loaded ? (
-            <IconCheck color={colors.text} />
+            <ConfirmedIcon color={colors.text} w="20px" h="15px" />
           ) : (
             <chakra.h6 mt="0.0625rem">
               {(data?.blockSyncer.syncing.progress * 100).toFixed(0)}%
