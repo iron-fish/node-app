@@ -18,10 +18,10 @@ import Send from 'Svgx/send'
 import HexFishCircle from 'Components/HexFishCircle'
 import BackButtonLink from 'Components/BackButtonLink'
 import { truncateHash } from 'Utils/hash'
-import { ROUTES } from '..'
 import AddressTransactions from './AddressTransactions'
 import ContactSettings from './ContactSettings'
 import useContact from 'Hooks/addressBook/useContact'
+import ROUTES from 'Routes/data'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -76,7 +76,7 @@ const AddressDetails = () => {
           variant="primary"
           size="small"
           onClick={() => {
-            navigate(ROUTES.SEND, { state: { contactId: contact?.identity } })
+            navigate(ROUTES.SEND, { state: { contactId: contact?._id } })
           }}
         >
           Send

@@ -2,7 +2,7 @@ import { FC, useMemo, useEffect, useState } from 'react'
 import { Autocomplete, FlexProps, useDebounce } from '@ironfish/ui-kit'
 
 import useAddressBook from 'Hooks/addressBook/useAddressBook'
-import { Contact } from 'Data/types/Contact'
+import Contact from 'Types/Contact'
 import { truncateHash } from 'Utils/hash'
 
 interface ContactsAutocompleteProps extends FlexProps {
@@ -34,9 +34,7 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
   )
 
   useEffect(() => {
-    const selectedOption = options.find(
-      ({ value }) => value.identity === contactId
-    )
+    const selectedOption = options.find(({ value }) => value._id === contactId)
     onSelectOption(selectedOption?.value || null)
   }, [options])
 
@@ -44,7 +42,7 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
     <Autocomplete
       label={label}
       options={options}
-      value={options.find(({ value }) => value.identity === contactId)}
+      value={options.find(({ value }) => value._id === contactId)}
       onSelectOption={option => onSelectOption(option.value)}
       InputProps={{
         placeholder: 'Input Text',

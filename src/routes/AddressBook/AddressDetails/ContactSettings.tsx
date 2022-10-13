@@ -11,14 +11,14 @@ import {
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
-import { Contact } from 'Data/types/Contact'
+import Contact from 'Types/Contact'
 import { useNavigate } from 'react-router-dom'
-import { ROUTES } from '..'
+import { ROUTES } from 'Routes/data'
 
 interface ContactSettingsProps {
   contact: Contact
   onUpdate?: (name: string, address: string) => void
-  onDelete?: (identity: string) => Promise<boolean>
+  onDelete?: (identity: string) => Promise<void>
 }
 
 const Information: FC = memo(() => {
@@ -89,9 +89,7 @@ const ContactSettings: FC<ContactSettingsProps> = ({
           <Link
             alignSelf="center"
             onClick={() => {
-              onDelete(contact.identity).then(
-                deleted => deleted && navigate(ROUTES.ADDRESS_BOOK)
-              )
+              onDelete(contact._id).then(() => navigate(ROUTES.ADDRESS_BOOK))
             }}
           >
             <h4>Delete Contact</h4>

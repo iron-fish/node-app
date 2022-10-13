@@ -13,7 +13,7 @@ import AddressBook from 'Routes/AddressBook'
 import AccountDetails from 'Routes/Accounts/AccountDetails'
 import Miner from 'Routes/Miner'
 import Send from 'Routes/Send/Send'
-import AddressDetails from 'Routes/AddressDetails'
+import AddressDetails from 'Routes/AddressBook/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
@@ -21,6 +21,7 @@ import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
 const breakpoints = {
   sm: '56.25rem', //900px
   sm1: '57.75rem', //924px
+  sm2: '59.25rem', //948px
   md: '72rem', //1152px',
   md1: '77.5rem', //'1240px',
   lg: '90rem', //1440px',

@@ -2,22 +2,8 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import DemoDataManager from './data/DemoDataManager'
-import noop from 'lodash/noop'
-// import { IronfishSdk } from '@ironfish/sdk'
-
-declare global {
-  interface Window {
-    DemoDataManager: DemoDataManager
-    setElectronThemeMode: (mode: string) => void
-    // Wallet: IronfishSdk
-  }
-}
-
-window.DemoDataManager = new DemoDataManager()
-if (!window.setElectronThemeMode) {
-  window.setElectronThemeMode = noop
-}
+import './index.css'
+import './initGlobalVariables'
 
 ReactDOM.render(<App />, document.getElementById('root'))
 
