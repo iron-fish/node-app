@@ -27,6 +27,7 @@ import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import { Account } from 'Data/types/Account'
 import { Contact } from 'Data/types/Contact'
 import SendIcon from 'Svgx/send'
+import { truncateHash } from 'Utils/hash'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
 
@@ -109,7 +110,7 @@ const ConfirmStep: FC<StepProps> = ({
                   whiteSpace="nowrap"
                   overflow="hidden"
                 >
-                  {to.address}
+                  {truncateHash(to.address, 2, 16)}
                 </chakra.h5>
               </HStack>
             }
