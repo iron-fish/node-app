@@ -23,5 +23,5 @@
       "Data/*": ["src/data/*"],
     },
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "electron/**/*", "types/**/*"],
 }

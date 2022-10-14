@@ -26,8 +26,14 @@ function wrapMethodsWithCallbacks<T extends Entity>(
 }
 
 // contextBridge.exposeInMainWorld('Wallet', IronfishSdk)
-contextBridge.exposeInMainWorld('setElectronThemeMode', mode => {
-  ipcRenderer.invoke('theme-mode-change', mode)
+contextBridge.exposeInMainWorld(
+  'setElectronThemeMode',
+  (mode: 'light' | 'dark' | 'system') => {
+    ipcRenderer.invoke('theme-mode-change', mode)
+  }
+)
+contextBridge.exposeInMainWorld('getIronfishManagerStatus', () => {
+  return ipcRenderer.invoke('ironfish-manager-status')
 })
 contextBridge.exposeInMainWorld(
   'AddressBookStorage',

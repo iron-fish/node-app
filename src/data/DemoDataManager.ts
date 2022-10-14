@@ -1,4 +1,7 @@
-import { GetStatusResponse, PeerResponse } from '@ironfish/sdk'
+import {
+  GetNodeStatusResponse as GetStatusResponse,
+  PeerResponse,
+} from '@ironfish/sdk'
 import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 import SortType from 'Types/SortType'
 import DemoAccountsManager from './DemoAccountsManager'

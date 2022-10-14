@@ -5,7 +5,7 @@ import Contact from 'Types/Contact'
 import AccountSettings from 'Types/AccountSettings'
 import SortType from 'Types/SortType'
 import noop from 'lodash/noop'
-import { nanoid } from 'nanoid'
+import IronFishInitStatus from 'Types/IronfishInitStatus'
 
 declare global {
   interface Window {
@@ -14,11 +14,16 @@ declare global {
     AddressBookStorage: IStorage<Contact>
     AccountSettingsStorage: IStorage<AccountSettings>
     setElectronThemeMode: (mode: string) => void
+    getIronfishManagerStatus: () => Promise<IronFishInitStatus>
   }
 }
 window.DemoDataManager = new DemoDataManager()
 if (!window.setElectronThemeMode) {
   window.setElectronThemeMode = noop
+}
+if (!window.getIronfishManagerStatus) {
+  window.getIronfishManagerStatus = () =>
+    Promise.resolve(IronFishInitStatus.READY)
 }
 
 if (!window.AddressBookStorage) {

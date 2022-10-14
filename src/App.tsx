@@ -17,6 +17,8 @@ import AddressDetails from 'Routes/AddressBook/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
+import { useEffect, useState } from 'react'
+import IronFishInitStatus from 'Types/IronfishInitStatus'
 
 const breakpoints = {
   sm: '56.25rem', //900px
@@ -30,6 +32,23 @@ const breakpoints = {
 }
 
 function App() {
+  const [initStatus, setInitStatus] = useState(IronFishInitStatus.NOT_STARTED)
+
+  useEffect(() => {
+    let interval: NodeJS.Timer | undefined
+    if (
+      initStatus !== IronFishInitStatus.READY &&
+      initStatus !== IronFishInitStatus.ERROR
+    ) {
+      interval = setInterval(
+        () => window.getIronfishManagerStatus().then(setInitStatus),
+        250
+      )
+    }
+
+    return () => interval && clearInterval(interval)
+  }, [])
+
   return (
     <IronFishUIProvider theme={{ breakpoints }}>
       <ElectronThemeChangeHandler />

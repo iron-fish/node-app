@@ -1,4 +1,7 @@
-import { GetStatusResponse, PeerResponse } from '@ironfish/sdk'
+import {
+  PeerResponse,
+  GetNodeStatusResponse as GetStatusResponse,
+} from '@ironfish/sdk'
 
 const STATUS: GetStatusResponse = {
   node: {
@@ -15,18 +18,28 @@ const STATUS: GetStatusResponse = {
     memFree: Math.random() * 4000,
     memTotal: 4232,
   },
+  cpu: {
+    cores: 8,
+    percentRollingAvg: 7,
+    percentCurrent: 24,
+  },
   miningDirector: {
     status: 'started',
     miners: 1,
     blocks: 1243,
     blockGraffiti: 'test',
+    newBlockTemplateSpeed: Math.random() * 1000,
+    newBlockTransactionsSpeed: Math.random() * 1000,
   },
   memPool: {
     size: 12,
+    sizeBytes: 12 * 1024 * 8,
   },
   blockchain: {
     synced: true,
     head: 'asmdksalkdajlkdjalskdjlksajlkasjdlksajdlksaj',
+    headTimestamp: new Date().getTime(),
+    newBlockSpeed: Math.random() * 1000,
   },
   blockSyncer: {
     status: 'stopped',
@@ -55,6 +68,14 @@ const STATUS: GetStatusResponse = {
     executing: 0,
     change: 0,
     speed: 0,
+  },
+  accounts: {
+    scanning: {
+      sequence: 123123,
+      endSequence: 1232312,
+      startedAt: 123123213,
+    },
+    head: 'ddsalkjfhkdsjhfkjdshfkjsdhfkjsdf',
   },
 }
 
