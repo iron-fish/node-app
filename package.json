@@ -31,6 +31,7 @@
     "@typescript-eslint/parser": "^5.27.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.0",
     "@visx/xychart": "2.12.2",
+    "aws-sdk": "^2.1233.0",
     "bip39": "^3.0.4",
     "copy-webpack-plugin": "^11.0.0",
     "cross-env": "^7.0.3",
@@ -50,7 +51,9 @@
     "fs-extra": "10.1.0",
     "husky": "^8.0.1",
     "lodash": "^4.17.21",
+    "mock-aws-s3": "^4.0.2",
     "nanoid": "^4.0.0",
+    "nock": "^13.2.9",
     "node-loader": "^2.0.0",
     "nps": "^5.10.0",
     "nps-utils": "^1.7.0",
@@ -67,6 +70,8 @@
     "wait-on": "^6.0.1"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "3.127.0",
+    "@ironfish/rust-nodejs": "0.1.14",
     "@ironfish/sdk": "0.0.26",
     "@ironfish/ui-kit": "^0.0.15",
     "@types/nedb": "^1.8.12",

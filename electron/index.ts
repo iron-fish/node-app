@@ -1,4 +1,9 @@
+import { AccountValue } from '@ironfish/sdk'
 import { app, BrowserWindow, ipcMain, nativeTheme, shell } from 'electron'
+import {
+  IronfishAccountManagerAction,
+  IronfishManagerAction,
+} from 'Types/IIronfishManager'
 import initStorageCallbacks from './initStorage'
 import { IronFishManager } from './ironfish/IronFishManager'
 
@@ -16,7 +21,7 @@ if (require('electron-squirrel-startup')) {
 
 let mainWindow: BrowserWindow
 const ironfishManager = new IronFishManager()
-ironfishManager.start()
+ironfishManager.initialize()
 
 async function shutdownNode() {
   return await ironfishManager.stop()
@@ -47,8 +52,16 @@ const createWindow = () => {
       }
     )
 
-    ipcMain.handle('ironfish-manager-status', () =>
-      ironfishManager.getInitStatus()
+    ipcMain.handle(
+      'ironfish-manager',
+      (e, action: IronfishManagerAction, ...args): Promise<any> =>
+        ironfishManager[action](...(args as []))
+    )
+
+    ipcMain.handle(
+      'ironfish-manager-accounts',
+      (e, action: IronfishAccountManagerAction, ...args): Promise<any> =>
+        ironfishManager.accounts[action](...(args as [any]))
     )
 
     mainWindow.maximize()
@@ -74,7 +87,7 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', () => createWindow())
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

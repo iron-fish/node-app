@@ -32,25 +32,38 @@ const breakpoints = {
 }
 
 function App() {
-  const [initStatus, setInitStatus] = useState(IronFishInitStatus.NOT_STARTED)
+  // const [initStatus, setInitStatus] = useState(IronFishInitStatus.NOT_STARTED)
+  // const [hasAccounts, setHasAccounts] = useState<boolean | null>(null)
 
-  useEffect(() => {
-    let interval: NodeJS.Timer | undefined
-    if (
-      initStatus !== IronFishInitStatus.READY &&
-      initStatus !== IronFishInitStatus.ERROR
-    ) {
-      interval = setInterval(
-        () => window.getIronfishManagerStatus().then(setInitStatus),
-        250
-      )
-    }
+  // useEffect(() => {
+  //   let interval: NodeJS.Timer | undefined
+  //   if (
+  //     initStatus !== IronFishInitStatus.INITIALIZED &&
+  //     initStatus !== IronFishInitStatus.ERROR
+  //   ) {
+  //     interval = setInterval(
+  //       () => window.IronfishManager.status().then(setInitStatus),
+  //       250
+  //     )
+  //   }
 
-    return () => interval && clearInterval(interval)
-  }, [])
+  //   return () => interval && clearInterval(interval)
+  // }, [])
+
+  // if (
+  //   initStatus !== IronFishInitStatus.INITIALIZED &&
+  //   initStatus !== IronFishInitStatus.STARTED
+  // ) {
+  //   return 'Initializing...'
+  // }
+
+  // if (initStatus === IronFishInitStatus.INITIALIZED) {
+
+  // }
 
   return (
     <IronFishUIProvider theme={{ breakpoints }}>
+
       <ElectronThemeChangeHandler />
       <HashRouter>
         <Routes>

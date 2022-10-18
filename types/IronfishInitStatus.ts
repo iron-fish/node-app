@@ -1,12 +1,11 @@
 enum IronFishInitStatus {
   NOT_STARTED,
   INITIALIZING_SDK,
-  STARTING_RPC,
   INITIALIZING_NODE,
-  MIGRATING_DB,
+  INITIALIZED,
   STARTING_NODE,
   ERROR,
-  READY,
+  STARTED,
 }
 
 export default IronFishInitStatus
