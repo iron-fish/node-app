@@ -1,4 +1,4 @@
-import { FC, memo, useState } from 'react'
+import { ChangeEvent, FC, memo, useState } from 'react'
 import {
   Box,
   Flex,
@@ -11,6 +11,7 @@ import {
   TextField,
   Button,
   Icon,
+  InputProps,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
@@ -20,7 +21,7 @@ import FeesImage from 'Svgx/FeesImage'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow'
 import { Account } from 'Data/types/Account'
-import { Contact } from 'Data/types/Contact'
+import Contact from 'Types/Contact'
 import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import { useDataSync } from 'Providers/DataSyncProvider'
@@ -42,6 +43,40 @@ const Information: FC = memo(() => {
     </Box>
   )
 })
+
+interface FloatInputProps {
+  amount: number
+  setAmount: (value: number) => void
+  InputProps?: InputProps
+}
+
+const FloatInput: FC<FloatInputProps> = ({ amount, setAmount }) => {
+  const [value, setValue] = useState(amount.toFixed(2).toString())
+
+  const handleNumber = (e: ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value
+
+    if (input.match(/^([0-9]{1,})?(\.)?([0-9]{1,})?$/)) {
+      setValue(input)
+    }
+  }
+
+  const handleFloat = () => {
+    setAmount(parseFloat(value || '0'))
+  }
+
+  return (
+    <Input
+      variant="unstyled"
+      fontSize="3rem"
+      width={value.length * 1.8 + 'rem'}
+      value={value}
+      onChange={handleNumber}
+      onBlur={handleFloat}
+      textAlign="end"
+    />
+  )
+}
 
 const Send: FC = () => {
   const location = useLocation()
@@ -88,17 +123,7 @@ const Send: FC = () => {
               alignItems="baseline"
               my="1rem"
             >
-              <Input
-                variant="unstyled"
-                type="number"
-                fontSize="3rem"
-                width={amount.toFixed(2).toString().length * 1.8 + 'rem'}
-                value={amount.toFixed(2)}
-                onChange={e => setAmount(Number.parseFloat(e.target.value))}
-                textAlign="end"
-                step={0.01}
-                min={0}
-              />
+              <FloatInput amount={amount} setAmount={setAmount} />
               <InputRightAddon
                 bg="transparent"
                 border="none"
@@ -119,7 +144,7 @@ const Send: FC = () => {
             />
             <ContactsAutocomplete
               label={'To'}
-              contactId={contact?.identity || state?.contactId}
+              contactId={contact?._id || state?.contactId}
               onSelectOption={setContact}
               mb="2rem"
             />
@@ -135,10 +160,11 @@ const Send: FC = () => {
               />
               <TextField
                 w="calc(50% - 1rem)"
-                label="Memo (32 characters)"
+                label={`Memo (${32 - notes.length} characters)`}
                 value={notes}
                 InputProps={{
                   onChange: e => setNotes(e.target.value.substring(0, 32)),
+                  maxLength: 32,
                 }}
               />
             </Flex>

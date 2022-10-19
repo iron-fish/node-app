@@ -27,7 +27,6 @@ const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
   const [loaded, setLoaded] = useState<boolean>(false)
   const [status, setNodeStatus] = useState<GetStatusResponse | undefined>()
   const [error, setError] = useState()
-  const [syncInterval, setSyncInterval] = useState(null)
 
   const loadStatus = () => {
     return window.DemoDataManager.getNodeStatus()
@@ -35,25 +34,30 @@ const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
       .catch(setError)
   }
 
+  // demo trigger for dataSync
   useEffect(() => {
     window.DemoDataManager.syncNodeData().then(() => loadStatus())
+    const syncInterval = setInterval(
+      () => window.DemoDataManager.syncNodeData().then(() => loadStatus()),
+      5 * 60 * 1000
+    )
+    return () => clearInterval(syncInterval)
   }, [])
 
   useEffect(() => {
+    let interval: NodeJS.Timeout
     if (status?.blockSyncer.status === 'syncing') {
       setLoaded(false)
-      const infinite = setInterval(() => {
+      interval = setInterval(() => {
         loadStatus()
       }, 1000)
-      setSyncInterval(infinite)
-    } else if (
-      status?.blockSyncer.status === 'idle' ||
-      status?.blockSyncer.status === 'stopped'
-    ) {
+    } else {
       setLoaded(true)
-      syncInterval && clearInterval(syncInterval)
+      interval = setInterval(() => {
+        loadStatus()
+      }, 5000)
     }
-    return () => syncInterval && clearInterval(syncInterval)
+    return () => clearInterval(interval)
   }, [status?.blockSyncer.status])
 
   const value = { loaded, data: status, error }

@@ -73,7 +73,6 @@ const AccountSettings: FC<AccountSettingsProps> = ({
 
   useEffect(() => {
     if (settings && loaded) {
-      setName(account?.name)
       const currencyOption = CURRENCIES.find(
         ({ value }) => value === settings.currency
       )
@@ -82,6 +81,10 @@ const AccountSettings: FC<AccountSettingsProps> = ({
       }
     }
   }, [settings, loaded])
+
+  useEffect(() => {
+    setName(account?.name)
+  }, [account])
 
   const checkChanges: () => boolean = () =>
     (loaded && name !== account?.name) || currency.value !== settings?.currency
@@ -114,7 +117,7 @@ const AccountSettings: FC<AccountSettingsProps> = ({
             onClick={() => {
               Promise.all([
                 updateAccount(account.identity, name),
-                updateSettings(settings.accountId, currency.value),
+                updateSettings(account.identity, currency.value),
               ])
             }}
           >

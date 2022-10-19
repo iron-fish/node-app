@@ -20,12 +20,14 @@ import {
   TextField,
   VStack,
   Icon,
+  Image,
+  Link,
 } from '@ironfish/ui-kit'
-import SendImage from 'Svgx/SendImage'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import { Account } from 'Data/types/Account'
-import { Contact } from 'Data/types/Contact'
+import Contact from 'Types/Contact'
 import SendIcon from 'Svgx/send'
+import { truncateHash } from 'Utils/hash'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
 
@@ -99,11 +101,22 @@ const ConfirmStep: FC<StepProps> = ({
             title="To:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{to.name}</chakra.h4>
-                <chakra.h5 color={NAMED_COLORS.GREY}>{to.address}</chakra.h5>
+                {to.name && (
+                  <chakra.h4 whiteSpace="nowrap">{to.name}</chakra.h4>
+                )}
+                <chakra.h5
+                  pl="4rem"
+                  color={NAMED_COLORS.GREY}
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                >
+                  {truncateHash(to.address, 2, 16)}
+                </chakra.h5>
               </HStack>
             }
+            flexDirection={to.name ? 'column' : 'row'}
             w="100%"
+            overflow="hidden"
           />
           <DataPreviewLine
             title="Amount:"
@@ -153,9 +166,7 @@ const ConfirmStep: FC<StepProps> = ({
         >
           Confirm & Send
         </Button>
-        <Button variant="link" onClick={onCancel}>
-          Cancel Transaction
-        </Button>
+        <Link onClick={onCancel}>Cancel Transaction</Link>
       </ModalFooter>
     </>
   )
@@ -192,10 +203,15 @@ const SendStep: FC<StepProps> = ({ onSend }) => {
           borderRadius="2rem"
           isIndeterminate
           bg={NAMED_COLORS.LIGHT_GREY}
-          colorScheme="green"
+          colorScheme="blue"
         />
         <HStack justifyContent="center">
-          <SendImage mt="2rem" />
+          <Image
+            height="12.875rem"
+            width="8.5rem"
+            mt="2rem"
+            src={'/gif/walking.gif'}
+          />
         </HStack>
       </Box>
     </ModalBody>

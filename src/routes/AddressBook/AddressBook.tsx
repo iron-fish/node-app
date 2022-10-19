@@ -20,10 +20,11 @@ import { truncateHash } from 'Utils/hash'
 import SimpleTable from 'Components/SimpleTable'
 import SearchSortField from 'Components/Search&Sort'
 import useAddressBook from 'Hooks/addressBook/useAddressBook'
-import { Contact } from 'Data/types/Contact'
+import Contact from 'Types/Contact'
 import SortType from 'Types/SortType'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
+import AddContactModal from './AddContactModal'
 import { useDataSync } from 'Providers/DataSyncProvider'
 
 const getIconBg = (address = '') => {
@@ -95,7 +96,7 @@ const COLUMNS = [
             disabled={!loaded}
             mr={{ base: '0.75rem', md: '1rem' }}
             onClick={() => {
-              navigate(ROUTES.SEND, { state: { contactId: contact?.identity } })
+              navigate(ROUTES.SEND, { state: { contactId: contact?._id } })
             }}
           >
             <h5>Send</h5>
@@ -105,7 +106,7 @@ const COLUMNS = [
             variant="ghost"
             icon={<Caret />}
             as={Link}
-            to={contact?.identity}
+            to={contact?._id}
             _active={{ bg: 'none' }}
             _hover={{ bg: 'none' }}
           />
@@ -114,6 +115,33 @@ const COLUMNS = [
     },
   },
 ]
+
+const AddContactButton: FC<{
+  onAdd: (name: string, address: string) => Promise<void>
+}> = ({ onAdd }) => {
+  const [openAddContactModal, setOpenAddContactModal] = useState<boolean>(false)
+
+  return (
+    <>
+      <Button
+        leftIcon={<IconAdd />}
+        borderRadius="4rem"
+        variant="secondary"
+        onClick={() => setOpenAddContactModal(true)}
+      >
+        <chakra.h5>Add Contact</chakra.h5>
+      </Button>
+      <AddContactModal
+        onAdd={(name, address) => {
+          onAdd(name, address)
+          setOpenAddContactModal(false)
+        }}
+        isOpen={openAddContactModal}
+        onClose={() => setOpenAddContactModal(false)}
+      />
+    </>
+  )
+}
 
 const AddressBook: FC = () => {
   const $colors = useColorModeValue(
@@ -149,13 +177,7 @@ const AddressBook: FC = () => {
           </Box>
         </Flex>
         <Flex>
-          <Button
-            leftIcon={<IconAdd />}
-            borderRadius="4rem"
-            variant="secondary"
-          >
-            <h5>Add Contact</h5>
-          </Button>
+          <AddContactButton onAdd={addContact} />
         </Flex>
       </Flex>
       <SearchSortField

@@ -1,5 +1,10 @@
-import { FC } from 'react'
-import { Flex, Box } from '@ironfish/ui-kit'
+import {
+  chakra,
+  Flex,
+  Box,
+  BoxProps,
+  useColorModeValue,
+} from '@ironfish/ui-kit'
 
 import IconHome from 'Svgx/home'
 import IconSend from 'Svgx/send'

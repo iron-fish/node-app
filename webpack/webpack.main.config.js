@@ -1,5 +1,6 @@
 const { resolve } = require('path')
 const path = require('path')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   /**
@@ -11,6 +12,16 @@ module.exports = {
   module: {
     rules: require('./webpack.rules'),
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.join(__dirname, '../electron/app.ico'),
+          to: path.join(__dirname, '../.webpack/main/app.ico'),
+        },
+      ],
+    }),
+  ],
   resolve: {
     fallback: {
       stream: false,
@@ -21,7 +32,7 @@ module.exports = {
       Routes: path.join(__dirname, '../src/routes'),
       Svgx: path.join(__dirname, '../src/svgx'),
       Utils: path.join(__dirname, '../src/utils'),
-      Types: path.join(__dirname, '../src/types'),
+      Types: path.join(__dirname, '../types'),
       Data: path.join(__dirname, '../src/data'),
       Providers: path.join(__dirname, '../src/providers'),
       react: resolve('./node_modules/react'),

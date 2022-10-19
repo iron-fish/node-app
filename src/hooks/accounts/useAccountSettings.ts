@@ -1,18 +1,23 @@
 import { useEffect, useCallback } from 'react'
-import { AccountSettings } from 'Data/types/Account'
+import AccountSettings from 'Types/AccountSettings'
 import useAsyncDataWrapper from '../useAsyncDataWrapper'
 
 const useAccountSettings = (id: string) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<AccountSettings>()
 
   const loadAccountSettings = (accountId: string) =>
-    promiseWrapper(window.DemoDataManager.getAccountSettings(accountId))
+    promiseWrapper(window.AccountSettingsStorage.find({ accountId }))
 
   const updateSettings = useCallback(
     (accountId: string, currency: string) =>
-      window.DemoDataManager.updateAccountSettings(accountId, currency).then(
-        () => loadAccountSettings(accountId)
-      ),
+      result.data
+        ? window.AccountSettingsStorage.update(result.data._id, {
+            accountId,
+            currency,
+          }).then(() => loadAccountSettings(accountId))
+        : window.AccountSettingsStorage.add({ accountId, currency }).then(() =>
+            loadAccountSettings(accountId)
+          ),
     []
   )
 

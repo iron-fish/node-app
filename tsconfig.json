@@ -16,7 +16,7 @@
       "*": ["node_modules/*"],
       "Components/*": ["src/components/*"],
       "Hooks/*": ["src/hooks/*"],
-      "Types/*": ["src/types/*"],
+      "Types/*": ["types/*"],
       "Routes/*": ["src/routes/*"],
       "Svgx/*": ["src/svgx/*"],
       "Utils/*": ["src/utils/*"],
