@@ -1,4 +1,4 @@
-import { FC, memo, useState } from 'react'
+import { ChangeEvent, FC, memo, useState } from 'react'
 import {
   Box,
   Flex,
@@ -11,6 +11,7 @@ import {
   TextField,
   Button,
   Icon,
+  InputProps,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
@@ -42,6 +43,40 @@ const Information: FC = memo(() => {
     </Box>
   )
 })
+
+interface FloatInputProps {
+  amount: number
+  setAmount: (value: number) => void
+  InputProps?: InputProps
+}
+
+const FloatInput: FC<FloatInputProps> = ({ amount, setAmount }) => {
+  const [value, setValue] = useState(amount.toFixed(2).toString())
+
+  const handleNumber = (e: ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value
+
+    if (input.match(/^([0-9]{1,})?(\.)?([0-9]{1,})?$/)) {
+      setValue(input)
+    }
+  }
+
+  const handleFloat = () => {
+    setAmount(parseFloat(value || '0'))
+  }
+
+  return (
+    <Input
+      variant="unstyled"
+      fontSize="3rem"
+      width={value.length * 1.8 + 'rem'}
+      value={value}
+      onChange={handleNumber}
+      onBlur={handleFloat}
+      textAlign="end"
+    />
+  )
+}
 
 const Send: FC = () => {
   const location = useLocation()
@@ -88,17 +123,7 @@ const Send: FC = () => {
               alignItems="baseline"
               my="1rem"
             >
-              <Input
-                variant="unstyled"
-                type="number"
-                fontSize="3rem"
-                width={amount.toFixed(2).toString().length * 1.8 + 'rem'}
-                value={amount.toFixed(2)}
-                onChange={e => setAmount(Number.parseFloat(e.target.value))}
-                textAlign="end"
-                step={0.01}
-                min={0}
-              />
+              <FloatInput amount={amount} setAmount={setAmount} />
               <InputRightAddon
                 bg="transparent"
                 border="none"

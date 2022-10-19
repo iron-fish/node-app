@@ -1,5 +1,6 @@
 const { resolve } = require('path')
 const path = require('path')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   /**
@@ -11,6 +12,16 @@ module.exports = {
   module: {
     rules: require('./webpack.rules'),
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.join(__dirname, '../electron/app.ico'),
+          to: path.join(__dirname, '../.webpack/main/app.ico'),
+        },
+      ],
+    }),
+  ],
   resolve: {
     fallback: {
       stream: false,

@@ -13,6 +13,7 @@ import {
   TextField,
   HStack,
   MnemonicView,
+  CopyToClipboardButton,
 } from '@ironfish/ui-kit'
 import { FC, useState } from 'react'
 import { ROUTES } from '..'
@@ -137,7 +138,16 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
       </chakra.h5>
       <MnemonicView
         value={phrase}
-        header="Mnemonic Phrase"
+        header={
+          <Flex gap="0.4375rem" mb="-0.4375rem">
+            <h6>Mnemonic phrase</h6>
+            <CopyToClipboardButton
+              value={phrase?.join(', ')}
+              copyTooltipText="CopyToClipBoard"
+              copiedTooltipText="Copied"
+            />
+          </Flex>
+        }
         placeholder="Empty"
         visible={true}
         isReadOnly={false}
