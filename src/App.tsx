@@ -16,6 +16,8 @@ import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressBook/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
+import { DataSyncProvider } from './providers/DataSyncProvider'
+import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
 
 const breakpoints = {
   xs: '46.875rem', //750px
