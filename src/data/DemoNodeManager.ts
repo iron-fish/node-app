@@ -1,4 +1,7 @@
 import { GetStatusResponse, PeerResponse } from '@ironfish/sdk'
+import { BlockSyncerStatusType } from 'Types/StatusTypes'
+
+const BLOCK_SPEED = 60000
 
 const STATUS: GetStatusResponse = {
   node: {
@@ -31,9 +34,9 @@ const STATUS: GetStatusResponse = {
   blockSyncer: {
     status: 'stopped',
     syncing: {
-      blockSpeed: Math.random() * 100,
-      speed: Math.random() * 1000,
-      progress: 98,
+      blockSpeed: BLOCK_SPEED,
+      speed: BLOCK_SPEED / 100,
+      progress: 0.01,
     },
   },
   peerNetwork: {
@@ -83,6 +86,14 @@ class DemoNodeManager {
   status(): Promise<GetStatusResponse> {
     return new Promise(resolve => {
       setTimeout(() => {
+        if (STATUS.blockSyncer.status === BlockSyncerStatusType.SYNCING) {
+          STATUS.blockSyncer.syncing.blockSpeed -=
+            STATUS.blockSyncer.syncing.speed
+          STATUS.blockSyncer.syncing.progress += 0.01
+        } else {
+          STATUS.blockSyncer.syncing.blockSpeed = BLOCK_SPEED
+          STATUS.blockSyncer.syncing.progress = 0.0
+        }
         resolve({
           ...STATUS,
           peerNetwork: {
@@ -103,6 +114,18 @@ class DemoNodeManager {
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(PEERS)
+      }, 500)
+    })
+  }
+
+  syncData(): Promise<void> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        STATUS.blockSyncer.status = 'syncing'
+        setTimeout(() => {
+          STATUS.blockSyncer.status = 'idle'
+        }, BLOCK_SPEED)
+        resolve()
       }, 500)
     })
   }

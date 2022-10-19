@@ -1,51 +1,73 @@
-import {
-  NAMED_COLORS as C,
-  HexFish as Logo,
-  Flex,
-  useColorMode,
-  Box,
-} from '@ironfish/ui-kit'
-import { FC } from 'react'
+import { Flex, Box, chakra, useBreakpointValue, Link } from '@ironfish/ui-kit'
+import { FC, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 
 import Navbar from '../components/Navbar'
+import CloseIcon from 'Svgx/CloseIcon'
 
 export const PageLayout: FC = () => {
-  const { colorMode } = useColorMode()
-  const isLightMode = colorMode === 'light'
+  const [hideSyncWarning, setHideSyncWarning] = useState(false)
+  const message = useBreakpointValue({
+    base: 'Account balances might not be accurate while your wallet syncs.',
+    sm: 'Account balances might not be accurate while your wallet syncs and certain functions may not be available.',
+  })
+
+  const warningHeight = hideSyncWarning ? 0 : 2.625
+
   return (
-    <Flex
-      top="0"
-      className="App"
-      justifyContent="center"
-      // alignItems="center"
-      minHeight="100vh"
-    >
-      <Navbar />
-      {/* <Logo
-        style={{
-          position: 'fixed',
-          width: '10rem',
-          left: '50%',
-          top: '50%',
-          fill: isLightMode ? C.GREY : C.PALE_GREY,
-          zIndex: -1,
-        }}
-      /> */}
-      <Box marginLeft={{ base: '6rem', sm: '17rem' }} w="100%">
-        <Flex
-          width="100%"
-          height="100%"
-          justifyContent="center"
-          px="2rem"
-          py="2.5rem"
+    <>
+      <Flex
+        h={`${warningHeight}rem`}
+        backgroundColor="#FFF9BC"
+        width="100%"
+        alignItems="center"
+        justifyContent="center"
+        transition="height 0.3s ease-in-out"
+      >
+        <chakra.h5
+          ml="auto"
+          color="#7E7400"
+          display={hideSyncWarning ? 'none' : 'block'}
         >
-          <Box width="100%" height="100%" maxWidth="65.5rem">
-            <Outlet />
-          </Box>
-        </Flex>
-      </Box>
-    </Flex>
+          {message}&nbsp;
+          <Link color="inherit">
+            <b>Learn More.</b>
+          </Link>
+        </chakra.h5>
+        <CloseIcon
+          display={hideSyncWarning ? 'none' : 'block'}
+          ml="auto"
+          mr="1rem"
+          color="#7E7400"
+          width="0.5625rem"
+          height="0.5625rem"
+          cursor="pointer"
+          onClick={() => setHideSyncWarning(true)}
+        />
+      </Flex>
+      <Flex
+        top="0"
+        className="App"
+        justifyContent="center"
+        minHeight={`calc(100vh - ${warningHeight}rem)`}
+        transition="min-height 0.3s ease-in-out"
+      >
+        <Navbar offsetTop={warningHeight} />
+        <Box marginLeft={{ base: '6rem', sm: '17rem' }} w="100%">
+          <Flex
+            width="100%"
+            height="100%"
+            justifyContent="center"
+            px="2rem"
+            py="2.5rem"
+          >
+            <Box width="100%" height="100%" maxWidth="65.5rem">
+              <Outlet />
+            </Box>
+          </Flex>
+        </Box>
+      </Flex>
+    </>
   )
 }
 

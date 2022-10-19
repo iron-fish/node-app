@@ -21,6 +21,7 @@
       "Svgx/*": ["src/svgx/*"],
       "Utils/*": ["src/utils/*"],
       "Data/*": ["src/data/*"],
+      "Providers/*": ["src/providers/*"],
     },
   },
   "include": ["src/**/*"],
