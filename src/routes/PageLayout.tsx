@@ -1,4 +1,11 @@
-import { Flex, Box, chakra, useBreakpointValue, Link } from '@ironfish/ui-kit'
+import {
+  Flex,
+  Box,
+  chakra,
+  useBreakpointValue,
+  Link,
+  useColorModeValue,
+} from '@ironfish/ui-kit'
 import { FC, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 
@@ -7,6 +14,16 @@ import CloseIcon from 'Svgx/CloseIcon'
 
 export const PageLayout: FC = () => {
   const [hideSyncWarning, setHideSyncWarning] = useState(false)
+  const colors = useColorModeValue(
+    {
+      textWarn: '#7E7400',
+      bgWarn: '#FFF9BC',
+    },
+    {
+      textWarn: '#FFF9BC',
+      bgWarn: '#444123',
+    }
+  )
   const message = useBreakpointValue({
     base: 'Account balances might not be accurate while your wallet syncs.',
     sm: 'Account balances might not be accurate while your wallet syncs and certain functions may not be available.',
@@ -18,7 +35,7 @@ export const PageLayout: FC = () => {
     <>
       <Flex
         h={`${warningHeight}rem`}
-        backgroundColor="#FFF9BC"
+        backgroundColor={colors.bgWarn}
         width="100%"
         alignItems="center"
         justifyContent="center"
@@ -26,7 +43,7 @@ export const PageLayout: FC = () => {
       >
         <chakra.h5
           ml="auto"
-          color="#7E7400"
+          color={colors.textWarn}
           display={hideSyncWarning ? 'none' : 'block'}
         >
           {message}&nbsp;
