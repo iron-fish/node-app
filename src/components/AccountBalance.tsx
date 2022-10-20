@@ -1,12 +1,12 @@
 import { FC, ReactNode } from 'react'
 import useAccountBalance from 'Hooks/accounts/useAccountBalance'
 import { Skeleton, SkeletonProps } from '@ironfish/ui-kit'
-import AccountBalance from 'Types/AccountBalance'
+import Balance from 'Types/AccountBalance'
 
 const AccountBalance: FC<{
   accountId: string
   skeletonProps?: SkeletonProps
-  renderBalance?: (balance: AccountBalance) => ReactNode
+  renderBalance?: (balance: Balance) => ReactNode
 }> = ({
   accountId,
   skeletonProps,

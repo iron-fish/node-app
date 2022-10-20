@@ -76,6 +76,9 @@ const Initializing: FC = () => {
   ) : (
     <Flex h="100vh" w="100vw" justifyContent="center" alignItems="center">
       {initStatus === null && 'Get information from server'}
+      {initStatus === IronFishInitStatus.INITIALIZED &&
+        hasAnyAccount === null &&
+        'Checking account list'}
       {initStatus === IronFishInitStatus.NOT_STARTED &&
         'Starting initialization'}
       {initStatus === IronFishInitStatus.INITIALIZING_SDK &&
