@@ -21,7 +21,6 @@ if (require('electron-squirrel-startup')) {
 
 let mainWindow: BrowserWindow
 const ironfishManager = new IronFishManager()
-ironfishManager.initialize()
 
 async function shutdownNode() {
   return await ironfishManager.stop()

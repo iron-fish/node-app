@@ -1,12 +1,13 @@
 import { BoxKeyPair } from '@ironfish/rust-nodejs'
 import {
-  Account,
   AccountValue,
   IronfishNode,
   IronfishSdk,
   NodeUtils,
   PrivateIdentity,
 } from '@ironfish/sdk'
+import AccountBalance from 'Types/AccountBalance'
+import CutAccount from 'Types/CutAccount'
 import {
   IIronfishManager,
   IIronfishAccountManager,
@@ -21,52 +22,58 @@ class AccountManager implements IIronfishAccountManager {
   }
 
   async create(name: string): Promise<AccountValue> {
-    return this.node.wallet.createAccount(name).then(account => ({
-      id: account.id,
-      name: account.name,
-      publicAddress: account.publicAddress,
-      incomingViewKey: account.incomingViewKey,
-      outgoingViewKey: account.outgoingViewKey,
-      spendingKey: account.spendingKey,
-    }))
+    return this.node.wallet
+      .createAccount(name)
+      .then(account => account.serialize())
   }
 
-  list(): Promise<Pick<Account, 'id' | 'name' | 'publicAddress'>[]> {
+  list(search?: string): Promise<CutAccount[]> {
     return Promise.resolve(
-      this.node.wallet.listAccounts().map(account => ({
-        name: account.name,
-        id: account.id,
-        publicAddress: account.publicAddress,
-      }))
+      this.node.wallet
+        .listAccounts()
+        .filter(
+          account =>
+            !search ||
+            account.name.includes(search) ||
+            account.publicAddress.includes(search)
+        )
+        .map(account => ({
+          name: account.name,
+          id: account.id,
+          publicAddress: account.publicAddress,
+        }))
     )
   }
 
   get(id: string): Promise<AccountValue | null> {
-    const account = this.node.wallet.getAccount(id)
-    let result = null
-    if (account) {
-      result = {
-        id: account.id,
-        name: account.name,
-        publicAddress: account.publicAddress,
-        incomingViewKey: account.incomingViewKey,
-        outgoingViewKey: account.outgoingViewKey,
-        spendingKey: account.spendingKey,
-      }
-    }
-    return Promise.resolve(result)
+    const account = this.node.wallet.getAccount(id)?.serialize()
+
+    return Promise.resolve(account || null)
   }
 
   async delete(name: string): Promise<void> {
     await this.node.wallet.removeAccount(name)
   }
 
-  async import(account: Omit<AccountValue, 'id' | 'rescan'>): Promise<Account> {
-    return this.node.wallet.importAccount(account)
+  async import(
+    account: Omit<AccountValue, 'id' | 'rescan'>
+  ): Promise<AccountValue> {
+    return this.node.wallet
+      .importAccount(account)
+      .then(data => data.serialize())
   }
 
   export(id: string): Promise<AccountValue> {
     return Promise.resolve(this.node.wallet.getAccount(id)?.serialize())
+  }
+
+  balance(id: string): Promise<AccountBalance> {
+    const account = this.node.wallet.getAccount(id)
+    if (account) {
+      return this.node.wallet.getBalance(account)
+    }
+
+    return Promise.reject(new Error(`Account with id=${id} was not found.`))
   }
 }
 

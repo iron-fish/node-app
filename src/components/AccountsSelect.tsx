@@ -1,20 +1,21 @@
 import { FC, useMemo, useEffect } from 'react'
 import { FlexProps, SelectField } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
-import { Account } from 'Data/types/Account'
 import useAccounts from 'Hooks/accounts/useAccounts'
+import CutAccount from 'Types/CutAccount'
+import AccountBalance from './AccountBalance'
 
 interface AccountsSelectProps extends FlexProps {
   accountId: string
   label: string
-  onSelectOption?: (account: Account) => void
+  onSelectOption?: (account: CutAccount) => void
 }
 
-const getAccountOptions = (accounts: Account[] = []): OptionType[] => {
+const getAccountOptions = (accounts: CutAccount[] = []): OptionType[] => {
   return accounts.map(account => ({
     label: account.name,
     value: account,
-    helperText: `${account.balance} $IRON`,
+    helperText: <AccountBalance accountId={account.id} />,
   }))
 }
 

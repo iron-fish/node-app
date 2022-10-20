@@ -27,11 +27,12 @@ import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import { Account } from 'Data/types/Account'
 import Contact from 'Types/Contact'
 import SendIcon from 'Svgx/send'
+import CutAccount from 'Types/CutAccount'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
 
 interface SendProps {
-  from: Account
+  from: CutAccount
   to: Contact
   amount: number
   memo: string

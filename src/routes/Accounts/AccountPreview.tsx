@@ -17,9 +17,10 @@ import Caret from 'Svgx/caret-icon'
 import { useNavigate } from 'react-router-dom'
 import { truncateHash } from 'Utils/hash'
 import { ROUTES } from '..'
-import { Account } from 'Data/types/Account'
+import CutAccount from 'Types/CutAccount'
+import AccountBalance from 'Components/AccountBalance'
 
-export interface AccountPreviewProps extends Account {
+export interface AccountPreviewProps extends CutAccount {
   order: number
 }
 
@@ -77,9 +78,8 @@ const ORDER_COLOR = [
 const AccountPreview: FC<AccountPreviewProps> = ({
   order = 0,
   name,
-  balance = 0,
-  address,
-  identity,
+  publicAddress,
+  id,
 }) => {
   const navigate = useNavigate()
   const $colors = useColorModeValue(
@@ -103,9 +103,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       border="0.063rem solid"
       borderRadius="0.25rem"
       cursor="pointer"
-      onClick={() =>
-        navigate(ROUTES.ACCOUNT, { state: { accountId: identity } })
-      }
+      onClick={() => navigate(ROUTES.ACCOUNT, { state: { accountId: id } })}
       sx={{
         transition: '0.3s',
         bg: $colors.bg,
@@ -162,7 +160,9 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       </Flex>
       <Box>
         <chakra.h5 pt="0.25rem">{name}</chakra.h5>
-        <chakra.h3 p="0.25rem 0">{balance} $IRON</chakra.h3>
+        <chakra.h3 p="0.25rem 0">
+          <AccountBalance accountId={id} />
+        </chakra.h3>
         <CopyValueToClipboard
           containerProps={{
             color: NAMED_COLORS.GREY,
@@ -175,8 +175,8 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             as: 'h5',
             mr: '0.5rem',
           }}
-          value={address}
-          label={truncateHash(address, 3)}
+          value={publicAddress}
+          label={truncateHash(publicAddress, 3)}
           copyTooltipText="Copy to clipboard"
           copiedTooltipText="Copied"
         />
@@ -190,7 +190,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              navigate(ROUTES.SEND, { state: { accountId: identity } })
+              navigate(ROUTES.SEND, { state: { accountId: id } })
             }}
             leftIcon={
               <Icon height={8}>
@@ -207,7 +207,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              navigate(ROUTES.RECEIVE, { state: { accountId: identity } })
+              navigate(ROUTES.RECEIVE, { state: { accountId: id } })
             }}
             leftIcon={
               <Icon height={8}>

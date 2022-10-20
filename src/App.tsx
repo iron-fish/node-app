@@ -1,6 +1,6 @@
 import './App.css'
 import { IronFishUIProvider } from '@ironfish/ui-kit'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes, redirect } from 'react-router-dom'
 import { ROUTES } from './routes'
 
 import Action from './routes/Onboarding/Action'
@@ -17,8 +17,7 @@ import AddressDetails from 'Routes/AddressBook/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
-import { useEffect, useState } from 'react'
-import IronFishInitStatus from 'Types/IronfishInitStatus'
+import Initializing from 'Routes/Initializing'
 
 const breakpoints = {
   sm: '56.25rem', //900px
@@ -32,59 +31,31 @@ const breakpoints = {
 }
 
 function App() {
-  // const [initStatus, setInitStatus] = useState(IronFishInitStatus.NOT_STARTED)
-  // const [hasAccounts, setHasAccounts] = useState<boolean | null>(null)
-
-  // useEffect(() => {
-  //   let interval: NodeJS.Timer | undefined
-  //   if (
-  //     initStatus !== IronFishInitStatus.INITIALIZED &&
-  //     initStatus !== IronFishInitStatus.ERROR
-  //   ) {
-  //     interval = setInterval(
-  //       () => window.IronfishManager.status().then(setInitStatus),
-  //       250
-  //     )
-  //   }
-
-  //   return () => interval && clearInterval(interval)
-  // }, [])
-
-  // if (
-  //   initStatus !== IronFishInitStatus.INITIALIZED &&
-  //   initStatus !== IronFishInitStatus.STARTED
-  // ) {
-  //   return 'Initializing...'
-  // }
-
-  // if (initStatus === IronFishInitStatus.INITIALIZED) {
-
-  // }
-
   return (
     <IronFishUIProvider theme={{ breakpoints }}>
-
       <ElectronThemeChangeHandler />
       <HashRouter>
         <Routes>
-          <Route element={<CreateLayout />}>
-            <Route path={ROUTES.ONBOARDING} element={<Action />} />
-            <Route path={ROUTES.CREATE} element={<CreateAccount />} />
-            <Route path={ROUTES.IMPORT} element={<ImportAccount />} />
-          </Route>
-          <Route element={<PageLayout />}>
-            <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
-            <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
-            <Route path={ROUTES.RECEIVE} element={<ReceiveMoney />} />
-            <Route path={ROUTES.SEND} element={<Send />} />
-            <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
-            <Route
-              path={ROUTES.ADDRESS_BOOK_DETAILS}
-              element={<AddressDetails />}
-            />
-            <Route path={ROUTES.RESOURCES} element={null} />
-            <Route path={ROUTES.NODE} element={<NodeOverview />} />
-            <Route path={ROUTES.MINER} element={<Miner />} />
+          <Route element={<Initializing />}>
+            <Route element={<CreateLayout />}>
+              <Route path={ROUTES.ONBOARDING} element={<Action />} />
+              <Route path={ROUTES.CREATE} element={<CreateAccount />} />
+              <Route path={ROUTES.IMPORT} element={<ImportAccount />} />
+            </Route>
+            <Route element={<PageLayout />}>
+              <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
+              <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
+              <Route path={ROUTES.RECEIVE} element={<ReceiveMoney />} />
+              <Route path={ROUTES.SEND} element={<Send />} />
+              <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
+              <Route
+                path={ROUTES.ADDRESS_BOOK_DETAILS}
+                element={<AddressDetails />}
+              />
+              <Route path={ROUTES.RESOURCES} element={null} />
+              <Route path={ROUTES.NODE} element={<NodeOverview />} />
+              <Route path={ROUTES.MINER} element={<Miner />} />
+            </Route>
           </Route>
         </Routes>
       </HashRouter>

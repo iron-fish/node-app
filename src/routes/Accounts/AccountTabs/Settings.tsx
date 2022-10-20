@@ -13,10 +13,10 @@ import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState, useEffect } from 'react'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
-import { Account } from 'Data/types/Account'
 import useAccountSettings from 'Hooks/accounts/useAccountSettings'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
+import { AccountValue } from '@ironfish/sdk'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -36,9 +36,9 @@ const Information: FC = memo(() => {
 })
 
 interface AccountSettingsProps {
-  account: Account
+  account: AccountValue
   updateAccount: (identity: string, name: string) => void
-  deleteAccount: (identity: string) => Promise<boolean>
+  deleteAccount: (identity: string) => Promise<void>
 }
 
 const CURRENCIES = [
@@ -68,7 +68,7 @@ const AccountSettings: FC<AccountSettingsProps> = ({
   const [currency, setCurrency] = useState<OptionType>(CURRENCIES[0])
   const navigate = useNavigate()
   const [{ data: settings, loaded }, updateSettings] = useAccountSettings(
-    account?.identity
+    account?.id
   )
 
   useEffect(() => {
@@ -97,6 +97,7 @@ const AccountSettings: FC<AccountSettingsProps> = ({
           label="Account Name"
           value={name}
           InputProps={{
+            isDisabled: true,
             onChange: e => setName(e.target.value),
           }}
         />
@@ -116,8 +117,8 @@ const AccountSettings: FC<AccountSettingsProps> = ({
             isDisabled={!checkChanges()}
             onClick={() => {
               Promise.all([
-                updateAccount(account.identity, name),
-                updateSettings(account.identity, currency.value),
+                // updateAccount(account.id, name),
+                updateSettings(account.id, currency.value),
               ])
             }}
           >
@@ -126,9 +127,7 @@ const AccountSettings: FC<AccountSettingsProps> = ({
           <Link
             alignSelf="center"
             onClick={() =>
-              deleteAccount(account.identity).then(
-                deleted => deleted && navigate(ROUTES.ACCOUNTS)
-              )
+              deleteAccount(account.id).then(() => navigate(ROUTES.ACCOUNTS))
             }
           >
             <h4>Delete Account</h4>

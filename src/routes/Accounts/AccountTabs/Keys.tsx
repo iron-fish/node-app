@@ -9,16 +9,17 @@ import {
   CopyToClipboardButton,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
-import { FC, memo, useState, useEffect } from 'react'
+import { FC, memo } from 'react'
 import AccountKeysImage from 'Svgx/AccountKeysImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
-import { Account } from 'Data/types/Account'
-import useAccountKeys from 'Hooks/accounts/useAccountKeys'
 import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 import DownloadIcon from '@ironfish/ui-kit/dist/svgx/download-icon'
+import { AccountValue } from '@ironfish/sdk'
+import randomWords from 'random-words'
+import { noop } from 'lodash'
 
 interface AccountKeysProps {
-  account: Account
+  account: AccountValue
 }
 
 const Information: FC = memo(() => {
@@ -52,15 +53,10 @@ const Information: FC = memo(() => {
 })
 
 const AccountKeys: FC<AccountKeysProps> = ({ account }) => {
-  const [phrase, setMnemonicPhrase] = useState<MnemonicPhraseType>()
-
-  const [{ data, loaded }] = useAccountKeys(account?.identity)
-
-  useEffect(() => {
-    if (data && loaded) {
-      setMnemonicPhrase(data.mnemonicPhrase)
-    }
-  }, [data, loaded])
+  const phrase = randomWords({
+    exactly: 12,
+    maxLength: 8,
+  }) as MnemonicPhraseType
 
   return (
     <Flex mb="4rem">
@@ -79,7 +75,7 @@ const AccountKeys: FC<AccountKeysProps> = ({ account }) => {
           value={phrase}
           isReadOnly={true}
           placeholder="Empty"
-          onChange={words => setMnemonicPhrase(words as MnemonicPhraseType)}
+          onChange={noop}
           mb="2rem"
         />
         <Flex>

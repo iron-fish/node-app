@@ -1,7 +1,11 @@
 import {
+  AccountValue,
   GetNodeStatusResponse as GetStatusResponse,
   PeerResponse,
 } from '@ironfish/sdk'
+import AccountBalance from 'Types/AccountBalance'
+import CutAccount from 'Types/CutAccount'
+import IronFishInitStatus from 'Types/IronfishInitStatus'
 import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 import SortType from 'Types/SortType'
 import DemoAccountsManager from './DemoAccountsManager'
@@ -20,6 +24,7 @@ class DemoDataManager {
   addressBook: DemoAddressBookManager
   miner: DemoMinerManager
   node: DemoNodeManager
+  status: IronFishInitStatus
 
   constructor() {
     this.accounts = new DemoAccountsManager()
@@ -27,55 +32,79 @@ class DemoDataManager {
     this.addressBook = new DemoAddressBookManager()
     this.miner = new DemoMinerManager()
     this.node = new DemoNodeManager()
+    this.status = IronFishInitStatus.NOT_STARTED
   }
 
-  createAccount(
-    name: string,
-    mnemonicPhrase: MnemonicPhraseType
-  ): Promise<string> {
-    return this.accounts.create(name, mnemonicPhrase)
+  initStatus(): Promise<IronFishInitStatus> {
+    return Promise.resolve(this.status)
+  }
+
+  async initialize(): Promise<void> {
+    this.status = IronFishInitStatus.INITIALIZING_SDK
+    await new Promise(resolve =>
+      setTimeout(() => {
+        this.status = IronFishInitStatus.INITIALIZING_NODE
+        resolve(undefined)
+      }, 2000)
+    )
+    await new Promise(resolve =>
+      setTimeout(() => {
+        this.status = IronFishInitStatus.INITIALIZED
+        resolve(undefined)
+      }, 2000)
+    )
+  }
+
+  async start(): Promise<void> {
+    this.status = IronFishInitStatus.STARTING_NODE
+    await new Promise(resolve =>
+      setTimeout(() => {
+        this.status = IronFishInitStatus.STARTED
+        resolve(undefined)
+      }, 2000)
+    )
+  }
+
+  async stop(): Promise<void> {
+    await new Promise(resolve =>
+      setTimeout(() => {
+        this.status = IronFishInitStatus.NOT_STARTED
+        resolve(undefined)
+      }, 2000)
+    )
+  }
+
+  async hasAnyAccount(): Promise<boolean> {
+    const accounts = await this.accounts.list()
+    return Promise.resolve(accounts.length > 0)
+  }
+
+  createAccount(name: string): Promise<AccountValue> {
+    return this.accounts.create(name)
   }
 
   generateMnemonic(): Promise<string[]> {
     return this.accounts.generateMnemonicPhrase()
   }
 
-  importAccountBySpendingKey(spendingKey: string): Promise<string> {
-    return this.accounts.importBySpendingKey(spendingKey)
+  importAccount(account: Omit<AccountValue, 'id'>): Promise<AccountValue> {
+    return this.accounts.import(account)
   }
 
-  importAccountByMnemonicPhrase(
-    mnemonicPhrase: MnemonicPhraseType
-  ): Promise<string> {
-    return this.accounts.importByMnemonicPhrase(mnemonicPhrase)
-  }
-
-  importAccountByFile(file: File): Promise<string> {
-    return this.accounts.importByFile(file)
-  }
-
-  getAccounts(searchTerm?: string): Promise<Account[]> {
+  getAccounts(searchTerm?: string): Promise<CutAccount[]> {
     return this.accounts.list(searchTerm || '')
   }
 
-  getAccount(accountId: string): Promise<Account> {
+  getAccount(accountId: string): Promise<AccountValue> {
     return this.accounts.findById(accountId)
   }
 
-  updateAccount(identity: string, name: string): Promise<Account> {
+  updateAccount(identity: string, name: string): Promise<AccountValue> {
     return this.accounts.update(identity, name)
   }
 
-  deleteAccount(identity: string): Promise<boolean> {
+  deleteAccount(identity: string): Promise<void> {
     return this.accounts.delete(identity)
-  }
-
-  getAccountKeys(accountId: string): Promise<AccountKeys> {
-    return this.accounts.keys(accountId)
-  }
-
-  updateAccountKeys(accountKeys: AccountKeys): Promise<AccountKeys> {
-    return this.accounts.updateKeys(accountKeys)
   }
 
   getAccountSettings(accountId: string): Promise<AccountSettings> {
@@ -87,6 +116,10 @@ class DemoDataManager {
     currency: string
   ): Promise<AccountSettings> {
     return this.accounts.updateSettings(accountId, currency)
+  }
+
+  getBalance(accountId: string): Promise<AccountBalance> {
+    return this.accounts.balance(accountId)
   }
 
   findTransactionsByAddress(
