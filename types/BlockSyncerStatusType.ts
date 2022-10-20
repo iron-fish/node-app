@@ -4,3 +4,5 @@ export enum BlockSyncerStatusType {
   STOPPING = 'stopping',
   SYNCING = 'syncing',
 }
+
+export default BlockSyncerStatusType
