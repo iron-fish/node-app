@@ -79,14 +79,15 @@ const Initializing: FC = () => {
       {initStatus === IronFishInitStatus.INITIALIZED &&
         hasAnyAccount === null &&
         'Checking account list'}
+      {initStatus === IronFishInitStatus.INITIALIZED &&
+        hasAnyAccount === true &&
+        'Account list checked'}
       {initStatus === IronFishInitStatus.NOT_STARTED &&
         'Starting initialization'}
       {initStatus === IronFishInitStatus.INITIALIZING_SDK &&
         'Initializing Iron Fish SDK'}
       {initStatus === IronFishInitStatus.INITIALIZING_NODE &&
         'Initializing Iron Fish Node'}
-      {initStatus === IronFishInitStatus.STARTING_NODE &&
-        'Starting Iron Fish Node'}
       {initStatus === IronFishInitStatus.STARTING_NODE &&
         'Starting Iron Fish Node'}
       {initStatus === IronFishInitStatus.ERROR && 'Something went wrong'}
