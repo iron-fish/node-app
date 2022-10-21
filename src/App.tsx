@@ -1,6 +1,6 @@
 import './App.css'
 import { IronFishUIProvider } from '@ironfish/ui-kit'
-import { HashRouter, Route, Routes, redirect } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 import { ROUTES } from './routes'
 
 import Action from './routes/Onboarding/Action'
@@ -16,10 +16,12 @@ import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressBook/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
+import { DataSyncProvider } from './providers/DataSyncProvider'
 import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
 import Initializing from 'Routes/Initializing'
 
 const breakpoints = {
+  xs: '46.875rem', //750px
   sm: '56.25rem', //900px
   sm1: '57.75rem', //924px
   sm2: '59.25rem', //948px
@@ -34,31 +36,33 @@ function App() {
   return (
     <IronFishUIProvider theme={{ breakpoints }}>
       <ElectronThemeChangeHandler />
-      <HashRouter>
-        <Routes>
-          <Route element={<Initializing />}>
-            <Route element={<CreateLayout />}>
-              <Route path={ROUTES.ONBOARDING} element={<Action />} />
-              <Route path={ROUTES.CREATE} element={<CreateAccount />} />
-              <Route path={ROUTES.IMPORT} element={<ImportAccount />} />
+      <DataSyncProvider>
+        <HashRouter>
+          <Routes>
+            <Route element={<Initializing />}>
+              <Route element={<CreateLayout />}>
+                <Route path={ROUTES.ONBOARDING} element={<Action />} />
+                <Route path={ROUTES.CREATE} element={<CreateAccount />} />
+                <Route path={ROUTES.IMPORT} element={<ImportAccount />} />
+              </Route>
+              <Route element={<PageLayout />}>
+                <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
+                <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
+                <Route path={ROUTES.RECEIVE} element={<ReceiveMoney />} />
+                <Route path={ROUTES.SEND} element={<Send />} />
+                <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
+                <Route
+                  path={ROUTES.ADDRESS_BOOK_DETAILS}
+                  element={<AddressDetails />}
+                />
+                <Route path={ROUTES.RESOURCES} element={null} />
+                <Route path={ROUTES.NODE} element={<NodeOverview />} />
+                <Route path={ROUTES.MINER} element={<Miner />} />
+              </Route>
             </Route>
-            <Route element={<PageLayout />}>
-              <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
-              <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
-              <Route path={ROUTES.RECEIVE} element={<ReceiveMoney />} />
-              <Route path={ROUTES.SEND} element={<Send />} />
-              <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
-              <Route
-                path={ROUTES.ADDRESS_BOOK_DETAILS}
-                element={<AddressDetails />}
-              />
-              <Route path={ROUTES.RESOURCES} element={null} />
-              <Route path={ROUTES.NODE} element={<NodeOverview />} />
-              <Route path={ROUTES.MINER} element={<Miner />} />
-            </Route>
-          </Route>
-        </Routes>
-      </HashRouter>
+          </Routes>
+        </HashRouter>
+      </DataSyncProvider>
     </IronFishUIProvider>
   )
 }

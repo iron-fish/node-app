@@ -1,4 +1,4 @@
-import { FC, memo, useState } from 'react'
+import { ChangeEvent, FC, memo, useState } from 'react'
 import {
   Box,
   Flex,
@@ -11,6 +11,7 @@ import {
   TextField,
   Button,
   Icon,
+  InputProps,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
@@ -19,11 +20,11 @@ import useFee from 'Hooks/transactions/useFee'
 import FeesImage from 'Svgx/FeesImage'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow'
-import { Account } from 'Data/types/Account'
 import Contact from 'Types/Contact'
 import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -43,6 +44,40 @@ const Information: FC = memo(() => {
   )
 })
 
+interface FloatInputProps {
+  amount: number
+  setAmount: (value: number) => void
+  InputProps?: InputProps
+}
+
+const FloatInput: FC<FloatInputProps> = ({ amount, setAmount }) => {
+  const [value, setValue] = useState(amount.toFixed(2).toString())
+
+  const handleNumber = (e: ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value
+
+    if (input.match(/^([0-9]{1,})?(\.)?([0-9]{1,})?$/)) {
+      setValue(input)
+    }
+  }
+
+  const handleFloat = () => {
+    setAmount(parseFloat(value || '0'))
+  }
+
+  return (
+    <Input
+      variant="unstyled"
+      fontSize="3rem"
+      width={value.length * 1.8 + 'rem'}
+      value={value}
+      onChange={handleNumber}
+      onBlur={handleFloat}
+      textAlign="end"
+    />
+  )
+}
+
 const Send: FC = () => {
   const location = useLocation()
   const state = location.state as LocationStateProps
@@ -56,6 +91,11 @@ const Send: FC = () => {
     { bg: NAMED_COLORS.DEEP_BLUE, color: NAMED_COLORS.WHITE },
     { bg: NAMED_COLORS.WHITE, color: NAMED_COLORS.DEEP_BLUE }
   )
+  const { loaded } = useDataSync()
+
+  const checkChanges: () => boolean = () =>
+    !loaded || !(feeCalculated && account && contact && amount)
+
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
@@ -83,17 +123,7 @@ const Send: FC = () => {
               alignItems="baseline"
               my="1rem"
             >
-              <Input
-                variant="unstyled"
-                type="number"
-                fontSize="3rem"
-                width={amount.toFixed(2).toString().length * 1.8 + 'rem'}
-                value={amount.toFixed(2)}
-                onChange={e => setAmount(Number.parseFloat(e.target.value))}
-                textAlign="end"
-                step={0.01}
-                min={0}
-              />
+              <FloatInput amount={amount} setAmount={setAmount} />
               <InputRightAddon
                 bg="transparent"
                 border="none"
@@ -144,7 +174,8 @@ const Send: FC = () => {
             borderRadius="4rem"
             mb="2rem"
             p="2rem"
-            isDisabled={!(feeCalculated && account && contact && amount)}
+            isDisabled={checkChanges()}
+            disabled={checkChanges()}
             leftIcon={
               <Icon height={26} width={26}>
                 <SendIcon fill="currentColor" />

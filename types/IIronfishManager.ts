@@ -15,6 +15,7 @@ export type IronfishAccountManagerAction =
   | 'list'
   | 'get'
   | 'delete'
+  | 'balance'
   | 'import'
   | 'export'
 

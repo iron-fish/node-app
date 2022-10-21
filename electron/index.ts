@@ -1,4 +1,3 @@
-import { AccountValue } from '@ironfish/sdk'
 import { app, BrowserWindow, ipcMain, nativeTheme, shell } from 'electron'
 import {
   IronfishAccountManagerAction,
@@ -39,7 +38,7 @@ const createWindow = () => {
       title: 'Iron Fish Wallet',
       webPreferences: {
         contextIsolation: true,
-        nodeIntegration: true,
+        // nodeIntegrationInWorker: true,
         preload: WALLET_PRELOAD_WEBPACK_ENTRY,
       },
     })

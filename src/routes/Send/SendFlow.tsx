@@ -24,10 +24,10 @@ import {
   Link,
 } from '@ironfish/ui-kit'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
-import { Account } from 'Data/types/Account'
 import Contact from 'Types/Contact'
 import SendIcon from 'Svgx/send'
 import CutAccount from 'Types/CutAccount'
+import { truncateHash } from 'Utils/hash'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
 
@@ -101,11 +101,22 @@ const ConfirmStep: FC<StepProps> = ({
             title="To:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{to.name}</chakra.h4>
-                <chakra.h5 color={NAMED_COLORS.GREY}>{to.address}</chakra.h5>
+                {to.name && (
+                  <chakra.h4 whiteSpace="nowrap">{to.name}</chakra.h4>
+                )}
+                <chakra.h5
+                  pl="4rem"
+                  color={NAMED_COLORS.GREY}
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                >
+                  {truncateHash(to.address, 2, 16)}
+                </chakra.h5>
               </HStack>
             }
+            flexDirection={to.name ? 'column' : 'row'}
             w="100%"
+            overflow="hidden"
           />
           <DataPreviewLine
             title="Amount:"

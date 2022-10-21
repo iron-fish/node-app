@@ -25,6 +25,7 @@ import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
 import { AccountValue } from '@ironfish/sdk'
 import AccountBalance from 'Components/AccountBalance'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 interface AccountOverviewProps {
   account: AccountValue
@@ -84,6 +85,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
     }
   )
   const navigate = useNavigate()
+  const { loaded: synced } = useDataSync()
   return (
     <>
       <Flex w="100%" pb="2rem">
@@ -123,6 +125,8 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                       state: { accountId: account?.id },
                     })
                   }
+                  isDisabled={!synced}
+                  disabled={!synced}
                 >
                   <h5>Send</h5>
                 </Button>
@@ -141,6 +145,8 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                       state: { accountId: account?.id },
                     })
                   }
+                  isDisabled={!synced}
+                  disabled={!synced}
                 >
                   <h5>Receive</h5>
                 </Button>

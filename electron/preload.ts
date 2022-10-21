@@ -52,6 +52,8 @@ contextBridge.exposeInMainWorld('IronfishManager', {
       ipcRenderer.invoke('ironfish-manager-accounts', 'import', account),
     export: (id: string) =>
       ipcRenderer.invoke('ironfish-manager-accounts', 'export', id),
+    balance: (id: string) =>
+      ipcRenderer.invoke('ironfish-manager-accounts', 'balance', id),
   },
 })
 contextBridge.exposeInMainWorld(

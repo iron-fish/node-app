@@ -19,6 +19,7 @@ import { truncateHash } from 'Utils/hash'
 import { ROUTES } from '..'
 import CutAccount from 'Types/CutAccount'
 import AccountBalance from 'Components/AccountBalance'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 export interface AccountPreviewProps extends CutAccount {
   order: number
@@ -82,6 +83,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
   id,
 }) => {
   const navigate = useNavigate()
+  const { loaded } = useDataSync()
   const $colors = useColorModeValue(
     {
       bg: NAMED_COLORS.WHITE,
@@ -197,6 +199,8 @@ const AccountPreview: FC<AccountPreviewProps> = ({
                 <Send fill="currentColor" />
               </Icon>
             }
+            isDisabled={!loaded}
+            disabled={!loaded}
           >
             <h5>Send</h5>
           </Button>
@@ -214,6 +218,8 @@ const AccountPreview: FC<AccountPreviewProps> = ({
                 <Receive fill="currentColor" />
               </Icon>
             }
+            isDisabled={!loaded}
+            disabled={!loaded}
           >
             <h5>Receive</h5>
           </Button>

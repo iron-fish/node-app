@@ -25,6 +25,7 @@ import SortType from 'Types/SortType'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import AddContactModal from './AddContactModal'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 const getIconBg = (address = '') => {
   let colorNumber = 0
@@ -80,6 +81,7 @@ const COLUMNS = [
     label: '',
     render: (contact: Contact) => {
       const navigate = useNavigate()
+      const { loaded } = useDataSync()
       return (
         <Flex justify="flex-end" mr="-1.0625rem">
           <Button
@@ -90,6 +92,8 @@ const COLUMNS = [
             }
             variant="primary"
             borderRadius="4rem"
+            isDisabled={!loaded}
+            disabled={!loaded}
             mr={{ base: '0.75rem', md: '1rem' }}
             onClick={() => {
               navigate(ROUTES.SEND, { state: { contactId: contact?._id } })
