@@ -1,51 +1,23 @@
-import {
-  PeerResponse,
-  GetNodeStatusResponse as GetStatusResponse,
-} from '@ironfish/sdk'
+import { PeerResponse } from '@ironfish/sdk'
+import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 import { BlockSyncerStatusType } from 'Types/StatusTypes'
 
 const BLOCK_SPEED = 60000
 
-const STATUS: GetStatusResponse = {
+const STATUS: NodeStatusResponse = {
   node: {
-    status: 'started',
-    version: '1.2.1',
-    git: 'something',
+    status: NodeStatusType.STARTED,
     nodeName: 'My Node Name Example',
-  },
-  memory: {
-    heapMax: 1250,
-    heapTotal: 1054,
-    heapUsed: Math.random() * 1000,
-    rss: 234,
-    memFree: Math.random() * 4000,
-    memTotal: 4232,
-  },
-  cpu: {
-    cores: 8,
-    percentRollingAvg: 7,
-    percentCurrent: 24,
-  },
-  miningDirector: {
-    status: 'started',
-    miners: 1,
-    blocks: 1243,
-    blockGraffiti: 'test',
-    newBlockTemplateSpeed: Math.random() * 1000,
-    newBlockTransactionsSpeed: Math.random() * 1000,
-  },
-  memPool: {
-    size: 12,
-    sizeBytes: 12 * 1024 * 8,
   },
   blockchain: {
     synced: true,
     head: 'asmdksalkdajlkdjalskdjlksajlkasjdlksajdlksaj',
+    totalSequences: '123344',
     headTimestamp: new Date().getTime(),
     newBlockSpeed: Math.random() * 1000,
   },
   blockSyncer: {
-    status: 'stopped',
+    status: 'syncing',
     syncing: {
       blockSpeed: BLOCK_SPEED,
       speed: BLOCK_SPEED / 100,
@@ -57,28 +29,6 @@ const STATUS: GetStatusResponse = {
     isReady: true,
     inboundTraffic: Math.random() * 100,
     outboundTraffic: Math.random() * 100,
-  },
-  telemetry: {
-    status: 'started',
-    pending: 0,
-    submitted: 12,
-  },
-  workers: {
-    started: false,
-    workers: 1,
-    queued: 0,
-    capacity: 0,
-    executing: 0,
-    change: 0,
-    speed: 0,
-  },
-  accounts: {
-    scanning: {
-      sequence: 123123,
-      endSequence: 1232312,
-      startedAt: 123123213,
-    },
-    head: 'ddsalkjfhkdsjhfkjdshfkjsdhfkjsdf',
   },
 }
 
@@ -104,7 +54,7 @@ const PEERS: PeerResponse[] = Array(23)
   }))
 
 class DemoNodeManager {
-  status(): Promise<GetStatusResponse> {
+  status(): Promise<NodeStatusResponse> {
     return new Promise(resolve => {
       setTimeout(() => {
         if (STATUS.blockSyncer.status === BlockSyncerStatusType.SYNCING) {
@@ -135,18 +85,6 @@ class DemoNodeManager {
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(PEERS)
-      }, 500)
-    })
-  }
-
-  syncData(): Promise<void> {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        STATUS.blockSyncer.status = 'syncing'
-        setTimeout(() => {
-          STATUS.blockSyncer.status = 'idle'
-        }, BLOCK_SPEED)
-        resolve()
       }, 500)
     })
   }

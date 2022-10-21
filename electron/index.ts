@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, nativeTheme, shell } from 'electron'
 import {
   IronfishAccountManagerAction,
   IronfishManagerAction,
+  IronfishNodeStatusManagerAction,
 } from 'Types/IIronfishManager'
 import initStorageCallbacks from './initStorage'
 import { IronFishManager } from './ironfish/IronFishManager'
@@ -60,6 +61,12 @@ const createWindow = () => {
       'ironfish-manager-accounts',
       (e, action: IronfishAccountManagerAction, ...args): Promise<any> =>
         ironfishManager.accounts[action](...(args as [any]))
+    )
+
+    ipcMain.handle(
+      'ironfish-manager-node-status',
+      (e, action: IronfishNodeStatusManagerAction): Promise<any> =>
+        ironfishManager.nodeStatus[action]()
     )
 
     mainWindow.maximize()

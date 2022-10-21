@@ -5,14 +5,18 @@ import {
   IronfishSdk,
   NodeUtils,
   PrivateIdentity,
+  MathUtils,
+  PeerResponse,
 } from '@ironfish/sdk'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import {
   IIronfishManager,
   IIronfishAccountManager,
+  IIronfishNodeStatusManager,
 } from 'Types/IIronfishManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
+import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 
 class AccountManager implements IIronfishAccountManager {
   private node: IronfishNode
@@ -77,11 +81,76 @@ class AccountManager implements IIronfishAccountManager {
   }
 }
 
+class NodeStatusManager implements IIronfishNodeStatusManager {
+  private node: IronfishNode
+
+  constructor(node: IronfishNode) {
+    this.node = node
+  }
+
+  get(): Promise<NodeStatusResponse> {
+    let totalSequences = 0
+    const peers = this.node.peerNetwork.peerManager
+      .getConnectedPeers()
+      .filter(peer => peer.work && peer.work > this.node.chain.head.work)
+
+    if (peers.length > 0) {
+      totalSequences = peers[0].sequence
+    }
+    const status = {
+      node: {
+        status: this.node.started
+          ? NodeStatusType.STARTED
+          : NodeStatusType.STOPPED,
+        nodeName: this.node.config.get('nodeName'),
+      },
+      peerNetwork: {
+        peers: this.node.metrics.p2p_PeersCount.value,
+        isReady: this.node.peerNetwork.isReady,
+        inboundTraffic: Math.max(
+          this.node.metrics.p2p_InboundTraffic.rate1s,
+          0
+        ),
+        outboundTraffic: Math.max(
+          this.node.metrics.p2p_OutboundTraffic.rate1s,
+          0
+        ),
+      },
+      blockSyncer: {
+        status: this.node.syncer.state,
+        syncing: {
+          blockSpeed: MathUtils.round(this.node.chain.addSpeed.avg, 2),
+          speed: MathUtils.round(this.node.syncer.speed.rate1m, 2),
+          progress: this.node.chain.getProgress(),
+        },
+      },
+      blockchain: {
+        synced: this.node.chain.synced,
+        head: this.node.chain.head.sequence.toString(),
+        totalSequences: totalSequences.toString(),
+        headTimestamp: this.node.chain.head.timestamp.getTime(),
+        newBlockSpeed: this.node.metrics.chain_newBlock.avg,
+      },
+    }
+    return Promise.resolve(status)
+  }
+
+  //to be implemented
+  getPeers(): Promise<PeerResponse[]> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve([])
+      }, 500)
+    })
+  }
+}
+
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   protected sdk: IronfishSdk
   protected node: IronfishNode
   accounts: IIronfishAccountManager
+  nodeStatus: IIronfishNodeStatusManager
 
   private getPrivateIdentity(): PrivateIdentity | undefined {
     const networkIdentity = this.sdk.internal.get('networkIdentity')
@@ -111,6 +180,7 @@ export class IronFishManager implements IIronfishManager {
       await NodeUtils.waitForOpen(this.node)
 
       this.accounts = new AccountManager(this.node)
+      this.nodeStatus = new NodeStatusManager(this.node)
 
       this.initStatus = IronFishInitStatus.INITIALIZED
     } catch (e) {

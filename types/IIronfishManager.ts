@@ -1,7 +1,8 @@
-import { AccountValue } from '@ironfish/sdk'
+import { AccountValue, PeerResponse } from '@ironfish/sdk'
 import AccountBalance from './AccountBalance'
 import CutAccount from './CutAccount'
 import IronFishInitStatus from './IronfishInitStatus'
+import NodeStatusResponse from 'Types/NodeStatusResponse'
 
 export type IronfishManagerAction =
   | 'initialize'
@@ -19,6 +20,8 @@ export type IronfishAccountManagerAction =
   | 'import'
   | 'export'
 
+export type IronfishNodeStatusManagerAction = 'get' | 'getPeers'
+
 export interface IIronfishAccountManager {
   create: (name: string) => Promise<AccountValue>
   list: (search?: string) => Promise<CutAccount[]>
@@ -29,8 +32,14 @@ export interface IIronfishAccountManager {
   balance: (id: string) => Promise<AccountBalance>
 }
 
+export interface IIronfishNodeStatusManager {
+  get: () => Promise<NodeStatusResponse>
+  getPeers: () => Promise<PeerResponse[]>
+}
+
 export interface IIronfishManager {
   accounts: IIronfishAccountManager
+  nodeStatus: IIronfishNodeStatusManager
   initialize: () => Promise<void>
   hasAnyAccount: () => Promise<boolean>
   start: () => Promise<void>

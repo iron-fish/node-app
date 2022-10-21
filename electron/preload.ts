@@ -55,6 +55,9 @@ contextBridge.exposeInMainWorld('IronfishManager', {
     balance: (id: string) =>
       ipcRenderer.invoke('ironfish-manager-accounts', 'balance', id),
   },
+  nodeStatus: {
+    get: () => ipcRenderer.invoke('ironfish-manager-node-status', 'get'),
+  },
 })
 contextBridge.exposeInMainWorld(
   'AddressBookStorage',

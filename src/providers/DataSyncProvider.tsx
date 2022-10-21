@@ -7,10 +7,10 @@ import {
   useEffect,
 } from 'react'
 
-import { GetNodeStatusResponse as GetStatusResponse } from '@ironfish/sdk'
+import NodeStatusResponse from 'Types/NodeStatusResponse'
 
 export interface DataSyncContextProps {
-  data?: GetStatusResponse | undefined
+  data?: NodeStatusResponse | undefined
   loaded?: boolean
   error?: unknown
 }
@@ -25,22 +25,19 @@ interface DataSyncProviderProps {
 
 const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
   const [loaded, setLoaded] = useState<boolean>(false)
-  const [status, setNodeStatus] = useState<GetStatusResponse | undefined>()
+  const [status, setNodeStatus] = useState<NodeStatusResponse | undefined>()
   const [error, setError] = useState()
 
   const loadStatus = () => {
-    return window.DemoDataManager.getNodeStatus()
+    return window.IronfishManager.nodeStatus
+      .get()
       .then(setNodeStatus)
       .catch(setError)
   }
 
-  // demo trigger for dataSync
   useEffect(() => {
-    window.DemoDataManager.syncNodeData().then(() => loadStatus())
-    const syncInterval = setInterval(
-      () => window.DemoDataManager.syncNodeData().then(() => loadStatus()),
-      5 * 60 * 1000
-    )
+    loadStatus()
+    const syncInterval = setInterval(() => loadStatus(), 5 * 60 * 1000)
     return () => clearInterval(syncInterval)
   }, [])
 
