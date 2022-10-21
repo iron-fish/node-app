@@ -18,6 +18,7 @@ import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 import { DataSyncProvider } from './providers/DataSyncProvider'
 import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
+import Initializing from 'Routes/Initializing'
 
 const breakpoints = {
   xs: '46.875rem', //750px
@@ -38,24 +39,26 @@ function App() {
       <DataSyncProvider>
         <HashRouter>
           <Routes>
-            <Route element={<CreateLayout />}>
-              <Route path={ROUTES.ONBOARDING} element={<Action />} />
-              <Route path={ROUTES.CREATE} element={<CreateAccount />} />
-              <Route path={ROUTES.IMPORT} element={<ImportAccount />} />
-            </Route>
-            <Route element={<PageLayout />}>
-              <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
-              <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
-              <Route path={ROUTES.RECEIVE} element={<ReceiveMoney />} />
-              <Route path={ROUTES.SEND} element={<Send />} />
-              <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
-              <Route
-                path={ROUTES.ADDRESS_BOOK_DETAILS}
-                element={<AddressDetails />}
-              />
-              <Route path={ROUTES.RESOURCES} element={null} />
-              <Route path={ROUTES.NODE} element={<NodeOverview />} />
-              <Route path={ROUTES.MINER} element={<Miner />} />
+            <Route element={<Initializing />}>
+              <Route element={<CreateLayout />}>
+                <Route path={ROUTES.ONBOARDING} element={<Action />} />
+                <Route path={ROUTES.CREATE} element={<CreateAccount />} />
+                <Route path={ROUTES.IMPORT} element={<ImportAccount />} />
+              </Route>
+              <Route element={<PageLayout />}>
+                <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
+                <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
+                <Route path={ROUTES.RECEIVE} element={<ReceiveMoney />} />
+                <Route path={ROUTES.SEND} element={<Send />} />
+                <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
+                <Route
+                  path={ROUTES.ADDRESS_BOOK_DETAILS}
+                  element={<AddressDetails />}
+                />
+                <Route path={ROUTES.RESOURCES} element={null} />
+                <Route path={ROUTES.NODE} element={<NodeOverview />} />
+                <Route path={ROUTES.MINER} element={<Miner />} />
+              </Route>
             </Route>
           </Routes>
         </HashRouter>

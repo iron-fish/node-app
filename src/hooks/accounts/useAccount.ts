@@ -1,17 +1,18 @@
 import { useCallback, useEffect } from 'react'
-import { Account } from 'Data/types/Account'
 import useAsyncDataWrapper from '../useAsyncDataWrapper'
+import { AccountValue } from '@ironfish/sdk'
 
 const useAccount = (id: string) => {
-  const [result, promiseWrapper] = useAsyncDataWrapper<Account>()
+  const [result, promiseWrapper] = useAsyncDataWrapper<AccountValue>()
 
   const loadAccount = (accountId: string) =>
-    promiseWrapper(window.DemoDataManager.getAccount(accountId))
+    promiseWrapper(window.IronfishManager.accounts.get(accountId))
 
   const updateAccount = useCallback((identity: string, name: string) => {
-    window.DemoDataManager.updateAccount(identity, name).then(() =>
-      loadAccount(identity)
-    )
+    // Is not support by @ironfish/sdk
+    // window.DemoDataManager.updateAccount(identity, name).then(() =>
+    //   loadAccount(identity)
+    // )
   }, [])
 
   const deleteAccount = useCallback(

@@ -5,7 +5,8 @@ import Contact from 'Types/Contact'
 import AccountSettings from 'Types/AccountSettings'
 import SortType from 'Types/SortType'
 import noop from 'lodash/noop'
-import { nanoid } from 'nanoid'
+import IIronfishManager from 'Types/IIronfishManager'
+import { AccountValue } from '@ironfish/sdk'
 
 declare global {
   interface Window {
@@ -14,11 +15,32 @@ declare global {
     AddressBookStorage: IStorage<Contact>
     AccountSettingsStorage: IStorage<AccountSettings>
     setElectronThemeMode: (mode: string) => void
+    IronfishManager: IIronfishManager
   }
 }
 window.DemoDataManager = new DemoDataManager()
 if (!window.setElectronThemeMode) {
   window.setElectronThemeMode = noop
+}
+
+if (!window.IronfishManager) {
+  window.IronfishManager = {
+    accounts: {
+      create: (name: string) => window.DemoDataManager.createAccount(name),
+      delete: (name: string) => window.DemoDataManager.deleteAccount(name),
+      export: (id: string) => window.DemoDataManager.getAccount(id),
+      get: (id: string) => window.DemoDataManager.getAccount(id),
+      import: (account: AccountValue) =>
+        window.DemoDataManager.createAccount(account.name),
+      list: (search: string) => window.DemoDataManager.getAccounts(search),
+      balance: (id: string) => window.DemoDataManager.getBalance(id),
+    },
+    hasAnyAccount: () => window.DemoDataManager.hasAnyAccount(),
+    initialize: () => window.DemoDataManager.initialize(),
+    start: () => window.DemoDataManager.start(),
+    stop: () => window.DemoDataManager.stop(),
+    status: () => window.DemoDataManager.initStatus(),
+  }
 }
 
 if (!window.AddressBookStorage) {

@@ -4,8 +4,7 @@ import { useCallback, useEffect } from 'react'
 const useCreateAccount = () => {
   const [result, promiseWrapper] = useAsyncDataWrapper<string[]>()
   const createAccount = useCallback(
-    (name, mnemonicPhrase) =>
-      window.DemoDataManager.createAccount(name, mnemonicPhrase),
+    (name, mnemonicPhrase) => window.IronfishManager.accounts.create(name),
     []
   )
 

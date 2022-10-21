@@ -7,7 +7,7 @@ import {
   useEffect,
 } from 'react'
 
-import { GetStatusResponse } from '@ironfish/sdk'
+import { GetNodeStatusResponse as GetStatusResponse } from '@ironfish/sdk'
 
 export interface DataSyncContextProps {
   data?: GetStatusResponse | undefined

@@ -1,4 +1,4 @@
-import { GetStatusResponse } from '@ironfish/sdk'
+import { GetNodeStatusResponse as GetStatusResponse } from '@ironfish/sdk'
 import { useEffect, useState } from 'react'
 
 const useNodeStatus = () => {

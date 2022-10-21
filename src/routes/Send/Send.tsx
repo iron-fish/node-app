@@ -20,10 +20,10 @@ import useFee from 'Hooks/transactions/useFee'
 import FeesImage from 'Svgx/FeesImage'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow'
-import { Account } from 'Data/types/Account'
 import Contact from 'Types/Contact'
 import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
+import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
 
 const Information: FC = memo(() => {
@@ -82,7 +82,7 @@ const Send: FC = () => {
   const location = useLocation()
   const state = location.state as LocationStateProps
   const [amount, setAmount] = useState(0)
-  const [account, setAccount] = useState<Account>(null)
+  const [account, setAccount] = useState<CutAccount>(null)
   const [contact, setContact] = useState<Contact>(null)
   const [notes, setNotes] = useState('Paying you back, Derek - B.')
   const [startSendFlow, setStart] = useState(false)
@@ -139,7 +139,7 @@ const Send: FC = () => {
             <AccountsSelect
               label="From Account"
               mb="2rem"
-              accountId={account?.identity || state?.accountId}
+              accountId={account?.id || state?.accountId}
               onSelectOption={setAccount}
             />
             <ContactsAutocomplete

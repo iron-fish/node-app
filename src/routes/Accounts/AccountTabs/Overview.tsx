@@ -19,15 +19,16 @@ import AccountKeysImage from 'Svgx/AccountBalance'
 import { truncateHash } from 'Utils/hash'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useTransactions'
-import { Account } from 'Data/types/Account'
 import { useNavigate } from 'react-router-dom'
 import EmptyOverviewImage from 'Svgx/EmptyOverviewImage'
 import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
+import { AccountValue } from '@ironfish/sdk'
+import AccountBalance from 'Components/AccountBalance'
 import { useDataSync } from 'Providers/DataSyncProvider'
 
 interface AccountOverviewProps {
-  account: Account
+  account: AccountValue
 }
 
 const EmptyOverview = () => {
@@ -69,7 +70,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
   const [{ data: transactions, loaded }] = useTransactions(
-    account?.address,
+    account?.publicAddress,
     $searchTerm,
     $sortOrder
   )
@@ -105,7 +106,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
               </Box>
               <Box mb="0.5rem">
                 <chakra.h2 color={NAMED_COLORS.DEEP_BLUE}>
-                  {account?.balance}
+                  <AccountBalance accountId={account?.id} />
                 </chakra.h2>
               </Box>
               <Box>
@@ -121,7 +122,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                   }
                   onClick={() =>
                     navigate(ROUTES.SEND, {
-                      state: { accountId: account?.identity },
+                      state: { accountId: account?.id },
                     })
                   }
                   isDisabled={!synced}
@@ -141,7 +142,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                   }
                   onClick={() =>
                     navigate(ROUTES.RECEIVE, {
-                      state: { accountId: account?.identity },
+                      state: { accountId: account?.id },
                     })
                   }
                   isDisabled={!synced}
@@ -166,7 +167,12 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
             <chakra.h4>Pending $IRON</chakra.h4>
           </Box>
           <Box mb="0.5rem">
-            <chakra.h2>{account?.pending}</chakra.h2>
+            <chakra.h2>
+              <AccountBalance
+                accountId={account?.id}
+                renderBalance={balance => balance?.pending?.toString() || 0}
+              />
+            </chakra.h2>
           </Box>
         </Box>
       </Flex>
