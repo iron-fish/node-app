@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid'
 import SortType from 'Types/SortType'
 
 import { Transaction } from './types/Transaction'
+import TransactionStatusType from 'Types/TransactionStatusType'
 
 const DEMO_TRANSACTIONS: Transaction[] = [
   {
@@ -16,7 +17,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     isMinersFee: false,
     notes: [],
     spends: 0,
-    status: 'success',
+    status: TransactionStatusType.CONFIRMED,
   },
   {
     amount: 10,
@@ -30,7 +31,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     isMinersFee: false,
     notes: [],
     spends: 0,
-    status: 'success',
+    status: TransactionStatusType.EXPIRED,
   },
   {
     amount: 100,
@@ -44,7 +45,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     isMinersFee: false,
     notes: [],
     spends: 0,
-    status: 'success',
+    status: TransactionStatusType.PENDING,
   },
   {
     amount: 1235,
@@ -58,7 +59,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     isMinersFee: false,
     notes: [],
     spends: 0,
-    status: 'success',
+    status: TransactionStatusType.UNCONFIRMED,
   },
   {
     amount: 121,
@@ -72,7 +73,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     isMinersFee: false,
     notes: [],
     spends: 0,
-    status: 'success',
+    status: TransactionStatusType.UNKNOWN,
   },
   {
     amount: 12,
@@ -86,7 +87,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     isMinersFee: false,
     notes: [],
     spends: 0,
-    status: 'success',
+    status: TransactionStatusType.CONFIRMED,
   },
 ]
 

@@ -25,6 +25,7 @@ import EmptyOverviewImage from 'Svgx/EmptyOverviewImage'
 import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
 import { useDataSync } from 'Providers/DataSyncProvider'
+import TransactionStatus from 'Components/TransactionStatus'
 
 interface AccountOverviewProps {
   account: Account
@@ -192,7 +193,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                   key: 'transaction-action-column',
                   label: <chakra.h6>Action</chakra.h6>,
                   render: transaction => (
-                    <chakra.h5>{transaction.action}</chakra.h5>
+                    <TransactionStatus status={transaction.status} />
                   ),
                 },
                 {
