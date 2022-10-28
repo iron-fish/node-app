@@ -173,7 +173,7 @@ const ConfirmStep: FC<StepProps> = ({
 }
 
 const SendStep: FC<StepProps> = ({ onSend }) => {
-  setTimeout(onSend, 3000)
+  setTimeout(onSend, 5000)
   return (
     <ModalBody p={0}>
       <chakra.h2 mb="1rem">Transaction Processing</chakra.h2>
@@ -203,7 +203,7 @@ const SendStep: FC<StepProps> = ({ onSend }) => {
           borderRadius="2rem"
           isIndeterminate
           bg={NAMED_COLORS.LIGHT_GREY}
-          colorScheme="blue"
+          variant="ironLightBlue"
         />
         <HStack justifyContent="center">
           <Image
