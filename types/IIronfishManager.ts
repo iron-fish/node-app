@@ -2,23 +2,65 @@ import { AccountValue } from '@ironfish/sdk'
 import AccountBalance from './AccountBalance'
 import CutAccount from './CutAccount'
 import IronFishInitStatus from './IronfishInitStatus'
+import SortType from './SortType'
+import Transaction, { Payment } from './Transaction'
 
-export type IronfishManagerAction =
-  | 'initialize'
-  | 'start'
-  | 'stop'
-  | 'status'
-  | 'hasAnyAccount'
+export enum IronfishManagerAction {
+  INITIALIZE = 'initialize',
+  START = 'start',
+  STOP = 'stop',
+  STATUS = 'status',
+  HAS_ANY_ACCOUNT = 'hasAnyAccount',
+}
 
-export type IronfishAccountManagerAction =
-  | 'create'
-  | 'list'
-  | 'get'
-  | 'delete'
-  | 'balance'
-  | 'import'
-  | 'export'
+export enum IronfishAccountManagerAction {
+  CREATE = 'create',
+  LIST = 'list',
+  GET = 'get',
+  DELETE = 'delete',
+  BALANCE = 'balance',
+  IMPORT = 'import',
+  EXPORT = 'export',
+}
 
+export enum IronfishTransactionManagerAction {
+  GET = 'get',
+  PAY = 'pay',
+  FEES = 'fees',
+  AVERAGE_FEE = 'averageFee',
+  FIND_BY_ACCOUNT_ID = 'findByAccountId',
+  FIND_BY_ADDRESS = 'findByAddress',
+}
+
+export interface TransactionFeeStatistic {
+  startBlock: number
+  endBlock: number
+  p25: number
+  p50: number
+  p75: number
+  p100: number
+}
+
+export interface IIronfishTransactionManager {
+  get: (hash: string, accountId: string) => Promise<Transaction>
+  pay: (
+    accountId: string,
+    payment: Payment,
+    transactionFee?: number
+  ) => Promise<Transaction>
+  fees: (numOfBlocks?: number) => Promise<TransactionFeeStatistic>
+  averageFee: (numOfBlocks?: number) => Promise<number>
+  findByAccountId: (
+    accountId: string,
+    searchTerm?: string,
+    sort?: SortType
+  ) => Promise<Transaction[]>
+  findByAddress: (
+    address: string,
+    searchTerm?: string,
+    sort?: SortType
+  ) => Promise<Transaction[]>
+}
 export interface IIronfishAccountManager {
   create: (name: string) => Promise<AccountValue>
   list: (search?: string) => Promise<CutAccount[]>
@@ -31,6 +73,7 @@ export interface IIronfishAccountManager {
 
 export interface IIronfishManager {
   accounts: IIronfishAccountManager
+  transactions: IIronfishTransactionManager
   initialize: () => Promise<void>
   hasAnyAccount: () => Promise<boolean>
   start: () => Promise<void>

@@ -11,8 +11,9 @@ import Caret from 'Svgx/caret-icon'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import SearchSortField from 'Components/Search&Sort'
-import useTransactions from 'Hooks/transactions/useTransactions'
+import useTransactions from 'Hooks/transactions/useAddressTransactions'
 import SortType from 'Types/SortType'
+import Transaction from 'Types/Transaction'
 
 interface AddressTransactionsProps {
   address: string
@@ -45,7 +46,7 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
             {
               key: 'action',
               label: 'Action',
-              render: transaction => (
+              render: (transaction: Transaction) => (
                 <Flex align="center" position="relative">
                   <Flex
                     w="1.625rem"
@@ -57,32 +58,38 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
                     background={NAMED_COLORS.LIGHT_GREY}
                   >
                     <Icon h={8}>
-                      {transaction.action === 'Send' ? <Send /> : <Receive />}
+                      {transaction.creator ? <Send /> : <Receive />}
                     </Icon>
                   </Flex>
-                  <chakra.h5 ml="2.375rem">{transaction.action}</chakra.h5>
+                  <chakra.h5 ml="2.375rem">{transaction.status}</chakra.h5>
                 </Flex>
               ),
             },
             {
               key: 'iron',
               label: '$IRON',
-              render: transaction => <h5>{transaction.iron}</h5>,
+              render: (transaction: Transaction) => (
+                <h5>{transaction.amount}</h5>
+              ),
             },
             {
               key: 'to',
               label: 'To',
-              render: transaction => <h5>{transaction.to}</h5>,
+              render: (transaction: Transaction) => <h5>{transaction.to}</h5>,
             },
             {
               key: 'date',
               label: 'Date',
-              render: transaction => <h5>{transaction.date}</h5>,
+              render: (transaction: Transaction) => (
+                <h5>{transaction.created.toISOString()}</h5>
+              ),
             },
             {
               key: 'memo',
               label: 'Memo',
-              render: transaction => <h5>{transaction.memo}</h5>,
+              render: (transaction: Transaction) => (
+                <h5>{transaction.notes?.at(0)?.memo}</h5>
+              ),
             },
             {
               key: 'actions',

@@ -18,7 +18,7 @@ import Receive from 'Svgx/receive'
 import AccountKeysImage from 'Svgx/AccountBalance'
 import { truncateHash } from 'Utils/hash'
 import SearchSortField from 'Components/Search&Sort'
-import useTransactions from 'Hooks/transactions/useTransactions'
+import useTransactions from 'Hooks/transactions/useAcccountTransactions'
 import { useNavigate } from 'react-router-dom'
 import EmptyOverviewImage from 'Svgx/EmptyOverviewImage'
 import ROUTES from 'Routes/data'
@@ -26,6 +26,7 @@ import SortType from 'Types/SortType'
 import { AccountValue } from '@ironfish/sdk'
 import AccountBalance from 'Components/AccountBalance'
 import { useDataSync } from 'Providers/DataSyncProvider'
+import Transaction from 'Types/Transaction'
 
 interface AccountOverviewProps {
   account: AccountValue
@@ -70,7 +71,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
   const [{ data: transactions, loaded }] = useTransactions(
-    account?.publicAddress,
+    account?.id,
     $searchTerm,
     $sortOrder
   )
@@ -197,21 +198,21 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                 {
                   key: 'transaction-action-column',
                   label: <chakra.h6>Action</chakra.h6>,
-                  render: transaction => (
-                    <chakra.h5>{transaction.action}</chakra.h5>
+                  render: (transaction: Transaction) => (
+                    <chakra.h5>{transaction.status}</chakra.h5>
                   ),
                 },
                 {
                   key: 'transaction-amount-column',
                   label: <chakra.h6>$IRON</chakra.h6>,
-                  render: transaction => (
+                  render: (transaction: Transaction) => (
                     <chakra.h5>{transaction.amount}</chakra.h5>
                   ),
                 },
                 {
                   key: 'transaction-to-column',
                   label: <chakra.h6>To</chakra.h6>,
-                  render: transaction =>
+                  render: (transaction: Transaction) =>
                     transaction.to ? (
                       <chakra.h5>{truncateHash(transaction.to, 3)}</chakra.h5>
                     ) : (
@@ -221,15 +222,15 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                 {
                   key: 'transaction-date-column',
                   label: <chakra.h6>Date</chakra.h6>,
-                  render: transaction => (
-                    <chakra.h5>{transaction.date}</chakra.h5>
+                  render: (transaction: Transaction) => (
+                    <chakra.h5>{transaction.created.toISOString()}</chakra.h5>
                   ),
                 },
                 {
                   key: 'transaction-memo-column',
                   label: <chakra.h6>Memo</chakra.h6>,
-                  render: transaction => (
-                    <chakra.h5>"{transaction.memo}"</chakra.h5>
+                  render: (transaction: Transaction) => (
+                    <chakra.h5>"{transaction.notes?.at(0)?.memo}"</chakra.h5>
                   ),
                 },
                 {

@@ -35,6 +35,46 @@ if (!window.IronfishManager) {
       list: (search: string) => window.DemoDataManager.getAccounts(search),
       balance: (id: string) => window.DemoDataManager.getBalance(id),
     },
+    transactions: {
+      averageFee: (numOfBlocks?) => {
+        return Promise.resolve(Math.random())
+      },
+      fees: (numOfBlocks?) => {
+        return Promise.resolve({
+          startBlock: 0,
+          endBlock: 100,
+          p25: 0.25,
+          p50: 0.5,
+          p75: 0.75,
+          p100: 1,
+        })
+      },
+      findByAccountId: (accountId, searchTerm?, sort?) => {
+        return window.DemoDataManager.transactions.findByAccountId(
+          accountId,
+          searchTerm,
+          sort
+        )
+      },
+      findByAddress: (address, searchTerm?, sort?) => {
+        return window.DemoDataManager.transactions.findByAddress(
+          address,
+          searchTerm,
+          sort
+        )
+      },
+      get: (hash, accountId) =>
+        window.DemoDataManager.transactions.get(hash, accountId),
+      pay: (accountId, payment, transactionFee?) =>
+        window.DemoDataManager.transactions.send(
+          accountId,
+          accountId,
+          payment.publicAddress,
+          Number(payment.amount),
+          payment.memo,
+          transactionFee || 0.5
+        ),
+    },
     hasAnyAccount: () => window.DemoDataManager.hasAnyAccount(),
     initialize: () => window.DemoDataManager.initialize(),
     start: () => window.DemoDataManager.start(),
