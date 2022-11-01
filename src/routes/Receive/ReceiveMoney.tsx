@@ -19,6 +19,7 @@ import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import LocationStateProps from 'Types/LocationState'
 import AccountsSelect from 'Components/AccountsSelect'
 import IconCheck from '@ironfish/ui-kit/dist/svgx/icon-check'
+import CutAccount from 'Types/CutAccount'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -108,7 +109,7 @@ const ViewField: FC<ViewFieldProps> = ({
 const ReceiveMoney: FC = () => {
   const location = useLocation()
   const state = location.state as LocationStateProps
-  const [account, setAccount] = useState(null)
+  const [account, setAccount] = useState<CutAccount>(null)
   // const [amount, setAmount] = useState(0)
 
   return (
@@ -120,7 +121,7 @@ const ReceiveMoney: FC = () => {
         <Box w="37.25rem">
           <AccountsSelect
             label="Account"
-            accountId={account?.identity || state?.accountId}
+            accountId={account?.id || state?.accountId}
             onSelectOption={setAccount}
             mb="1rem"
           />
@@ -144,10 +145,10 @@ const ReceiveMoney: FC = () => {
               ml={0}
             >
               <Box mb="2rem">
-                <QRCodeSVG value={account?.address} />
+                <QRCodeSVG value={account?.publicAddress} />
               </Box>
               <ViewField
-                value={account?.address}
+                value={account?.publicAddress}
                 buttonText="Copy"
                 copiedTooltipText="Copied"
                 copyTooltipText="Copy to clipboard"
