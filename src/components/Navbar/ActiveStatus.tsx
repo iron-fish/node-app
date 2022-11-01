@@ -198,7 +198,7 @@ const StatusItem: FC<StatusItemProps> = ({ fullSize, minified, loaded }) => {
   )
 }
 
-const ActiveStats: FC<FlexProps> = props => {
+const ActiveStatus: FC<FlexProps> = props => {
   const { loaded, data } = useDataSync()
   const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
   return (
@@ -236,4 +236,4 @@ const ActiveStats: FC<FlexProps> = props => {
   )
 }
 
-export default ActiveStats
+export default ActiveStatus
