@@ -29,31 +29,23 @@ const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
   const [error, setError] = useState()
 
   const loadStatus = () => {
-    return window.IronfishManager.nodeStatus
-      .get()
+    return window.IronfishManager.nodeStatus()
       .then(setNodeStatus)
       .catch(setError)
   }
 
   useEffect(() => {
     loadStatus()
-    const syncInterval = setInterval(() => loadStatus(), 5 * 60 * 1000)
-    return () => clearInterval(syncInterval)
   }, [])
 
   useEffect(() => {
-    let interval: NodeJS.Timeout
-    if (status?.blockSyncer.status === 'syncing') {
-      setLoaded(false)
-      interval = setInterval(() => {
+    setLoaded(status?.blockchain.synced)
+    const interval = setInterval(
+      () => {
         loadStatus()
-      }, 1000)
-    } else {
-      setLoaded(true)
-      interval = setInterval(() => {
-        loadStatus()
-      }, 5000)
-    }
+      },
+      status?.blockchain.synced ? 10000 : 1000
+    )
     return () => clearInterval(interval)
   }, [status?.blockSyncer.status])
 

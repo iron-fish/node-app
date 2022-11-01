@@ -7,8 +7,7 @@ const useNodeStatus = () => {
   const [error, setError] = useState()
 
   const loadStatus = () => {
-    return window.IronfishManager.nodeStatus
-      .get()
+    return window.IronfishManager.nodeStatus()
       .then(setNodeStatus)
       .catch(setError)
       .finally(() => setLoaded(true))

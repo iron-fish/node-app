@@ -9,6 +9,8 @@ export type IronfishManagerAction =
   | 'start'
   | 'stop'
   | 'status'
+  | 'nodeStatus'
+  | 'peers'
   | 'hasAnyAccount'
 
 export type IronfishAccountManagerAction =
@@ -32,19 +34,15 @@ export interface IIronfishAccountManager {
   balance: (id: string) => Promise<AccountBalance>
 }
 
-export interface IIronfishNodeStatusManager {
-  get: () => Promise<NodeStatusResponse>
-  getPeers: () => Promise<PeerResponse[]>
-}
-
 export interface IIronfishManager {
   accounts: IIronfishAccountManager
-  nodeStatus: IIronfishNodeStatusManager
   initialize: () => Promise<void>
   hasAnyAccount: () => Promise<boolean>
   start: () => Promise<void>
   stop: () => Promise<void>
   status: () => Promise<IronFishInitStatus>
+  nodeStatus: () => Promise<NodeStatusResponse>
+  peers: () => Promise<PeerResponse[]>
 }
 
 export default IIronfishManager

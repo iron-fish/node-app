@@ -63,12 +63,6 @@ const createWindow = () => {
         ironfishManager.accounts[action](...(args as [any]))
     )
 
-    ipcMain.handle(
-      'ironfish-manager-node-status',
-      (e, action: IronfishNodeStatusManagerAction): Promise<any> =>
-        ironfishManager.nodeStatus[action]()
-    )
-
     mainWindow.maximize()
 
     if (process.env.APP_DEV === 'true') {

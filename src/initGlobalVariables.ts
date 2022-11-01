@@ -35,10 +35,8 @@ if (!window.IronfishManager) {
       list: (search: string) => window.DemoDataManager.getAccounts(search),
       balance: (id: string) => window.DemoDataManager.getBalance(id),
     },
-    nodeStatus: {
-      get: () => window.DemoDataManager.getNodeStatus(),
-      getPeers: () => window.DemoDataManager.getNodePeers(),
-    },
+    nodeStatus: () => window.DemoDataManager.getNodeStatus(),
+    peers: () => window.DemoDataManager.getNodePeers(),
     hasAnyAccount: () => window.DemoDataManager.hasAnyAccount(),
     initialize: () => window.DemoDataManager.initialize(),
     start: () => window.DemoDataManager.start(),

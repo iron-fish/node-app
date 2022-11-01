@@ -5,7 +5,7 @@ import useAsyncDataWrapper from '../useAsyncDataWrapper'
 const useNodePeers = () => {
   const [result, promiseWrapper] = useAsyncDataWrapper<PeerResponse[]>()
 
-  const loadPeers = () => promiseWrapper(window.DemoDataManager.getNodePeers())
+  const loadPeers = () => promiseWrapper(window.IronfishManager.peers())
 
   useEffect(() => {
     loadPeers()
