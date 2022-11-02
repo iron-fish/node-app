@@ -7,6 +7,9 @@ import {
   PrivateIdentity,
   CurrencyUtils,
   Account,
+  MathUtils,
+  PeerResponse,
+  Connection,
 } from '@ironfish/sdk'
 import { TransactionValue } from '@ironfish/sdk/build/src/wallet/walletdb/transactionValue'
 import AccountBalance from 'Types/AccountBalance'
@@ -20,6 +23,7 @@ import {
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import SortType from 'Types/SortType'
 import Transaction, { Payment } from 'Types/Transaction'
+import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 
 class AccountManager implements IIronfishAccountManager {
   private node: IronfishNode
@@ -345,5 +349,108 @@ export class IronFishManager implements IIronfishManager {
 
   status(): Promise<IronFishInitStatus> {
     return Promise.resolve(this.initStatus)
+  }
+
+  nodeStatus(): Promise<NodeStatusResponse> {
+    let totalSequences = 0
+    const peers = this.node.peerNetwork.peerManager
+      .getConnectedPeers()
+      .filter(peer => peer.work && peer.work > this.node.chain.head.work)
+
+    if (peers.length > 0) {
+      totalSequences = peers[0].sequence
+    }
+    const status = {
+      node: {
+        status: this.node.started
+          ? NodeStatusType.STARTED
+          : NodeStatusType.STOPPED,
+        nodeName: this.node.config.get('nodeName'),
+      },
+      peerNetwork: {
+        peers: this.node.metrics.p2p_PeersCount.value,
+        isReady: this.node.peerNetwork.isReady,
+        inboundTraffic: Math.max(
+          this.node.metrics.p2p_InboundTraffic.rate1s,
+          0
+        ),
+        outboundTraffic: Math.max(
+          this.node.metrics.p2p_OutboundTraffic.rate1s,
+          0
+        ),
+      },
+      blockSyncer: {
+        status: this.node.syncer.state,
+        syncing: {
+          blockSpeed: MathUtils.round(this.node.chain.addSpeed.avg, 2),
+          speed: MathUtils.round(this.node.syncer.speed.rate1m, 2),
+          progress: this.node.chain.getProgress(),
+        },
+      },
+      blockchain: {
+        synced: this.node.chain.synced,
+        head: this.node.chain.head.sequence.toString(),
+        totalSequences: totalSequences.toString(),
+        headTimestamp: this.node.chain.head.timestamp.getTime(),
+        newBlockSpeed: this.node.metrics.chain_newBlock.avg,
+      },
+    }
+    return Promise.resolve(status)
+  }
+
+  peers(): Promise<PeerResponse[]> {
+    const result: PeerResponse[] = []
+
+    for (const peer of this.node.peerNetwork.peerManager.peers) {
+      let connections = 0
+      let connectionWebRTC: Connection['state']['type'] | '' = ''
+      let connectionWebSocket: Connection['state']['type'] | '' = ''
+      let connectionWebRTCError = ''
+      let connectionWebSocketError = ''
+
+      if (peer.state.type !== 'DISCONNECTED') {
+        if (peer.state.connections.webSocket) {
+          connectionWebSocket = peer.state.connections.webSocket.state.type
+          connectionWebSocketError = String(
+            peer.state.connections.webSocket.error || ''
+          )
+        }
+
+        if (peer.state.connections.webRtc) {
+          connectionWebRTC = peer.state.connections.webRtc.state.type
+          connectionWebRTCError = String(
+            peer.state.connections.webRtc.error || ''
+          )
+        }
+      }
+
+      if (connectionWebSocket !== '') {
+        connections++
+      }
+      if (connectionWebRTC !== '') {
+        connections++
+      }
+
+      result.push({
+        state: peer.state.type,
+        address: peer.address,
+        port: peer.port,
+        identity: peer.state.identity,
+        name: peer.name,
+        version: peer.version,
+        agent: peer.agent,
+        head: peer.head?.toString('hex') || null,
+        work: String(peer.work),
+        sequence: peer.sequence !== null ? Number(peer.sequence) : null,
+        connections: connections,
+        error: peer.error !== null ? String(peer.error) : null,
+        connectionWebSocket: connectionWebSocket,
+        connectionWebSocketError: connectionWebSocketError,
+        connectionWebRTC: connectionWebRTC,
+        connectionWebRTCError: connectionWebRTCError,
+      })
+    }
+
+    return Promise.resolve(result)
   }
 }

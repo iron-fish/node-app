@@ -75,6 +75,8 @@ if (!window.IronfishManager) {
           transactionFee || 0.5
         ),
     },
+    nodeStatus: () => window.DemoDataManager.getNodeStatus(),
+    peers: () => window.DemoDataManager.getNodePeers(),
     hasAnyAccount: () => window.DemoDataManager.hasAnyAccount(),
     initialize: () => window.DemoDataManager.initialize(),
     start: () => window.DemoDataManager.start(),

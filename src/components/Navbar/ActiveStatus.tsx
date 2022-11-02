@@ -41,6 +41,67 @@ const getWalletSyncStatus = (
   }
 }
 
+function round(value: number, places: number): number {
+  const scalar = Math.pow(10, places)
+  return Math.round(value * scalar) / scalar
+}
+
+const MS_PER_SEC = 1000.0
+const MS_PER_MIN = 60.0 * 1000.0
+const MS_PER_HOUR = 60.0 * 60.0 * 1000.0
+
+const renderTime = (
+  time: number,
+  options?: {
+    forceHour?: boolean
+    forceMinute?: boolean
+    forceSecond?: boolean
+    forceMillisecond?: boolean
+    hideMilliseconds?: boolean
+  }
+): string => {
+  if (time < 1) {
+    return `${round(time, 4)}ms`
+  }
+
+  const parts = []
+  let magnitude = 0
+
+  if (time >= MS_PER_HOUR && (magnitude <= 5 || options?.forceHour)) {
+    const hours = Math.floor(time / MS_PER_HOUR)
+    time -= hours * MS_PER_HOUR
+    parts.push(`${hours.toFixed(0)}h`)
+    magnitude = Math.max(magnitude, 4)
+  }
+
+  if (time >= MS_PER_MIN && (magnitude <= 4 || options?.forceMinute)) {
+    const minutes = Math.floor(time / MS_PER_MIN)
+    time -= minutes * MS_PER_MIN
+    parts.push(`${minutes.toFixed(0)}m`)
+    magnitude = Math.max(magnitude, 3)
+  }
+
+  if (time >= MS_PER_SEC && (magnitude <= 3 || options?.forceSecond)) {
+    const seconds = Math.floor(time / MS_PER_SEC)
+    time -= seconds * MS_PER_SEC
+    parts.push(`${seconds.toFixed(0)}s`)
+    magnitude = Math.max(magnitude, 2)
+  }
+
+  if (time > 0 && (magnitude <= 2 || options?.forceMillisecond)) {
+    if (!options?.hideMilliseconds) {
+      if (magnitude === 0) {
+        parts.push(`${round(time, 4)}ms`)
+      } else {
+        parts.push(`${time.toFixed(0)}ms`)
+      }
+    }
+    magnitude = Math.max(magnitude, 1)
+  }
+
+  return parts.join(' ')
+}
+
 const SyncStatus: FC<DataSyncContextProps> = ({ data, loaded }) => {
   const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
   return (
@@ -60,19 +121,14 @@ const SyncStatus: FC<DataSyncContextProps> = ({ data, loaded }) => {
       {!loaded && (
         <>
           <chakra.h5 color={colors.textWarn}>
-            {`${(data?.blockSyncer.syncing.progress * 100).toFixed(0)}%`}
+            {`${(data?.blockSyncer.syncing.progress * 100).toFixed(2)}%`}
             {' | '}
-            {`${(data?.blockSyncer.syncing.blockSpeed / 1000).toFixed(0)}`}
-            {' seconds'}
+            {`${renderTime(Date.now() - data?.blockchain.headTimestamp)}`}
           </chakra.h5>
           <chakra.h5 color={colors.textWarn}>
-            {`${Math.floor(
-              data?.blockSyncer.syncing.progress *
-                data?.blockSyncer.syncing.speed *
-                100
-            ).toLocaleString()}`}
+            {`${data?.blockchain.head}`}
             {' / '}
-            {`${(data?.blockSyncer.syncing.speed * 100).toLocaleString()}`}
+            {`${data?.blockchain.totalSequences}`}
             {' blocks'}
           </chakra.h5>
         </>
@@ -142,7 +198,7 @@ const StatusItem: FC<StatusItemProps> = ({ fullSize, minified, loaded }) => {
   )
 }
 
-const ActiveStats: FC<FlexProps> = props => {
+const ActiveStatus: FC<FlexProps> = props => {
   const { loaded, data } = useDataSync()
   const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
   return (
@@ -180,4 +236,4 @@ const ActiveStats: FC<FlexProps> = props => {
   )
 }
 
-export default ActiveStats
+export default ActiveStatus

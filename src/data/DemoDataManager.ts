@@ -1,22 +1,18 @@
-import {
-  AccountValue,
-  GetNodeStatusResponse as GetStatusResponse,
-  PeerResponse,
-} from '@ironfish/sdk'
+import { AccountValue, PeerResponse } from '@ironfish/sdk'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
-import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 import SortType from 'Types/SortType'
 import DemoAccountsManager from './DemoAccountsManager'
 import DemoAddressBookManager from './DemoAddressBookManager'
 import DemoMinerManager from './DemoMinerManager'
 import DemoNodeManager from './DemoNodeManager'
 import DemoTransactionsManager from './DemoTransactionsManager'
-import { Account, AccountKeys, AccountSettings } from './types/Account'
+import { AccountSettings } from './types/Account'
 import { AccountMinerStatistic, MinerProps } from './types/AccountMiner'
 import { Contact } from './types/Contact'
 import Transaction from 'Types/Transaction'
+import NodeStatusResponse from 'Types/NodeStatusResponse'
 
 class DemoDataManager {
   accounts: DemoAccountsManager
@@ -193,16 +189,12 @@ class DemoDataManager {
     return this.miner.stop()
   }
 
-  getNodeStatus(): Promise<GetStatusResponse> {
+  getNodeStatus(): Promise<NodeStatusResponse> {
     return this.node.status()
   }
 
   getNodePeers(): Promise<PeerResponse[]> {
     return this.node.peers()
-  }
-
-  syncNodeData(): Promise<void> {
-    return this.node.syncData()
   }
 }
 

@@ -1,15 +1,18 @@
-import { AccountValue } from '@ironfish/sdk'
+import { AccountValue, PeerResponse } from '@ironfish/sdk'
 import AccountBalance from './AccountBalance'
 import CutAccount from './CutAccount'
 import IronFishInitStatus from './IronfishInitStatus'
 import SortType from './SortType'
 import Transaction, { Payment } from './Transaction'
+import NodeStatusResponse from 'Types/NodeStatusResponse'
 
 export enum IronfishManagerAction {
   INITIALIZE = 'initialize',
   START = 'start',
   STOP = 'stop',
   STATUS = 'status',
+  NODE_STATUS = 'nodeStatus',
+  PEERS = 'peers',
   HAS_ANY_ACCOUNT = 'hasAnyAccount',
 }
 
@@ -61,6 +64,7 @@ export interface IIronfishTransactionManager {
     sort?: SortType
   ) => Promise<Transaction[]>
 }
+
 export interface IIronfishAccountManager {
   create: (name: string) => Promise<AccountValue>
   list: (search?: string) => Promise<CutAccount[]>
@@ -79,6 +83,8 @@ export interface IIronfishManager {
   start: () => Promise<void>
   stop: () => Promise<void>
   status: () => Promise<IronFishInitStatus>
+  nodeStatus: () => Promise<NodeStatusResponse>
+  peers: () => Promise<PeerResponse[]>
 }
 
 export default IIronfishManager

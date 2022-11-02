@@ -14,7 +14,7 @@ import Nav from './Nav'
 import IronFishLogo from 'Svgx/IronFishLogo'
 import HexFishLogo from 'Svgx/hexfish'
 
-import ActiveStats from './ActiveSatatus'
+import ActiveStatus from './ActiveStatus'
 
 const primaryNavItems = [
   { hotkey: 'A', to: '/accounts', label: 'Privacy Accounts', icon: IconHome },
@@ -66,7 +66,7 @@ export const Navbar: FC<NavbarProps> = ({ offsetTop = 0 }) => {
       </Box>
       <Box marginTop="auto">
         <Nav my="1rem" list={secondaryNavItems} />
-        <ActiveStats />
+        <ActiveStatus />
         <Toggle />
       </Box>
     </Flex>
