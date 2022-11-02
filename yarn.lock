@@ -3212,10 +3212,10 @@
     ws "7.5.1"
     yup "0.29.3"
 
-"@ironfish/ui-kit@^0.0.15":
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-0.0.15.tgz#392ee512877cfbc79c32774294c6aadff1f639ed"
-  integrity sha512-Y8ylyGnYeLc0N6qaCYSPKDQZ2W/XMUA5LNTsO5rXy6+tmx10TESyei96de/Rztt+93izGrHAW0jfb9rVDoTcew==
+"@ironfish/ui-kit@0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-0.0.16.tgz#cc40c43c484091774e3d852be44a5410064671f5"
+  integrity sha512-ybH8xWfp7o6Vi8G9n61qIAUCElg2+pW6joj7Kv+ACGi8jPx5/T9c+KDRJcthmC9BbdyelXrbEXpMqI1oACtaRg==
   dependencies:
     "@chakra-ui/icons" "1.1.7"
     "@chakra-ui/react" "1.8.6"
@@ -12056,6 +12056,11 @@ ora@^5.0.0, ora@^5.1.0, ora@^5.4.1:
     log-symbols "^4.1.0"
     strip-ansi "^6.0.0"
     wcwidth "^1.0.1"
+
+os-browserify@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/os-browserify/-/os-browserify-0.3.0.tgz#854373c7f5c2315914fc9bfc6bd8238fdda1ec27"
+  integrity sha512-gjcpUc3clBf9+210TRaDWbf+rZZZEshZ+DlXMRCeAjp0xhTrnQsKHypIy1J3d5hKdUzj69t708EHtU8P6bUn0A==
 
 os-tmpdir@^1.0.0, os-tmpdir@~1.0.2:
   version "1.0.2"

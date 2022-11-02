@@ -5,17 +5,24 @@ import {
   IronfishSdk,
   NodeUtils,
   PrivateIdentity,
+  CurrencyUtils,
+  Account,
   MathUtils,
   PeerResponse,
   Connection,
 } from '@ironfish/sdk'
+import { TransactionValue } from '@ironfish/sdk/build/src/wallet/walletdb/transactionValue'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import {
   IIronfishManager,
   IIronfishAccountManager,
+  TransactionFeeStatistic,
+  IIronfishTransactionManager,
 } from 'Types/IIronfishManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
+import SortType from 'Types/SortType'
+import Transaction, { Payment } from 'Types/Transaction'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 
 class AccountManager implements IIronfishAccountManager {
@@ -81,11 +88,194 @@ class AccountManager implements IIronfishAccountManager {
   }
 }
 
+class TransactionManager implements IIronfishTransactionManager {
+  private node: IronfishNode
+
+  constructor(node: IronfishNode) {
+    this.node = node
+  }
+
+  async pay(
+    accountId: string,
+    payment: Payment,
+    transactionFee?: number
+  ): Promise<Transaction> {
+    const account = this.node.wallet.getAccount(accountId)
+    const headSequence = await this.node.wallet.getAccountHeadSequence(account)
+    const fee = transactionFee || (await this.averageFee())
+    const transaction = await this.node.wallet.createTransaction(
+      account,
+      [payment],
+      BigInt(fee),
+      0
+    )
+
+    return await this.resolveTransactionFields(
+      account,
+      headSequence,
+      await account.getTransaction(transaction.hash())
+    )
+  }
+
+  private async getFees(numOfBlocks = 100) {
+    let startBlock
+    const endBlock = this.node.chain.latest.sequence
+    const fees: number[] = []
+
+    let hash = this.node.chain.latest.hash
+
+    for (let i = 0; i < numOfBlocks; i++) {
+      const block = await this.node.chain.getBlock(hash)
+      hash = block.header.previousBlockHash
+
+      if (block) {
+        startBlock = block.header.sequence
+        block.transactions.forEach(transaction => {
+          !transaction.isMinersFee() && fees.push(Number(transaction.fee()))
+        })
+      }
+    }
+
+    return {
+      startBlock,
+      endBlock,
+      fees,
+    }
+  }
+
+  async fees(numOfBlocks = 100): Promise<TransactionFeeStatistic> {
+    const { startBlock, endBlock, fees } = await this.getFees(numOfBlocks)
+
+    fees.sort((a, b) => a - b)
+
+    return {
+      startBlock,
+      endBlock,
+      p25: fees[Math.floor(fees.length * 0.25)],
+      p50: fees[Math.floor(fees.length * 0.5)],
+      p75: fees[Math.floor(fees.length * 0.75)],
+      p100: fees[fees.length - 1],
+    }
+  }
+
+  async averageFee(numOfBlocks = 100): Promise<number> {
+    const { fees } = await this.getFees(numOfBlocks)
+
+    return fees.reduce((prev, curr) => prev + curr, 0) / fees.length
+  }
+
+  async get(hash: string, accountId: string): Promise<Transaction> {
+    const account = this.node.wallet.getAccount(accountId)
+    const headSequence = await this.node.wallet.getAccountHeadSequence(account)
+    const transaction = await account.getTransactionByUnsignedHash(
+      Buffer.from(hash)
+    )
+    await this.node.wallet.syncTransaction(
+      transaction.transaction,
+      transaction,
+      [account]
+    )
+    return await this.resolveTransactionFields(
+      account,
+      headSequence,
+      transaction
+    )
+  }
+
+  private async resolveTransactionFields(
+    account: Account,
+    headSequence: number,
+    transaction: Readonly<TransactionValue>
+  ): Promise<Transaction> {
+    const status = await this.node.wallet.getTransactionStatus(
+      account,
+      transaction,
+      { headSequence }
+    )
+    const created = await this.node.chain.getBlock(transaction.blockHash)
+    const spends = []
+    let creator = false
+    for await (const spend of transaction.transaction.spends()) {
+      const noteHash = await account.getNoteHash(spend.nullifier)
+
+      if (noteHash) {
+        creator = true
+        break
+      }
+
+      spends.push(spend)
+    }
+    const notes = await account.getTransactionNotes(transaction.transaction)
+
+    return {
+      accountId: account.id,
+      hash: transaction.transaction.unsignedHash().toString('hex'),
+      isMinersFee: transaction.transaction.isMinersFee(),
+      fee: transaction.transaction.fee().toString(),
+      notesCount: transaction.transaction.notesLength(),
+      spendsCount: transaction.transaction.spendsLength(),
+      expirationSequence: transaction.transaction.expirationSequence(),
+      status,
+      notes: notes.map(n => ({
+        value: n.note.value(),
+        memo: n.note.memo(),
+      })),
+      spends,
+      creator,
+      from: creator ? account.publicAddress : '',
+      to: creator ? '' : account.publicAddress,
+      created: created?.header?.timestamp,
+      amount: CurrencyUtils.renderIron(
+        notes
+          .map(note => note.note.value())
+          .reduce((prev, curr) => prev + curr, BigInt(0))
+      ),
+    }
+  }
+
+  async findByAccountId(
+    accountId: string,
+    searchTerm?: string,
+    sort?: SortType
+  ): Promise<Transaction[]> {
+    const account = this.node.wallet.getAccount(accountId)
+    const headSequence = await this.node.wallet.getAccountHeadSequence(account)
+    const transactions = []
+    for await (const transaction of account.getTransactions()) {
+      transactions.push(
+        await this.resolveTransactionFields(account, headSequence, transaction)
+      )
+    }
+
+    return transactions
+      .filter(
+        transaction =>
+          !searchTerm ||
+          transaction.from.includes(searchTerm) ||
+          transaction.to.includes(searchTerm) ||
+          transaction.notes.find(note => note.memo)
+      )
+      .sort((t1, t2) => {
+        const date1: number = (t1.created || new Date()).getTime()
+        const date2: number = (t2.created || new Date()).getTime()
+
+        return sort === SortType.ASC ? date1 - date2 : date2 - date1
+      })
+  }
+
+  async findByAddress(address: string, searchTerm?: string, sort?: SortType) {
+    const transactions: Transaction[] = await Promise.resolve([])
+
+    return transactions
+  }
+}
+
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   protected sdk: IronfishSdk
   protected node: IronfishNode
   accounts: IIronfishAccountManager
+  transactions: IIronfishTransactionManager
 
   private getPrivateIdentity(): PrivateIdentity | undefined {
     const networkIdentity = this.sdk.internal.get('networkIdentity')
@@ -115,6 +305,7 @@ export class IronFishManager implements IIronfishManager {
       await NodeUtils.waitForOpen(this.node)
 
       this.accounts = new AccountManager(this.node)
+      this.transactions = new TransactionManager(this.node)
 
       this.initStatus = IronFishInitStatus.INITIALIZED
     } catch (e) {

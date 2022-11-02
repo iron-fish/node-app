@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -28,6 +28,8 @@ import Contact from 'Types/Contact'
 import SendIcon from 'Svgx/send'
 import CutAccount from 'Types/CutAccount'
 import { truncateHash } from 'Utils/hash'
+import useSendFlow from 'Hooks/transactions/useSendFlow'
+import Transaction, { TransactionStatus } from 'Types/Transaction'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
 
@@ -37,6 +39,7 @@ interface SendProps {
   amount: number
   memo: string
   fee: number
+  transaction: Transaction | null
 }
 
 interface DataPreviewLineProps extends StyleProps {
@@ -68,7 +71,7 @@ const DataPreviewLine: FC<DataPreviewLineProps> = ({
 interface StepProps extends SendProps {
   onConfirm: () => void
   onCancel: () => void
-  onSend: () => void
+  onSend: (transaction: Transaction) => void
 }
 
 const ConfirmStep: FC<StepProps> = ({
@@ -172,15 +175,43 @@ const ConfirmStep: FC<StepProps> = ({
   )
 }
 
-const SendStep: FC<StepProps> = ({ onSend }) => {
-  setTimeout(onSend, 3000)
+const getProgress = (transaction: Transaction): number => {
+  switch (transaction?.status) {
+    case TransactionStatus.UNKNOWN:
+      return 10
+    case TransactionStatus.UNCONFIRMED:
+      return 25
+    case TransactionStatus.PENDING:
+      return 50
+    case TransactionStatus.CONFIRMED:
+    case TransactionStatus.EXPIRED:
+      return 100
+    default:
+      return 0
+  }
+}
+
+const SendStep: FC<StepProps> = ({ amount, fee, from, to, memo, onSend }) => {
+  const transaction = useSendFlow(from.id, amount, memo, to.address, fee)
+
+  useEffect(() => {
+    if (
+      transaction?.status === TransactionStatus.CONFIRMED ||
+      transaction?.status === TransactionStatus.EXPIRED
+    ) {
+      onSend(transaction)
+    }
+  }, [transaction?.status])
+
+  const progress = getProgress(transaction)
+
   return (
     <ModalBody p={0}>
       <chakra.h2 mb="1rem">Transaction Processing</chakra.h2>
       <chakra.h4 mb="2rem">
-        We are processing your transaction of 1.3232 $IRON. This may take a few
-        minutes. Once the transaction is processed there will be a link below
-        with your details.
+        We are processing your transaction of {amount} $IRON. This may take a
+        few minutes. Once the transaction is processed there will be a link
+        below with your details.
       </chakra.h4>
       <Box
         border="0.0625rem solid"
@@ -191,7 +222,7 @@ const SendStep: FC<StepProps> = ({ onSend }) => {
       >
         <Flex w="100%" justifyContent="space-between" mb="0.5rem">
           <Box>
-            <chakra.h4>0% Complete</chakra.h4>
+            <chakra.h4>{progress}% Complete</chakra.h4>
           </Box>
           <Box>
             <chakra.h5 color={NAMED_COLORS.GREY}>
@@ -218,7 +249,7 @@ const SendStep: FC<StepProps> = ({ onSend }) => {
   )
 }
 
-const ResultStep: FC<StepProps> = () => (
+const ResultStep: FC<StepProps> = ({ transaction }) => (
   <>
     <ModalCloseButton
       border="0.0625rem solid"
@@ -241,7 +272,7 @@ const ResultStep: FC<StepProps> = () => (
       <FieldGroup w="100%">
         <TextField
           label="Transaction Link"
-          value="https://explorer.ironfish.network/transaction/a717490d1d8aa25d8c64ca1ab78934e0b8bc7981b40de33359ec6a8137c26484"
+          value={`https://explorer.ironfish.network/transaction/${transaction.hash}`}
           InputProps={{
             textColor: NAMED_COLORS.LIGHT_BLUE,
             whiteSpace: 'nowrap',
@@ -251,7 +282,7 @@ const ResultStep: FC<StepProps> = () => (
             cursor: 'pointer',
             onClick: () =>
               window.open(
-                'https://explorer.ironfish.network/transaction/a717490d1d8aa25d8c64ca1ab78934e0b8bc7981b40de33359ec6a8137c26484',
+                `https://explorer.ironfish.network/transaction/${transaction.hash}`,
                 '_blank'
               ),
           }}
@@ -271,7 +302,7 @@ const ResultStep: FC<StepProps> = () => (
 
 const STEPS: FC<StepProps>[] = [ConfirmStep, SendStep, ResultStep]
 
-const SendFlow: FC<SendFlowProps> = ({
+const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
   from,
   to,
   amount,
@@ -280,6 +311,7 @@ const SendFlow: FC<SendFlowProps> = ({
   ...props
 }) => {
   const [currStep, setCurrentStep] = useState<number>(0)
+  const [transaction, setTransaction] = useState<Transaction | null>(null)
   const Step = STEPS[currStep]
 
   const handleClose = () => {
@@ -306,7 +338,9 @@ const SendFlow: FC<SendFlowProps> = ({
             onConfirm={() => {
               setCurrentStep(1)
             }}
-            onSend={() => {
+            transaction={transaction}
+            onSend={t => {
+              setTransaction(t)
               setCurrentStep(2)
             }}
             onCancel={handleClose}

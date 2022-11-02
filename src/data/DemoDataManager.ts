@@ -11,7 +11,7 @@ import DemoTransactionsManager from './DemoTransactionsManager'
 import { AccountSettings } from './types/Account'
 import { AccountMinerStatistic, MinerProps } from './types/AccountMiner'
 import { Contact } from './types/Contact'
-import { Transaction } from './types/Transaction'
+import Transaction from 'Types/Transaction'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
 
 class DemoDataManager {
@@ -131,13 +131,14 @@ class DemoDataManager {
   }
 
   sendTransaction(
+    accountId: string,
     from: string,
     to: string,
     amount: number,
     memo: string,
     fee: number
-  ): Promise<string> {
-    return this.transactions.send(from, to, amount, memo, fee)
+  ): Promise<Transaction> {
+    return this.transactions.send(accountId, from, to, amount, memo, fee)
   }
 
   getAddressBook(search: string, sort?: SortType): Promise<Contact[]> {

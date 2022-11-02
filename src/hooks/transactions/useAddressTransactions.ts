@@ -1,19 +1,23 @@
 import { useCallback, useEffect } from 'react'
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
-import { Transaction } from 'Data/types/Transaction'
+import Transaction from 'Types/Transaction'
 import SortType from 'Types/SortType'
 
-const useTransactions = (address: string, search?: string, sort?: SortType) => {
+const useAddressTransactions = (
+  address: string,
+  search?: string,
+  sort?: SortType
+) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Transaction[]>()
   const addContact = useCallback(
     (name, contactAddress) =>
-      window.DemoDataManager.addContact(name, contactAddress),
+      window.AddressBookStorage.add({ name, address: contactAddress }),
     []
   )
 
   const loadTransactions = () =>
     promiseWrapper(
-      window.DemoDataManager.findTransactionsByAddress(address, search, sort)
+      window.IronfishManager.transactions.findByAddress(address, search, sort)
     )
 
   useEffect(() => {
@@ -23,4 +27,4 @@ const useTransactions = (address: string, search?: string, sort?: SortType) => {
   return [result, addContact] as const
 }
 
-export default useTransactions
+export default useAddressTransactions

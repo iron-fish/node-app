@@ -1,12 +1,15 @@
 import { contextBridge, ipcRenderer } from 'electron'
-// import { IronfishSdk } from '@ironfish/sdk'
+import { AccountValue } from '@ironfish/sdk'
 
-// contextBridge.exposeInMainWorld('Wallet', IronfishSdk)
 import SortType from 'Types/SortType'
 import IStorage from 'Types/IStorage'
 import Entity from 'Types/Entity'
-import { AccountValue } from '@ironfish/sdk'
-import IIronfishManager from 'Types/IIronfishManager'
+import IIronfishManager, {
+  IronfishAccountManagerAction,
+  IronfishManagerAction,
+  IronfishTransactionManagerAction,
+} from 'Types/IIronfishManager'
+import { Payment } from 'Types/Transaction'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
   storageName: string
@@ -35,29 +38,116 @@ contextBridge.exposeInMainWorld(
   }
 )
 contextBridge.exposeInMainWorld('IronfishManager', {
-  status: () => ipcRenderer.invoke('ironfish-manager', 'status'),
-  initialize: () => ipcRenderer.invoke('ironfish-manager', 'initialize'),
-  hasAnyAccount: () => ipcRenderer.invoke('ironfish-manager', 'hasAnyAccount'),
-  start: () => ipcRenderer.invoke('ironfish-manager', 'start'),
-  stop: () => ipcRenderer.invoke('ironfish-manager', 'stop'),
-  nodeStatus: () => ipcRenderer.invoke('ironfish-manager', 'nodeStatus'),
-  peers: () => ipcRenderer.invoke('ironfish-manager', 'peers'),
+  status: () =>
+    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.STATUS),
+  initialize: () =>
+    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.INITIALIZE),
+  hasAnyAccount: () =>
+    ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.HAS_ANY_ACCOUNT
+    ),
+  start: () =>
+    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.START),
+  stop: () =>
+    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.STOP),
+  nodeStatus: () =>
+    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.NODE_STATUS),
+  peers: () =>
+    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.PEERS),
   accounts: {
     create: (name: string) =>
-      ipcRenderer.invoke('ironfish-manager-accounts', 'create', name),
-    list: () => ipcRenderer.invoke('ironfish-manager-accounts', 'list'),
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.CREATE,
+        name
+      ),
+    list: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.LIST
+      ),
     get: (id: string) =>
-      ipcRenderer.invoke('ironfish-manager-accounts', 'get', id),
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.GET,
+        id
+      ),
     delete: (name: string) =>
-      ipcRenderer.invoke('ironfish-manager-accounts', 'delete', name),
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.DELETE,
+        name
+      ),
     import: (account: Omit<AccountValue, 'id' | 'rescan'>) =>
-      ipcRenderer.invoke('ironfish-manager-accounts', 'import', account),
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.IMPORT,
+        account
+      ),
     export: (id: string) =>
-      ipcRenderer.invoke('ironfish-manager-accounts', 'export', id),
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.EXPORT,
+        id
+      ),
     balance: (id: string) =>
-      ipcRenderer.invoke('ironfish-manager-accounts', 'balance', id),
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.BALANCE,
+        id
+      ),
   },
-})
+  transactions: {
+    get: (hash: string, accountId: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-transactions',
+        IronfishTransactionManagerAction.GET,
+        hash,
+        accountId
+      ),
+    pay: (accountId: string, payment: Payment, transactionFee?: number) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-transactions',
+        IronfishTransactionManagerAction.PAY,
+        accountId,
+        payment,
+        transactionFee
+      ),
+    fees: (numOfBlocks = 100) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-transactions',
+        IronfishTransactionManagerAction.FEES,
+        numOfBlocks
+      ),
+    averageFee: (numOfBlocks = 100) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-transactions',
+        IronfishTransactionManagerAction.AVERAGE_FEE,
+        numOfBlocks
+      ),
+    findByAccountId: (
+      accountId: string,
+      searchTerm?: string,
+      sort?: SortType
+    ) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-transactions',
+        IronfishTransactionManagerAction.FIND_BY_ACCOUNT_ID,
+        accountId,
+        searchTerm,
+        sort
+      ),
+    findByAddress: (address: string, searchTerm?: string, sort?: SortType) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-transactions',
+        IronfishTransactionManagerAction.FIND_BY_ADDRESS,
+        address,
+        searchTerm,
+        sort
+      ),
+  },
+} as IIronfishManager)
 contextBridge.exposeInMainWorld(
   'AddressBookStorage',
   wrapMethodsWithCallbacks('address-book')
