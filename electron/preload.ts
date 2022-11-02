@@ -40,6 +40,8 @@ contextBridge.exposeInMainWorld('IronfishManager', {
   hasAnyAccount: () => ipcRenderer.invoke('ironfish-manager', 'hasAnyAccount'),
   start: () => ipcRenderer.invoke('ironfish-manager', 'start'),
   stop: () => ipcRenderer.invoke('ironfish-manager', 'stop'),
+  nodeStatus: () => ipcRenderer.invoke('ironfish-manager', 'nodeStatus'),
+  peers: () => ipcRenderer.invoke('ironfish-manager', 'peers'),
   accounts: {
     create: (name: string) =>
       ipcRenderer.invoke('ironfish-manager-accounts', 'create', name),

@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, nativeTheme, shell } from 'electron'
 import {
   IronfishAccountManagerAction,
   IronfishManagerAction,
+  IronfishNodeStatusManagerAction,
 } from 'Types/IIronfishManager'
 import initStorageCallbacks from './initStorage'
 import { IronFishManager } from './ironfish/IronFishManager'
