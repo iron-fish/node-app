@@ -12,7 +12,7 @@ const STATUS: NodeStatusResponse = {
   blockchain: {
     synced: false,
     head: '0',
-    totalSequences: '23344',
+    totalSequences: '2344',
     headTimestamp: new Date().getTime(),
     newBlockSpeed: Math.random() * 1000,
   },
@@ -57,9 +57,10 @@ class DemoNodeManager {
   status(): Promise<NodeStatusResponse> {
     return new Promise(resolve => {
       setTimeout(() => {
-        if (STATUS.blockSyncer.status === BlockSyncerStatusType.SYNCING) {
-          const head = Number(STATUS.blockchain.head)
-          const total = Number(STATUS.blockchain.totalSequences)
+        const head = Number(STATUS.blockchain.head)
+        const total = Number(STATUS.blockchain.totalSequences)
+        if (head < total) {
+          STATUS.blockSyncer.status = BlockSyncerStatusType.SYNCING
           STATUS.blockchain.synced = false
           STATUS.blockSyncer.syncing.blockSpeed -=
             STATUS.blockSyncer.syncing.speed
@@ -68,6 +69,7 @@ class DemoNodeManager {
           ).toString()
           STATUS.blockSyncer.syncing.progress = head / total
         } else {
+          STATUS.blockSyncer.status = BlockSyncerStatusType.IDLE
           STATUS.blockchain.synced = true
           STATUS.blockSyncer.syncing.blockSpeed = BLOCK_SPEED
           STATUS.blockSyncer.syncing.progress = 100.0

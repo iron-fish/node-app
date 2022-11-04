@@ -14,6 +14,7 @@ import {
   VStack,
   useColorModeValue,
 } from '@ironfish/ui-kit'
+import size from 'byte-size'
 import useNodeStatus from 'Hooks/node/useNodeStatus'
 import NodeOverviewImage from 'Svgx/NodeOverviewImage'
 
@@ -54,6 +55,12 @@ const NodeStatus: FC<BoxProps> = props => {
       boxShadow: `0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.DARKER_GREY}, 0.25rem 0.25rem ${NAMED_COLORS.WHITE} !important`,
     }
   )
+  const inbound = size(data?.peerNetwork.inboundTraffic || 0, {
+    precision: 2,
+  })
+  const outbound = size(data?.peerNetwork.outboundTraffic || 0, {
+    precision: 2,
+  })
   return (
     <Box
       p="4rem"
@@ -110,8 +117,11 @@ const NodeStatus: FC<BoxProps> = props => {
                   label="Outgoing"
                   value={
                     <>
-                      {data?.peerNetwork.outboundTraffic.toFixed(2)}&nbsp;
-                      <chakra.span textTransform="lowercase">kb/s</chakra.span>
+                      {Number(outbound.value).toFixed(2)}
+                      &nbsp;
+                      <chakra.span textTransform="lowercase">
+                        {outbound.unit}/s
+                      </chakra.span>
                     </>
                   }
                 />
@@ -120,8 +130,11 @@ const NodeStatus: FC<BoxProps> = props => {
                   label="Incoming"
                   value={
                     <>
-                      {data?.peerNetwork.inboundTraffic.toFixed(2)}&nbsp;
-                      <chakra.span textTransform="lowercase">kb/s</chakra.span>
+                      {Number(inbound.value).toFixed(2)}
+                      &nbsp;
+                      <chakra.span textTransform="lowercase">
+                        {inbound.unit}/s
+                      </chakra.span>
                     </>
                   }
                 />

@@ -13,14 +13,34 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     to: 'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
-    spends: [],
+    notes: [
+      {
+        memo: 'test',
+        value: 8,
+      },
+      {
+        memo: 'test2',
+        value: 4,
+      },
+    ],
+    spends: [
+      {
+        commitment:
+          'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
+        nullifier:
+          'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
+        size: 12567,
+      },
+    ],
     status: TransactionStatus.CONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     expirationSequence: 0,
-    notesCount: 0,
+    notesCount: 2,
     spendsCount: 0,
+    size: 276943,
+    blockHash:
+      'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
   },
   {
     amount: '10',
@@ -31,14 +51,26 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     from: 'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [
+      {
+        memo: 'test',
+        value: 8,
+      },
+      {
+        memo: 'test2',
+        value: 2,
+      },
+    ],
     spends: [],
     status: TransactionStatus.CONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     expirationSequence: 0,
-    notesCount: 0,
+    notesCount: 2,
     spendsCount: 0,
+    size: 321453,
+    blockHash:
+      'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
   },
   {
     amount: '100',
@@ -49,14 +81,26 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     from: 'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [
+      {
+        memo: 'test',
+        value: 80,
+      },
+      {
+        memo: 'test2',
+        value: 20,
+      },
+    ],
     spends: [],
     status: TransactionStatus.CONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     expirationSequence: 0,
-    notesCount: 0,
+    notesCount: 2,
     spendsCount: 0,
+    size: 142765,
+    blockHash:
+      'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
   },
   {
     amount: '1235',
@@ -67,14 +111,26 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     to: 'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [
+      {
+        memo: 'test',
+        value: 800,
+      },
+      {
+        memo: 'test2',
+        value: 435,
+      },
+    ],
     spends: [],
     status: TransactionStatus.CONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     expirationSequence: 0,
-    notesCount: 0,
+    notesCount: 2,
     spendsCount: 0,
+    size: 153924,
+    blockHash:
+      'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
   },
   {
     amount: '121',
@@ -85,14 +141,26 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     to: 'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [
+      {
+        memo: 'test',
+        value: 80,
+      },
+      {
+        memo: 'test2',
+        value: 41,
+      },
+    ],
     spends: [],
     status: TransactionStatus.CONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     expirationSequence: 0,
-    notesCount: 0,
+    notesCount: 2,
     spendsCount: 0,
+    size: 375603,
+    blockHash:
+      'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
   },
   {
     amount: '12',
@@ -103,14 +171,26 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     from: 'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [
+      {
+        memo: 'test',
+        value: 8,
+      },
+      {
+        memo: 'test2',
+        value: 4,
+      },
+    ],
     spends: [],
     status: TransactionStatus.CONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     expirationSequence: 0,
-    notesCount: 0,
+    notesCount: 2,
     spendsCount: 0,
+    size: 194285,
+    blockHash:
+      'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
   },
 ]
 
@@ -192,7 +272,6 @@ class DemoTransactionsManager {
   ): Promise<Transaction> {
     return new Promise(resolve => {
       setTimeout(() => {
-        const hash = nanoid(64)
         const transaction: Transaction = {
           amount: amount.toString(),
           created: new Date(),
@@ -201,10 +280,12 @@ class DemoTransactionsManager {
           from: from,
           to: to,
           hash: nanoid(64),
+          blockHash: nanoid(64),
+          size: Math.floor(Math.random() * 100000),
           isMinersFee: false,
           notes: [
             {
-              value: BigInt(amount),
+              value: amount,
               memo: memo,
             },
           ],

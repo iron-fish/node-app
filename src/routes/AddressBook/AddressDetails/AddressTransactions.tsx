@@ -7,6 +7,7 @@ import {
   Icon,
   Link,
 } from '@ironfish/ui-kit'
+import { Link as RouterLink } from 'react-router-dom'
 import Caret from 'Svgx/caret-icon'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
@@ -14,6 +15,7 @@ import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAddressTransactions'
 import SortType from 'Types/SortType'
 import Transaction from 'Types/Transaction'
+import ROUTES from 'Routes/data'
 
 interface AddressTransactionsProps {
   address: string
@@ -102,13 +104,19 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
               ItemProps: {
                 justifyContent: 'flex-end',
               },
-              render: () => (
+              render: (transaction: Transaction) => (
                 <Link
                   sx={{
                     color: NAMED_COLORS.LIGHT_BLUE,
                     _hover: {
                       color: NAMED_COLORS.LIGHT_BLUE,
                     },
+                  }}
+                  as={RouterLink}
+                  to={ROUTES.TRANSACTION}
+                  state={{
+                    accountId: transaction.accountId,
+                    hash: transaction.hash,
                   }}
                 >
                   <Flex>

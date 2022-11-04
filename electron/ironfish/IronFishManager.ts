@@ -1,4 +1,5 @@
 import { BoxKeyPair } from '@ironfish/rust-nodejs'
+import { sizeVarBytes } from 'bufio'
 import {
   AccountValue,
   IronfishNode,
@@ -105,7 +106,12 @@ class TransactionManager implements IIronfishTransactionManager {
     const fee = transactionFee || (await this.averageFee())
     const transaction = await this.node.wallet.createTransaction(
       account,
-      [payment],
+      [
+        {
+          ...payment,
+          amount: BigInt(payment.amount),
+        },
+      ],
       BigInt(fee),
       0
     )
@@ -217,10 +223,16 @@ class TransactionManager implements IIronfishTransactionManager {
       expirationSequence: transaction.transaction.expirationSequence(),
       status,
       notes: notes.map(n => ({
-        value: n.note.value(),
+        value: Number(n.note.value()),
         memo: n.note.memo(),
       })),
-      spends,
+      spends: spends.map(spend => ({
+        commitment: spend.commitment.toString('hex'),
+        nullifier: spend.nullifier.toString('hex'),
+        size: spend.size,
+      })),
+      blockHash: transaction.blockHash.toString('hex'),
+      size: sizeVarBytes(transaction.transaction),
       creator,
       from: creator ? account.publicAddress : '',
       to: creator ? '' : account.publicAddress,
@@ -295,6 +307,7 @@ export class IronFishManager implements IIronfishManager {
       this.sdk = await IronfishSdk.init({
         configOverrides: {
           nodeWorkers: 0,
+          nodeName: 'My node',
         },
       })
 
@@ -451,6 +464,27 @@ export class IronFishManager implements IIronfishManager {
       })
     }
 
-    return Promise.resolve(result)
+    return Promise.resolve(
+      result.sort((peerA, peerB) => {
+        if (peerA.state === 'CONNECTED') {
+          return -1
+        }
+        if (peerB.state === 'CONNECTED') {
+          return 1
+        }
+        if (peerA.state === 'CONNECTING') {
+          return -1
+        }
+        if (peerB.state === 'CONNECTING') {
+          return 1
+        }
+        if (peerA.state === 'DISCONNECTED') {
+          return -1
+        }
+        if (peerB.state === 'DISCONNECTED') {
+          return 1
+        }
+      })
+    )
   }
 }

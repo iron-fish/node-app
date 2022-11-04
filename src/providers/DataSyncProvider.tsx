@@ -24,7 +24,6 @@ interface DataSyncProviderProps {
 }
 
 const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
-  const [loaded, setLoaded] = useState<boolean>(false)
   const [status, setNodeStatus] = useState<NodeStatusResponse | undefined>()
   const [error, setError] = useState()
 
@@ -39,7 +38,6 @@ const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    setLoaded(status?.blockchain.synced)
     const interval = setInterval(
       () => {
         loadStatus()
@@ -49,7 +47,7 @@ const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
     return () => clearInterval(interval)
   }, [status?.blockSyncer.status])
 
-  const value = { loaded, data: status, error }
+  const value = { loaded: status?.blockchain.synced, data: status, error }
 
   return (
     <DataSyncContext.Provider value={value}>

@@ -240,11 +240,17 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                     height: '100%',
                     justifyContent: 'flex-end',
                   },
-                  render: () => (
+                  render: (transaction: Transaction) => (
                     <Button
                       variant="link"
                       color={NAMED_COLORS.LIGHT_BLUE}
                       rightIcon={<ChevronRightIcon />}
+                      as={RouterLink}
+                      to={ROUTES.TRANSACTION}
+                      state={{
+                        accountId: transaction.accountId,
+                        hash: transaction.hash,
+                      }}
                     >
                       <chakra.h5>View Details</chakra.h5>
                     </Button>

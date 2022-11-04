@@ -19,6 +19,7 @@ import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 import { DataSyncProvider } from './providers/DataSyncProvider'
 import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
 import Initializing from 'Routes/Initializing'
+import TransactionOverview from 'Routes/Transaction/TransactionOverview'
 
 const breakpoints = {
   xs: '46.875rem', //750px
@@ -58,6 +59,10 @@ function App() {
                 <Route path={ROUTES.RESOURCES} element={null} />
                 <Route path={ROUTES.NODE} element={<NodeOverview />} />
                 <Route path={ROUTES.MINER} element={<Miner />} />
+                <Route
+                  path={ROUTES.TRANSACTION}
+                  element={<TransactionOverview />}
+                />
               </Route>
             </Route>
           </Routes>
