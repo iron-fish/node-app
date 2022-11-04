@@ -14,7 +14,7 @@ const useSendFlow = (
       .pay(
         accountId,
         {
-          amount: BigInt(amount),
+          amount: amount,
           memo: memo,
           publicAddress: to,
         },
