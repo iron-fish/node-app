@@ -10,7 +10,7 @@ import {
   CopyToClipboardButton,
 } from '@ironfish/ui-kit'
 import { FC, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '..'
 import BackButtonLink from 'Components/BackButtonLink'
 import useCreateAccount from 'Hooks/accounts/useCreateAccount'
@@ -25,6 +25,7 @@ const CreateAccount: FC<CreateAccountProps> = ({
   desktopMode = true,
   onCreate = () => undefined,
 }) => {
+  const navigate = useNavigate()
   const [saved, setSaved] = useState<boolean>(false)
   const [accountName, setAccountName] = useState<string>('')
   const [{ data: phrase, loaded }, createAccount] = useCreateAccount()
@@ -105,16 +106,12 @@ const CreateAccount: FC<CreateAccountProps> = ({
         <Button
           variant="primary"
           isDisabled={checkChanges()}
-          as={Link}
-          to={ROUTES.ACCOUNTS}
           size="large"
           w={desktopMode ? undefined : '100%'}
           onClick={() => {
-            if (!checkChanges()) {
-              createAccount(accountName, phrase as MnemonicPhraseType).then(
-                () => onCreate()
-              )
-            }
+            createAccount(accountName, phrase as MnemonicPhraseType)
+              .then(() => onCreate())
+              .finally(() => navigate(ROUTES.ACCOUNTS))
           }}
         >
           Create Account
