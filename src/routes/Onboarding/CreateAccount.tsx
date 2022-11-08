@@ -110,9 +110,11 @@ const CreateAccount: FC<CreateAccountProps> = ({
           size="large"
           w={desktopMode ? undefined : '100%'}
           onClick={() => {
-            createAccount(accountName, phrase as MnemonicPhraseType).then(() =>
-              onCreate()
-            )
+            if (!checkChanges()) {
+              createAccount(accountName, phrase as MnemonicPhraseType).then(
+                () => onCreate()
+              )
+            }
           }}
         >
           Create Account
