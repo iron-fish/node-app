@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, forwardRef } from 'react'
 import {
   chakra,
   Flex,
@@ -41,50 +41,54 @@ const getWalletSyncStatus = (
   }
 }
 
-const SyncStatus: FC<DataSyncContextProps> = ({ data, loaded }) => {
-  const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
-  return (
-    <Flex
-      p="0.25rem"
-      bg={loaded ? colors.bg : colors.bgWarn}
-      borderRadius="0.25rem"
-      textAlign="center"
-      flexDirection="column"
-      width="14.5rem"
-      minH="2.125rem"
-      justifyContent="center"
-    >
-      <chakra.h5 color={loaded ? colors.text : colors.textWarn}>
-        Wallet Status: {getWalletSyncStatus(data?.blockSyncer.status)}
-      </chakra.h5>
-      {!loaded && (
-        <>
-          <chakra.h5 color={colors.textWarn}>
-            {`${(data?.blockSyncer.syncing.progress * 100).toFixed(0)}%`}
-            {' | '}
-            {`${(data?.blockSyncer.syncing.blockSpeed / 1000).toFixed(0)}`}
-            {' seconds'}
-          </chakra.h5>
-          <chakra.h5 color={colors.textWarn}>
-            {`${Math.floor(
-              data?.blockSyncer.syncing.progress *
-                data?.blockSyncer.syncing.speed *
-                100
-            ).toLocaleString()}`}
-            {' / '}
-            {`${(data?.blockSyncer.syncing.speed * 100).toLocaleString()}`}
-            {' blocks'}
-          </chakra.h5>
-        </>
-      )}
-    </Flex>
-  )
-}
+const SyncStatus = forwardRef<HTMLDivElement, DataSyncContextProps>(
+  ({ data, loaded }, ref) => {
+    const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
+    return (
+      <Flex
+        ref={ref}
+        p="0.25rem"
+        bg={loaded ? colors.bg : colors.bgWarn}
+        borderRadius="0.25rem"
+        textAlign="center"
+        flexDirection="column"
+        width="14.5rem"
+        minH="2.125rem"
+        justifyContent="center"
+      >
+        <chakra.h5 color={loaded ? colors.text : colors.textWarn}>
+          Wallet Status: {getWalletSyncStatus(data?.blockSyncer.status)}
+        </chakra.h5>
+        {!loaded && (
+          <>
+            <chakra.h5 color={colors.textWarn}>
+              {`${(data?.blockSyncer.syncing.progress * 100).toFixed(0)}%`}
+              {' | '}
+              {`${(data?.blockSyncer.syncing.blockSpeed / 1000).toFixed(0)}`}
+              {' seconds'}
+            </chakra.h5>
+            <chakra.h5 color={colors.textWarn}>
+              {`${Math.floor(
+                data?.blockSyncer.syncing.progress *
+                  data?.blockSyncer.syncing.speed *
+                  100
+              ).toLocaleString()}`}
+              {' / '}
+              {`${(data?.blockSyncer.syncing.speed * 100).toLocaleString()}`}
+              {' blocks'}
+            </chakra.h5>
+          </>
+        )}
+      </Flex>
+    )
+  }
+)
 
-const MiningStatus = () => {
+const MiningStatus = forwardRef<HTMLDivElement>((props, ref) => {
   const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
   return (
     <Flex
+      ref={ref}
       p="0.25rem"
       bg={colors.bg}
       borderRadius="0.25rem"
@@ -96,7 +100,7 @@ const MiningStatus = () => {
       <chakra.h5 color={colors.text}>Miner Running: 300 h/s</chakra.h5>
     </Flex>
   )
-}
+})
 
 interface StatusItemProps {
   fullSize: ReactNode
