@@ -19,22 +19,9 @@ import { truncateHash } from 'Utils/hash'
 import { ROUTES } from '..'
 import { Account } from 'Data/types/Account'
 import { useDataSync } from 'Providers/DataSyncProvider'
+import { stringToColor } from 'Utils/stringToColor'
 
-export interface AccountPreviewProps extends Account {
-  order: number
-}
-
-export const getGradientColor = (address = '', lightness = 85) => {
-  let colorNumber = 0
-  Array.from(address).forEach(char => {
-    colorNumber += char.charCodeAt(0)
-  })
-
-  return `hsl(${colorNumber % 255}, 100%, ${lightness}%)`
-}
-
-const AccountPreview: FC<AccountPreviewProps> = ({
-  order = 0,
+const AccountPreview: FC<Account> = ({
   name,
   balance = 0,
   address,
@@ -91,9 +78,10 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           sm: '1.25rem',
           lg: '2.75rem',
         }}
-        bg={`linear-gradient(89.56deg, ${getGradientColor(
-          address
-        )} 0.38%, ${getGradientColor(address, 55)} 99.64%)`}
+        bg={`linear-gradient(89.56deg, ${stringToColor(
+          address,
+          85
+        )} 0.38%, ${stringToColor(address, 55)} 99.64%)`}
         borderColor={NAMED_COLORS.BLACK}
         borderRadius="0.25rem"
         border="0.063rem solid"
@@ -110,7 +98,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
           border: '0.063rem solid',
           bg: `linear-gradient(89.56deg, ${
             NAMED_COLORS.WHITE
-          } 0.38%, ${getGradientColor(address, 55)} 99.64%)`,
+          } 0.38%, ${stringToColor(address, 55)} 99.64%)`,
           mr: '-0.25rem',
           mb: '-0.25rem',
           mt: '0.25rem',

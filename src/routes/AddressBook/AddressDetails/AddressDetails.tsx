@@ -23,15 +23,7 @@ import ContactSettings from './ContactSettings'
 import useContact from 'Hooks/addressBook/useContact'
 import ROUTES from 'Routes/data'
 import { useDataSync } from 'Providers/DataSyncProvider'
-
-const getIconBg = (address = '') => {
-  let colorNumber = 0
-  Array.from(address).forEach(char => {
-    colorNumber += char.charCodeAt(0)
-  })
-
-  return `hsl(${colorNumber % 255}, 100%, 73%)`
-}
+import { stringToColor } from 'Utils/stringToColor'
 
 const AddressDetails = () => {
   const { identity } = useParams()
@@ -51,7 +43,7 @@ const AddressDetails = () => {
       <Flex mb="0.5rem" align="center">
         <HexFishCircle
           mr="1rem"
-          bg={getIconBg(contact?.address + contact?.name)}
+          bg={stringToColor(contact?.address + contact?.name, 73)}
         />
         <chakra.h3 mr="1rem">{contact?.name}</chakra.h3>
         <CopyValueToClipboard

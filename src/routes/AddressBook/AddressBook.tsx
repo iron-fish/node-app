@@ -25,15 +25,7 @@ import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import AddContactModal from './AddContactModal'
 import { useDataSync } from 'Providers/DataSyncProvider'
-
-const getIconBg = (address = '') => {
-  let colorNumber = 0
-  Array.from(address).forEach(char => {
-    colorNumber += char.charCodeAt(0)
-  })
-
-  return `hsl(${colorNumber % 255}, 100%, 73%)`
-}
+import { stringToColor } from 'Utils/stringToColor'
 
 const COLUMNS = [
   {
@@ -43,7 +35,7 @@ const COLUMNS = [
       <Flex alignItems="center">
         <HexFishCircle
           mr="1rem"
-          bg={getIconBg(contact.address + contact.name)}
+          bg={stringToColor(contact.address + contact.name, 73)}
         />
         <h5>{contact.name}</h5>
       </Flex>
