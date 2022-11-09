@@ -26,6 +26,7 @@ import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import TransactionStatus from 'Components/TransactionStatus'
+import { getGradientColor } from '../AccountPreview'
 
 interface AccountOverviewProps {
   account: Account
@@ -91,7 +92,12 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
       <Flex w="100%" pb="2rem">
         <Box
           layerStyle="card"
-          bg="linear-gradient(92.65deg, #85ADFE 0.41%, #4D88FF 100.03%) !important"
+          bg={`linear-gradient(92.65deg, ${getGradientColor(
+            account?.address
+          )} 0.38%, ${getGradientColor(
+            account?.address,
+            55
+          )} 99.64%) !important`}
           borderRadius="0.25rem"
           w="100%"
           minWidth="18rem"
