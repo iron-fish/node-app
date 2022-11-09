@@ -185,44 +185,56 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       </Box>
       <Flex ml="auto" alignSelf="center" mr="-1rem">
         <Flex direction="column" gap="0.75rem">
-          <Button
-            variant="primary"
-            borderRadius="4rem"
-            mr="1rem"
+          <Flex
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              navigate(ROUTES.SEND, { state: { accountId: identity } })
+              if (loaded) {
+                navigate(ROUTES.SEND, { state: { accountId: identity } })
+              }
             }}
-            leftIcon={
-              <Icon height={8}>
-                <Send fill="currentColor" />
-              </Icon>
-            }
-            isDisabled={!loaded}
-            disabled={!loaded}
           >
-            <h5>Send</h5>
-          </Button>
-          <Button
-            variant="primary"
-            borderRadius="4rem"
-            mr="1rem"
+            <Button
+              w="100%"
+              variant="primary"
+              borderRadius="4rem"
+              mr="1rem"
+              leftIcon={
+                <Icon height={8}>
+                  <Send fill="currentColor" />
+                </Icon>
+              }
+              isDisabled={!loaded}
+              disabled={!loaded}
+            >
+              <h5>Send</h5>
+            </Button>
+          </Flex>
+          <Flex
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              navigate(ROUTES.RECEIVE, { state: { accountId: identity } })
+              if (loaded) {
+                navigate(ROUTES.RECEIVE, { state: { accountId: identity } })
+              }
             }}
-            leftIcon={
-              <Icon height={8}>
-                <Receive fill="currentColor" />
-              </Icon>
-            }
-            isDisabled={!loaded}
-            disabled={!loaded}
           >
-            <h5>Receive</h5>
-          </Button>
+            <Button
+              w="100%"
+              variant="primary"
+              borderRadius="4rem"
+              mr="1rem"
+              leftIcon={
+                <Icon height={8}>
+                  <Receive fill="currentColor" />
+                </Icon>
+              }
+              isDisabled={!loaded}
+              disabled={!loaded}
+            >
+              <h5>Receive</h5>
+            </Button>
+          </Flex>
         </Flex>
         <IconButton
           alignSelf="center"
