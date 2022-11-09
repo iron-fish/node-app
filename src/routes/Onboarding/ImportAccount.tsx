@@ -15,7 +15,7 @@ import {
   MnemonicView,
   CopyToClipboardButton,
 } from '@ironfish/ui-kit'
-import { FC, useState } from 'react'
+import { FC, useState, useCallback } from 'react'
 import { ROUTES } from '..'
 import IconEye from '@ironfish/ui-kit/dist/svgx/icon-eye'
 import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
@@ -32,7 +32,6 @@ interface DesktopModeProps {
 const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [show, setShow] = useState(false)
   const [key, setKey] = useState('')
-  const navigate = useNavigate()
   const [importBySpendingKey] = useImportAccount()
 
   return (
@@ -64,7 +63,6 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           onClick={() => {
             importBySpendingKey(key).then(() => {
               onImport()
-              desktopMode && navigate(ROUTES.ACCOUNTS)
             })
           }}
           size="large"
@@ -79,7 +77,6 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [file, setFile] = useState<File | null>(null)
-  const navigate = useNavigate()
   const [, , importByFile] = useImportAccount()
   return (
     <>
@@ -113,7 +110,6 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           onClick={() => {
             importByFile(file).then(() => {
               onImport()
-              desktopMode && navigate(ROUTES.ACCOUNTS)
             })
           }}
         >
@@ -126,7 +122,6 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [phrase, setPhrase] = useState([])
-  const navigate = useNavigate()
   const [, importByMnemonicPhrase] = useImportAccount()
   return (
     <>
@@ -160,7 +155,6 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           onClick={() => {
             importByMnemonicPhrase(phrase as MnemonicPhraseType).then(() => {
               onImport()
-              desktopMode && navigate(ROUTES.ACCOUNTS)
             })
           }}
           disabled={
@@ -182,6 +176,12 @@ const ImportAccount: FC<DesktopModeProps> = ({
   desktopMode = true,
   onImport = () => undefined,
 }) => {
+  const navigate = useNavigate()
+  const handleOnImport = useCallback(() => {
+    onImport()
+    desktopMode && navigate(ROUTES.ACCOUNTS)
+  }, [onImport])
+
   return (
     <Flex
       flexDirection="column"
@@ -209,13 +209,22 @@ const ImportAccount: FC<DesktopModeProps> = ({
         </TabList>
         <TabPanels>
           <TabPanel w="100%" p={0}>
-            <SpendingKeyTab desktopMode={desktopMode} onImport={onImport} />
+            <SpendingKeyTab
+              desktopMode={desktopMode}
+              onImport={handleOnImport}
+            />
           </TabPanel>
           <TabPanel w="100%" p={0}>
-            <MnemonicPhraseTab desktopMode={desktopMode} onImport={onImport} />
+            <MnemonicPhraseTab
+              desktopMode={desktopMode}
+              onImport={handleOnImport}
+            />
           </TabPanel>
           <TabPanel w="100%" p={0}>
-            <ImportFileTab desktopMode={desktopMode} onImport={onImport} />
+            <ImportFileTab
+              desktopMode={desktopMode}
+              onImport={handleOnImport}
+            />
           </TabPanel>
         </TabPanels>
       </Tabs>
