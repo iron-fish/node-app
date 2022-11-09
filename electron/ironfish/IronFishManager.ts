@@ -382,8 +382,8 @@ export class IronFishManager implements IIronfishManager {
       blockSyncer: {
         status: this.node.syncer.state,
         syncing: {
-          blockSpeed: MathUtils.round(this.node.chain.addSpeed.avg, 2),
-          speed: MathUtils.round(this.node.syncer.speed.rate1m, 2),
+          blockSpeed: MathUtils.round(this.node.syncer.speed.avg, 2),
+          speed: MathUtils.round(this.node.syncer.speed.rate5m, 2),
           progress: this.node.chain.getProgress(),
         },
       },
