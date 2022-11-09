@@ -15,7 +15,7 @@ import {
   MnemonicView,
   CopyToClipboardButton,
 } from '@ironfish/ui-kit'
-import { FC, useState } from 'react'
+import { FC, useState, useRef } from 'react'
 import { ROUTES } from '..'
 import IconEye from '@ironfish/ui-kit/dist/svgx/icon-eye'
 import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
@@ -23,6 +23,8 @@ import BackButtonLink from 'Components/BackButtonLink'
 import useImportAccount from 'Hooks/accounts/useImportAccount'
 import { useNavigate } from 'react-router-dom'
 import MnemonicPhraseType from 'Types/MnemonicPhraseType'
+import CloseIcon from 'Svgx/CloseIcon'
+import FileIcon from 'Svgx/FileIcon'
 
 interface DesktopModeProps {
   desktopMode?: boolean
@@ -81,15 +83,25 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [file, setFile] = useState<File | null>(null)
   const navigate = useNavigate()
   const [, , importByFile] = useImportAccount()
+  const fileInput = useRef<HTMLInputElement>()
   return (
     <>
       <chakra.h5 mb="1rem" mt="2rem" color={NAMED_COLORS.GREY}>
         Upload your JSON file to import your account
       </chakra.h5>
-      <Box>
-        <Button variant="secondary" borderRadius="4rem">
+      <Flex>
+        <Button
+          variant="secondary"
+          borderRadius="4rem"
+          onClick={() => {
+            if (!file) {
+              fileInput.current.value = ''
+            }
+          }}
+        >
           Browse Files
           <Input
+            ref={fileInput}
             type="file"
             height="100%"
             width="100%"
@@ -99,10 +111,26 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
             opacity="0"
             aria-hidden="true"
             accept="application/JSON"
-            onChange={e => setFile(e.target.files[0])}
+            onChange={e => {
+              setFile(e.target.files[0])
+            }}
           />
         </Button>
-      </Box>
+        {file && (
+          <Flex ml="34px" alignSelf="center" alignItems="center">
+            <FileIcon mr="8px" />
+            <h5>{file.name}</h5>
+            <CloseIcon
+              ml="27px"
+              width="9xp"
+              height="9px"
+              color={NAMED_COLORS.GREY}
+              cursor="pointer"
+              onClick={() => setFile(null)}
+            />
+          </Flex>
+        )}
+      </Flex>
       <Box>
         <Button
           variant="primary"
