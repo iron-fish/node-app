@@ -13,7 +13,7 @@ import {
 import { QRCodeSVG } from 'qrcode.react'
 import { useLocation } from 'react-router-dom'
 import DetailsPanel from 'Components/DetailsPanel'
-import AccountSettingsImage from 'Svgx/AccountSettingsImage'
+import ReceiveIronImage from 'Svgx/ReceiveIronImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import LocationStateProps from 'Types/LocationState'
@@ -42,7 +42,7 @@ const Information: FC = memo(() => {
           <chakra.h5>Check it out!</chakra.h5>
         </Button>
       </chakra.h5>
-      <AccountSettingsImage />
+      <ReceiveIronImage />
     </Box>
   )
 })

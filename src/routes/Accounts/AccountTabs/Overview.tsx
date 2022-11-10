@@ -15,7 +15,7 @@ import { Link as RouterLink } from 'react-router-dom'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
-import AccountKeysImage from 'Svgx/AccountBalance'
+import FeesImage from 'Svgx/FeesImage'
 import { truncateHash } from 'Utils/hash'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useTransactions'
@@ -153,7 +153,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
               </Box>
             </Box>
             <Box display={{ base: 'none', md: 'inline-block' }} m="1rem">
-              <AccountKeysImage />
+              <FeesImage width={180} height={133} />
             </Box>
           </Flex>
         </Box>
