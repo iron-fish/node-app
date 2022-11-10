@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router-dom'
 import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 import CloseIcon from 'Svgx/CloseIcon'
 import FileIcon from 'Svgx/FileIcon'
+import { truncateHash } from 'Utils/hash'
 
 interface DesktopModeProps {
   desktopMode?: boolean
@@ -120,7 +121,11 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
         {file && (
           <Flex ml="34px" alignSelf="center" alignItems="center">
             <FileIcon mr="8px" />
-            <h5>{file.name}</h5>
+            <chakra.h5 color={NAMED_COLORS.BLACK}>
+              {file.name.length > 32
+                ? truncateHash(file.name, 2, 14)
+                : file.name}
+            </chakra.h5>
             <CloseIcon
               ml="27px"
               width="9xp"
