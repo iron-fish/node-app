@@ -231,8 +231,8 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                   key: 'transaction-details-column',
                   label: '',
                   ItemProps: {
-                    height: '100%',
-                    justifyContent: 'flex-end',
+                    marginLeft: 'auto',
+                    width: 'min-content',
                   },
                   render: () => (
                     <Button
