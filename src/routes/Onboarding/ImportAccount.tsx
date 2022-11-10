@@ -91,6 +91,7 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
       </chakra.h5>
       <Flex>
         <Button
+          minW="8.75rem"
           variant="secondary"
           borderRadius="4rem"
           onClick={() => {
