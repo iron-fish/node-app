@@ -30,6 +30,7 @@ import { stringToColor } from 'Utils/stringToColor'
 
 interface AccountOverviewProps {
   account: Account
+  address?: string
 }
 
 const EmptyOverview = () => {
@@ -67,7 +68,7 @@ const EmptyOverview = () => {
   )
 }
 
-const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
+const AccountOverview: FC<AccountOverviewProps> = ({ account, address }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
   const [{ data: transactions, loaded }] = useTransactions(
@@ -93,9 +94,9 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
         <Box
           layerStyle="card"
           bg={`linear-gradient(92.65deg, ${stringToColor(
-            account?.address,
+            address,
             85
-          )} 0.38%, ${stringToColor(account?.address, 55)} 99.64%) !important`}
+          )} 0.38%, ${stringToColor(address, 55)} 99.64%) !important`}
           borderRadius="0.25rem"
           w="100%"
           minWidth="18rem"

@@ -51,7 +51,7 @@ const AccountPreview: FC<Account> = ({
       borderRadius="0.25rem"
       cursor="pointer"
       onClick={() =>
-        navigate(ROUTES.ACCOUNT, { state: { accountId: identity } })
+        navigate(ROUTES.ACCOUNT, { state: { accountId: identity, address } })
       }
       sx={{
         transition: '0.3s',
