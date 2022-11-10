@@ -6,14 +6,16 @@ import {
   Link,
   useColorModeValue,
 } from '@ironfish/ui-kit'
-import { FC, useState } from 'react'
+import { FC, useState, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 
 import Navbar from '../components/Navbar'
 import CloseIcon from 'Svgx/CloseIcon'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 export const PageLayout: FC = () => {
   const [hideSyncWarning, setHideSyncWarning] = useState(false)
+  const { loaded: synced } = useDataSync()
   const colors = useColorModeValue(
     {
       textWarn: '#7E7400',
@@ -29,7 +31,14 @@ export const PageLayout: FC = () => {
     sm: 'Account balances might not be accurate while your wallet syncs and certain functions may not be available.',
   })
 
-  const warningHeight = hideSyncWarning ? 0 : 2.625
+  useEffect(() => {
+    if (synced) {
+      setHideSyncWarning(false)
+    }
+  }, [synced])
+
+  const showWarning = hideSyncWarning || synced
+  const warningHeight = showWarning ? 0 : 2.625
 
   return (
     <>
@@ -44,7 +53,7 @@ export const PageLayout: FC = () => {
         <chakra.h5
           ml="auto"
           color={colors.textWarn}
-          display={hideSyncWarning ? 'none' : 'block'}
+          display={showWarning ? 'none' : 'block'}
         >
           {message}&nbsp;
           <Link color="inherit">
@@ -52,7 +61,7 @@ export const PageLayout: FC = () => {
           </Link>
         </chakra.h5>
         <CloseIcon
-          display={hideSyncWarning ? 'none' : 'block'}
+          display={showWarning ? 'none' : 'block'}
           ml="auto"
           mr="1rem"
           color="#7E7400"
