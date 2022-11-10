@@ -128,8 +128,8 @@ const StatusItem: FC<StatusItemProps> = ({ fullSize, minified, loaded }) => {
           bgColor={loaded ? colors.bg : colors.bgWarn}
           p="0.25rem"
           borderRadius="0.25rem"
-          h="2.125rem"
-          width="2.125rem"
+          h="2.75rem"
+          width="2.75rem"
           alignItems="center"
           justifyContent="center"
           _hover={{
@@ -162,7 +162,7 @@ const ActiveStats: FC<FlexProps> = props => {
         fullSize={<SyncStatus data={data} loaded={loaded} />}
         minified={
           loaded ? (
-            <ConfirmedIcon color={colors.text} w="20px" h="15px" />
+            <ConfirmedIcon color={colors.text} w="1.25rem" h="0.9375rem" />
           ) : (
             <chakra.h6 mt="0.0625rem">
               {(data?.blockSyncer.syncing.progress * 100).toFixed(0)}%
