@@ -2,12 +2,12 @@ import './initGlobalVariables'
 import {
   AccountSettingsStorage,
   AddressBookStorage,
-  IromFishManager,
+  IronFishManager,
 } from './withDemoData'
 import noop from 'lodash/noop'
 
 if (!window.IronfishManager) {
-  window.IronfishManager = IromFishManager
+  window.IronfishManager = IronFishManager
 }
 if (!window.AddressBookStorage) {
   window.AddressBookStorage = AddressBookStorage

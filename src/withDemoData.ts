@@ -6,7 +6,7 @@ import IIronfishManager from 'Types/IIronfishManager'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
 
-export const IromFishManager: IIronfishManager = {
+export const IronFishManager: IIronfishManager = {
   accounts: {
     create: (name: string) => window.DemoDataManager.createAccount(name),
     delete: (name: string) => window.DemoDataManager.deleteAccount(name),

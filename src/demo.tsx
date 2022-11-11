@@ -2,11 +2,11 @@ import './initGlobalVariables'
 import {
   AccountSettingsStorage,
   AddressBookStorage,
-  IromFishManager,
+  IronFishManager,
 } from './withDemoData'
 import noop from 'lodash/noop'
 
-window.IronfishManager = IromFishManager
+window.IronfishManager = IronFishManager
 window.AddressBookStorage = AddressBookStorage
 window.AccountSettingsStorage = AccountSettingsStorage
 if (!window.setElectronThemeMode) {
