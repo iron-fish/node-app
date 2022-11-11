@@ -7,6 +7,7 @@ module.exports = function override(config, env) {
   //do stuff with the webpack config...
   return {
     ...config,
+    entry: path.join(__dirname, './src/demo.tsx'),
     resolve: {
       ...config?.resolve,
       fallback: {
