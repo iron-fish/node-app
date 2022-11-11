@@ -1,7 +1,7 @@
-import AddressBookStorage from './storage/AddressBookStorage'
-import AccountSettingsStorage from './storage/AccountSettingsStorage'
 import { IpcMain } from 'electron/main'
-import AbstractStorage from './storage/AbstractStorage'
+import AbstractStorage from '../storage/AbstractStorage'
+import AccountSettingsStorage from '../storage/AccountSettingsStorage'
+import AddressBookStorage from '../storage/AddressBookStorage'
 
 import Entity from 'Types/Entity'
 

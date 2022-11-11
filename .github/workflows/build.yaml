@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: yarn
     - name: Build application
-      run: yarn build
+      run: yarn build:production
       
   build_on_win:
     name: 'Check build on Windows'
@@ -40,4 +40,4 @@ jobs:
     - name: Install dependencies
       run: yarn
     - name: Build application
-      run: yarn build
+      run: yarn build:production
