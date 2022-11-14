@@ -63,7 +63,7 @@ const AccountDetails: FC = () => {
           </TabList>
           <TabPanels>
             <TabPanel p="0" pt="2rem">
-              <AccountOverview account={account} address={address} />
+              <AccountOverview account={account} />
             </TabPanel>
             <TabPanel p="0" pt="2rem">
               <AccountKeys account={account} />

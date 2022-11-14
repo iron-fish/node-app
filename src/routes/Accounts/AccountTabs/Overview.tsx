@@ -30,7 +30,6 @@ import { stringToColor } from 'Utils/stringToColor'
 
 interface AccountOverviewProps {
   account: Account
-  address?: string
 }
 
 const EmptyOverview = () => {
@@ -68,7 +67,7 @@ const EmptyOverview = () => {
   )
 }
 
-const AccountOverview: FC<AccountOverviewProps> = ({ account, address }) => {
+const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
   const [{ data: transactions, loaded }] = useTransactions(
@@ -88,15 +87,15 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, address }) => {
   )
   const navigate = useNavigate()
   const { loaded: synced } = useDataSync()
-  return (
+  return account ? (
     <>
       <Flex w="100%" pb="2rem">
         <Box
           layerStyle="card"
           bg={`linear-gradient(92.65deg, ${stringToColor(
-            address,
+            account?.identity,
             85
-          )} 0.38%, ${stringToColor(address, 55)} 99.64%) !important`}
+          )} 0.38%, ${stringToColor(account?.identity, 55)} 99.64%) !important`}
           borderRadius="0.25rem"
           w="100%"
           minWidth="18rem"
@@ -254,7 +253,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, address }) => {
           </>
         ))}
     </>
-  )
+  ) : null
 }
 
 export default AccountOverview

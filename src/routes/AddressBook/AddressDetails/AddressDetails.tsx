@@ -41,10 +41,7 @@ const AddressDetails = () => {
         label={'Back to address book'}
       />
       <Flex mb="0.5rem" align="center">
-        <HexFishCircle
-          mr="1rem"
-          bg={stringToColor(contact?.address + contact?.name, 73)}
-        />
+        <HexFishCircle mr="1rem" bg={stringToColor(identity, 73)} />
         <chakra.h3 mr="1rem">{contact?.name}</chakra.h3>
         <CopyValueToClipboard
           containerProps={{

@@ -33,10 +33,7 @@ const COLUMNS = [
     label: 'Contact',
     render: (contact: Contact) => (
       <Flex alignItems="center">
-        <HexFishCircle
-          mr="1rem"
-          bg={stringToColor(contact.address + contact.name, 73)}
-        />
+        <HexFishCircle mr="1rem" bg={stringToColor(contact._id, 73)} />
         <h5>{contact.name}</h5>
       </Flex>
     ),

@@ -51,7 +51,7 @@ const AccountPreview: FC<Account> = ({
       borderRadius="0.25rem"
       cursor="pointer"
       onClick={() =>
-        navigate(ROUTES.ACCOUNT, { state: { accountId: identity, address } })
+        navigate(ROUTES.ACCOUNT, { state: { accountId: identity } })
       }
       sx={{
         transition: '0.3s',
@@ -79,9 +79,9 @@ const AccountPreview: FC<Account> = ({
           lg: '2.75rem',
         }}
         bg={`linear-gradient(89.56deg, ${stringToColor(
-          address,
+          identity,
           85
-        )} 0.38%, ${stringToColor(address, 55)} 99.64%)`}
+        )} 0.38%, ${stringToColor(identity, 55)} 99.64%)`}
         borderColor={NAMED_COLORS.BLACK}
         borderRadius="0.25rem"
         border="0.063rem solid"
@@ -98,7 +98,7 @@ const AccountPreview: FC<Account> = ({
           border: '0.063rem solid',
           bg: `linear-gradient(89.56deg, ${
             NAMED_COLORS.WHITE
-          } 0.38%, ${stringToColor(address, 55)} 99.64%)`,
+          } 0.38%, ${stringToColor(identity, 55)} 99.64%)`,
           mr: '-0.25rem',
           mb: '-0.25rem',
           mt: '0.25rem',
