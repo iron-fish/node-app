@@ -7,7 +7,7 @@ module.exports = {
       default: crossEnv('MODE=dev electron-forge start'),
       dev: crossEnv('MODE=dev electron-forge start'),
       demo: crossEnv('MODE=demo electron-forge start'),
-      production: crossEnv('MODE=demo electron-forge start'),
+      production: crossEnv('MODE=production electron-forge start'),
     },
     package: {
       default: crossEnv('MODE=production electron-forge package'),
