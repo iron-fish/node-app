@@ -183,7 +183,7 @@ const AddressBook: FC = () => {
       <Flex direction="column" width="100%">
         <SimpleTable
           onRowClick={contact =>
-            navigate(ROUTES.ADDRESS_BOOK + `/${contact.__id}`)
+            navigate(ROUTES.ADDRESS_BOOK + `/${contact._id}`)
           }
           data={loaded ? contacts : new Array(10).fill(null)}
           columns={COLUMNS}
