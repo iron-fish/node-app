@@ -10,6 +10,7 @@ import IIronfishManager, {
   IronfishTransactionManagerAction,
 } from 'Types/IIronfishManager'
 import { Payment } from 'Types/Transaction'
+import '../common/preload'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
   storageName: string
@@ -30,13 +31,6 @@ function wrapMethodsWithCallbacks<T extends Entity>(
   }
 }
 
-// contextBridge.exposeInMainWorld('Wallet', IronfishSdk)
-contextBridge.exposeInMainWorld(
-  'setElectronThemeMode',
-  (mode: 'light' | 'dark' | 'system') => {
-    ipcRenderer.invoke('theme-mode-change', mode)
-  }
-)
 contextBridge.exposeInMainWorld('IronfishManager', {
   status: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.STATUS),

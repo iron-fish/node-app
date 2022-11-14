@@ -1,0 +1,41 @@
+const { resolve } = require('path')
+const CopyPlugin = require('copy-webpack-plugin')
+
+module.exports = {
+  /**
+   * This is the main entry point for your application, it's the first file
+   * that runs in the main process.
+   */
+  entry: resolve('./electron/prod/index.ts'),
+  // Put your normal webpack config below here
+  module: {
+    rules: require('./rules'),
+  },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: resolve('./electron/app.ico'),
+          to: resolve('./.webpack/main/app.ico'),
+        },
+      ],
+    }),
+  ],
+  resolve: {
+    fallback: {
+      stream: false,
+    },
+    alias: {
+      Components: resolve('./src/components'),
+      Hooks: resolve('./src/hooks'),
+      Routes: resolve('./src/routes'),
+      Svgx: resolve('./src/svgx'),
+      Utils: resolve('./src/utils'),
+      Types: resolve('./types'),
+      Data: resolve('./src/data'),
+      Providers: resolve('./src/providers'),
+      react: resolve('./node_modules/react'),
+    },
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
+  },
+}

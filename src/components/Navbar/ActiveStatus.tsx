@@ -41,65 +41,45 @@ const getWalletSyncStatus = (
   }
 }
 
-function round(value: number, places: number): number {
-  const scalar = Math.pow(10, places)
-  return Math.round(value * scalar) / scalar
-}
+const DELIMETERS = [
+  {
+    unit: 's',
+    value: 60,
+  },
+  {
+    unit: 'm',
+    value: 60,
+  },
+  {
+    unit: 'h',
+    value: 24,
+  },
+]
 
-const MS_PER_SEC = 1000.0
-const MS_PER_MIN = 60.0 * 1000.0
-const MS_PER_HOUR = 60.0 * 60.0 * 1000.0
-
-const renderTime = (
-  time: number,
-  options?: {
-    forceHour?: boolean
-    forceMinute?: boolean
-    forceSecond?: boolean
-    forceMillisecond?: boolean
-    hideMilliseconds?: boolean
+const renderTime = (time: number) => {
+  if (!time) {
+    return '...'
   }
-): string => {
-  if (time < 1) {
-    return `${round(time, 4)}ms`
-  }
+  let remaining = time
+  const result = []
+  let index = 0
+  while (remaining > 0) {
+    result.push(
+      `${Math.floor(remaining % DELIMETERS[index].value)}${
+        DELIMETERS[index].unit
+      }`
+    )
+    remaining = Math.floor(remaining / DELIMETERS[index].value)
 
-  const parts = []
-  let magnitude = 0
-
-  if (time >= MS_PER_HOUR && (magnitude <= 5 || options?.forceHour)) {
-    const hours = Math.floor(time / MS_PER_HOUR)
-    time -= hours * MS_PER_HOUR
-    parts.push(`${hours.toFixed(0)}h`)
-    magnitude = Math.max(magnitude, 4)
-  }
-
-  if (time >= MS_PER_MIN && (magnitude <= 4 || options?.forceMinute)) {
-    const minutes = Math.floor(time / MS_PER_MIN)
-    time -= minutes * MS_PER_MIN
-    parts.push(`${minutes.toFixed(0)}m`)
-    magnitude = Math.max(magnitude, 3)
-  }
-
-  if (time >= MS_PER_SEC && (magnitude <= 3 || options?.forceSecond)) {
-    const seconds = Math.floor(time / MS_PER_SEC)
-    time -= seconds * MS_PER_SEC
-    parts.push(`${seconds.toFixed(0)}s`)
-    magnitude = Math.max(magnitude, 2)
-  }
-
-  if (time > 0 && (magnitude <= 2 || options?.forceMillisecond)) {
-    if (!options?.hideMilliseconds) {
-      if (magnitude === 0) {
-        parts.push(`${round(time, 4)}ms`)
-      } else {
-        parts.push(`${time.toFixed(0)}ms`)
-      }
+    if (index === 2 && remaining > 0) {
+      result.push(`${remaining}d`)
+      break
+    } else {
+      index++
     }
-    magnitude = Math.max(magnitude, 1)
   }
 
-  return parts.join(' ')
+  return result.reverse().join(' ')
 }
 
 const SyncStatus: FC<DataSyncContextProps> = ({ data, loaded }) => {
@@ -123,7 +103,11 @@ const SyncStatus: FC<DataSyncContextProps> = ({ data, loaded }) => {
           <chakra.h5 color={colors.textWarn}>
             {`${(data?.blockSyncer.syncing.progress * 100).toFixed(2)}%`}
             {' | '}
-            {`${renderTime(Date.now() - data?.blockchain.headTimestamp)}`}
+            {`${renderTime(
+              (data?.blockSyncer?.syncing?.speed || 0) *
+                (Number(data?.blockchain?.totalSequences || 0) -
+                  Number(data?.blockchain?.head || 0))
+            )}`}
           </chakra.h5>
           <chakra.h5 color={colors.textWarn}>
             {`${data?.blockchain.head}`}

@@ -5,7 +5,7 @@ const useFee = (amount: number) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<number>()
 
   const calculateFee = () =>
-    promiseWrapper(window.DemoDataManager.calculateFee(amount))
+    promiseWrapper(window.IronfishManager.transactions.averageFee())
 
   useEffect(() => {
     calculateFee()
