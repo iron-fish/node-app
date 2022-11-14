@@ -55,7 +55,8 @@ const COLUMNS = [
     render: (contact: Contact) => {
       const addressLabel = useBreakpointValue({
         base: truncateHash(contact.address, 2, 9),
-        md: contact.address,
+        md: truncateHash(contact.address, 2, 16),
+        lg: contact.address,
       })
       return (
         <CopyValueToClipboard
