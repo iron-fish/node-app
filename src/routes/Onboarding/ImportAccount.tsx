@@ -15,7 +15,7 @@ import {
   MnemonicView,
   CopyToClipboardButton,
 } from '@ironfish/ui-kit'
-import { FC, useState } from 'react'
+import { FC, useState, useCallback } from 'react'
 import { ROUTES } from '..'
 import IconEye from '@ironfish/ui-kit/dist/svgx/icon-eye'
 import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
@@ -182,6 +182,12 @@ const ImportAccount: FC<DesktopModeProps> = ({
   desktopMode = true,
   onImport = () => undefined,
 }) => {
+  const navigate = useNavigate()
+  const handleOnImport = useCallback(() => {
+    onImport()
+    desktopMode && navigate(ROUTES.ACCOUNTS)
+  }, [onImport])
+
   return (
     <Flex
       flexDirection="column"
@@ -209,13 +215,22 @@ const ImportAccount: FC<DesktopModeProps> = ({
         </TabList>
         <TabPanels>
           <TabPanel w="100%" p={0}>
-            <SpendingKeyTab desktopMode={desktopMode} onImport={onImport} />
+            <SpendingKeyTab
+              desktopMode={desktopMode}
+              onImport={handleOnImport}
+            />
           </TabPanel>
           <TabPanel w="100%" p={0}>
-            <MnemonicPhraseTab desktopMode={desktopMode} onImport={onImport} />
+            <MnemonicPhraseTab
+              desktopMode={desktopMode}
+              onImport={handleOnImport}
+            />
           </TabPanel>
           <TabPanel w="100%" p={0}>
-            <ImportFileTab desktopMode={desktopMode} onImport={onImport} />
+            <ImportFileTab
+              desktopMode={desktopMode}
+              onImport={handleOnImport}
+            />
           </TabPanel>
         </TabPanels>
       </Tabs>
