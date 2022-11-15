@@ -352,6 +352,13 @@ export class IronFishManager implements IIronfishManager {
   }
 
   nodeStatus(): Promise<NodeStatusResponse> {
+    if (
+      this.initStatus < IronFishInitStatus.INITIALIZED ||
+      this.initStatus === IronFishInitStatus.ERROR
+    ) {
+      return Promise.resolve(null)
+    }
+
     let totalSequences = 0
     const peers = this.node.peerNetwork.peerManager
       .getConnectedPeers()
