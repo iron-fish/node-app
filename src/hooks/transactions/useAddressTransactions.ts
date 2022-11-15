@@ -5,8 +5,8 @@ import SortType from 'Types/SortType'
 
 const useAddressTransactions = (
   address: string,
-  search?: string,
-  sort?: SortType
+  searchTerm?: string,
+  sortOrder?: SortType
 ) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Transaction[]>()
   const addContact = useCallback(
@@ -15,14 +15,18 @@ const useAddressTransactions = (
     []
   )
 
-  const loadTransactions = () =>
+  const loadTransactions = (
+    contactAddress: string,
+    search: string,
+    sort: SortType
+  ) =>
     promiseWrapper(
       window.IronfishManager.transactions.findByAddress(address, search, sort)
     )
 
   useEffect(() => {
-    address && loadTransactions()
-  }, [address, search, sort])
+    address && loadTransactions(address, searchTerm, sortOrder)
+  }, [address, searchTerm, sortOrder])
 
   return [result, addContact] as const
 }

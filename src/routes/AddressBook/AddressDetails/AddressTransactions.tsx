@@ -38,6 +38,16 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
         SortSelectProps={{
           onSelectOption: ({ value }) => $setSortOrder(value),
         }}
+        options={[
+          {
+            label: 'Newest to oldest',
+            value: SortType.DESC,
+          },
+          {
+            label: 'Oldest to oldest',
+            value: SortType.ASC,
+          },
+        ]}
       />
       <Flex direction="column" width="100%">
         <CommonTable

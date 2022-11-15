@@ -112,7 +112,12 @@ const Accounts = () => {
         SearchProps={{
           onChange: e => $setSearchTerm(e.target.value),
         }}
+        GroupProps={{
+          mr: '0px',
+        }}
         SortSelectProps={{
+          // disable sorting while account balance fetched by separate request
+          display: 'none',
           onSelectOption: ({ value }) => $setSortOrder(value),
         }}
       />

@@ -6,6 +6,7 @@ import { nanoid } from 'nanoid'
 import randomWords from 'random-words'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
+import SortType from 'Types/SortType'
 
 const DEMO_ACCOUNTS: AccountValue[] = [
   {

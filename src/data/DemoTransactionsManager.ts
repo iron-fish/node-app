@@ -24,7 +24,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   },
   {
     amount: '10',
-    created: new Date('2022-08-26T08:43:00.770Z'),
+    created: new Date('2022-08-25T08:43:00.770Z'),
     creator: true,
     fee: '0.01',
     to: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
@@ -42,7 +42,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   },
   {
     amount: '100',
-    created: new Date('2022-08-26T08:43:00.770Z'),
+    created: new Date('2022-08-24T08:43:00.770Z'),
     creator: true,
     fee: '0.1',
     to: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
@@ -60,7 +60,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   },
   {
     amount: '1235',
-    created: new Date('2022-08-26T08:43:00.770Z'),
+    created: new Date('2022-08-23T08:43:00.770Z'),
     creator: true,
     fee: '0.01235',
     from: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
@@ -78,7 +78,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   },
   {
     amount: '121',
-    created: new Date('2022-08-26T08:43:00.770Z'),
+    created: new Date('2022-08-21T08:43:00.770Z'),
     creator: true,
     fee: '0.0121',
     from: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
@@ -96,7 +96,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   },
   {
     amount: '12',
-    created: new Date('2022-08-26T08:43:00.770Z'),
+    created: new Date('2022-08-22T08:43:00.770Z'),
     creator: true,
     fee: '0.0012',
     to: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',

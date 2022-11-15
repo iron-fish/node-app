@@ -28,7 +28,7 @@ class AddressBookStorage extends AbstractStorage<Contact> {
             { address: new RegExp(searchTerm, 'g') },
           ],
         })
-        .sort({ name: sort === SortType.DESC ? -1 : 1 })
+        .sort({ createdAt: sort === SortType.DESC ? -1 : 1 })
         .exec((err, contacts) => {
           if (err) {
             reject(err)
