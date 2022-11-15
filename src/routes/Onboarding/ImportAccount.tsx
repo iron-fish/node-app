@@ -32,7 +32,6 @@ interface DesktopModeProps {
 const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [show, setShow] = useState(false)
   const [key, setKey] = useState('')
-  const navigate = useNavigate()
   const [importBySpendingKey] = useImportAccount()
 
   return (
@@ -62,10 +61,7 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           variant="primary"
           isDisabled={!key}
           onClick={() => {
-            importBySpendingKey(key).then(() => {
-              onImport()
-              desktopMode && navigate(ROUTES.ACCOUNTS)
-            })
+            importBySpendingKey(key).then(() => onImport())
           }}
           size="large"
           w={desktopMode ? undefined : '100%'}
@@ -79,7 +75,6 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [file, setFile] = useState<File | null>(null)
-  const navigate = useNavigate()
   const [, , importByFile] = useImportAccount()
   return (
     <>
@@ -111,10 +106,7 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           size="large"
           w={desktopMode ? undefined : '100%'}
           onClick={() => {
-            importByFile(file).then(() => {
-              onImport()
-              desktopMode && navigate(ROUTES.ACCOUNTS)
-            })
+            importByFile(file).then(() => onImport())
           }}
         >
           Import Account
@@ -126,7 +118,6 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [phrase, setPhrase] = useState([])
-  const navigate = useNavigate()
   const [, importByMnemonicPhrase] = useImportAccount()
   return (
     <>
@@ -158,10 +149,9 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           variant="primary"
           mt="2rem"
           onClick={() => {
-            importByMnemonicPhrase(phrase as MnemonicPhraseType).then(() => {
+            importByMnemonicPhrase(phrase as MnemonicPhraseType).then(() =>
               onImport()
-              desktopMode && navigate(ROUTES.ACCOUNTS)
-            })
+            )
           }}
           disabled={
             !phrase ||
