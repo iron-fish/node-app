@@ -1,4 +1,4 @@
-name: Publish Demo
+name: Publish Production
 permissions: write-all
 on:
   push:
