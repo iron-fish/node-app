@@ -9,7 +9,7 @@ const useTransaction = (accountId: string, txHash: string) => {
     promiseWrapper(window.IronfishManager.transactions.get(txHash, accountId))
 
   useEffect(() => {
-    loadTransaction()
+    accountId && txHash && loadTransaction()
   }, [accountId, txHash])
 
   return result

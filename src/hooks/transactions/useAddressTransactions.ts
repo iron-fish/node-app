@@ -21,7 +21,7 @@ const useAddressTransactions = (
     )
 
   useEffect(() => {
-    loadTransactions()
+    address && loadTransactions()
   }, [address, search, sort])
 
   return [result, addContact] as const
