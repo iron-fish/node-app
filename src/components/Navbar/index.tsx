@@ -5,10 +5,10 @@ import IconHome from 'Svgx/home'
 import IconSend from 'Svgx/send'
 import IconReceive from 'Svgx/receive'
 import IconAddressBook from 'Svgx/address-book'
-import IconResources from 'Svgx/lightbulb'
 import IconNode from 'Svgx/node'
-import IconMiner from 'Svgx/hammer'
 import Toggle from 'Components/ThemeToggle'
+// import IconResources from 'Svgx/lightbulb'
+// import IconMiner from 'Svgx/hammer'
 
 import Nav from './Nav'
 import IronFishLogo from 'Svgx/IronFishLogo'
@@ -28,9 +28,9 @@ const primaryNavItems = [
   },
 ]
 const secondaryNavItems = [
-  { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
+  // { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
   { hotkey: 'N', to: '/node', label: 'Your Node', icon: IconNode },
-  { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
+  // { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
 ]
 interface NavbarProps {
   offsetTop?: number
