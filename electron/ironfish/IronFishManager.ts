@@ -402,30 +402,27 @@ export class IronFishManager implements IIronfishManager {
     const result: PeerResponse[] = []
 
     for (const peer of this.node.peerNetwork.peerManager.peers) {
+      if (peer.state.type !== 'CONNECTED') {
+        continue
+      }
       let connections = 0
       let connectionWebRTC: Connection['state']['type'] | '' = ''
       let connectionWebSocket: Connection['state']['type'] | '' = ''
       let connectionWebRTCError = ''
       let connectionWebSocketError = ''
 
-      if (peer.state.type !== 'CONNECTED') {
-        continue
+      if (peer.state.connections.webSocket) {
+        connectionWebSocket = peer.state.connections.webSocket.state.type
+        connectionWebSocketError = String(
+          peer.state.connections.webSocket.error || ''
+        )
       }
 
-      if (peer.state.type !== 'DISCONNECTED') {
-        if (peer.state.connections.webSocket) {
-          connectionWebSocket = peer.state.connections.webSocket.state.type
-          connectionWebSocketError = String(
-            peer.state.connections.webSocket.error || ''
-          )
-        }
-
-        if (peer.state.connections.webRtc) {
-          connectionWebRTC = peer.state.connections.webRtc.state.type
-          connectionWebRTCError = String(
-            peer.state.connections.webRtc.error || ''
-          )
-        }
+      if (peer.state.connections.webRtc) {
+        connectionWebRTC = peer.state.connections.webRtc.state.type
+        connectionWebRTCError = String(
+          peer.state.connections.webRtc.error || ''
+        )
       }
 
       if (connectionWebSocket !== '') {
