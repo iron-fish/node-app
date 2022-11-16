@@ -408,6 +408,10 @@ export class IronFishManager implements IIronfishManager {
       let connectionWebRTCError = ''
       let connectionWebSocketError = ''
 
+      if (peer.state.type !== 'CONNECTED') {
+        continue
+      }
+
       if (peer.state.type !== 'DISCONNECTED') {
         if (peer.state.connections.webSocket) {
           connectionWebSocket = peer.state.connections.webSocket.state.type
