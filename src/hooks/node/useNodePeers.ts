@@ -10,7 +10,7 @@ const useNodePeers = () => {
   useEffect(() => {
     const infinite = setInterval(() => {
       loadPeers()
-    }, 1000)
+    }, 5000)
     return () => clearInterval(infinite)
   }, [])
 
