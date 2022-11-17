@@ -8,6 +8,7 @@ import {
   useColorModeValue,
   chakra,
   Link,
+  ModalProps,
 } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import DetailsPanel from 'Components/DetailsPanel'
@@ -17,6 +18,7 @@ import useAccountSettings from 'Hooks/accounts/useAccountSettings'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import { AccountValue } from '@ironfish/sdk'
+import ModalWindow from 'Components/ModalWindow'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -58,6 +60,79 @@ const CURRENCIES = [
     helperText: 'Pound Sterling',
   },
 ]
+
+interface RemoveAccountModalProps extends Omit<ModalProps, 'children'> {
+  account: AccountValue
+  onDelete: (name: string) => void
+}
+
+const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
+  account,
+  onDelete,
+  ...modalProps
+}) => {
+  return (
+    <ModalWindow
+      {...modalProps}
+      onClose={() => {
+        modalProps.onClose()
+      }}
+    >
+      <chakra.h2 mb="16px">Remove Account</chakra.h2>
+      <chakra.h4 mb="32px">
+        You’re about to remove “Account Name”. Please be sure to have written
+        down your mnemonic phrase if you plan to import it.
+      </chakra.h4>
+      <TextField
+        label="Type REMOVE"
+        value="REMOVE"
+        mb="32px"
+        InputProps={{
+          isDisabled: true,
+        }}
+      />
+      <Flex>
+        <Button variant="primary" size="large" mr="24px">
+          Remove Account
+        </Button>
+        <Link
+          alignSelf="center"
+          onClick={() => {
+            modalProps.onClose()
+          }}
+        >
+          <h4>Cancel</h4>
+        </Link>
+      </Flex>
+    </ModalWindow>
+  )
+}
+
+const RemoveAccountButton = ({ account, onDelete }) => {
+  const [openRemoveAccountModal, setOpenRemoveAccountModal] =
+    useState<boolean>(false)
+
+  return (
+    <>
+      <Button
+        borderRadius="4rem"
+        as={Link}
+        onClick={() => setOpenRemoveAccountModal(true)}
+      >
+        <chakra.h4>Delete Account</chakra.h4>
+      </Button>
+      <RemoveAccountModal
+        account={account}
+        onDelete={() => {
+          onDelete(account.name)
+          setOpenRemoveAccountModal(false)
+        }}
+        isOpen={openRemoveAccountModal}
+        onClose={() => setOpenRemoveAccountModal(false)}
+      />
+    </>
+  )
+}
 
 const AccountSettings: FC<AccountSettingsProps> = ({
   account,
@@ -124,14 +199,15 @@ const AccountSettings: FC<AccountSettingsProps> = ({
           >
             Save Changes
           </Button>
-          <Link
+          <RemoveAccountButton account={account} onDelete={deleteAccount} />
+          {/* <Link
             alignSelf="center"
             onClick={() =>
               deleteAccount(account.id).then(() => navigate(ROUTES.ACCOUNTS))
             }
           >
             <h4>Delete Account</h4>
-          </Link>
+          </Link> */}
         </Flex>
       </Box>
       <Box>

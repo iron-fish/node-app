@@ -86,6 +86,10 @@ class AccountManager implements IIronfishAccountManager {
 
     return Promise.reject(new Error(`Account with id=${id} was not found.`))
   }
+
+  async remove(name: string): Promise<void> {
+    return this.node.wallet.removeAccount(name)
+  }
 }
 
 class TransactionManager implements IIronfishTransactionManager {
