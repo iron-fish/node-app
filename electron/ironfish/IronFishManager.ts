@@ -39,6 +39,7 @@ class AccountManager implements IIronfishAccountManager {
   }
 
   list(search?: string): Promise<CutAccount[]> {
+    console.log(search)
     return Promise.resolve(
       this.node.wallet
         .listAccounts()
