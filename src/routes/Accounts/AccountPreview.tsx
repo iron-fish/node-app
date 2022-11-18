@@ -19,9 +19,14 @@ import { truncateHash } from 'Utils/hash'
 import { ROUTES } from '..'
 import { Account } from 'Data/types/Account'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { stringToColor } from 'Utils/stringToColor'
+import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 
-const AccountPreview: FC<Account> = ({
+export interface AccountPreviewProps extends Account {
+  order: number
+}
+
+const AccountPreview: FC<AccountPreviewProps> = ({
+  order = 0,
   name,
   balance = 0,
   address,
@@ -51,7 +56,7 @@ const AccountPreview: FC<Account> = ({
       borderRadius="0.25rem"
       cursor="pointer"
       onClick={() =>
-        navigate(ROUTES.ACCOUNT, { state: { accountId: identity } })
+        navigate(ROUTES.ACCOUNT, { state: { accountId: identity, order } })
       }
       sx={{
         transition: '0.3s',
@@ -78,10 +83,7 @@ const AccountPreview: FC<Account> = ({
           sm: '1.25rem',
           lg: '2.75rem',
         }}
-        bg={`linear-gradient(89.56deg, ${stringToColor(
-          identity,
-          85
-        )} 0.38%, ${stringToColor(identity, 55)} 99.64%)`}
+        bg={accountGradientByOrder(order)}
         borderColor={NAMED_COLORS.BLACK}
         borderRadius="0.25rem"
         border="0.063rem solid"
@@ -96,9 +98,7 @@ const AccountPreview: FC<Account> = ({
           borderColor: NAMED_COLORS.BLACK,
           borderRadius: '0.25rem',
           border: '0.063rem solid',
-          bg: `linear-gradient(89.56deg, ${
-            NAMED_COLORS.WHITE
-          } 0.38%, ${stringToColor(identity, 55)} 99.64%)`,
+          bg: accountGradientByOrder(order, NAMED_COLORS.WHITE),
           mr: '-0.25rem',
           mb: '-0.25rem',
           mt: '0.25rem',

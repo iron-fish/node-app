@@ -26,10 +26,11 @@ import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import TransactionStatus from 'Components/TransactionStatus'
-import { stringToColor } from 'Utils/stringToColor'
+import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 
 interface AccountOverviewProps {
   account: Account
+  order: number
 }
 
 const EmptyOverview = () => {
@@ -67,7 +68,7 @@ const EmptyOverview = () => {
   )
 }
 
-const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
+const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
   const [{ data: transactions, loaded }] = useTransactions(
@@ -87,15 +88,12 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
   )
   const navigate = useNavigate()
   const { loaded: synced } = useDataSync()
-  return account ? (
+  return (
     <>
       <Flex w="100%" pb="2rem">
         <Box
           layerStyle="card"
-          bg={`linear-gradient(92.65deg, ${stringToColor(
-            account?.identity,
-            85
-          )} 0.38%, ${stringToColor(account?.identity, 55)} 99.64%) !important`}
+          bg={accountGradientByOrder(order)}
           borderRadius="0.25rem"
           w="100%"
           minWidth="18rem"
@@ -253,7 +251,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
           </>
         ))}
     </>
-  ) : null
+  )
 }
 
 export default AccountOverview
