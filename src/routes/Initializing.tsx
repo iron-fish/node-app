@@ -50,7 +50,8 @@ const Initializing: FC = () => {
   }, [initStatus, hasAnyAccount])
 
   if (
-    initStatus === IronFishInitStatus.INITIALIZED &&
+    (initStatus === IronFishInitStatus.INITIALIZED ||
+      initStatus === IronFishInitStatus.STARTED) &&
     hasAnyAccount === false &&
     location.pathname !== ROUTES.ONBOARDING &&
     location.pathname !== ROUTES.IMPORT &&
