@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react'
 import useAccountBalance from 'Hooks/accounts/useAccountBalance'
 import { Skeleton, SkeletonProps } from '@ironfish/ui-kit'
 import Balance from 'Types/AccountBalance'
+import { oreToFormattedIron } from 'Utils/oreToIron'
 
 const AccountBalance: FC<{
   accountId: string
@@ -10,7 +11,7 @@ const AccountBalance: FC<{
 }> = ({
   accountId,
   skeletonProps,
-  renderBalance = balance => balance?.confirmed?.toString() || 0,
+  renderBalance = balance => oreToFormattedIron(balance?.confirmed),
 }) => {
   const { loaded, data: balance } = useAccountBalance(accountId)
   return (
