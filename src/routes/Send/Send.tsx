@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, memo, useState } from 'react'
+import { ChangeEvent, FC, memo, useState, useEffect } from 'react'
 import {
   Box,
   Flex,
@@ -12,7 +12,9 @@ import {
   Button,
   Icon,
   InputProps,
+  Skeleton,
 } from '@ironfish/ui-kit'
+import floor from 'lodash/floor'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
 import DetailsPanel from 'Components/DetailsPanel'
@@ -86,12 +88,19 @@ const Send: FC = () => {
   const [contact, setContact] = useState<Contact>(null)
   const [notes, setNotes] = useState('')
   const [startSendFlow, setStart] = useState(false)
-  const { data: fee, loaded: feeCalculated } = useFee(amount)
+  const [ownFee, setOwnFee] = useState(Number(0).toFixed(7))
+  const { data: fee, loaded: feeCalculated } = useFee()
   const $colors = useColorModeValue(
     { bg: NAMED_COLORS.DEEP_BLUE, color: NAMED_COLORS.WHITE },
     { bg: NAMED_COLORS.WHITE, color: NAMED_COLORS.DEEP_BLUE }
   )
   const { loaded } = useDataSync()
+
+  useEffect(() => {
+    if (fee) {
+      setOwnFee(floor(fee / 10000000, 7).toFixed(7))
+    }
+  }, [fee])
 
   const checkChanges: () => boolean = () =>
     !loaded || !(feeCalculated && account && contact && amount)
@@ -149,15 +158,24 @@ const Send: FC = () => {
               mb="2rem"
             />
             <Flex mb="2rem">
-              <TextField
-                w="calc(50% - 1rem)"
+              <Skeleton
+                variant="ironFish"
+                width="calc(50% - 1rem)"
                 mr="2rem"
-                label="Fee"
-                value={(amount * 0.01).toFixed(2)}
-                InputProps={{
-                  isReadOnly: true,
-                }}
-              />
+                isLoaded={feeCalculated}
+              >
+                <TextField
+                  label="Estimated Fee"
+                  value={ownFee}
+                  InputProps={{
+                    type: 'number',
+                    onBlur: e =>
+                      setOwnFee(
+                        e.target.value ? Number(e.target.value).toFixed(7) : '0'
+                      ),
+                  }}
+                />
+              </Skeleton>
               <TextField
                 w="calc(50% - 1rem)"
                 label={`Memo (${32 - notes.length} characters)`}

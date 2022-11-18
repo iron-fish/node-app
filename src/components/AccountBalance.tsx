@@ -14,7 +14,12 @@ const AccountBalance: FC<{
 }) => {
   const { loaded, data: balance } = useAccountBalance(accountId)
   return (
-    <Skeleton minW="4rem" {...skeletonProps} isLoaded={loaded}>
+    <Skeleton
+      variant="ironFish"
+      minW="4rem"
+      {...skeletonProps}
+      isLoaded={loaded}
+    >
       {renderBalance(balance)}&nbsp;$IRON
     </Skeleton>
   )
