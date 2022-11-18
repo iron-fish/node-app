@@ -15,7 +15,7 @@ import {
   MnemonicView,
   CopyToClipboardButton,
 } from '@ironfish/ui-kit'
-import { FC, useState } from 'react'
+import { FC, useState, useCallback, useRef } from 'react'
 import { ROUTES } from '..'
 import IconEye from '@ironfish/ui-kit/dist/svgx/icon-eye'
 import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
@@ -23,6 +23,9 @@ import BackButtonLink from 'Components/BackButtonLink'
 import useImportAccount from 'Hooks/accounts/useImportAccount'
 import { useNavigate } from 'react-router-dom'
 import MnemonicPhraseType from 'Types/MnemonicPhraseType'
+import CloseIcon from 'Svgx/CloseIcon'
+import FileIcon from 'Svgx/FileIcon'
+import { truncateHash } from 'Utils/hash'
 
 interface DesktopModeProps {
   desktopMode?: boolean
@@ -32,7 +35,6 @@ interface DesktopModeProps {
 const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [show, setShow] = useState(false)
   const [key, setKey] = useState('')
-  const navigate = useNavigate()
   const [importBySpendingKey] = useImportAccount()
 
   return (
@@ -62,10 +64,7 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           variant="primary"
           isDisabled={!key}
           onClick={() => {
-            importBySpendingKey(key).then(() => {
-              onImport()
-              desktopMode && navigate(ROUTES.ACCOUNTS)
-            })
+            importBySpendingKey(key).then(() => onImport())
           }}
           size="large"
           w={desktopMode ? undefined : '100%'}
@@ -79,17 +78,27 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [file, setFile] = useState<File | null>(null)
-  const navigate = useNavigate()
   const [, , importByFile] = useImportAccount()
+  const fileInput = useRef<HTMLInputElement>()
   return (
     <>
       <chakra.h5 mb="1rem" mt="2rem" color={NAMED_COLORS.GREY}>
         Upload your JSON file to import your account
       </chakra.h5>
-      <Box>
-        <Button variant="secondary" borderRadius="4rem">
+      <Flex>
+        <Button
+          minW="8.75rem"
+          variant="secondary"
+          borderRadius="4rem"
+          onClick={() => {
+            if (!file) {
+              fileInput.current.value = ''
+            }
+          }}
+        >
           Browse Files
           <Input
+            ref={fileInput}
             type="file"
             height="100%"
             width="100%"
@@ -99,10 +108,30 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
             opacity="0"
             aria-hidden="true"
             accept="application/JSON"
-            onChange={e => setFile(e.target.files[0])}
+            onChange={e => {
+              setFile(e.target.files[0])
+            }}
           />
         </Button>
-      </Box>
+        {file && (
+          <Flex ml="34px" alignSelf="center" alignItems="center">
+            <FileIcon mr="8px" />
+            <chakra.h5 color={NAMED_COLORS.BLACK}>
+              {file.name.length > 32
+                ? truncateHash(file.name, 2, 14)
+                : file.name}
+            </chakra.h5>
+            <CloseIcon
+              ml="27px"
+              width="9xp"
+              height="9px"
+              color={NAMED_COLORS.GREY}
+              cursor="pointer"
+              onClick={() => setFile(null)}
+            />
+          </Flex>
+        )}
+      </Flex>
       <Box>
         <Button
           variant="primary"
@@ -111,10 +140,7 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           size="large"
           w={desktopMode ? undefined : '100%'}
           onClick={() => {
-            importByFile(file).then(() => {
-              onImport()
-              desktopMode && navigate(ROUTES.ACCOUNTS)
-            })
+            importByFile(file).then(() => onImport())
           }}
         >
           Import Account
@@ -126,7 +152,6 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [phrase, setPhrase] = useState([])
-  const navigate = useNavigate()
   const [, importByMnemonicPhrase] = useImportAccount()
   return (
     <>
@@ -158,10 +183,9 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           variant="primary"
           mt="2rem"
           onClick={() => {
-            importByMnemonicPhrase(phrase as MnemonicPhraseType).then(() => {
+            importByMnemonicPhrase(phrase as MnemonicPhraseType).then(() =>
               onImport()
-              desktopMode && navigate(ROUTES.ACCOUNTS)
-            })
+            )
           }}
           disabled={
             !phrase ||
@@ -182,6 +206,12 @@ const ImportAccount: FC<DesktopModeProps> = ({
   desktopMode = true,
   onImport = () => undefined,
 }) => {
+  const navigate = useNavigate()
+  const handleOnImport = useCallback(() => {
+    onImport()
+    desktopMode && navigate(ROUTES.ACCOUNTS)
+  }, [onImport])
+
   return (
     <Flex
       flexDirection="column"
@@ -209,13 +239,22 @@ const ImportAccount: FC<DesktopModeProps> = ({
         </TabList>
         <TabPanels>
           <TabPanel w="100%" p={0}>
-            <SpendingKeyTab desktopMode={desktopMode} onImport={onImport} />
+            <SpendingKeyTab
+              desktopMode={desktopMode}
+              onImport={handleOnImport}
+            />
           </TabPanel>
           <TabPanel w="100%" p={0}>
-            <MnemonicPhraseTab desktopMode={desktopMode} onImport={onImport} />
+            <MnemonicPhraseTab
+              desktopMode={desktopMode}
+              onImport={handleOnImport}
+            />
           </TabPanel>
           <TabPanel w="100%" p={0}>
-            <ImportFileTab desktopMode={desktopMode} onImport={onImport} />
+            <ImportFileTab
+              desktopMode={desktopMode}
+              onImport={handleOnImport}
+            />
           </TabPanel>
         </TabPanels>
       </Tabs>

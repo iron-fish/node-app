@@ -5,9 +5,9 @@ import {
   CommonTable,
   NAMED_COLORS,
   Icon,
-  Link,
+  Button,
 } from '@ironfish/ui-kit'
-import Caret from 'Svgx/caret-icon'
+import { ChevronRightIcon } from '@chakra-ui/icons'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import SearchSortField from 'Components/Search&Sort'
@@ -104,28 +104,18 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
             {
               key: 'actions',
               label: '',
-              WrapperProps: {
-                display: 'flex',
-                textAlign: 'right',
-                justifyContent: 'flex-end',
-              },
               ItemProps: {
-                justifyContent: 'flex-end',
+                marginLeft: 'auto',
+                width: 'min-content',
               },
               render: () => (
-                <Link
-                  sx={{
-                    color: NAMED_COLORS.LIGHT_BLUE,
-                    _hover: {
-                      color: NAMED_COLORS.LIGHT_BLUE,
-                    },
-                  }}
+                <Button
+                  variant="link"
+                  color={NAMED_COLORS.LIGHT_BLUE}
+                  rightIcon={<ChevronRightIcon />}
                 >
-                  <Flex>
-                    <chakra.h5 mr="0.3125rem">View Details</chakra.h5>
-                    <Caret />
-                  </Flex>
-                </Link>
+                  <chakra.h5>View Details</chakra.h5>
+                </Button>
               ),
             },
           ]}

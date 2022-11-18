@@ -33,7 +33,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     isMinersFee: false,
     notes: [],
     spends: [],
-    status: TransactionStatus.CONFIRMED,
+    status: TransactionStatus.EXPIRED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     expirationSequence: 0,
@@ -51,7 +51,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     isMinersFee: false,
     notes: [],
     spends: [],
-    status: TransactionStatus.CONFIRMED,
+    status: TransactionStatus.PENDING,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     expirationSequence: 0,
@@ -69,7 +69,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     isMinersFee: false,
     notes: [],
     spends: [],
-    status: TransactionStatus.CONFIRMED,
+    status: TransactionStatus.UNCONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     expirationSequence: 0,
@@ -87,7 +87,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     isMinersFee: false,
     notes: [],
     spends: [],
-    status: TransactionStatus.CONFIRMED,
+    status: TransactionStatus.UNKNOWN,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     expirationSequence: 0,
@@ -192,7 +192,6 @@ class DemoTransactionsManager {
   ): Promise<Transaction> {
     return new Promise(resolve => {
       setTimeout(() => {
-        const hash = nanoid(64)
         const transaction: Transaction = {
           amount: amount.toString(),
           created: new Date(),

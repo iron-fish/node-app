@@ -84,7 +84,7 @@ const Send: FC = () => {
   const [amount, setAmount] = useState(0)
   const [account, setAccount] = useState<CutAccount>(null)
   const [contact, setContact] = useState<Contact>(null)
-  const [notes, setNotes] = useState('Paying you back, Derek - B.')
+  const [notes, setNotes] = useState('')
   const [startSendFlow, setStart] = useState(false)
   const { data: fee, loaded: feeCalculated } = useFee(amount)
   const $colors = useColorModeValue(

@@ -8,7 +8,10 @@ const useNodePeers = () => {
   const loadPeers = () => promiseWrapper(window.IronfishManager.peers())
 
   useEffect(() => {
-    loadPeers()
+    const infinite = setInterval(() => {
+      loadPeers()
+    }, 5000)
+    return () => clearInterval(infinite)
   }, [])
 
   return result

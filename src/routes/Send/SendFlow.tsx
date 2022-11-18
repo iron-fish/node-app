@@ -234,7 +234,7 @@ const SendStep: FC<StepProps> = ({ amount, fee, from, to, memo, onSend }) => {
           borderRadius="2rem"
           isIndeterminate
           bg={NAMED_COLORS.LIGHT_GREY}
-          colorScheme="blue"
+          variant="ironLightBlue"
         />
         <HStack justifyContent="center">
           <Image

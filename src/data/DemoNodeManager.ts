@@ -1,6 +1,6 @@
 import { PeerResponse } from '@ironfish/sdk'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
-import { BlockSyncerStatusType } from 'Types/StatusTypes'
+import { BlockSyncerStatusType } from 'Types/BlockSyncerStatusType'
 
 const BLOCK_SPEED = 60000
 
