@@ -6,6 +6,7 @@ import {
   useColorModeValue,
   Tooltip,
   useBreakpointValue,
+  Box,
 } from '@ironfish/ui-kit'
 import { useDataSync, DataSyncContextProps } from 'Providers/DataSyncProvider'
 import ConfirmedIcon from 'Svgx/ConfirmedIcon'
@@ -170,16 +171,22 @@ const ActiveStats: FC<FlexProps> = props => {
           )
         }
       />
-      <StatusItem
-        loaded={true}
-        fullSize={<MiningStatus />}
-        minified={
-          <Flex direction="column" alignItems="center" justifyContent="center">
-            <chakra.h6 mb="-0.4375rem">300</chakra.h6>
-            <chakra.h6 mb="-0.1875rem">h\s</chakra.h6>
-          </Flex>
-        }
-      />
+      <Box display="none">
+        <StatusItem
+          loaded={true}
+          fullSize={<MiningStatus />}
+          minified={
+            <Flex
+              direction="column"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <chakra.h6 mb="-0.4375rem">300</chakra.h6>
+              <chakra.h6 mb="-0.1875rem">h\s</chakra.h6>
+            </Flex>
+          }
+        />
+      </Box>
     </Flex>
   )
 }
