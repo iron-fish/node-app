@@ -11,7 +11,6 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from '@ironfish/ui-kit'
-import { Link } from 'react-router-dom'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import Send from 'Svgx/send'
 import Caret from 'Svgx/caret-icon'
@@ -26,15 +25,7 @@ import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import AddContactModal from './AddContactModal'
 import { useDataSync } from 'Providers/DataSyncProvider'
-
-const getIconBg = (address = '') => {
-  let colorNumber = 0
-  Array.from(address).forEach(char => {
-    colorNumber += char.charCodeAt(0)
-  })
-
-  return `hsl(${colorNumber % 255}, 100%, 73%)`
-}
+import { stringToColor } from 'Utils/stringToColor'
 
 const COLUMNS = [
   {
@@ -42,10 +33,7 @@ const COLUMNS = [
     label: 'Contact',
     render: (contact: Contact) => (
       <Flex alignItems="center">
-        <HexFishCircle
-          mr="1rem"
-          bg={getIconBg(contact.address + contact.name)}
-        />
+        <HexFishCircle mr="1rem" bg={stringToColor(contact._id, 73)} />
         <h5>{contact.name}</h5>
       </Flex>
     ),
@@ -56,7 +44,8 @@ const COLUMNS = [
     render: (contact: Contact) => {
       const addressLabel = useBreakpointValue({
         base: truncateHash(contact.address, 2, 9),
-        md: contact.address,
+        md: truncateHash(contact.address, 2, 16),
+        lg: contact.address,
       })
       return (
         <CopyValueToClipboard
@@ -84,29 +73,32 @@ const COLUMNS = [
       const { loaded } = useDataSync()
       return (
         <Flex justify="flex-end" mr="-1.0625rem">
-          <Button
-            leftIcon={
-              <Icon height={8}>
-                <Send fill="currentColor" />
-              </Icon>
-            }
-            variant="primary"
-            borderRadius="4rem"
-            isDisabled={!loaded}
-            disabled={!loaded}
-            mr={{ base: '0.75rem', md: '1rem' }}
-            onClick={() => {
-              navigate(ROUTES.SEND, { state: { contactId: contact?._id } })
+          <Box
+            onClick={e => {
+              e.stopPropagation()
+              if (loaded) {
+                navigate(ROUTES.SEND, { state: { contactId: contact?._id } })
+              }
             }}
           >
-            <h5>Send</h5>
-          </Button>
+            <Button
+              leftIcon={
+                <Icon height={8}>
+                  <Send fill="currentColor" />
+                </Icon>
+              }
+              variant="primary"
+              borderRadius="4rem"
+              isDisabled={!loaded}
+              mr={{ base: '0.75rem', md: '1rem' }}
+            >
+              <h5>Send</h5>
+            </Button>
+          </Box>
           <IconButton
             aria-label="book-details"
             variant="ghost"
             icon={<Caret />}
-            as={Link}
-            to={contact?._id}
             _active={{ bg: 'none' }}
             _hover={{ bg: 'none' }}
           />
@@ -144,6 +136,7 @@ const AddContactButton: FC<{
 }
 
 const AddressBook: FC = () => {
+  const navigate = useNavigate()
   const $colors = useColorModeValue(
     {
       hoverBorder: NAMED_COLORS.DEEP_BLUE,
@@ -190,6 +183,9 @@ const AddressBook: FC = () => {
       />
       <Flex direction="column" width="100%">
         <SimpleTable
+          onRowClick={contact =>
+            navigate(ROUTES.ADDRESS_BOOK + `/${contact._id}`)
+          }
           data={loaded ? contacts : new Array(10).fill(null)}
           columns={COLUMNS}
           sx={{

@@ -55,9 +55,9 @@ function App() {
                   path={ROUTES.ADDRESS_BOOK_DETAILS}
                   element={<AddressDetails />}
                 />
-                <Route path={ROUTES.RESOURCES} element={null} />
+                {/* <Route path={ROUTES.RESOURCES} element={null} /> */}
                 <Route path={ROUTES.NODE} element={<NodeOverview />} />
-                <Route path={ROUTES.MINER} element={<Miner />} />
+                {/* <Route path={ROUTES.MINER} element={<Miner />} /> */}
               </Route>
             </Route>
           </Routes>

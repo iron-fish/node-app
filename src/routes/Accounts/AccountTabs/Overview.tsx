@@ -15,7 +15,7 @@ import { Link as RouterLink } from 'react-router-dom'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
-import AccountKeysImage from 'Svgx/AccountBalance'
+import FeesImage from 'Svgx/FeesImage'
 import { truncateHash } from 'Utils/hash'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAcccountTransactions'
@@ -27,6 +27,8 @@ import { AccountValue } from '@ironfish/sdk'
 import AccountBalance from 'Components/AccountBalance'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import Transaction from 'Types/Transaction'
+import TransactionStatus from 'Components/TransactionStatus'
+import { stringToColor } from 'Utils/stringToColor'
 
 interface AccountOverviewProps {
   account: AccountValue
@@ -87,12 +89,15 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
   )
   const navigate = useNavigate()
   const { loaded: synced } = useDataSync()
-  return (
+  return account ? (
     <>
       <Flex w="100%" pb="2rem">
         <Box
           layerStyle="card"
-          bg="linear-gradient(92.65deg, #85ADFE 0.41%, #4D88FF 100.03%) !important"
+          bg={`linear-gradient(92.65deg, ${stringToColor(
+            account?.identity,
+            85
+          )} 0.38%, ${stringToColor(account?.identity, 55)} 99.64%) !important`}
           borderRadius="0.25rem"
           w="100%"
           minWidth="18rem"
@@ -154,7 +159,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
               </Box>
             </Box>
             <Box display={{ base: 'none', md: 'inline-block' }} m="1rem">
-              <AccountKeysImage />
+              <FeesImage width={180} height={133} />
             </Box>
           </Flex>
         </Box>
@@ -199,7 +204,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                   key: 'transaction-action-column',
                   label: <chakra.h6>Action</chakra.h6>,
                   render: (transaction: Transaction) => (
-                    <chakra.h5>{transaction.status}</chakra.h5>
+                    <TransactionStatus status={transaction.status} />
                   ),
                 },
                 {
@@ -237,8 +242,8 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                   key: 'transaction-details-column',
                   label: '',
                   ItemProps: {
-                    height: '100%',
-                    justifyContent: 'flex-end',
+                    marginLeft: 'auto',
+                    width: 'min-content',
                   },
                   render: () => (
                     <Button
@@ -255,7 +260,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
           </>
         ))}
     </>
-  )
+  ) : null
 }
 
 export default AccountOverview
