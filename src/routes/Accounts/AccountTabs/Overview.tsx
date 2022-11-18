@@ -213,7 +213,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                 key: 'transaction-action-column',
                 label: <chakra.h6>Action</chakra.h6>,
                 render: (transaction: Transaction) => (
-                  <chakra.h5>{transaction.status}</chakra.h5>
+                  <TransactionStatusView status={transaction.status} />
                 ),
               },
               {
