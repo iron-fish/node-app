@@ -27,7 +27,7 @@ import { AccountValue } from '@ironfish/sdk'
 import AccountBalance from 'Components/AccountBalance'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import Transaction from 'Types/Transaction'
-import TransactionStatus from 'Components/TransactionStatus'
+import TransactionStatusView from 'Components/TransactionStatusView'
 import { stringToColor } from 'Utils/stringToColor'
 
 interface AccountOverviewProps {
@@ -95,9 +95,9 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
         <Box
           layerStyle="card"
           bg={`linear-gradient(92.65deg, ${stringToColor(
-            account?.identity,
+            account?.id,
             85
-          )} 0.38%, ${stringToColor(account?.identity, 55)} 99.64%) !important`}
+          )} 0.38%, ${stringToColor(account?.id, 55)} 99.64%) !important`}
           borderRadius="0.25rem"
           w="100%"
           minWidth="18rem"
@@ -204,7 +204,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
                   key: 'transaction-action-column',
                   label: <chakra.h6>Action</chakra.h6>,
                   render: (transaction: Transaction) => (
-                    <TransactionStatus status={transaction.status} />
+                    <TransactionStatusView status={transaction.status} />
                   ),
                 },
                 {

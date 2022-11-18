@@ -22,7 +22,7 @@ import AccountBalance from 'Components/AccountBalance'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { stringToColor } from 'Utils/stringToColor'
 
-const AccountPreview: FC<Account> = ({ name, publicAddress, id }) => {
+const AccountPreview: FC<CutAccount> = ({ name, publicAddress, id }) => {
   const navigate = useNavigate()
   const { loaded } = useDataSync()
   const $colors = useColorModeValue(
@@ -73,9 +73,9 @@ const AccountPreview: FC<Account> = ({ name, publicAddress, id }) => {
           lg: '2.75rem',
         }}
         bg={`linear-gradient(89.56deg, ${stringToColor(
-          identity,
+          id,
           85
-        )} 0.38%, ${stringToColor(identity, 55)} 99.64%)`}
+        )} 0.38%, ${stringToColor(id, 55)} 99.64%)`}
         borderColor={NAMED_COLORS.BLACK}
         borderRadius="0.25rem"
         border="0.063rem solid"
@@ -92,7 +92,7 @@ const AccountPreview: FC<Account> = ({ name, publicAddress, id }) => {
           border: '0.063rem solid',
           bg: `linear-gradient(89.56deg, ${
             NAMED_COLORS.WHITE
-          } 0.38%, ${stringToColor(identity, 55)} 99.64%)`,
+          } 0.38%, ${stringToColor(id, 55)} 99.64%)`,
           mr: '-0.25rem',
           mb: '-0.25rem',
           mt: '0.25rem',
