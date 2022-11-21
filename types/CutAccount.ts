@@ -1,5 +1,9 @@
 import { AccountValue } from '@ironfish/sdk'
+import AccountBalance from './AccountBalance'
 
-type CutAccount = Pick<AccountValue, 'id' | 'name' | 'publicAddress'>
+interface CutAccount
+  extends Pick<AccountValue, 'id' | 'name' | 'publicAddress'> {
+  balance: AccountBalance
+}
 
 export default CutAccount

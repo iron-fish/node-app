@@ -67,7 +67,7 @@ export interface IIronfishTransactionManager {
 
 export interface IIronfishAccountManager {
   create: (name: string) => Promise<AccountValue>
-  list: (search?: string) => Promise<CutAccount[]>
+  list: (search?: string, sort?: SortType) => Promise<CutAccount[]>
   get: (id: string) => Promise<AccountValue>
   delete: (name: string) => Promise<void>
   import: (account: Omit<AccountValue, 'id'>) => Promise<AccountValue>
