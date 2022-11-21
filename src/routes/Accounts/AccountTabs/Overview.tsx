@@ -29,7 +29,7 @@ import { useDataSync } from 'Providers/DataSyncProvider'
 import Transaction from 'Types/Transaction'
 import TransactionStatusView from 'Components/TransactionStatusView'
 import { stringToColor } from 'Utils/stringToColor'
-import { oreToFormattedIron } from 'Utils/oreToIron'
+import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
 
 interface AccountOverviewProps {
   account: AccountValue
@@ -177,7 +177,9 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
             <chakra.h2>
               <AccountBalance
                 accountId={account?.id}
-                renderBalance={balance => oreToFormattedIron(balance?.pending)}
+                renderBalance={balance =>
+                  CurrencyUtils.renderIron(balance?.pending || '0')
+                }
               />
             </chakra.h2>
           </Box>
