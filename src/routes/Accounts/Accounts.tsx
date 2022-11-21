@@ -8,7 +8,6 @@ import {
   useColorModeValue,
   useBreakpointValue,
   ButtonsGroup,
-  Skeleton,
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SearchSortField from 'Components/Search&Sort'
@@ -18,7 +17,6 @@ import ModalWindow from 'Components/ModalWindow'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import SortType from 'Types/SortType'
-import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
 
 interface ActionButtonsProps {
   showCreate: (show: boolean) => void
@@ -72,7 +70,7 @@ const ActionButtons: FC<ActionButtonsProps> = ({ showCreate, showImport }) => {
 
 const Accounts = () => {
   const [$searchTerm, $setSearchTerm] = useState('')
-  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
+  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
   const [{ data: accounts, loaded }, reloadAccounts] = useAccounts(
     $searchTerm,
     $sortOrder
@@ -100,18 +98,9 @@ const Accounts = () => {
               Total accounts balance:
             </chakra.h5>
             &nbsp;
-            <Skeleton minW="4rem" isLoaded={loaded}>
-              <h5>
-                <b>
-                  {CurrencyUtils.encodeIron(
-                    accounts
-                      ?.map(a => a.balance.confirmed || BigInt(0))
-                      ?.reduce((a, b) => a + b, BigInt(0)) || BigInt(0)
-                  )}
-                  &nbsp;$IRON
-                </b>
-              </h5>
-            </Skeleton>
+            <h5>
+              <b>10,456 $IRON</b>
+            </h5>
           </Flex>
         </Flex>
         <ActionButtons
@@ -120,7 +109,6 @@ const Accounts = () => {
         />
       </Flex>
       <SearchSortField
-        sortValue={$sortOrder}
         SearchProps={{
           onChange: e => $setSearchTerm(e.target.value),
         }}

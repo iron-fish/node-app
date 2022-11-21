@@ -87,8 +87,8 @@ class DemoDataManager {
     return this.accounts.import(account)
   }
 
-  getAccounts(searchTerm?: string, sort?: SortType): Promise<CutAccount[]> {
-    return this.accounts.list(searchTerm || '', sort)
+  getAccounts(searchTerm?: string): Promise<CutAccount[]> {
+    return this.accounts.list(searchTerm || '')
   }
 
   getAccount(accountId: string): Promise<AccountValue> {

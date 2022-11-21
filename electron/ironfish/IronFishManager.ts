@@ -38,36 +38,22 @@ class AccountManager implements IIronfishAccountManager {
       .then(account => account.serialize())
   }
 
-  async list(search?: string, sort?: SortType): Promise<CutAccount[]> {
-    const result: CutAccount[] = []
-    const accounts = this.node.wallet
-      .listAccounts()
-      .filter(
-        account =>
-          !search ||
-          account.name.includes(search) ||
-          account.publicAddress.includes(search)
-      )
-
-    for (const account of accounts) {
-      const balance = await this.node.wallet.getBalance(account)
-      result.push({
-        id: account.id,
-        name: account.name,
-        publicAddress: account.publicAddress,
-        balance: balance,
-      })
-    }
-
-    if (sort) {
-      result.sort(
-        (a, b) =>
-          (SortType.ASC === sort ? 1 : -1) *
-          (Number(a.balance.confirmed) - Number(b.balance.confirmed))
-      )
-    }
-
-    return Promise.resolve(result)
+  list(search?: string): Promise<CutAccount[]> {
+    return Promise.resolve(
+      this.node.wallet
+        .listAccounts()
+        .filter(
+          account =>
+            !search ||
+            account.name.includes(search) ||
+            account.publicAddress.includes(search)
+        )
+        .map(account => ({
+          name: account.name,
+          id: account.id,
+          publicAddress: account.publicAddress,
+        }))
+    )
   }
 
   get(id: string): Promise<AccountValue | null> {

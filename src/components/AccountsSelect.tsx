@@ -3,7 +3,7 @@ import { FlexProps, SelectField } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import useAccounts from 'Hooks/accounts/useAccounts'
 import CutAccount from 'Types/CutAccount'
-import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
+import AccountBalance from './AccountBalance'
 
 interface AccountsSelectProps extends FlexProps {
   accountId: string
@@ -15,9 +15,7 @@ const getAccountOptions = (accounts: CutAccount[] = []): OptionType[] => {
   return accounts.map(account => ({
     label: account.name,
     value: account,
-    helperText: CurrencyUtils.encodeIron(
-      account?.balance?.confirmed || BigInt(0)
-    ),
+    helperText: <AccountBalance accountId={account.id} />,
   }))
 }
 

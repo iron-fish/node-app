@@ -18,16 +18,11 @@ import { useNavigate } from 'react-router-dom'
 import { truncateHash } from 'Utils/hash'
 import { ROUTES } from '..'
 import CutAccount from 'Types/CutAccount'
-import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
+import AccountBalance from 'Components/AccountBalance'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { stringToColor } from 'Utils/stringToColor'
 
-const AccountPreview: FC<CutAccount> = ({
-  name,
-  publicAddress,
-  id,
-  balance,
-}) => {
+const AccountPreview: FC<CutAccount> = ({ name, publicAddress, id }) => {
   const navigate = useNavigate()
   const { loaded } = useDataSync()
   const $colors = useColorModeValue(
@@ -110,7 +105,7 @@ const AccountPreview: FC<CutAccount> = ({
       <Box>
         <chakra.h5 pt="0.25rem">{name}</chakra.h5>
         <chakra.h3 p="0.25rem 0">
-          {CurrencyUtils.encodeIron(balance.confirmed)}&nbsp;$IRON
+          <AccountBalance accountId={id} />
         </chakra.h3>
         <CopyValueToClipboard
           containerProps={{
