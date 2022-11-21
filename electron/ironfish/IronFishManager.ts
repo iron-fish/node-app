@@ -292,11 +292,7 @@ export class IronFishManager implements IIronfishManager {
     try {
       //Initializing Iron Fish SDK
       this.initStatus = IronFishInitStatus.INITIALIZING_SDK
-      this.sdk = await IronfishSdk.init({
-        configOverrides: {
-          nodeWorkers: 0,
-        },
-      })
+      this.sdk = await IronfishSdk.init()
 
       //Initializing Iron Fish node
       this.initStatus = IronFishInitStatus.INITIALIZING_NODE
