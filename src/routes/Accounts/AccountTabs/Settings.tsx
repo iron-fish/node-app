@@ -229,7 +229,9 @@ const AccountSettings: FC<AccountSettingsProps> = ({
           <RemoveAccountButton
             accountId={account?.id}
             onDelete={() =>
-              deleteAccount(account?.name).then(() => navigate(ROUTES.ACCOUNTS))
+              deleteAccount(account?.name).then(() =>
+                navigate(ROUTES.ACCOUNTS, { state: { recheckAccounts: true } })
+              )
             }
           />
         </Flex>
