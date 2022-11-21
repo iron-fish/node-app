@@ -119,7 +119,11 @@ const Accounts = () => {
       <Flex mt="0.5rem" direction="column" width="100%">
         {loaded
           ? accounts.map((account, index) => (
-              <AccountPreview key={`${account.name}-${index}`} {...account} />
+              <AccountPreview
+                key={`${account.name}-${index}`}
+                {...account}
+                order={index}
+              />
             ))
           : null}
       </Flex>
