@@ -29,16 +29,15 @@ const AccountsSelect: FC<AccountsSelectProps> = ({
   const options = useMemo(() => getAccountOptions(data), [JSON.stringify(data)])
 
   useEffect(() => {
-    const selectedOption = options.find(
-      ({ value }) => value.identity === accountId
-    )
+    const selectedOption =
+      options.find(({ value }) => value.id === accountId) || options[0]
     onSelectOption(selectedOption?.value || options[0]?.value)
   }, [options])
 
   return (
     <SelectField
       options={options}
-      value={options.find(({ value }) => value.identity === accountId)}
+      value={options.find(({ value }) => value.id === accountId)}
       onSelectOption={option => onSelectOption(option.value)}
       {...props}
     />
