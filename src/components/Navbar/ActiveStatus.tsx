@@ -26,19 +26,20 @@ const DARK_COLORS = {
 }
 
 const getWalletSyncStatus = (
-  status: 'stopped' | 'idle' | 'stopping' | 'syncing'
+  status: 'stopped' | 'idle' | 'stopping' | 'syncing',
+  chainSyncStatus = false
 ) => {
   switch (status) {
     case 'stopped':
       return 'Stropped'
     case 'idle':
-      return 'Synced'
+      return chainSyncStatus ? 'Synced' : 'Starting'
     case 'stopping':
       return 'Stopping'
     case 'syncing':
       return 'Syncing'
     default:
-      return 'Syncing'
+      return 'Idle'
   }
 }
 
@@ -99,9 +100,13 @@ const SyncStatus = forwardRef<HTMLDivElement, DataSyncContextProps>(
         justifyContent="center"
       >
         <chakra.h5 color={loaded ? colors.text : colors.textWarn}>
-          Wallet Status: {getWalletSyncStatus(data?.blockSyncer.status)}
+          Wallet Status:{' '}
+          {getWalletSyncStatus(
+            data?.blockSyncer.status,
+            status?.blockchain?.synced
+          )}
         </chakra.h5>
-        {!loaded && (
+        {!loaded && data?.blockSyncer.status === 'syncing' && (
           <>
             <chakra.h5 color={colors.textWarn}>
               {`${(data?.blockSyncer.syncing.progress * 100).toFixed(2)}%`}

@@ -47,7 +47,7 @@ const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
       status?.blockchain.synced ? 10000 : 1000
     )
     return () => clearInterval(interval)
-  }, [status?.blockSyncer.status])
+  }, [status?.blockchain.synced])
 
   const value = { loaded, data: status, error }
 
