@@ -112,7 +112,9 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
               </Box>
               <Box mb="0.5rem">
                 <chakra.h2 color={NAMED_COLORS.DEEP_BLUE}>
-                  {CurrencyUtils.encodeIron(account?.balance.confirmed)}
+                  {CurrencyUtils.encodeIron(
+                    account?.balance.confirmed || BigInt(0)
+                  )}
                   &nbsp;<chakra.span whiteSpace="nowrap">$IRON</chakra.span>
                 </chakra.h2>
               </Box>
@@ -175,7 +177,8 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
           </Box>
           <Box mb="0.5rem">
             <chakra.h2>
-              {CurrencyUtils.encodeIron(account?.balance.pending)}&nbsp;
+              {CurrencyUtils.encodeIron(account?.balance.pending || BigInt(0))}
+              &nbsp;
               <chakra.span whiteSpace="nowrap">$IRON</chakra.span>
             </chakra.h2>
           </Box>

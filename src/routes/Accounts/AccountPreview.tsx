@@ -110,7 +110,7 @@ const AccountPreview: FC<CutAccount> = ({
       <Box>
         <chakra.h5 pt="0.25rem">{name}</chakra.h5>
         <chakra.h3 p="0.25rem 0">
-          {CurrencyUtils.encodeIron(balance.confirmed)}&nbsp;$IRON
+          {CurrencyUtils.encodeIron(balance.confirmed || BigInt(0))}&nbsp;$IRON
         </chakra.h3>
         <CopyValueToClipboard
           containerProps={{
