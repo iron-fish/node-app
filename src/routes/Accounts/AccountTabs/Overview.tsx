@@ -23,16 +23,15 @@ import { useNavigate } from 'react-router-dom'
 import EmptyOverviewImage from 'Svgx/EmptyOverviewImage'
 import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
-import { AccountValue } from '@ironfish/sdk'
-import AccountBalance from 'Components/AccountBalance'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import Transaction from 'Types/Transaction'
 import TransactionStatusView from 'Components/TransactionStatusView'
 import { stringToColor } from 'Utils/stringToColor'
+import Account from 'Types/Account'
 import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
 
 interface AccountOverviewProps {
-  account: AccountValue
+  account: Account
 }
 
 const EmptyOverview = () => {
@@ -113,7 +112,10 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
               </Box>
               <Box mb="0.5rem">
                 <chakra.h2 color={NAMED_COLORS.DEEP_BLUE}>
-                  <AccountBalance accountId={account?.id} />
+                  {CurrencyUtils.encodeIron(
+                    account?.balance.confirmed || BigInt(0)
+                  )}
+                  &nbsp;<chakra.span whiteSpace="nowrap">$IRON</chakra.span>
                 </chakra.h2>
               </Box>
               <Box>
@@ -175,12 +177,9 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
           </Box>
           <Box mb="0.5rem">
             <chakra.h2>
-              <AccountBalance
-                accountId={account?.id}
-                renderBalance={balance =>
-                  CurrencyUtils.renderIron(balance?.pending || '0')
-                }
-              />
+              {CurrencyUtils.encodeIron(account?.balance.pending || BigInt(0))}
+              &nbsp;
+              <chakra.span whiteSpace="nowrap">$IRON</chakra.span>
             </chakra.h2>
           </Box>
         </Box>

@@ -6,6 +6,8 @@ import { nanoid } from 'nanoid'
 import randomWords from 'random-words'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
+import WalletAccount from 'Types/Account'
+import SortType from 'Types/SortType'
 
 const DEMO_ACCOUNTS: AccountValue[] = [
   {
@@ -127,34 +129,42 @@ class DemoAccountsManager {
 
   // export() {}
 
-  list(searchTerm?: string): Promise<CutAccount[]> {
+  list(searchTerm?: string, sort?: SortType): Promise<CutAccount[]> {
     return new Promise(resolve =>
-      setTimeout(
-        () =>
-          resolve(
-            DEMO_ACCOUNTS.filter(
-              account =>
-                !searchTerm ||
-                account.name.includes(searchTerm) ||
-                account.publicAddress.includes(searchTerm)
-            ).map(account => ({
-              id: account.id,
-              publicAddress: account.publicAddress,
-              name: account.name,
-            }))
-          ),
-        500
-      )
+      setTimeout(() => {
+        const accounts = DEMO_ACCOUNTS.filter(
+          account =>
+            !searchTerm ||
+            account.name.includes(searchTerm) ||
+            account.publicAddress.includes(searchTerm)
+        ).map(account => ({
+          id: account.id,
+          publicAddress: account.publicAddress,
+          name: account.name,
+          balance: ACCOUNT_BALANCES[account.id],
+        }))
+
+        if (sort) {
+          accounts.sort(
+            (a, b) =>
+              (SortType.ASC === sort ? 1 : -1) *
+              (Number(a.balance.confirmed) - Number(b.balance.confirmed))
+          )
+        }
+
+        resolve(accounts)
+      }, 500)
     )
   }
 
-  findById(id: string): Promise<AccountValue | null> {
-    return new Promise(resolve =>
-      setTimeout(
-        () => resolve(DEMO_ACCOUNTS.find(account => account.id === id)),
-        500
-      )
-    )
+  findById(id: string): Promise<WalletAccount | null> {
+    const account: WalletAccount = DEMO_ACCOUNTS.find(a => a.id === id)
+
+    if (account) {
+      account.balance = ACCOUNT_BALANCES[account.id]
+    }
+
+    return new Promise(resolve => setTimeout(() => resolve(account), 500))
   }
 
   update(identity: string, name: string): Promise<AccountValue> {
