@@ -179,11 +179,11 @@ class DemoAccountsManager {
     )
   }
 
-  delete(identity: string): Promise<void> {
+  delete(name: string): Promise<void> {
     return new Promise(resolve => {
       setTimeout(() => {
         DEMO_ACCOUNTS.splice(
-          DEMO_ACCOUNTS.findIndex(account => account.id === identity),
+          DEMO_ACCOUNTS.findIndex(account => account.name === name),
           1
         )
         resolve()
