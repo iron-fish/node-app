@@ -39,7 +39,6 @@ class AccountManager implements IIronfishAccountManager {
   }
 
   async list(search?: string, sort?: SortType): Promise<CutAccount[]> {
-    const result: CutAccount[] = []
     const accounts = this.node.wallet
       .listAccounts()
       .filter(
@@ -49,15 +48,14 @@ class AccountManager implements IIronfishAccountManager {
           account.publicAddress.includes(search)
       )
 
-    for (const account of accounts) {
-      const balance = await this.node.wallet.getBalance(account)
-      result.push({
+    const result: CutAccount[] = await Promise.all(
+      accounts.map(async account => ({
         id: account.id,
         name: account.name,
         publicAddress: account.publicAddress,
-        balance: balance,
-      })
-    }
+        balance: await this.node.wallet.getBalance(account),
+      }))
+    )
 
     if (sort) {
       result.sort(
@@ -67,7 +65,7 @@ class AccountManager implements IIronfishAccountManager {
       )
     }
 
-    return Promise.resolve(result)
+    return result
   }
 
   get(id: string): Promise<AccountValue | null> {
