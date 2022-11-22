@@ -3,11 +3,11 @@ import useAsyncDataWrapper from '../useAsyncDataWrapper'
 import SortType from 'Types/SortType'
 import CutAccount from 'Types/CutAccount'
 
-const useAccounts = (searchTerm = '', sortOrder = SortType.ASC) => {
+const useAccounts = (searchTerm = '', sortOrder: SortType = null) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<CutAccount[]>()
 
   const loadAccounts = (search: string, sort: SortType) =>
-    promiseWrapper(window.IronfishManager.accounts.list(search))
+    promiseWrapper(window.IronfishManager.accounts.list(search, sort))
 
   useEffect(() => {
     loadAccounts(searchTerm, sortOrder)

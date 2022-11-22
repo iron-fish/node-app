@@ -6,7 +6,15 @@ module.exports = {
    * This is the main entry point for your application, it's the first file
    * that runs in the main process.
    */
-  entry: resolve('./electron/prod/index.ts'),
+  entry: {
+    index: resolve('./electron/prod/index.ts'),
+    worker: resolve(
+      './node_modules/@ironfish/sdk/build/src/workerPool/worker.js'
+    ),
+  },
+  output: {
+    filename: '[name].js',
+  },
   // Put your normal webpack config below here
   module: {
     rules: require('./rules'),

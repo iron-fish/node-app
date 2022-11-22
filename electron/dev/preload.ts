@@ -56,11 +56,12 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         IronfishAccountManagerAction.CREATE,
         name
       ),
-    list: (searchTerm?: string) =>
+    list: (search?: string, sort?: SortType) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.LIST,
-        searchTerm
+        search,
+        sort
       ),
     get: (id: string) =>
       ipcRenderer.invoke(

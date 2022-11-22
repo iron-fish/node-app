@@ -21,6 +21,7 @@ import {
   IIronfishTransactionManager,
 } from 'Types/IIronfishManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
+import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import Transaction, { Payment } from 'Types/Transaction'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
@@ -32,32 +33,47 @@ class AccountManager implements IIronfishAccountManager {
     this.node = node
   }
 
-  async create(name: string): Promise<AccountValue> {
+  async create(name: string): Promise<WalletAccount> {
     return this.node.wallet
       .createAccount(name)
       .then(account => account.serialize())
   }
 
-  list(search?: string): Promise<CutAccount[]> {
-    return Promise.resolve(
-      this.node.wallet
-        .listAccounts()
-        .filter(
-          account =>
-            !search ||
-            account.name.includes(search) ||
-            account.publicAddress.includes(search)
-        )
-        .map(account => ({
-          name: account.name,
-          id: account.id,
-          publicAddress: account.publicAddress,
-        }))
+  async list(search?: string, sort?: SortType): Promise<CutAccount[]> {
+    const accounts = this.node.wallet
+      .listAccounts()
+      .filter(
+        account =>
+          !search ||
+          account.name.includes(search) ||
+          account.publicAddress.includes(search)
+      )
+
+    const result: CutAccount[] = await Promise.all(
+      accounts.map(async account => ({
+        id: account.id,
+        name: account.name,
+        publicAddress: account.publicAddress,
+        balance: await this.node.wallet.getBalance(account),
+      }))
     )
+
+    if (sort) {
+      result.sort(
+        (a, b) =>
+          (SortType.ASC === sort ? 1 : -1) *
+          (Number(a.balance.confirmed) - Number(b.balance.confirmed))
+      )
+    }
+
+    return result
   }
 
-  get(id: string): Promise<AccountValue | null> {
-    const account = this.node.wallet.getAccount(id)?.serialize()
+  async get(id: string): Promise<WalletAccount | null> {
+    const account: WalletAccount = this.node.wallet.getAccount(id)?.serialize()
+    if (account) {
+      account.balance = await this.balance(account.id)
+    }
 
     return Promise.resolve(account || null)
   }
@@ -292,11 +308,7 @@ export class IronFishManager implements IIronfishManager {
     try {
       //Initializing Iron Fish SDK
       this.initStatus = IronFishInitStatus.INITIALIZING_SDK
-      this.sdk = await IronfishSdk.init({
-        configOverrides: {
-          nodeWorkers: 0,
-        },
-      })
+      this.sdk = await IronfishSdk.init()
 
       //Initializing Iron Fish node
       this.initStatus = IronFishInitStatus.INITIALIZING_NODE

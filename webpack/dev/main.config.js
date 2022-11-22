@@ -3,5 +3,8 @@ const common = require('../common/main.config')
 
 module.exports = {
   ...common,
-  entry: resolve('./electron/dev/index.ts'),
+  entry: {
+    ...common.entry,
+    index: resolve('./electron/dev/index.ts'),
+  },
 }

@@ -16,6 +16,7 @@ import {
 } from '@ironfish/ui-kit'
 import useNodeStatus from 'Hooks/node/useNodeStatus'
 import NodeOverviewImage from 'Svgx/NodeOverviewImage'
+import { FileUtils } from '@ironfish/sdk/build/src/utils/file'
 
 interface NodeStatProps {
   isLoaded: boolean
@@ -110,8 +111,12 @@ const NodeStatus: FC<BoxProps> = props => {
                   label="Outgoing"
                   value={
                     <>
-                      {data?.peerNetwork.outboundTraffic.toFixed(2)}&nbsp;
-                      <chakra.span textTransform="lowercase">kb/s</chakra.span>
+                      <chakra.span textTransform="lowercase">
+                        {FileUtils.formatFileSize(
+                          data?.peerNetwork.outboundTraffic
+                        )}
+                      </chakra.span>
+                      <chakra.span textTransform="lowercase">/s</chakra.span>
                     </>
                   }
                 />
@@ -120,8 +125,12 @@ const NodeStatus: FC<BoxProps> = props => {
                   label="Incoming"
                   value={
                     <>
-                      {data?.peerNetwork.inboundTraffic.toFixed(2)}&nbsp;
-                      <chakra.span textTransform="lowercase">kb/s</chakra.span>
+                      <chakra.span textTransform="lowercase">
+                        {FileUtils.formatFileSize(
+                          data?.peerNetwork.inboundTraffic
+                        )}
+                      </chakra.span>
+                      <chakra.span textTransform="lowercase">/s</chakra.span>
                     </>
                   }
                 />
