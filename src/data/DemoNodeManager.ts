@@ -77,10 +77,11 @@ class DemoNodeManager {
           peerNetwork: {
             ...STATUS.peerNetwork,
             inboundTraffic: Math.abs(
-              STATUS.peerNetwork.inboundTraffic + (0.5 - Math.random()) * 10
+              STATUS.peerNetwork.inboundTraffic + (0.5 - Math.random()) * 100000
             ),
             outboundTraffic: Math.abs(
-              STATUS.peerNetwork.outboundTraffic + (0.5 - Math.random()) * 10
+              STATUS.peerNetwork.outboundTraffic +
+                (0.5 - Math.random()) * 100000
             ),
           },
         })
