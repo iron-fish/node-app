@@ -6,6 +6,7 @@ import { nanoid } from 'nanoid'
 import randomWords from 'random-words'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
+import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 
 const DEMO_ACCOUNTS: AccountValue[] = [
@@ -156,13 +157,14 @@ class DemoAccountsManager {
     )
   }
 
-  findById(id: string): Promise<AccountValue | null> {
-    return new Promise(resolve =>
-      setTimeout(
-        () => resolve(DEMO_ACCOUNTS.find(account => account.id === id)),
-        500
-      )
-    )
+  findById(id: string): Promise<WalletAccount | null> {
+    const account: WalletAccount = DEMO_ACCOUNTS.find(a => a.id === id)
+
+    if (account) {
+      account.balance = ACCOUNT_BALANCES[account.id]
+    }
+
+    return new Promise(resolve => setTimeout(() => resolve(account), 500))
   }
 
   update(identity: string, name: string): Promise<AccountValue> {

@@ -5,6 +5,7 @@ import IronFishInitStatus from './IronfishInitStatus'
 import SortType from './SortType'
 import Transaction, { Payment } from './Transaction'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
+import Account from './Account'
 
 export enum IronfishManagerAction {
   INITIALIZE = 'initialize',
@@ -66,9 +67,9 @@ export interface IIronfishTransactionManager {
 }
 
 export interface IIronfishAccountManager {
-  create: (name: string) => Promise<AccountValue>
+  create: (name: string) => Promise<Account>
   list: (search?: string, sort?: SortType) => Promise<CutAccount[]>
-  get: (id: string) => Promise<AccountValue>
+  get: (id: string) => Promise<Account>
   delete: (name: string) => Promise<void>
   import: (account: Omit<AccountValue, 'id'>) => Promise<AccountValue>
   export: (id: string) => Promise<AccountValue>

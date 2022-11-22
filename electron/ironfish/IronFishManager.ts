@@ -21,6 +21,7 @@ import {
   IIronfishTransactionManager,
 } from 'Types/IIronfishManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
+import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import Transaction, { Payment } from 'Types/Transaction'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
@@ -32,7 +33,7 @@ class AccountManager implements IIronfishAccountManager {
     this.node = node
   }
 
-  async create(name: string): Promise<AccountValue> {
+  async create(name: string): Promise<WalletAccount> {
     return this.node.wallet
       .createAccount(name)
       .then(account => account.serialize())
@@ -68,8 +69,11 @@ class AccountManager implements IIronfishAccountManager {
     return result
   }
 
-  get(id: string): Promise<AccountValue | null> {
-    const account = this.node.wallet.getAccount(id)?.serialize()
+  async get(id: string): Promise<WalletAccount | null> {
+    const account: WalletAccount = this.node.wallet.getAccount(id)?.serialize()
+    if (account) {
+      account.balance = await this.balance(account.id)
+    }
 
     return Promise.resolve(account || null)
   }
