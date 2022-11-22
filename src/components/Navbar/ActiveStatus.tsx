@@ -103,7 +103,7 @@ const SyncStatus = forwardRef<HTMLDivElement, DataSyncContextProps>(
           Wallet Status:{' '}
           {getWalletSyncStatus(
             data?.blockSyncer.status,
-            status?.blockchain?.synced
+            data?.blockchain.synced
           )}
         </chakra.h5>
         {!loaded && data?.blockSyncer.status === 'syncing' && (
