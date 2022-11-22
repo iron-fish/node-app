@@ -16,7 +16,7 @@ const useAccount = (id: string) => {
   }, [])
 
   const deleteAccount = useCallback(
-    (identity: string) => window.DemoDataManager.deleteAccount(identity),
+    (name: string) => window.IronfishManager.accounts.delete(name),
     []
   )
 

@@ -14,6 +14,16 @@ const Initializing: FC = () => {
     window.IronfishManager.status().then(setInitStatus)
   }
 
+  const isInitialized =
+    initStatus === IronFishInitStatus.INITIALIZED ||
+    initStatus === IronFishInitStatus.STARTED
+
+  useEffect(() => {
+    if (location?.state?.recheckAccounts) {
+      window.IronfishManager.hasAnyAccount().then(setHasAnyAccount)
+    }
+  }, [location?.state?.recheckAccounts])
+
   useEffect(() => {
     let interval: NodeJS.Timer
 
@@ -34,14 +44,14 @@ const Initializing: FC = () => {
       window.IronfishManager.initialize()
     }
 
-    if (initStatus === IronFishInitStatus.INITIALIZED && !hasAnyAccount) {
+    if (isInitialized && !hasAnyAccount) {
       interval = setInterval(
         () => window.IronfishManager.hasAnyAccount().then(setHasAnyAccount),
         500
       )
     }
 
-    if (initStatus === IronFishInitStatus.INITIALIZED && hasAnyAccount) {
+    if (isInitialized && hasAnyAccount) {
       interval = setInterval(loadInitStatus, 1000)
       window.IronfishManager.start()
     }
@@ -50,7 +60,7 @@ const Initializing: FC = () => {
   }, [initStatus, hasAnyAccount])
 
   if (
-    initStatus === IronFishInitStatus.INITIALIZED &&
+    isInitialized &&
     hasAnyAccount === false &&
     location.pathname !== ROUTES.ONBOARDING &&
     location.pathname !== ROUTES.IMPORT &&
