@@ -155,6 +155,7 @@ const Send: FC = () => {
               label={'To'}
               contactId={contact?._id || state?.contactId}
               onSelectOption={setContact}
+              freeInput
               mb="2rem"
             />
             <Flex mb="2rem">

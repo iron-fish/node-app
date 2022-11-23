@@ -15,9 +15,9 @@ const getAccountOptions = (accounts: CutAccount[] = []): OptionType[] => {
   return accounts.map(account => ({
     label: account.name,
     value: account,
-    helperText: CurrencyUtils.encodeIron(
-      account?.balance?.confirmed || BigInt(0)
-    ),
+    helperText:
+      CurrencyUtils.encodeIron(account?.balance?.confirmed || BigInt(0)) +
+      ' $IRON',
   }))
 }
 
@@ -28,7 +28,10 @@ const AccountsSelect: FC<AccountsSelectProps> = ({
 }) => {
   const [{ data }] = useAccounts()
 
-  const options = useMemo(() => getAccountOptions(data), [JSON.stringify(data)])
+  const options = useMemo(
+    () => getAccountOptions(data),
+    [JSON.stringify(data?.map(account => account.id))]
+  )
 
   useEffect(() => {
     const selectedOption =
