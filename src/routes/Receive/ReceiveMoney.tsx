@@ -80,6 +80,9 @@ const ViewField: FC<ViewFieldProps> = ({
           textOverflow: 'ellipsis',
           isReadOnly: true,
         }}
+        sx={{
+          zIndex: 1,
+        }}
         width="100%"
       />
       <Button
@@ -88,6 +91,9 @@ const ViewField: FC<ViewFieldProps> = ({
         onClick={() => {
           $setCopied(true)
           navigator.clipboard.writeText(value)
+        }}
+        sx={{
+          zIndex: 1,
         }}
       >
         <Tooltip
