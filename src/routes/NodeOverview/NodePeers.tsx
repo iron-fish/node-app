@@ -16,7 +16,12 @@ const NodePeers: FC = () => {
         {
           key: 'connection-type',
           label: 'Connection Type',
-          render: ({ name }) => name,
+          render: ({ connectionWebRTC, connectionWebSocket }) =>
+            connectionWebRTC
+              ? 'WebRTC'
+              : connectionWebSocket
+              ? 'WebSocket'
+              : 'Unknown',
         },
       ]}
     />
