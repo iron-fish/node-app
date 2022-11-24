@@ -6,7 +6,7 @@ import Contact from 'Types/Contact'
 import { truncateHash } from 'Utils/hash'
 
 interface ContactsAutocompleteProps extends FlexProps {
-  contactId: string
+  address: string
   label: string
   freeInput: boolean
   onSelectOption?: (account: Contact) => void
@@ -25,20 +25,24 @@ const getContactOptions = (contacts: Contact[] = []) =>
     value: contact,
   }))
 
+const isValidPublicAddress = (address: string) => address?.length === 86
+
 const getSelectedOption = (
   options: ContactOption[] = [],
-  contractId: string,
+  address: string,
   freeInput: boolean
 ) => {
-  let selectedOption = options?.find(o => o.value._id === contractId)
+  let selectedOption = options?.find(
+    o => o.value._id === address || o.value.address === address
+  )
 
-  if (freeInput && contractId) {
+  if (freeInput && isValidPublicAddress(address) && !selectedOption) {
     selectedOption = {
-      label: contractId,
+      label: address,
       value: {
-        _id: contractId,
-        name: contractId,
-        address: contractId,
+        _id: address,
+        name: address,
+        address: address,
       },
     }
   }
@@ -47,7 +51,7 @@ const getSelectedOption = (
 }
 
 const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
-  contactId,
+  address,
   label,
   freeInput,
   onSelectOption,
@@ -64,7 +68,7 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
   )
 
   useEffect(() => {
-    const selectedOption = getSelectedOption(options, contactId, freeInput)
+    const selectedOption = getSelectedOption(options, address, freeInput)
     onSelectOption(selectedOption?.value || null)
   }, [options])
 
@@ -72,27 +76,24 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
     <Autocomplete
       label={label}
       options={options}
-      value={getSelectedOption(options, contactId, freeInput)}
+      value={getSelectedOption(options, address, freeInput)}
       onSelectOption={option => onSelectOption(option.value)}
-      // onClose={() => {
-      //   if (freeInput && options.length === 0) {
-      //     onSelectOption({
-      //       _id: $searchTerm,
-      //       address: $searchTerm,
-      //       name: $searchTerm,
-      //     })
-      //   }
-      // }}
-      InputProps={{
-        placeholder: 'Input Text',
-        onChange: e => $setSearchTerm(e.target.value),
-        onKeyDown: e =>
-          e.key === 'Enter' &&
+      onClose={() => {
+        if (
+          freeInput &&
+          options.length === 0 &&
+          isValidPublicAddress($searchTerm)
+        ) {
           onSelectOption({
             _id: $searchTerm,
             address: $searchTerm,
             name: $searchTerm,
-          }),
+          })
+        }
+      }}
+      InputProps={{
+        placeholder: 'Input Text',
+        onChange: e => $setSearchTerm(e.target.value),
       }}
       {...rest}
     />

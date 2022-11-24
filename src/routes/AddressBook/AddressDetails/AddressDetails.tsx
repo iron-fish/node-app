@@ -70,7 +70,7 @@ const AddressDetails = () => {
           variant="primary"
           size="small"
           onClick={() => {
-            navigate(ROUTES.SEND, { state: { contactId: contact?._id } })
+            navigate(ROUTES.SEND, { state: { address: contact?.address } })
           }}
           isDisabled={!synced}
           disabled={!synced}

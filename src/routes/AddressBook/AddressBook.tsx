@@ -77,7 +77,7 @@ const COLUMNS = [
             onClick={e => {
               e.stopPropagation()
               if (loaded) {
-                navigate(ROUTES.SEND, { state: { contactId: contact?._id } })
+                navigate(ROUTES.SEND, { state: { address: contact?.address } })
               }
             }}
           >
