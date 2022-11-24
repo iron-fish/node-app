@@ -269,7 +269,7 @@ class TransactionManager implements IIronfishTransactionManager {
           !searchTerm ||
           transaction.from.includes(searchTerm) ||
           transaction.to.includes(searchTerm) ||
-          transaction.notes.find(note => note.memo)
+          transaction.notes.find(note => note.memo?.includes(searchTerm))
       )
       .sort((t1, t2) => {
         const date1: number = (t1.created || new Date()).getTime()
