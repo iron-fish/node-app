@@ -27,6 +27,7 @@ import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
+import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -88,7 +89,7 @@ const Send: FC = () => {
   const [contact, setContact] = useState<Contact>(null)
   const [notes, setNotes] = useState('')
   const [startSendFlow, setStart] = useState(false)
-  const [ownFee, setOwnFee] = useState(Number(0).toFixed(7))
+  const [ownFee, setOwnFee] = useState(Number(0).toFixed(8))
   const { data: fee, loaded: feeCalculated } = useFee()
   const $colors = useColorModeValue(
     { bg: NAMED_COLORS.DEEP_BLUE, color: NAMED_COLORS.WHITE },
@@ -98,7 +99,7 @@ const Send: FC = () => {
 
   useEffect(() => {
     if (fee) {
-      setOwnFee(floor(fee / 10000000, 7).toFixed(7))
+      setOwnFee(floor(fee / ORE_TO_IRON, 8).toFixed(8))
     }
   }, [fee])
 
@@ -153,8 +154,9 @@ const Send: FC = () => {
             />
             <ContactsAutocomplete
               label={'To'}
-              contactId={contact?._id || state?.contactId}
+              address={contact?.address || state?.address}
               onSelectOption={setContact}
+              freeInput
               mb="2rem"
             />
             <Flex mb="2rem">
@@ -171,7 +173,7 @@ const Send: FC = () => {
                     type: 'number',
                     onBlur: e =>
                       setOwnFee(
-                        e.target.value ? Number(e.target.value).toFixed(7) : '0'
+                        e.target.value ? Number(e.target.value).toFixed(8) : '0'
                       ),
                   }}
                 />
@@ -217,7 +219,7 @@ const Send: FC = () => {
         from={account}
         to={contact}
         memo={notes}
-        fee={fee}
+        fee={Number(ownFee) || fee}
       />
     </Flex>
   )

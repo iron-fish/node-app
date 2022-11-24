@@ -15,9 +15,9 @@ const getAccountOptions = (accounts: CutAccount[] = []): OptionType[] => {
   return accounts.map(account => ({
     label: account.name,
     value: account,
-    helperText: CurrencyUtils.encodeIron(
-      account?.balance?.confirmed || BigInt(0)
-    ),
+    helperText:
+      CurrencyUtils.encodeIron(account?.balance?.confirmed || BigInt(0)) +
+      ' $IRON',
   }))
 }
 

@@ -30,6 +30,7 @@ import CutAccount from 'Types/CutAccount'
 import { truncateHash } from 'Utils/hash'
 import useSendFlow from 'Hooks/transactions/useSendFlow'
 import Transaction, { TransactionStatus } from 'Types/Transaction'
+import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
 
@@ -125,7 +126,7 @@ const ConfirmStep: FC<StepProps> = ({
             title="Amount:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{amount}</chakra.h4>
+                <chakra.h4>{amount} $IRON</chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -145,7 +146,10 @@ const ConfirmStep: FC<StepProps> = ({
             title="Total:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{amount + fee} $IRON</chakra.h4>
+                <chakra.h4>
+                  {(amount * ORE_TO_IRON + fee * ORE_TO_IRON) / ORE_TO_IRON}
+                  &nbsp;$IRON
+                </chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }

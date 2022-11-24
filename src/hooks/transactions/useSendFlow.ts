@@ -1,3 +1,4 @@
+import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
 import { useEffect, useState } from 'react'
 import Transaction, { TransactionStatus } from 'Types/Transaction'
 
@@ -14,11 +15,11 @@ const useSendFlow = (
       .pay(
         accountId,
         {
-          amount: BigInt(amount),
+          amount: BigInt(amount * ORE_TO_IRON),
           memo: memo,
           publicAddress: to,
         },
-        fee
+        fee * ORE_TO_IRON
       )
       .then(setTransaction)
 
