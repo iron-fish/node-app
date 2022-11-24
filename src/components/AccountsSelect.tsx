@@ -30,7 +30,11 @@ const AccountsSelect: FC<AccountsSelectProps> = ({
 
   const options = useMemo(
     () => getAccountOptions(data),
-    [JSON.stringify(data?.map(account => account.id))]
+    [
+      JSON.stringify(data, (key, value) =>
+        typeof value === 'bigint' ? value.toString() : value
+      ),
+    ]
   )
 
   useEffect(() => {
