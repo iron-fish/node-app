@@ -67,9 +67,9 @@ const AddressBook: FC = () => {
     }
   )
   const $getAddressLabel = useBreakpointValue({
-    base: address => truncateHash(address, 2, 9),
-    md: address => truncateHash(address, 2, 16),
-    lg: address => address,
+    base: (address: string) => truncateHash(address, 2, 9),
+    md: (address: string) => truncateHash(address, 2, 16),
+    lg: (address: string) => address,
   })
 
   const [$searchTerm, $setSearchTerm] = useState('')
