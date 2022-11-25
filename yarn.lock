@@ -3267,10 +3267,10 @@
     "@ironfish/rust-nodejs-linux-x64-musl" "0.1.17"
     "@ironfish/rust-nodejs-win32-x64-msvc" "0.1.17"
 
-"@ironfish/sdk@0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@ironfish/sdk/-/sdk-0.0.29.tgz#61c8c8dabef1c8e0d9a1e270191a9eafcc3dee12"
-  integrity sha512-7f0Bamh5OtQJfSqqtFvLDPXZYvtfwXtQlZLILA/mywDRnIdGA55wRkcK653bBQ1hL5MA6vjBf5zb4u7ON/Ocwg==
+"@ironfish/sdk@0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@ironfish/sdk/-/sdk-0.0.31.tgz#910399afa935c4a89f80ed3921f500f68912e040"
+  integrity sha512-W8UFiu4XdEFJslZ4+1ecfMAHrznH9dIumTNTHWHUXhWRfgYN/vETuXG+2Kl0fHlqIzUyJhHor30PZwLNfmTRig==
   dependencies:
     "@ethersproject/bignumber" "5.7.0"
     "@ironfish/rust-nodejs" "0.1.17"
@@ -3300,10 +3300,10 @@
     ws "7.5.1"
     yup "0.29.3"
 
-"@ironfish/ui-kit@0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-0.0.17.tgz#f2f265ec2495b19e5ef899cf1ef176bedeef1922"
-  integrity sha512-4pidCATUXY2BgLq+fDxsljE71uqgOgzR3J6Gkugh+5ozoblU5yHJOwSrB7TWvxMCXk7oFTbb8/aDPxIm3CnU8Q==
+"@ironfish/ui-kit@0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-0.0.18.tgz#d4d629cfc018049be08f539419f2c999eba062cb"
+  integrity sha512-382voe6kzVXbYUOx9CJf5MxhvGW5jnH8StxuwERzd9itAFaYGVoMJvLAKtVAJHuf1MlDqBPAKXSfLo/WH+ZbHQ==
   dependencies:
     "@chakra-ui/icons" "1.1.7"
     "@chakra-ui/react" "1.8.6"

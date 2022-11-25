@@ -171,7 +171,7 @@ const AddressBook: FC = () => {
                         e.stopPropagation()
                         if (synced) {
                           navigate(ROUTES.SEND, {
-                            state: { contactId: contact?._id },
+                            state: { address: contact?.address },
                           })
                         }
                       }}

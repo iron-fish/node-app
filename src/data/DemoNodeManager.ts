@@ -34,24 +34,27 @@ const STATUS: NodeStatusResponse = {
 
 const PEERS: PeerResponse[] = Array(23)
   .fill(null)
-  .map(() => ({
-    state: 'active',
-    identity: (Math.random() * 1000000).toFixed(3),
-    version: 1024,
-    head: 'ksajdlkasjdlsakjdaksdj',
-    sequence: 2048,
-    work: 'active',
-    agent: 'test',
-    name: 'Websocket',
-    address: 'jalkaslkdjsaldjsalkdjlsakdjlksad',
-    port: 8080,
-    error: '',
-    connections: 12,
-    connectionWebSocket: '',
-    connectionWebSocketError: '',
-    connectionWebRTC: '',
-    connectionWebRTCError: '',
-  }))
+  .map(() => {
+    const type = Math.random()
+    return {
+      state: 'active',
+      identity: (Math.random() * 1000000).toFixed(3),
+      version: 1024,
+      head: 'ksajdlkasjdlsakjdaksdj',
+      sequence: 2048,
+      work: 'active',
+      agent: 'test',
+      name: 'Websocket',
+      address: 'jalkaslkdjsaldjsalkdjlsakdjlksad',
+      port: 8080,
+      error: '',
+      connections: 12,
+      connectionWebSocket: type > 0.5 ? 'CONNECTED' : '',
+      connectionWebSocketError: '',
+      connectionWebRTC: type < 0.5 ? 'CONNECTED' : '',
+      connectionWebRTCError: '',
+    }
+  })
 
 class DemoNodeManager {
   status(): Promise<NodeStatusResponse> {
