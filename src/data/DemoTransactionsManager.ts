@@ -13,7 +13,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     to: '97fu1x7AXPO9pmQcMpvyfeyR8AWBeHPmv6bPdB1cE946BpgwAbTESdNrSUDVrbhr',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [{ value: BigInt(100000), memo: 'dziakyi' }],
     spends: [],
     status: TransactionStatus.CONFIRMED,
     accountId:
@@ -31,7 +31,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     from: 'xXqWJOahmVrQQ5paK1Kb7gAS2QkEPYG43G7RfzSnQElDu9WZmVCmhWi8PO39hr9q',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [{ value: BigInt(100000), memo: 'thanks' }],
     spends: [],
     status: TransactionStatus.EXPIRED,
     accountId:
@@ -49,7 +49,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     from: 'xHubwKNZc906tiN3GBqDPCYtWVSCItx9bpC6UD1I72b943c0eMSS9ipWq3NKJOID',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [{ value: BigInt(100000), memo: 'welcome message' }],
     spends: [],
     status: TransactionStatus.PENDING,
     accountId:
@@ -67,7 +67,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     to: 'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [{ value: BigInt(100000), memo: 'aloha' }],
     spends: [],
     status: TransactionStatus.UNCONFIRMED,
     accountId:
@@ -85,7 +85,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     to: 'eBpm3UivfNtMdVf82e8fzUACM5tuZGEmeB0S1z8gyYLpECW5Ct1295DD05Lh2X04',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [{ value: BigInt(100000), memo: 'Have A GOOD DAY' }],
     spends: [],
     status: TransactionStatus.UNKNOWN,
     accountId:
@@ -103,7 +103,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     from: 'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [{ value: BigInt(100000), memo: 'TASTY' }],
     spends: [],
     status: TransactionStatus.CONFIRMED,
     accountId:
@@ -139,7 +139,8 @@ class DemoTransactionsManager {
             (!searchTerm ||
               transaction.hash.includes(searchTerm) ||
               transaction.from.includes(searchTerm) ||
-              transaction.to.includes(searchTerm))
+              transaction.to.includes(searchTerm) ||
+              transaction.notes.find(note => note.memo?.includes(searchTerm)))
         )
         transactions.sort(
           (a, b) =>
@@ -164,7 +165,8 @@ class DemoTransactionsManager {
             (!searchTerm ||
               transaction.hash.includes(searchTerm) ||
               transaction.from.includes(searchTerm) ||
-              transaction.to.includes(searchTerm))
+              transaction.to.includes(searchTerm) ||
+              transaction.notes.find(note => note.memo?.includes(searchTerm)))
         )
         transactions.sort(
           (a, b) =>

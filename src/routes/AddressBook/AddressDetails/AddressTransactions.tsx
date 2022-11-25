@@ -33,7 +33,8 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
       <chakra.h3 mb="1rem">Transactions</chakra.h3>
       <SearchSortField
         SearchProps={{
-          onChange: e => $setSearchTerm(e.target.value),
+          value: $searchTerm,
+          onChange: e => $setSearchTerm(e.target.value.trimStart()),
         }}
         SortSelectProps={{
           onSelectOption: ({ value }) => $setSortOrder(value),
