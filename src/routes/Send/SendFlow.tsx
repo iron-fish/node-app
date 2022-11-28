@@ -31,6 +31,7 @@ import { truncateHash } from 'Utils/hash'
 import useSendFlow from 'Hooks/transactions/useSendFlow'
 import Transaction, { TransactionStatus } from 'Types/Transaction'
 import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
+import useAddressBook from 'Hooks/addressBook/useAddressBook'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
 
@@ -84,6 +85,20 @@ const ConfirmStep: FC<StepProps> = ({
   memo,
   fee,
 }) => {
+  const [contactName, setContactName] = useState('')
+  const [showAddName, setShowAddName] = useState(false)
+  const [toContact, setToContact] = useState<Contact>(to)
+  const [{ data: contacts }, addContact] = useAddressBook()
+
+  useEffect(() => {
+    const contact = contacts?.find(
+      ({ address }) => address === toContact.address
+    )
+    if (contact) {
+      setToContact(contact)
+    }
+  }, [JSON.stringify(contacts)])
+
   return (
     <>
       <ModalCloseButton
@@ -104,19 +119,69 @@ const ConfirmStep: FC<StepProps> = ({
           <DataPreviewLine
             title="To:"
             value={
-              <HStack w="100%" justifyContent="space-between">
-                {to.name && (
-                  <chakra.h4 whiteSpace="nowrap">{to.name}</chakra.h4>
+              <Flex direction="column">
+                <HStack w="100%" justifyContent="space-between">
+                  {toContact.name && toContact._id !== toContact.address ? (
+                    <chakra.h4 whiteSpace="nowrap">{toContact.name}</chakra.h4>
+                  ) : (
+                    <chakra.h4
+                      cursor="pointer"
+                      color={NAMED_COLORS.LIGHT_BLUE}
+                      whiteSpace="nowrap"
+                      onClick={() => setShowAddName(true)}
+                    >
+                      Add New Contact?
+                    </chakra.h4>
+                  )}
+                  <chakra.h5
+                    pl="4rem"
+                    color={NAMED_COLORS.GREY}
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                  >
+                    {truncateHash(to.address, 2, 16)}
+                  </chakra.h5>
+                </HStack>
+                {showAddName && (
+                  <Flex direction="column">
+                    <TextField
+                      label="Contact Name"
+                      my="1rem"
+                      value={contactName}
+                      InputProps={{
+                        onChange: e => setContactName(e.target.value),
+                      }}
+                    />
+                    <Flex>
+                      <Button
+                        variant="primary"
+                        size="medium"
+                        mr="1.5rem"
+                        isDisabled={!contactName.trim()}
+                        onClick={() => {
+                          addContact(contactName, to.address).then(() => {
+                            setShowAddName(false)
+                            setContactName('')
+                          })
+                        }}
+                      >
+                        Add Contact
+                      </Button>
+                      <Button
+                        _hover={{ textDecoration: 'unset' }}
+                        variant="link"
+                        size="medium"
+                        onClick={() => {
+                          setShowAddName(false)
+                          setContactName('')
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </Flex>
+                  </Flex>
                 )}
-                <chakra.h5
-                  pl="4rem"
-                  color={NAMED_COLORS.GREY}
-                  whiteSpace="nowrap"
-                  overflow="hidden"
-                >
-                  {truncateHash(to.address, 2, 16)}
-                </chakra.h5>
-              </HStack>
+              </Flex>
             }
             flexDirection={to.name ? 'column' : 'row'}
             w="100%"
