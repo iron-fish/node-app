@@ -9,6 +9,7 @@ import {
   chakra,
   Link,
   ModalProps,
+  useIronToast,
 } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import DetailsPanel from 'Components/DetailsPanel'
@@ -149,7 +150,7 @@ const RemoveAccountButton: FC<RemoveAccountButtonProps> = ({
         <chakra.h4>Delete Account</chakra.h4>
       </Link>
       <RemoveAccountModal
-        balance={balance?.pending || 0}
+        balance={balance?.pending || balance?.confirmed || 0}
         onDelete={() => {
           onDelete()
           setOpenRemoveAccountModal(false)
@@ -172,6 +173,11 @@ const AccountSettings: FC<AccountSettingsProps> = ({
   const [{ data: settings, loaded }, updateSettings] = useAccountSettings(
     account?.id
   )
+  const toast = useIronToast({
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
 
   useEffect(() => {
     if (settings && loaded) {
@@ -221,7 +227,7 @@ const AccountSettings: FC<AccountSettingsProps> = ({
               Promise.all([
                 // updateAccount(account.id, name),
                 updateSettings(account.id, currency.value),
-              ])
+              ]).then(() => toast({ title: 'Account Details Updated' }))
             }}
           >
             Save Changes
@@ -229,9 +235,10 @@ const AccountSettings: FC<AccountSettingsProps> = ({
           <RemoveAccountButton
             accountId={account?.id}
             onDelete={() =>
-              deleteAccount(account?.name).then(() =>
+              deleteAccount(account?.name).then(() => {
                 navigate(ROUTES.ACCOUNTS, { state: { recheckAccounts: true } })
-              )
+                toast({ title: 'Account Removed' })
+              })
             }
           />
         </Flex>
