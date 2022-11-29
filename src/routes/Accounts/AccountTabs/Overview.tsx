@@ -95,7 +95,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
       <Flex w="100%" pb="2rem">
         <Box
           layerStyle="card"
-          bg={accountGradientByOrder(order)}
+          bg={`${accountGradientByOrder(order)} !important`}
           borderRadius="0.25rem"
           w="100%"
           minWidth="18rem"

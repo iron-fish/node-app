@@ -141,7 +141,7 @@ const ReceiveMoney: FC = () => {
             mb="1rem"
           /> */}
           <ViewField
-            value={account?.address}
+            value={account?.publicAddress}
             buttonText="Copy"
             copiedTooltipText="Copied"
             copyTooltipText="Copy to clipboard"
