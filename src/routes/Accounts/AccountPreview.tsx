@@ -20,9 +20,14 @@ import { ROUTES } from '..'
 import CutAccount from 'Types/CutAccount'
 import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { stringToColor } from 'Utils/stringToColor'
+import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 
-const AccountPreview: FC<CutAccount> = ({
+export interface AccountPreviewProps extends CutAccount {
+  order: number
+}
+
+const AccountPreview: FC<AccountPreviewProps> = ({
+  order = 0,
   name,
   publicAddress,
   id,
@@ -51,7 +56,9 @@ const AccountPreview: FC<CutAccount> = ({
       border="0.063rem solid"
       borderRadius="0.25rem"
       cursor="pointer"
-      onClick={() => navigate(ROUTES.ACCOUNT, { state: { accountId: id } })}
+      onClick={() =>
+        navigate(ROUTES.ACCOUNT, { state: { accountId: id, order } })
+      }
       sx={{
         transition: '0.3s',
         bg: $colors.bg,
@@ -77,10 +84,7 @@ const AccountPreview: FC<CutAccount> = ({
           sm: '1.25rem',
           lg: '2.75rem',
         }}
-        bg={`linear-gradient(89.56deg, ${stringToColor(
-          id,
-          85
-        )} 0.38%, ${stringToColor(id, 55)} 99.64%)`}
+        bg={accountGradientByOrder(order)}
         borderColor={NAMED_COLORS.BLACK}
         borderRadius="0.25rem"
         border="0.063rem solid"
@@ -95,9 +99,7 @@ const AccountPreview: FC<CutAccount> = ({
           borderColor: NAMED_COLORS.BLACK,
           borderRadius: '0.25rem',
           border: '0.063rem solid',
-          bg: `linear-gradient(89.56deg, ${
-            NAMED_COLORS.WHITE
-          } 0.38%, ${stringToColor(id, 55)} 99.64%)`,
+          bg: accountGradientByOrder(order, NAMED_COLORS.WHITE),
           mr: '-0.25rem',
           mb: '-0.25rem',
           mt: '0.25rem',

@@ -10,7 +10,6 @@ import {
   FieldGroup,
   Tooltip,
 } from '@ironfish/ui-kit'
-import { QRCodeSVG } from 'qrcode.react'
 import { useLocation } from 'react-router-dom'
 import DetailsPanel from 'Components/DetailsPanel'
 import ReceiveIronImage from 'Svgx/ReceiveIronImage'
@@ -82,6 +81,9 @@ const ViewField: FC<ViewFieldProps> = ({
           textOverflow: 'ellipsis',
           isReadOnly: true,
         }}
+        sx={{
+          zIndex: 1,
+        }}
         width="100%"
       />
       <Button
@@ -90,6 +92,9 @@ const ViewField: FC<ViewFieldProps> = ({
         onClick={() => {
           $setCopied(true)
           navigator.clipboard.writeText(value)
+        }}
+        sx={{
+          zIndex: 1,
         }}
       >
         <Tooltip
@@ -123,7 +128,7 @@ const ReceiveMoney: FC = () => {
             label="Account"
             accountId={account?.id || state?.accountId}
             onSelectOption={setAccount}
-            mb="1rem"
+            mb="2rem"
           />
           {/* Hide amount field while not clarified, should be removed or enabled when with API connection
            <TextField
@@ -135,26 +140,12 @@ const ReceiveMoney: FC = () => {
             }}
             mb="1rem"
           /> */}
-          <Box mr="0.25rem">
-            <Flex
-              layerStyle="card"
-              w="100%"
-              p="4rem"
-              direction="column"
-              alignItems="center"
-              ml={0}
-            >
-              <Box mb="2rem">
-                <QRCodeSVG value={account?.publicAddress} />
-              </Box>
-              <ViewField
-                value={account?.publicAddress}
-                buttonText="Copy"
-                copiedTooltipText="Copied"
-                copyTooltipText="Copy to clipboard"
-              />
-            </Flex>
-          </Box>
+          <ViewField
+            value={account?.address}
+            buttonText="Copy"
+            copiedTooltipText="Copied"
+            copyTooltipText="Copy to clipboard"
+          />
         </Box>
         <Box ml="4rem">
           <DetailsPanel>
