@@ -133,14 +133,18 @@ class DemoTransactionsManager {
   ): Promise<Transaction[]> {
     return new Promise(resolve => {
       setTimeout(() => {
+        const search = searchTerm?.toLowerCase()
         const transactions = DEMO_TRANSACTIONS.filter(
           transaction =>
             (transaction.from === address || transaction.to === address) &&
-            (!searchTerm ||
-              transaction.hash.includes(searchTerm) ||
-              transaction.from.includes(searchTerm) ||
-              transaction.to.includes(searchTerm) ||
-              transaction.notes.find(note => note.memo?.includes(searchTerm)))
+            (!search ||
+              transaction.hash.toLowerCase().includes(search) ||
+              transaction.from.toLowerCase().includes(search) ||
+              transaction.to.toLowerCase().includes(search) ||
+              transaction.notes.find(note =>
+                note.memo?.toLowerCase().includes(search)
+              ) ||
+              transaction.amount.toString().includes(search))
         )
         transactions.sort(
           (a, b) =>
@@ -159,14 +163,18 @@ class DemoTransactionsManager {
   ): Promise<Transaction[]> {
     return new Promise(resolve => {
       setTimeout(() => {
+        const search = searchTerm?.toLowerCase()
         const transactions = DEMO_TRANSACTIONS.filter(
           transaction =>
             transaction.accountId === accountId &&
-            (!searchTerm ||
-              transaction.hash.includes(searchTerm) ||
-              transaction.from.includes(searchTerm) ||
-              transaction.to.includes(searchTerm) ||
-              transaction.notes.find(note => note.memo?.includes(searchTerm)))
+            (!search ||
+              transaction.hash.toLowerCase().includes(search) ||
+              transaction.from.toLowerCase().includes(search) ||
+              transaction.to.toLowerCase().includes(search) ||
+              transaction.notes.find(note =>
+                note.memo?.toLowerCase().includes(search)
+              ) ||
+              transaction.amount.toString().includes(search))
         )
         transactions.sort(
           (a, b) =>

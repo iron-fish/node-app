@@ -25,6 +25,7 @@ import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import Transaction, { Payment } from 'Types/Transaction'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
+import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
 
 class AccountManager implements IIronfishAccountManager {
   private node: IronfishNode
@@ -39,15 +40,9 @@ class AccountManager implements IIronfishAccountManager {
       .then(account => account.serialize())
   }
 
-  async list(search?: string, sort?: SortType): Promise<CutAccount[]> {
-    const accounts = this.node.wallet
-      .listAccounts()
-      .filter(
-        account =>
-          !search ||
-          account.name.includes(search) ||
-          account.publicAddress.includes(search)
-      )
+  async list(searchTerm?: string, sort?: SortType): Promise<CutAccount[]> {
+    const search = searchTerm?.toLowerCase()
+    const accounts = this.node.wallet.listAccounts()
 
     const result: CutAccount[] = await Promise.all(
       accounts.map(async account => ({
@@ -66,7 +61,13 @@ class AccountManager implements IIronfishAccountManager {
       )
     }
 
-    return result
+    return result.filter(
+      account =>
+        !search ||
+        account.name.toLowerCase().includes(search) ||
+        account.publicAddress.toLowerCase().includes(search) ||
+        CurrencyUtils.renderIron(account.balance.confirmed).includes(search)
+    )
   }
 
   async get(id: string): Promise<WalletAccount | null> {
@@ -262,14 +263,18 @@ class TransactionManager implements IIronfishTransactionManager {
         await this.resolveTransactionFields(account, headSequence, transaction)
       )
     }
+    const search = searchTerm?.toLowerCase()
 
     return transactions
       .filter(
         transaction =>
-          !searchTerm ||
-          transaction.from.includes(searchTerm) ||
-          transaction.to.includes(searchTerm) ||
-          transaction.notes.find(note => note.memo?.includes(searchTerm))
+          !search ||
+          transaction.from.toLowerCase().includes(search) ||
+          transaction.to.toLowerCase().includes(search) ||
+          transaction.notes.find(note =>
+            note.memo?.toLowerCase().includes(search)
+          ) ||
+          transaction.amount.toString().includes(search)
       )
       .sort((t1, t2) => {
         const date1: number = (t1.created || new Date()).getTime()
