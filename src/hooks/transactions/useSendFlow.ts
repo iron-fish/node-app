@@ -40,7 +40,7 @@ const useSendFlow = (
       transaction.status !== TransactionStatus.CONFIRMED &&
       transaction.status !== TransactionStatus.EXPIRED
     ) {
-      timeout = setInterval(() => syncTransaction())
+      timeout = setInterval(() => syncTransaction(), 1000)
     }
 
     return () => {
