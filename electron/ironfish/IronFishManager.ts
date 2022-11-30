@@ -25,7 +25,6 @@ import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import Transaction, { Payment } from 'Types/Transaction'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
-import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
 
 class AccountManager implements IIronfishAccountManager {
   private node: IronfishNode
