@@ -28,8 +28,6 @@ const useAddressTransactions = (
     accountId && loadTransactions()
   }, [accountId, search, sort])
 
-  console.log(result.data)
-
   return [result, addContact] as const
 }
 
