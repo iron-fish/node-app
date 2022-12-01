@@ -122,7 +122,10 @@ const Accounts = () => {
       <SearchSortField
         sortValue={$sortOrder}
         SearchProps={{
-          onChange: e => $setSearchTerm(e.target.value),
+          value: $searchTerm,
+          onChange: e => {
+            $setSearchTerm(e.target.value.trimStart())
+          },
         }}
         SortSelectProps={{
           onSelectOption: ({ value }) => $setSortOrder(value),

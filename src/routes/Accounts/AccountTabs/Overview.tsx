@@ -182,82 +182,91 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
           </Box>
         </Box>
       </Flex>
+      <chakra.h3 pb="1rem">Transactions</chakra.h3>
+      <SearchSortField
+        SearchProps={{
+          value: $searchTerm,
+          onChange: e => $setSearchTerm(e.target.value.trimStart()),
+        }}
+        SortSelectProps={{
+          onSelectOption: ({ value }) => $setSortOrder(value),
+        }}
+        options={[
+          {
+            label: 'Newest to oldest',
+            value: SortType.DESC,
+          },
+          {
+            label: 'Oldest to oldest',
+            value: SortType.ASC,
+          },
+        ]}
+      />
       {loaded &&
         (transactions?.length === 0 ? (
           <EmptyOverview />
         ) : (
-          <>
-            <chakra.h3 pb="1rem">Transactions</chakra.h3>
-            <SearchSortField
-              SearchProps={{
-                onChange: e => $setSearchTerm(e.target.value),
-              }}
-              SortSelectProps={{
-                onSelectOption: ({ value }) => $setSortOrder(value),
-              }}
-            />
-            <CommonTable
-              textTransform="capitalize"
-              data={loaded ? transactions : new Array(10).fill(null)}
-              columns={[
-                {
-                  key: 'transaction-action-column',
-                  label: <chakra.h6>Action</chakra.h6>,
-                  render: (transaction: Transaction) => (
-                    <TransactionStatusView status={transaction.status} />
+          <CommonTable
+            textTransform="capitalize"
+            data={loaded ? transactions : new Array(10).fill(null)}
+            columns={[
+              {
+                key: 'transaction-action-column',
+                label: <chakra.h6>Action</chakra.h6>,
+                render: (transaction: Transaction) => (
+                  <TransactionStatusView status={transaction.status} />
+                ),
+              },
+              {
+                key: 'transaction-amount-column',
+                label: <chakra.h6>$IRON</chakra.h6>,
+                render: (transaction: Transaction) => (
+                  <chakra.h5>{transaction.amount}</chakra.h5>
+                ),
+              },
+              {
+                key: 'transaction-to-column',
+                label: <chakra.h6>To</chakra.h6>,
+                render: (transaction: Transaction) =>
+                  transaction.to ? (
+                    <chakra.h5>{truncateHash(transaction.to, 3)}</chakra.h5>
+                  ) : (
+                    <chakra.h5 color={NAMED_COLORS.GREY}>n/a</chakra.h5>
                   ),
+              },
+              {
+                key: 'transaction-date-column',
+                label: <chakra.h6>Date</chakra.h6>,
+                render: (transaction: Transaction) => (
+                  <chakra.h5>{transaction.created.toISOString()}</chakra.h5>
+                ),
+              },
+              {
+                key: 'transaction-memo-column',
+                label: <chakra.h6>Memo</chakra.h6>,
+                render: (transaction: Transaction) => (
+                  <chakra.h5>"{transaction.notes?.at(0)?.memo}"</chakra.h5>
+                ),
+              },
+              {
+                key: 'transaction-details-column',
+                label: '',
+                ItemProps: {
+                  height: '100%',
+                  justifyContent: 'flex-end',
                 },
-                {
-                  key: 'transaction-amount-column',
-                  label: <chakra.h6>$IRON</chakra.h6>,
-                  render: (transaction: Transaction) => (
-                    <chakra.h5>{transaction.amount}</chakra.h5>
-                  ),
-                },
-                {
-                  key: 'transaction-to-column',
-                  label: <chakra.h6>To</chakra.h6>,
-                  render: (transaction: Transaction) =>
-                    transaction.to ? (
-                      <chakra.h5>{truncateHash(transaction.to, 3)}</chakra.h5>
-                    ) : (
-                      <chakra.h5 color={NAMED_COLORS.GREY}>n/a</chakra.h5>
-                    ),
-                },
-                {
-                  key: 'transaction-date-column',
-                  label: <chakra.h6>Date</chakra.h6>,
-                  render: (transaction: Transaction) => (
-                    <chakra.h5>{transaction.created.toISOString()}</chakra.h5>
-                  ),
-                },
-                {
-                  key: 'transaction-memo-column',
-                  label: <chakra.h6>Memo</chakra.h6>,
-                  render: (transaction: Transaction) => (
-                    <chakra.h5>"{transaction.notes?.at(0)?.memo}"</chakra.h5>
-                  ),
-                },
-                {
-                  key: 'transaction-details-column',
-                  label: '',
-                  ItemProps: {
-                    marginLeft: 'auto',
-                    width: 'min-content',
-                  },
-                  render: () => (
-                    <Button
-                      variant="link"
-                      color={NAMED_COLORS.LIGHT_BLUE}
-                      rightIcon={<ChevronRightIcon />}
-                    >
-                      <chakra.h5>View Details</chakra.h5>
-                    </Button>
-                  ),
-                },
-              ]}
-            />
-          </>
+                render: () => (
+                  <Button
+                    variant="link"
+                    color={NAMED_COLORS.LIGHT_BLUE}
+                    rightIcon={<ChevronRightIcon />}
+                  >
+                    <chakra.h5>View Details</chakra.h5>
+                  </Button>
+                ),
+              },
+            ]}
+          />
         ))}
     </>
   )

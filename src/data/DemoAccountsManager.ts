@@ -1,5 +1,5 @@
 import { AccountSettings } from './types/Account'
-import { Account, AccountValue } from '@ironfish/sdk'
+import { AccountValue } from '@ironfish/sdk'
 import { nanoid } from 'nanoid'
 // seems that it can be used thought preload script
 // import { generateMnemonic } from 'bip39'
@@ -8,6 +8,7 @@ import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
+import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
 
 const DEMO_ACCOUNTS: AccountValue[] = [
   {
@@ -132,17 +133,19 @@ class DemoAccountsManager {
   list(searchTerm?: string, sort?: SortType): Promise<CutAccount[]> {
     return new Promise(resolve =>
       setTimeout(() => {
-        const accounts = DEMO_ACCOUNTS.filter(
-          account =>
-            !searchTerm ||
-            account.name.includes(searchTerm) ||
-            account.publicAddress.includes(searchTerm)
-        ).map(account => ({
+        const search = searchTerm?.toLowerCase()
+        const accounts = DEMO_ACCOUNTS.map(account => ({
           id: account.id,
           publicAddress: account.publicAddress,
           name: account.name,
           balance: ACCOUNT_BALANCES[account.id],
-        }))
+        })).filter(
+          account =>
+            !search ||
+            account.name.toLowerCase().includes(search) ||
+            account.publicAddress.toLowerCase().includes(search) ||
+            CurrencyUtils.renderIron(account.balance.confirmed).includes(search)
+        )
 
         if (sort) {
           accounts.sort(
