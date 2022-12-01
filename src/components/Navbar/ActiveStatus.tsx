@@ -112,9 +112,9 @@ const SyncStatus = forwardRef<HTMLDivElement, DataSyncContextProps>(
               {`${(data?.blockSyncer.syncing.progress * 100).toFixed(2)}%`}
               {' | '}
               {`${renderTime(
-                (data?.blockSyncer?.syncing?.speed || 0) *
-                  (Number(data?.blockchain?.totalSequences || 0) -
-                    Number(data?.blockchain?.head || 0))
+                (Number(data?.blockchain?.totalSequences || 0) -
+                  Number(data?.blockchain?.head || 0)) /
+                  (data?.blockSyncer?.syncing?.speed || 1)
               )}`}
             </chakra.h5>
             <chakra.h5 color={colors.textWarn}>
