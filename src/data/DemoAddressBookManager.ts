@@ -41,15 +41,16 @@ const DEMO_ADDRESS_BOOK: Contact[] = [
 ]
 
 class DemoAddressBookManager {
-  list(search: string, sort?: SortType): Promise<Contact[]> {
+  list(searchTerm: string, sort?: SortType): Promise<Contact[]> {
     return new Promise(resolve => {
+      const search = searchTerm?.toLowerCase()
       setTimeout(
         () =>
           resolve(
             DEMO_ADDRESS_BOOK.filter(
               contact =>
-                contact.name.includes(search || '') ||
-                contact.address.includes(search || '')
+                contact.name.toLowerCase().includes(search || '') ||
+                contact.address.toLowerCase().includes(search || '')
             ).sort(
               (a, b) =>
                 a.name.localeCompare(b.name) * (sort === SortType.DESC ? -1 : 1)

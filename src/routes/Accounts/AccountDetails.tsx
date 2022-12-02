@@ -25,7 +25,7 @@ import useAccount from 'Hooks/accounts/useAccount'
 const AccountDetails: FC = () => {
   const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
   const location = useLocation()
-  const { accountId } = location.state as LocationStateProps
+  const { accountId, order } = location.state as LocationStateProps
   const [{ data: account, loaded }, updateAccount, deleteAccount] =
     useAccount(accountId)
   return (
@@ -65,7 +65,7 @@ const AccountDetails: FC = () => {
           </TabList>
           <TabPanels>
             <TabPanel p="0" pt="2rem">
-              <AccountOverview account={account} />
+              <AccountOverview account={account} order={order} />
             </TabPanel>
             <TabPanel p="0" pt="2rem">
               <AccountKeys account={account} />

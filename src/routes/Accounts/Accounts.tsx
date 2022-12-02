@@ -122,7 +122,10 @@ const Accounts = () => {
       <SearchSortField
         sortValue={$sortOrder}
         SearchProps={{
-          onChange: e => $setSearchTerm(e.target.value),
+          value: $searchTerm,
+          onChange: e => {
+            $setSearchTerm(e.target.value.trimStart())
+          },
         }}
         SortSelectProps={{
           onSelectOption: ({ value }) => $setSortOrder(value),
@@ -131,7 +134,11 @@ const Accounts = () => {
       <Flex mt="0.5rem" direction="column" width="100%">
         {loaded
           ? accounts.map((account, index) => (
-              <AccountPreview key={`${account.name}-${index}`} {...account} />
+              <AccountPreview
+                key={`${account.name}-${index}`}
+                {...account}
+                order={index}
+              />
             ))
           : null}
       </Flex>

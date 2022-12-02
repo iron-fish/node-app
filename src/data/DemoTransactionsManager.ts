@@ -9,11 +9,11 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     created: new Date('2022-08-26T08:43:00.770Z'),
     creator: true,
     fee: '0.012',
-    from: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
-    to: 'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
+    from: 'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+    to: '97fu1x7AXPO9pmQcMpvyfeyR8AWBeHPmv6bPdB1cE946BpgwAbTESdNrSUDVrbhr',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [{ value: BigInt(100000), memo: 'dziakyi' }],
     spends: [],
     status: TransactionStatus.CONFIRMED,
     accountId:
@@ -24,14 +24,14 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   },
   {
     amount: '10',
-    created: new Date('2022-08-26T08:43:00.770Z'),
     creator: false,
+    created: new Date('2022-08-25T08:43:00.770Z'),
     fee: '0.01',
-    to: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
-    from: 'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
+    to: 'DhUuMS51CioZSQVEp05nzXklomlelMqDWK70DNLLg4vNobtJSKJhNkZ8gOVGVymu',
+    from: 'xXqWJOahmVrQQ5paK1Kb7gAS2QkEPYG43G7RfzSnQElDu9WZmVCmhWi8PO39hr9q',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [{ value: BigInt(100000), memo: 'thanks' }],
     spends: [],
     status: TransactionStatus.EXPIRED,
     accountId:
@@ -42,14 +42,14 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   },
   {
     amount: '100',
-    created: new Date('2022-08-26T08:43:00.770Z'),
     creator: false,
+    created: new Date('2022-08-24T08:43:00.770Z'),
     fee: '0.1',
-    to: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
-    from: 'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
+    to: 'MXaagM3oWH3OXzffgFOo6nbYxqc9Z7SiF5zhFooG0yB5M1xnSd3r4hPmmrSKhvJC',
+    from: 'xHubwKNZc906tiN3GBqDPCYtWVSCItx9bpC6UD1I72b943c0eMSS9ipWq3NKJOID',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [{ value: BigInt(100000), memo: 'welcome message' }],
     spends: [],
     status: TransactionStatus.PENDING,
     accountId:
@@ -60,14 +60,14 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   },
   {
     amount: '-1235',
-    created: new Date('2022-08-26T08:43:00.770Z'),
+    created: new Date('2022-08-23T08:43:00.770Z'),
     creator: true,
     fee: '0.01235',
-    from: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+    from: 'tQ2ntaJtntysj6ufqzIbLOzOvktPuMVsDHWTSTovMWJU2HIhbLb6NqvbaNxANjgU',
     to: 'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [{ value: BigInt(100000), memo: 'aloha' }],
     spends: [],
     status: TransactionStatus.UNCONFIRMED,
     accountId:
@@ -78,14 +78,14 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   },
   {
     amount: '-121',
-    created: new Date('2022-08-26T08:43:00.770Z'),
+    created: new Date('2022-08-21T08:43:00.770Z'),
     creator: true,
     fee: '0.0121',
     from: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
-    to: 'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
+    to: 'eBpm3UivfNtMdVf82e8fzUACM5tuZGEmeB0S1z8gyYLpECW5Ct1295DD05Lh2X04',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [{ value: BigInt(100000), memo: 'Have A GOOD DAY' }],
     spends: [],
     status: TransactionStatus.UNKNOWN,
     accountId:
@@ -96,14 +96,14 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   },
   {
     amount: '12',
-    created: new Date('2022-08-26T08:43:00.770Z'),
     creator: false,
+    created: new Date('2022-08-22T08:43:00.770Z'),
     fee: '0.0012',
-    to: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+    to: 'XCT3LdATRBhBbbxzEsoZwAfvjQiSSbNwwa5IagFWKev0RYhTKjFJNyBXKR61AF3L',
     from: 'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [],
+    notes: [{ value: BigInt(100000), memo: 'TASTY' }],
     spends: [],
     status: TransactionStatus.CONFIRMED,
     accountId:
@@ -133,13 +133,18 @@ class DemoTransactionsManager {
   ): Promise<Transaction[]> {
     return new Promise(resolve => {
       setTimeout(() => {
+        const search = searchTerm?.toLowerCase()
         const transactions = DEMO_TRANSACTIONS.filter(
           transaction =>
             (transaction.from === address || transaction.to === address) &&
-            (!searchTerm ||
-              transaction.hash.includes(searchTerm) ||
-              transaction.from.includes(searchTerm) ||
-              transaction.to.includes(searchTerm))
+            (!search ||
+              transaction.hash.toLowerCase().includes(search) ||
+              transaction.from.toLowerCase().includes(search) ||
+              transaction.to.toLowerCase().includes(search) ||
+              transaction.notes.find(note =>
+                note.memo?.toLowerCase().includes(search)
+              ) ||
+              transaction.amount.toString().includes(search))
         )
         transactions.sort(
           (a, b) =>
@@ -158,13 +163,18 @@ class DemoTransactionsManager {
   ): Promise<Transaction[]> {
     return new Promise(resolve => {
       setTimeout(() => {
+        const search = searchTerm?.toLowerCase()
         const transactions = DEMO_TRANSACTIONS.filter(
           transaction =>
             transaction.accountId === accountId &&
-            (!searchTerm ||
-              transaction.hash.includes(searchTerm) ||
-              transaction.from.includes(searchTerm) ||
-              transaction.to.includes(searchTerm))
+            (!search ||
+              transaction.hash.toLowerCase().includes(search) ||
+              transaction.from.toLowerCase().includes(search) ||
+              transaction.to.toLowerCase().includes(search) ||
+              transaction.notes.find(note =>
+                note.memo?.toLowerCase().includes(search)
+              ) ||
+              transaction.amount.toString().includes(search))
         )
         transactions.sort(
           (a, b) =>

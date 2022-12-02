@@ -26,12 +26,13 @@ import SortType from 'Types/SortType'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import Transaction from 'Types/Transaction'
 import TransactionStatusView from 'Components/TransactionStatusView'
-import { stringToColor } from 'Utils/stringToColor'
 import Account from 'Types/Account'
 import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
+import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 
 interface AccountOverviewProps {
   account: Account
+  order: number
 }
 
 const EmptyOverview = () => {
@@ -69,7 +70,7 @@ const EmptyOverview = () => {
   )
 }
 
-const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
+const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
   const [{ data: transactions, loaded }] = useTransactions(
@@ -89,15 +90,12 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
   )
   const navigate = useNavigate()
   const { loaded: synced } = useDataSync()
-  return account ? (
+  return (
     <>
       <Flex w="100%" pb="2rem">
         <Box
           layerStyle="card"
-          bg={`linear-gradient(92.65deg, ${stringToColor(
-            account?.id,
-            85
-          )} 0.38%, ${stringToColor(account?.id, 55)} 99.64%) !important`}
+          bg={`${accountGradientByOrder(order)} !important`}
           borderRadius="0.25rem"
           w="100%"
           minWidth="18rem"
@@ -184,87 +182,96 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
           </Box>
         </Box>
       </Flex>
+      <chakra.h3 pb="1rem">Transactions</chakra.h3>
+      <SearchSortField
+        SearchProps={{
+          value: $searchTerm,
+          onChange: e => $setSearchTerm(e.target.value.trimStart()),
+        }}
+        SortSelectProps={{
+          onSelectOption: ({ value }) => $setSortOrder(value),
+        }}
+        options={[
+          {
+            label: 'Newest to oldest',
+            value: SortType.DESC,
+          },
+          {
+            label: 'Oldest to oldest',
+            value: SortType.ASC,
+          },
+        ]}
+      />
       {loaded &&
         (transactions?.length === 0 ? (
           <EmptyOverview />
         ) : (
-          <>
-            <chakra.h3 pb="1rem">Transactions</chakra.h3>
-            <SearchSortField
-              SearchProps={{
-                onChange: e => $setSearchTerm(e.target.value),
-              }}
-              SortSelectProps={{
-                onSelectOption: ({ value }) => $setSortOrder(value),
-              }}
-            />
-            <CommonTable
-              textTransform="capitalize"
-              data={loaded ? transactions : new Array(10).fill(null)}
-              columns={[
-                {
-                  key: 'transaction-action-column',
-                  label: <chakra.h6>Action</chakra.h6>,
-                  render: (transaction: Transaction) => (
-                    <TransactionStatusView status={transaction.status} />
+          <CommonTable
+            textTransform="capitalize"
+            data={loaded ? transactions : new Array(10).fill(null)}
+            columns={[
+              {
+                key: 'transaction-action-column',
+                label: <chakra.h6>Action</chakra.h6>,
+                render: (transaction: Transaction) => (
+                  <TransactionStatusView status={transaction.status} />
+                ),
+              },
+              {
+                key: 'transaction-amount-column',
+                label: <chakra.h6>$IRON</chakra.h6>,
+                render: (transaction: Transaction) => (
+                  <chakra.h5>
+                    {(transaction.creator ? '' : '+') + transaction.amount}
+                  </chakra.h5>
+                ),
+              },
+              {
+                key: 'transaction-to-column',
+                label: <chakra.h6>To</chakra.h6>,
+                render: (transaction: Transaction) =>
+                  transaction.to ? (
+                    <chakra.h5>{truncateHash(transaction.to, 3)}</chakra.h5>
+                  ) : (
+                    <chakra.h5 color={NAMED_COLORS.GREY}>n/a</chakra.h5>
                   ),
+              },
+              {
+                key: 'transaction-date-column',
+                label: <chakra.h6>Date</chakra.h6>,
+                render: (transaction: Transaction) => (
+                  <chakra.h5>{transaction.created.toISOString()}</chakra.h5>
+                ),
+              },
+              {
+                key: 'transaction-memo-column',
+                label: <chakra.h6>Memo</chakra.h6>,
+                render: (transaction: Transaction) => (
+                  <chakra.h5>"{transaction.notes?.at(0)?.memo}"</chakra.h5>
+                ),
+              },
+              {
+                key: 'transaction-details-column',
+                label: '',
+                ItemProps: {
+                  height: '100%',
+                  justifyContent: 'flex-end',
                 },
-                {
-                  key: 'transaction-amount-column',
-                  label: <chakra.h6>$IRON</chakra.h6>,
-                  render: (transaction: Transaction) => (
-                    <chakra.h5>
-                      {(transaction.creator ? '' : '+') + transaction.amount}
-                    </chakra.h5>
-                  ),
-                },
-                {
-                  key: 'transaction-to-column',
-                  label: <chakra.h6>To</chakra.h6>,
-                  render: (transaction: Transaction) =>
-                    transaction.to ? (
-                      <chakra.h5>{truncateHash(transaction.to, 3)}</chakra.h5>
-                    ) : (
-                      <chakra.h5 color={NAMED_COLORS.GREY}>n/a</chakra.h5>
-                    ),
-                },
-                {
-                  key: 'transaction-date-column',
-                  label: <chakra.h6>Date</chakra.h6>,
-                  render: (transaction: Transaction) => (
-                    <chakra.h5>{transaction.created.toISOString()}</chakra.h5>
-                  ),
-                },
-                {
-                  key: 'transaction-memo-column',
-                  label: <chakra.h6>Memo</chakra.h6>,
-                  render: (transaction: Transaction) => (
-                    <chakra.h5>"{transaction.notes?.at(0)?.memo}"</chakra.h5>
-                  ),
-                },
-                {
-                  key: 'transaction-details-column',
-                  label: '',
-                  ItemProps: {
-                    marginLeft: 'auto',
-                    width: 'min-content',
-                  },
-                  render: () => (
-                    <Button
-                      variant="link"
-                      color={NAMED_COLORS.LIGHT_BLUE}
-                      rightIcon={<ChevronRightIcon />}
-                    >
-                      <chakra.h5>View Details</chakra.h5>
-                    </Button>
-                  ),
-                },
-              ]}
-            />
-          </>
+                render: () => (
+                  <Button
+                    variant="link"
+                    color={NAMED_COLORS.LIGHT_BLUE}
+                    rightIcon={<ChevronRightIcon />}
+                  >
+                    <chakra.h5>View Details</chakra.h5>
+                  </Button>
+                ),
+              },
+            ]}
+          />
         ))}
     </>
-  ) : null
+  )
 }
 
 export default AccountOverview

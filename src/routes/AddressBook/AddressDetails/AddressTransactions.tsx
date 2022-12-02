@@ -33,11 +33,22 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
       <chakra.h3 mb="1rem">Transactions</chakra.h3>
       <SearchSortField
         SearchProps={{
-          onChange: e => $setSearchTerm(e.target.value),
+          value: $searchTerm,
+          onChange: e => $setSearchTerm(e.target.value.trimStart()),
         }}
         SortSelectProps={{
           onSelectOption: ({ value }) => $setSortOrder(value),
         }}
+        options={[
+          {
+            label: 'Newest to oldest',
+            value: SortType.DESC,
+          },
+          {
+            label: 'Oldest to oldest',
+            value: SortType.ASC,
+          },
+        ]}
       />
       <Flex direction="column" width="100%">
         <CommonTable

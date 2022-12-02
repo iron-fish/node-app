@@ -24,11 +24,11 @@ class AddressBookStorage extends AbstractStorage<Contact> {
       this.storage
         .find({
           $or: [
-            { name: new RegExp(searchTerm, 'g') },
-            { address: new RegExp(searchTerm, 'g') },
+            { name: new RegExp(searchTerm, 'gi') },
+            { address: new RegExp(searchTerm, 'gi') },
           ],
         })
-        .sort({ name: sort === SortType.DESC ? -1 : 1 })
+        .sort({ createdAt: sort === SortType.DESC ? -1 : 1 })
         .exec((err, contacts) => {
           if (err) {
             reject(err)
