@@ -5,7 +5,7 @@ import Transaction, { TransactionStatus } from 'Types/Transaction'
 
 const DEMO_TRANSACTIONS: Transaction[] = [
   {
-    amount: '12',
+    amount: '-12',
     created: new Date('2022-08-26T08:43:00.770Z'),
     creator: true,
     fee: '0.012',
@@ -25,7 +25,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   {
     amount: '10',
     created: new Date('2022-08-26T08:43:00.770Z'),
-    creator: true,
+    creator: false,
     fee: '0.01',
     to: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
     from: 'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
@@ -43,7 +43,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   {
     amount: '100',
     created: new Date('2022-08-26T08:43:00.770Z'),
-    creator: true,
+    creator: false,
     fee: '0.1',
     to: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
     from: 'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
@@ -59,7 +59,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     spendsCount: 0,
   },
   {
-    amount: '1235',
+    amount: '-1235',
     created: new Date('2022-08-26T08:43:00.770Z'),
     creator: true,
     fee: '0.01235',
@@ -77,7 +77,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     spendsCount: 0,
   },
   {
-    amount: '121',
+    amount: '-121',
     created: new Date('2022-08-26T08:43:00.770Z'),
     creator: true,
     fee: '0.0121',
@@ -97,7 +97,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   {
     amount: '12',
     created: new Date('2022-08-26T08:43:00.770Z'),
-    creator: true,
+    creator: false,
     fee: '0.0012',
     to: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
     from: 'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',

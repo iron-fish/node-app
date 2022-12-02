@@ -231,13 +231,13 @@ class TransactionManager implements IIronfishTransactionManager {
       ? await this.node.chain.getBlock(transaction.blockHash)
       : null
     const spends = []
-    let creator = false
+    let creator
     for await (const spend of transaction?.transaction?.spends() || []) {
       const noteHash = await account.getNoteHash(spend.nullifier)
 
       if (noteHash) {
-        creator = true
-        break
+        const decryptedNote = await account.getDecryptedNote(noteHash)
+        creator = decryptedNote
       }
 
       spends.push(spend)
@@ -260,14 +260,15 @@ class TransactionManager implements IIronfishTransactionManager {
         memo: n.note.memo(),
       })),
       spends,
-      creator,
+      creator: !!creator,
       from: creator ? account.publicAddress : '',
       to: creator ? '' : account.publicAddress,
       created: created?.header?.timestamp || new Date(),
       amount: CurrencyUtils.renderIron(
         notes
           .map(note => note.note.value())
-          .reduce((prev, curr) => prev + curr, BigInt(0))
+          .reduce((prev, curr) => prev + curr, BigInt(0)) -
+          (creator?.note?.value() || BigInt(0))
       ),
     }
   }
