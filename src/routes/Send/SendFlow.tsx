@@ -201,7 +201,7 @@ const ConfirmStep: FC<StepProps> = ({
             title="Fee:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{fee} $IRON</chakra.h4>
+                <chakra.h4>{fee.toFixed(8)} $IRON</chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
