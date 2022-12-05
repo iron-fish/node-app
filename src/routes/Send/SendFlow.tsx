@@ -6,7 +6,6 @@ import {
   FieldGroup,
   Flex,
   HStack,
-  LightMode,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -28,6 +27,7 @@ import { Account } from 'Data/types/Account'
 import Contact from 'Types/Contact'
 import SendIcon from 'Svgx/send'
 import { truncateHash } from 'Utils/hash'
+import LightMode from 'Components/LightMode'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
 

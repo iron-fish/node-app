@@ -7,8 +7,8 @@ import {
   ModalProps,
   ModalOverlay,
   ModalContent,
-  LightMode,
 } from '@ironfish/ui-kit'
+import LightMode from 'Components/LightMode'
 
 const ModalWindow: FC<ModalProps> = ({ children, ...props }) => {
   return (

@@ -5,7 +5,6 @@ import {
   chakra,
   Flex,
   HStack,
-  LightMode,
   NAMED_COLORS,
   Skeleton,
   Stat,
@@ -16,7 +15,7 @@ import {
 } from '@ironfish/ui-kit'
 import useNodeStatus from 'Hooks/node/useNodeStatus'
 import NodeOverviewImage from 'Svgx/NodeOverviewImage'
-
+import LightMode from 'Components/LightMode'
 interface NodeStatProps {
   isLoaded: boolean
   label: ReactNode
