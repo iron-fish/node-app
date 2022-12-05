@@ -1,5 +1,6 @@
-import { FC, useMemo, useEffect, useState, ReactNode } from 'react'
+import { FC, useMemo, useEffect, useState, ReactNode, useRef } from 'react'
 import { Autocomplete, FlexProps, useDebounce } from '@ironfish/ui-kit'
+import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 
 import useAddressBook from 'Hooks/addressBook/useAddressBook'
 import Contact from 'Types/Contact'
@@ -50,6 +51,22 @@ const getSelectedOption = (
   return selectedOption
 }
 
+const optionsFilter = (option: OptionType, searchTerm: string) => {
+  const { name, address } = option.value
+  const _name = name?.toLowerCase()
+  const _address = address?.toLowerCase()
+  const _search = searchTerm.toLowerCase()
+
+  return _name?.includes(_search) || _address?.includes(_search)
+}
+
+const getOptionsFilter = (options, $searchTerm) => {
+  const filteredOptions = options.filter(option =>
+    optionsFilter(option, $searchTerm)
+  )
+  return filteredOptions.length ? optionsFilter : () => true
+}
+
 const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
   address,
   label,
@@ -62,10 +79,15 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
   const [{ data: contacts = [], loaded: contactsLoaded }] =
     useAddressBook($search)
 
-  const options = useMemo(
-    () => getContactOptions(contacts),
-    [JSON.stringify(contacts.map(c => c._id))]
-  )
+  const startOptions = useRef([])
+
+  const options = useMemo(() => {
+    const contactOptions = getContactOptions(contacts)
+    if (startOptions.current.length === 0) {
+      startOptions.current = contactOptions
+    }
+    return contactOptions
+  }, [JSON.stringify(contacts.map(c => c._id))])
 
   useEffect(() => {
     const selectedOption = getSelectedOption(
@@ -79,9 +101,13 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
   return (
     <Autocomplete
       label={label}
-      options={options}
+      options={options.length === 0 ? startOptions.current : options}
       value={getSelectedOption(options, address || $searchTerm, freeInput)}
-      onSelectOption={option => onSelectOption(option.value)}
+      onSelectOption={option => {
+        onSelectOption(option.value)
+        $setSearchTerm('')
+      }}
+      filterOption={getOptionsFilter(options, $searchTerm)}
       onClose={() => {
         if (
           freeInput &&
@@ -94,6 +120,11 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
             name: $searchTerm,
           })
         }
+      }}
+      isClearable={true}
+      onClear={() => {
+        onSelectOption(null)
+        $setSearchTerm('')
       }}
       InputProps={{
         placeholder: 'Input Text',
