@@ -76,16 +76,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
     $searchTerm,
     $sortOrder
   )
-  const $colors = useColorModeValue(
-    {
-      borderColor: NAMED_COLORS.DEEP_BLUE,
-      boxShadow: `0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.WHITE}, 0.25rem 0.25rem ${NAMED_COLORS.DEEP_BLUE}`,
-    },
-    {
-      borderColor: `${NAMED_COLORS.WHITE}!important`,
-      boxShadow: `0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.DARKER_GREY}, 0.25rem 0.25rem ${NAMED_COLORS.WHITE} !important`,
-    }
-  )
+
   const navigate = useNavigate()
   const { loaded: synced } = useDataSync()
   return (
@@ -93,13 +84,11 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
       <Flex w="100%" pb="2rem">
         <Box
           layerStyle="card"
-          bg={accountGradientByOrder(order)}
+          bg={`${accountGradientByOrder(order)} !important`}
           borderRadius="0.25rem"
           w="100%"
           minWidth="18rem"
           mr="1rem"
-          borderColor={$colors.borderColor}
-          boxShadow={$colors.boxShadow}
         >
           <Flex justifyContent="space-between" alignItems="center">
             <Box m="2rem">

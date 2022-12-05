@@ -12,7 +12,6 @@ import {
   StatLabel,
   StatNumber,
   VStack,
-  useColorModeValue,
 } from '@ironfish/ui-kit'
 import useNodeStatus from 'Hooks/node/useNodeStatus'
 import NodeOverviewImage from 'Svgx/NodeOverviewImage'
@@ -44,16 +43,7 @@ const NodeStat: FC<NodeStatProps> = ({ isLoaded, label, value }) => (
 
 const NodeStatus: FC<BoxProps> = props => {
   const { loaded, data, error } = useNodeStatus()
-  const $colors = useColorModeValue(
-    {
-      borderColor: NAMED_COLORS.DEEP_BLUE,
-      boxShadow: `0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.WHITE}, 0.25rem 0.25rem ${NAMED_COLORS.DEEP_BLUE}`,
-    },
-    {
-      borderColor: `${NAMED_COLORS.WHITE}!important`,
-      boxShadow: `0.25rem 0.25rem 0 -0.063rem ${NAMED_COLORS.DARKER_GREY}, 0.25rem 0.25rem ${NAMED_COLORS.WHITE} !important`,
-    }
-  )
+
   return (
     <Box
       p="4rem"
@@ -64,8 +54,6 @@ const NodeStatus: FC<BoxProps> = props => {
       h="18.75rem"
       overflow="hidden"
       whiteSpace="nowrap"
-      borderColor={$colors.borderColor}
-      boxShadow={$colors.boxShadow}
       borderRadius="0.25rem"
       {...props}
     >
