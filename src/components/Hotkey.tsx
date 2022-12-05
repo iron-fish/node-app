@@ -1,7 +1,11 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import { useColorMode, Flex, NAMED_COLORS } from '@ironfish/ui-kit'
 
-export const Hotkey: FC = ({ children }) => {
+interface HotkeyProps {
+  children: ReactNode
+}
+
+export const Hotkey: FC<HotkeyProps> = ({ children }) => {
   const { colorMode } = useColorMode()
   const isLightMode = colorMode === 'light'
   return (

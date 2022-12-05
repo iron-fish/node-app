@@ -1,10 +1,11 @@
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
 import { useCallback, useEffect } from 'react'
+import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 
 const useCreateAccount = () => {
   const [result, promiseWrapper] = useAsyncDataWrapper<string[]>()
   const createAccount = useCallback(
-    (name, mnemonicPhrase) =>
+    (name: string, mnemonicPhrase: MnemonicPhraseType) =>
       window.DemoDataManager.createAccount(name, mnemonicPhrase),
     []
   )
