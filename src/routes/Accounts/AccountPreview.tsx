@@ -78,6 +78,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       <Flex
         w={{ base: '6rem', md: '10.375rem' }}
         h="6rem"
+        color={NAMED_COLORS.BLACK}
         mr={{
           base: '1.25rem',
           sm: '1.25rem',
