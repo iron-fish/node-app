@@ -68,7 +68,11 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
   )
 
   useEffect(() => {
-    const selectedOption = getSelectedOption(options, address, freeInput)
+    const selectedOption = getSelectedOption(
+      options,
+      address || $searchTerm,
+      freeInput
+    )
     onSelectOption(selectedOption?.value || null)
   }, [options])
 
@@ -76,7 +80,7 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
     <Autocomplete
       label={label}
       options={options}
-      value={getSelectedOption(options, address, freeInput)}
+      value={getSelectedOption(options, address || $searchTerm, freeInput)}
       onSelectOption={option => onSelectOption(option.value)}
       onClose={() => {
         if (

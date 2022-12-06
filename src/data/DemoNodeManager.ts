@@ -20,7 +20,7 @@ const STATUS: NodeStatusResponse = {
     status: 'syncing',
     syncing: {
       blockSpeed: BLOCK_SPEED,
-      speed: BLOCK_SPEED / 100,
+      speed: BLOCK_SPEED / 50,
       progress: 0.01,
     },
   },
@@ -60,14 +60,23 @@ class DemoNodeManager {
   status(): Promise<NodeStatusResponse> {
     return new Promise(resolve => {
       setTimeout(() => {
+        const head = Number(STATUS.blockchain.head)
+        const total = Number(STATUS.blockchain.totalSequences)
+        if (head === total) {
+          STATUS.blockSyncer.status = BlockSyncerStatusType.IDLE
+        }
         if (STATUS.blockSyncer.status === BlockSyncerStatusType.SYNCING) {
-          const head = Number(STATUS.blockchain.head)
-          const total = Number(STATUS.blockchain.totalSequences)
           STATUS.blockchain.synced = false
-          STATUS.blockSyncer.syncing.blockSpeed -=
-            STATUS.blockSyncer.syncing.speed
+          STATUS.blockSyncer.syncing.blockSpeed = Math.random() * 1000
+          STATUS.blockSyncer.syncing.speed =
+            total - head > STATUS.blockSyncer.syncing.speed
+              ? STATUS.blockSyncer.syncing.speed
+              : total - head
           STATUS.blockchain.head = (
-            head + (total - head > 60 ? 60 : total - head)
+            head +
+            (total - head > STATUS.blockSyncer.syncing.speed
+              ? STATUS.blockSyncer.syncing.speed
+              : total - head)
           ).toString()
           STATUS.blockSyncer.syncing.progress = head / total
         } else {
