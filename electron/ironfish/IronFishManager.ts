@@ -268,7 +268,9 @@ class TransactionManager implements IIronfishTransactionManager {
         notes
           .map(note => note.note.value())
           .reduce((prev, curr) => prev + curr, BigInt(0)) -
-          (creator?.note?.value() || BigInt(0))
+          (creator?.note?.value()
+            ? creator?.note?.value() - transaction.transaction.fee()
+            : BigInt(0))
       ),
     }
   }
