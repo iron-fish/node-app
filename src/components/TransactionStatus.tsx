@@ -49,7 +49,10 @@ const getStatusMessage = (status: TransactionStatusType) => {
 }
 
 const TransactionStatus: FC<TransactionStatusProps> = ({ status }) => {
-  const bgColor = useColorModeValue(NAMED_COLORS.LIGHT_GREY, NAMED_COLORS.GREY)
+  const bgColor = useColorModeValue(
+    NAMED_COLORS.LIGHT_GREY,
+    NAMED_COLORS.DARK_GREY
+  )
   return (
     <Flex alignItems="center" gap="0.75rem">
       <Flex
