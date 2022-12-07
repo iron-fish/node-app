@@ -21,6 +21,14 @@ const DEMO_ACCOUNTS: Account[] = [
     name: 'Secondary Account',
     pending: 124,
   },
+  {
+    address: 'hb7FhUScEm1UOSHGw6DPwSVmWL6gRB7ZKD7jIusykM1bMDOTL62LMyKKiSHuPqRS',
+    balance: 1002230000033994,
+    identity:
+      '1qPr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
+    name: 'Large balance demo',
+    pending: 2230000033994,
+  },
 ]
 
 const ACCOUNT_KEYS: AccountKeys[] = [

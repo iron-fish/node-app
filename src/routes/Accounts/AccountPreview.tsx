@@ -20,6 +20,7 @@ import { ROUTES } from '..'
 import { Account } from 'Data/types/Account'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
+import { formatOreToTronWithLanguage } from 'Utils/number'
 
 export interface AccountPreviewProps extends Account {
   order: number
@@ -111,7 +112,9 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       </Flex>
       <Box>
         <chakra.h5 pt="0.25rem">{name}</chakra.h5>
-        <chakra.h3 p="0.25rem 0">{balance} $IRON</chakra.h3>
+        <chakra.h3 p="0.25rem 0">
+          {formatOreToTronWithLanguage(balance)} $IRON
+        </chakra.h3>
         <CopyValueToClipboard
           containerProps={{
             color: NAMED_COLORS.GREY,
