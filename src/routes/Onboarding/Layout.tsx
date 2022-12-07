@@ -1,7 +1,6 @@
-import { Flex, Box, NAMED_COLORS } from '@ironfish/ui-kit'
+import { Flex, Box, NAMED_COLORS, LightMode } from '@ironfish/ui-kit'
 import { FC } from 'react'
 import { Outlet } from 'react-router-dom'
-import LightMode from 'Components/LightMode'
 
 const Layout: FC = () => {
   return (
