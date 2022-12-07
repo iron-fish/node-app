@@ -1,17 +1,13 @@
-import { FC, useState } from 'react'
+import { FC, useState, useRef, useEffect } from 'react'
 import {
   Box,
   Button,
   chakra,
   CommonTable,
   Flex,
-  VStack,
   Icon,
   NAMED_COLORS,
-  useColorModeValue,
-  Link,
 } from '@ironfish/ui-kit'
-import { Link as RouterLink } from 'react-router-dom'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
@@ -21,61 +17,136 @@ import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useTransactions'
 import { Account } from 'Data/types/Account'
 import { useNavigate } from 'react-router-dom'
-import EmptyOverviewImage from 'Svgx/EmptyOverviewImage'
 import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import TransactionStatus from 'Components/TransactionStatus'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
+import EmptyOverview from 'Components/EmptyOverview'
+
+interface SearchTransactionsProps {
+  address: string
+}
+
+const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
+  const [$searchTerm, $setSearchTerm] = useState('')
+  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
+  const [{ data: transactions = undefined, loaded }] = useTransactions(
+    address,
+    $searchTerm,
+    $sortOrder
+  )
+
+  return loaded && transactions.length === 0 && !$searchTerm ? null : (
+    <>
+      <Box>
+        <chakra.h3 pb="1rem">Transactions</chakra.h3>
+        <SearchSortField
+          SearchProps={{
+            value: $searchTerm,
+            onChange: e => $setSearchTerm(e.target.value),
+          }}
+          SortSelectProps={{
+            onSelectOption: ({ value }) => $setSortOrder(value),
+          }}
+        />
+      </Box>
+      {transactions?.length === 0 ? (
+        <EmptyOverview
+          header="0 Results"
+          description="There aren’t any transactions with details that match your search input. "
+        />
+      ) : (
+        <CommonTable
+          textTransform="capitalize"
+          data={loaded ? transactions : new Array(10).fill(null)}
+          columns={[
+            {
+              key: 'transaction-action-column',
+              label: <chakra.h6>Action</chakra.h6>,
+              render: transaction => (
+                <TransactionStatus status={transaction.status} />
+              ),
+            },
+            {
+              key: 'transaction-amount-column',
+              label: <chakra.h6>$IRON</chakra.h6>,
+              render: transaction => (
+                <chakra.h5>{transaction.amount}</chakra.h5>
+              ),
+            },
+            {
+              key: 'transaction-to-column',
+              label: <chakra.h6>To</chakra.h6>,
+              render: transaction =>
+                transaction.to ? (
+                  <chakra.h5>{truncateHash(transaction.to, 3)}</chakra.h5>
+                ) : (
+                  <chakra.h5 color={NAMED_COLORS.GREY}>n/a</chakra.h5>
+                ),
+            },
+            {
+              key: 'transaction-date-column',
+              label: <chakra.h6>Date</chakra.h6>,
+              render: transaction => <chakra.h5>{transaction.date}</chakra.h5>,
+            },
+            {
+              key: 'transaction-memo-column',
+              label: <chakra.h6>Memo</chakra.h6>,
+              render: transaction => (
+                <chakra.h5>"{transaction.memo}"</chakra.h5>
+              ),
+            },
+            {
+              key: 'transaction-details-column',
+              label: '',
+              ItemProps: {
+                marginLeft: 'auto',
+                width: 'min-content',
+              },
+              render: () => (
+                <Button
+                  variant="link"
+                  color={NAMED_COLORS.LIGHT_BLUE}
+                  rightIcon={<ChevronRightIcon />}
+                >
+                  <chakra.h5>View Details</chakra.h5>
+                </Button>
+              ),
+            },
+          ]}
+        />
+      )}
+    </>
+  )
+}
 
 interface AccountOverviewProps {
   account: Account
   order: number
 }
 
-const EmptyOverview = () => {
-  const $fontColor = useColorModeValue(
-    NAMED_COLORS.GREY,
-    NAMED_COLORS.PALE_GREY
-  )
-  return (
-    <Flex mt="2rem" justifyContent="center">
-      <VStack w="25rem">
-        <chakra.h3 mb="1rem">You don’t have any transactions</chakra.h3>
-        <chakra.h5 mb="2.5rem !important" textAlign="center" color={$fontColor}>
-          When your account compiles transactions they will be listed here. To
-          produce a transactions, either{' '}
-          <Link
-            as={RouterLink}
-            to={ROUTES.SEND}
-            color={NAMED_COLORS.LIGHT_BLUE}
-          >
-            send
-          </Link>{' '}
-          or{' '}
-          <Link
-            as={RouterLink}
-            to={ROUTES.RECEIVE}
-            color={NAMED_COLORS.LIGHT_BLUE}
-          >
-            receive
-          </Link>{' '}
-          $IRON.
-        </chakra.h5>
-        <EmptyOverviewImage />
-      </VStack>
-    </Flex>
-  )
-}
-
 const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
-  const [$searchTerm, $setSearchTerm] = useState('')
-  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
-  const [{ data: transactions, loaded }] = useTransactions(
-    account?.address,
-    $searchTerm,
-    $sortOrder
+  const [{ data: transactions = undefined, loaded }] = useTransactions(
+    account?.address
   )
+
+  const isReady = useRef(false)
+  const isEmptyOverview = useRef(false)
+
+  useEffect(() => {
+    if (
+      account?.address &&
+      loaded &&
+      transactions !== undefined &&
+      !isReady.current
+    ) {
+      isReady.current = true
+      if (transactions.length === 0) {
+        isEmptyOverview.current = true
+      }
+    }
+  }, [transactions, loaded])
 
   const navigate = useNavigate()
   const { loaded: synced } = useDataSync()
@@ -162,83 +233,16 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
           </Box>
         </Box>
       </Flex>
-      {loaded &&
-        (transactions?.length === 0 ? (
-          <EmptyOverview />
+      <Box display={isReady.current ? 'block' : 'none'}>
+        {isEmptyOverview.current ? (
+          <EmptyOverview
+            header="You don’t have any transactions"
+            description="When your account compiles transactions they will be listed here. To produce a transactions, eitherF send or receive $IRON."
+          />
         ) : (
-          <>
-            <chakra.h3 pb="1rem">Transactions</chakra.h3>
-            <SearchSortField
-              SearchProps={{
-                onChange: e => $setSearchTerm(e.target.value),
-              }}
-              SortSelectProps={{
-                onSelectOption: ({ value }) => $setSortOrder(value),
-              }}
-            />
-            <CommonTable
-              textTransform="capitalize"
-              data={loaded ? transactions : new Array(10).fill(null)}
-              columns={[
-                {
-                  key: 'transaction-action-column',
-                  label: <chakra.h6>Action</chakra.h6>,
-                  render: transaction => (
-                    <TransactionStatus status={transaction.status} />
-                  ),
-                },
-                {
-                  key: 'transaction-amount-column',
-                  label: <chakra.h6>$IRON</chakra.h6>,
-                  render: transaction => (
-                    <chakra.h5>{transaction.amount}</chakra.h5>
-                  ),
-                },
-                {
-                  key: 'transaction-to-column',
-                  label: <chakra.h6>To</chakra.h6>,
-                  render: transaction =>
-                    transaction.to ? (
-                      <chakra.h5>{truncateHash(transaction.to, 3)}</chakra.h5>
-                    ) : (
-                      <chakra.h5 color={NAMED_COLORS.GREY}>n/a</chakra.h5>
-                    ),
-                },
-                {
-                  key: 'transaction-date-column',
-                  label: <chakra.h6>Date</chakra.h6>,
-                  render: transaction => (
-                    <chakra.h5>{transaction.date}</chakra.h5>
-                  ),
-                },
-                {
-                  key: 'transaction-memo-column',
-                  label: <chakra.h6>Memo</chakra.h6>,
-                  render: transaction => (
-                    <chakra.h5>"{transaction.memo}"</chakra.h5>
-                  ),
-                },
-                {
-                  key: 'transaction-details-column',
-                  label: '',
-                  ItemProps: {
-                    marginLeft: 'auto',
-                    width: 'min-content',
-                  },
-                  render: () => (
-                    <Button
-                      variant="link"
-                      color={NAMED_COLORS.LIGHT_BLUE}
-                      rightIcon={<ChevronRightIcon />}
-                    >
-                      <chakra.h5>View Details</chakra.h5>
-                    </Button>
-                  ),
-                },
-              ]}
-            />
-          </>
-        ))}
+          <SearchTransactions address={account?.address} />
+        )}
+      </Box>
     </>
   )
 }
