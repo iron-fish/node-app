@@ -80,6 +80,9 @@ class DemoAccountsManager {
   create(name: string): Promise<AccountValue> {
     return new Promise(resolve => {
       setTimeout(() => {
+        if (DEMO_ACCOUNTS.find(account => name === account.name)) {
+          throw new Error(`Account already exists with the name ${name}`)
+        }
         const account = {
           id: nanoid(64),
           publicAddress: nanoid(64),
@@ -93,6 +96,13 @@ class DemoAccountsManager {
           accountId: account.id,
           currency: 'USD',
         })
+        ACCOUNT_BALANCES[account.id] = {
+          confirmed: BigInt(0),
+          unconfirmed: BigInt(0),
+          pending: BigInt(0),
+          pendingCount: 0,
+          unconfirmedCount: 0,
+        }
         resolve(account)
       }, 500)
     })
@@ -109,13 +119,21 @@ class DemoAccountsManager {
   import(account: Omit<AccountValue, 'id'>): Promise<AccountValue> {
     return new Promise(resolve => {
       setTimeout(() => {
+        if (DEMO_ACCOUNTS.find(({ name }) => name === account.name)) {
+          throw new Error(
+            `Account already exists with the name ${account.name}`
+          )
+        }
+
+        if (
+          DEMO_ACCOUNTS.find(
+            ({ spendingKey }) => spendingKey === account.spendingKey
+          )
+        ) {
+          throw new Error(`Account already exists with provided spending key`)
+        }
         const newAccount = {
           id: nanoid(64),
-          publicAddress: nanoid(64),
-          name: 'Imported Account',
-          incomingViewKey: nanoid(64),
-          outgoingViewKey: nanoid(64),
-          spendingKey: nanoid(64),
           ...account,
         }
         DEMO_ACCOUNTS.push(newAccount)
@@ -123,6 +141,13 @@ class DemoAccountsManager {
           accountId: newAccount.id,
           currency: 'USD',
         })
+        ACCOUNT_BALANCES[newAccount.id] = {
+          confirmed: BigInt(12364),
+          unconfirmed: BigInt(327),
+          pending: BigInt(1234),
+          pendingCount: 12,
+          unconfirmedCount: 3,
+        }
         resolve(newAccount)
       }, 500)
     })
@@ -151,7 +176,7 @@ class DemoAccountsManager {
           accounts.sort(
             (a, b) =>
               (SortType.ASC === sort ? 1 : -1) *
-              (Number(a.balance.confirmed) - Number(b.balance.confirmed))
+              (Number(a.balance?.confirmed) - Number(b.balance?.confirmed) || 1)
           )
         }
 

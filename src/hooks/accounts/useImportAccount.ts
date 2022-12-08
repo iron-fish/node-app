@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid'
 import { useCallback } from 'react'
+import Account from 'Types/Account'
 
 const useImportAccount = () => {
   const importAccountBySpendingKey = useCallback(
@@ -25,14 +26,7 @@ const useImportAccount = () => {
     []
   )
   const importAccountByFile = useCallback(
-    file =>
-      window.IronfishManager.accounts.import({
-        incomingViewKey: nanoid(64),
-        outgoingViewKey: nanoid(64),
-        name: 'Imported Account',
-        publicAddress: nanoid(64),
-        spendingKey: nanoid(64),
-      }),
+    (account: Account) => window.IronfishManager.accounts.import(account),
     []
   )
 
