@@ -221,7 +221,9 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
                 key: 'transaction-amount-column',
                 label: <chakra.h6>$IRON</chakra.h6>,
                 render: (transaction: Transaction) => (
-                  <chakra.h5>{transaction.amount}</chakra.h5>
+                  <chakra.h5>
+                    {(transaction.creator ? '' : '+') + transaction.amount}
+                  </chakra.h5>
                 ),
               },
               {

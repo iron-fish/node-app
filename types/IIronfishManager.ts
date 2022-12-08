@@ -15,6 +15,7 @@ export enum IronfishManagerAction {
   NODE_STATUS = 'nodeStatus',
   PEERS = 'peers',
   HAS_ANY_ACCOUNT = 'hasAnyAccount',
+  SYNC = 'sync',
 }
 
 export enum IronfishAccountManagerAction {
@@ -84,6 +85,7 @@ export interface IIronfishManager {
   start: () => Promise<void>
   stop: () => Promise<void>
   status: () => Promise<IronFishInitStatus>
+  sync: () => Promise<void>
   nodeStatus: () => Promise<NodeStatusResponse>
   peers: () => Promise<PeerResponse[]>
 }
