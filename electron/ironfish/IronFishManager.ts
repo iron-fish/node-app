@@ -90,8 +90,10 @@ class AccountManager implements IIronfishAccountManager {
       .then(data => data.serialize())
   }
 
-  export(id: string): Promise<AccountValue> {
-    return Promise.resolve(this.node.wallet.getAccount(id)?.serialize())
+  export(id: string): Promise<Omit<AccountValue, 'id'>> {
+    const account = this.node.wallet.getAccount(id)?.serialize()
+    delete account.id
+    return Promise.resolve(account)
   }
 
   balance(id: string): Promise<AccountBalance> {

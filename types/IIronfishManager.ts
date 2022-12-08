@@ -72,7 +72,7 @@ export interface IIronfishAccountManager {
   get: (id: string) => Promise<Account>
   delete: (name: string) => Promise<void>
   import: (account: Omit<AccountValue, 'id'>) => Promise<AccountValue>
-  export: (id: string) => Promise<AccountValue>
+  export: (id: string) => Promise<Omit<AccountValue, 'id'>>
   balance: (id: string) => Promise<AccountBalance>
 }
 
