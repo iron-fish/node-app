@@ -10,7 +10,16 @@ export const IronFishManager: IIronfishManager = {
   accounts: {
     create: (name: string) => window.DemoDataManager.createAccount(name),
     delete: (name: string) => window.DemoDataManager.deleteAccount(name),
-    export: (id: string) => window.DemoDataManager.getAccount(id),
+    export: async (id: string) => {
+      const account = Object.assign(
+        {},
+        await window.DemoDataManager.accounts.findById(id)
+      )
+      delete account.id
+      delete account.balance
+
+      return account
+    },
     get: (id: string) => window.DemoDataManager.getAccount(id),
     import: (account: AccountValue) =>
       window.DemoDataManager.createAccount(account.name),
