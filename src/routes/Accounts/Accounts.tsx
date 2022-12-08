@@ -18,7 +18,7 @@ import ModalWindow from 'Components/ModalWindow'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import SortType from 'Types/SortType'
-import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
+import { formatOreToTronWithLanguage } from 'Utils/number'
 
 interface ActionButtonsProps {
   showCreate: (show: boolean) => void
@@ -103,7 +103,7 @@ const Accounts = () => {
             <Skeleton minW="4rem" isLoaded={loaded}>
               <h5>
                 <b>
-                  {CurrencyUtils.encodeIron(
+                  {formatOreToTronWithLanguage(
                     accounts
                       ?.map(a => a.balance.confirmed || BigInt(0))
                       ?.reduce((a, b) => a + b, BigInt(0)) || BigInt(0)

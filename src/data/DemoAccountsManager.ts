@@ -35,6 +35,18 @@ const DEMO_ACCOUNTS: AccountValue[] = [
     spendingKey:
       'E-cVvstCOWfvkiqeR3-Qc4Vm65EqX_I12Ouvavtk75j-z0Vii0I2L9_1JCtz8rlq',
   },
+  {
+    id: 'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
+    name: 'Large balance demo',
+    publicAddress:
+      'hb7FhUScEm1UOSHGw6DPwSVmWL6gRB7ZKD7jIusykM1bMDOTL62LMyKKiSHuPqRS',
+    incomingViewKey:
+      'gn0yVhZvyYNZ3rY0tDalqzqz0VbGafQhq8zhsEwkIFbUfTz7PmhMT9BlK9ctYT62',
+    outgoingViewKey:
+      'xG17AxJB4XrEoGricts13ZfIMLVx4ays4Heh1oA444BID90CzLqhzRin9wEZM225',
+    spendingKey:
+      'RXFS7bN5gSsnKqSZv208s8EtRwwsHNji3CQuCUlD3jDwlzQ7gfFpsrtf14klpuYF',
+  },
 ]
 
 const ACCOUNT_SETTINGS: AccountSettings[] = [
@@ -47,6 +59,11 @@ const ACCOUNT_SETTINGS: AccountSettings[] = [
     accountId:
       'H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6',
     currency: 'EUR',
+  },
+  {
+    accountId:
+      'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
+    currency: 'USD',
   },
 ]
 
@@ -71,6 +88,13 @@ const ACCOUNT_BALANCES: Record<
     confirmed: BigInt(8481),
     unconfirmed: BigInt(164),
     pending: BigInt(874),
+    pendingCount: 8,
+    unconfirmedCount: 1,
+  },
+  q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7: {
+    confirmed: BigInt(1222255000002254),
+    unconfirmed: BigInt(164),
+    pending: BigInt(2200000022310),
     pendingCount: 8,
     unconfirmedCount: 1,
   },
