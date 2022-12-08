@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useEffect } from 'react'
+import { FC, useState } from 'react'
 import {
   Box,
   Button,
@@ -131,23 +131,6 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
     account?.address
   )
 
-  const isReady = useRef(false)
-  const isEmptyOverview = useRef(false)
-
-  useEffect(() => {
-    if (
-      account?.address &&
-      loaded &&
-      transactions !== undefined &&
-      !isReady.current
-    ) {
-      isReady.current = true
-      if (transactions.length === 0) {
-        isEmptyOverview.current = true
-      }
-    }
-  }, [transactions, loaded])
-
   const navigate = useNavigate()
   const { loaded: synced } = useDataSync()
   return (
@@ -233,8 +216,8 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
           </Box>
         </Box>
       </Flex>
-      <Box display={isReady.current ? 'block' : 'none'}>
-        {isEmptyOverview.current ? (
+      <Box display={account?.address && loaded ? 'block' : 'none'}>
+        {transactions?.length === 0 ? (
           <EmptyOverview
             header="You don’t have any transactions"
             description="When your account compiles transactions they will be listed here. To produce a transactions, eitherF send or receive $IRON."

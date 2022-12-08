@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react'
+import { FC, useState } from 'react'
 import {
   Box,
   Button,
@@ -155,17 +155,6 @@ const AddressBook: FC = () => {
     $searchTerm,
     $sortOrder
   )
-  const [isReady, setReady] = useState(false)
-  const [isEmptyOverview, setEmptyOverview] = useState(false)
-
-  useEffect(() => {
-    if (loaded && contacts !== undefined && !isReady) {
-      setReady(true)
-      if (contacts.length === 0) {
-        setEmptyOverview(true)
-      }
-    }
-  }, [contacts, loaded])
 
   return (
     <>
@@ -182,17 +171,12 @@ const AddressBook: FC = () => {
         </Flex>
         <Flex>
           <AddContactButton
-            onAdd={(name, address) =>
-              addContact(name, address).then(() => {
-                navigate(ROUTES.ADDRESS_BOOK)
-                setEmptyOverview(false)
-              })
-            }
+            onAdd={(name, address) => addContact(name, address)}
           />
         </Flex>
       </Flex>
-      <Box display={isReady ? 'block' : 'none'}>
-        {isEmptyOverview ? (
+      <Box display={loaded ? 'block' : 'none'}>
+        {contacts?.length === 0 && !$searchTerm ? (
           <EmptyOverview
             header="You don’t have any contacts"
             description="Your address book is where you can manage all of your contacts, their names, and their public addresses"

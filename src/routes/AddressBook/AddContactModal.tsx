@@ -68,7 +68,11 @@ const AddContactModal: FC<AddContactModalProps> = ({
         py="2rem"
         width="100%"
         borderRadius="2rem"
-        onClick={() => onAdd(name, presetAddress || address)}
+        onClick={() => {
+          onAdd(name, presetAddress || address)
+          setName('')
+          setAddress('')
+        }}
         disabled={!name || (!presetAddress && !address)}
       >
         <chakra.h4>Add Contact</chakra.h4>

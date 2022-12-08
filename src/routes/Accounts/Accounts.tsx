@@ -118,20 +118,22 @@ const Accounts = () => {
         }}
       />
       <Flex mt="0.5rem" direction="column" width="100%">
-        {loaded && accounts.length > 0 ? (
-          accounts.map((account, index) => (
-            <AccountPreview
-              key={`${account.name}-${index}`}
-              {...account}
-              order={index}
+        {loaded ? (
+          accounts.length > 0 ? (
+            accounts.map((account, index) => (
+              <AccountPreview
+                key={`${account.name}-${index}`}
+                {...account}
+                order={index}
+              />
+            ))
+          ) : (
+            <EmptyOverview
+              header="0 Results"
+              description="There aren’t any accounts with details that match your search input."
             />
-          ))
-        ) : (
-          <EmptyOverview
-            header="0 Results"
-            description="There aren’t any accounts with details that match your search input."
-          />
-        )}
+          )
+        ) : null}
       </Flex>
       <ModalWindow
         isOpen={showCreateAccount}

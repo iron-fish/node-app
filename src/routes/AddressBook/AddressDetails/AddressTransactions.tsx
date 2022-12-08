@@ -121,24 +121,9 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
 const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
   const [{ data: transactions = undefined, loaded }] = useTransactions(address)
 
-  const isReady = useRef(false)
-  const isEmptyOverview = useRef(false)
-
-  useEffect(() => {
-    if (address && loaded && transactions !== undefined && !isReady.current) {
-      isReady.current = true
-    }
-  }, [loaded])
-
-  useEffect(() => {
-    if (isReady.current) {
-      isEmptyOverview.current = transactions?.length === 0
-    }
-  }, [transactions])
-
   return (
-    <Box display={isReady.current ? 'block' : 'none'}>
-      {isEmptyOverview.current ? (
+    <Box display={address && loaded ? 'block' : 'none'}>
+      {transactions?.length === 0 ? (
         <EmptyOverview
           header="You don’t have any transactions"
           description="You don’t have any transaction with this contact yet. To produce a transactions, either send or receive $IRON. "
