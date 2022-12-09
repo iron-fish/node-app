@@ -57,7 +57,6 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
     setExporting(true)
     exportAccount(account.id)
       .then(exportedAccount => {
-        console.log(exportedAccount)
         const data = JSON.stringify(exportedAccount)
         const file = new Blob([data], { type: 'text/plain' })
         const element = document.createElement('a')
@@ -68,7 +67,6 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
         document.removeChild(element)
       })
       .catch(e => {
-        console.log(e)
         //TODO: add toast on error
       })
       .finally(() => setExporting(false))
