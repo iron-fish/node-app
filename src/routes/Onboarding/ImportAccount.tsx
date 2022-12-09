@@ -145,7 +145,9 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
               const content = e.target.result
               importByFile(JSON.parse(content.toString()))
                 .then(() => onImport())
-                .catch(error => alert(error))
+                .catch(() => {
+                  // TODO: add toast
+                })
             }
             reader.readAsText(file)
           }}

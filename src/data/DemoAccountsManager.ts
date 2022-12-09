@@ -176,7 +176,7 @@ class DemoAccountsManager {
           accounts.sort(
             (a, b) =>
               (SortType.ASC === sort ? 1 : -1) *
-              (Number(a.balance?.confirmed) - Number(b.balance?.confirmed) || 1)
+              (Number(a.balance.confirmed) - Number(b.balance.confirmed))
           )
         }
 
