@@ -18,9 +18,9 @@ import { useNavigate } from 'react-router-dom'
 import { truncateHash } from 'Utils/hash'
 import { ROUTES } from '..'
 import CutAccount from 'Types/CutAccount'
-import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
+import { formatOreToTronWithLanguage } from 'Utils/number'
 
 export interface AccountPreviewProps extends CutAccount {
   order: number
@@ -113,7 +113,8 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       <Box>
         <chakra.h5 pt="0.25rem">{name}</chakra.h5>
         <chakra.h3 p="0.25rem 0">
-          {CurrencyUtils.encodeIron(balance.confirmed || BigInt(0))}&nbsp;$IRON
+          {formatOreToTronWithLanguage(balance.confirmed || BigInt(0))}
+          &nbsp;$IRON
         </chakra.h3>
         <CopyValueToClipboard
           containerProps={{

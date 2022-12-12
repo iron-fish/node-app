@@ -3,7 +3,7 @@ import { FlexProps, SelectField } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import useAccounts from 'Hooks/accounts/useAccounts'
 import CutAccount from 'Types/CutAccount'
-import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
+import { formatOreToTronWithLanguage } from 'Utils/number'
 
 interface AccountsSelectProps extends FlexProps {
   accountId: string
@@ -16,7 +16,7 @@ const getAccountOptions = (accounts: CutAccount[] = []): OptionType[] => {
     label: account.name,
     value: account,
     helperText:
-      CurrencyUtils.encodeIron(account?.balance?.confirmed || BigInt(0)) +
+      formatOreToTronWithLanguage(account?.balance?.confirmed || BigInt(0)) +
       ' $IRON',
   }))
 }

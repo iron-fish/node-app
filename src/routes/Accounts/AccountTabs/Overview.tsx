@@ -27,8 +27,8 @@ import { useDataSync } from 'Providers/DataSyncProvider'
 import Transaction from 'Types/Transaction'
 import TransactionStatusView from 'Components/TransactionStatusView'
 import Account from 'Types/Account'
-import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
+import { formatOreToTronWithLanguage } from 'Utils/number'
 
 interface AccountOverviewProps {
   account: Account
@@ -99,10 +99,9 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
               </Box>
               <Box mb="0.5rem">
                 <chakra.h2 color={NAMED_COLORS.DEEP_BLUE}>
-                  {CurrencyUtils.encodeIron(
+                  {formatOreToTronWithLanguage(
                     account?.balance.confirmed || BigInt(0)
                   )}
-                  &nbsp;<chakra.span whiteSpace="nowrap">$IRON</chakra.span>
                 </chakra.h2>
               </Box>
               <Box>
@@ -164,9 +163,9 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
           </Box>
           <Box mb="0.5rem">
             <chakra.h2>
-              {CurrencyUtils.encodeIron(account?.balance.pending || BigInt(0))}
-              &nbsp;
-              <chakra.span whiteSpace="nowrap">$IRON</chakra.span>
+              {formatOreToTronWithLanguage(
+                account?.balance.pending || BigInt(0)
+              )}
             </chakra.h2>
           </Box>
         </Box>
