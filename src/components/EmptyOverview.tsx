@@ -26,7 +26,7 @@ const EmptyOverview: FC<EmptyOverviewProps> = ({
     <Flex mt="2rem" justifyContent="center" {...props}>
       <VStack w="25rem">
         <chakra.h3 mb="1rem">{header}</chakra.h3>
-        <chakra.h5 mb="2.5rem !important" textAlign="center" color={$fontColor}>
+        <chakra.h5 mb="1.5rem !important" textAlign="center" color={$fontColor}>
           {description}
         </chakra.h5>
         <EmptyOverviewImage />
