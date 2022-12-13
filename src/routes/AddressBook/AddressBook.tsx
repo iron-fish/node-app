@@ -26,6 +26,7 @@ import ROUTES from 'Routes/data'
 import AddContactModal from './AddContactModal'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { stringToColor } from 'Utils/stringToColor'
+import EmptyOverview from 'Components/EmptyOverview'
 
 const COLUMNS = [
   {
@@ -147,11 +148,10 @@ const AddressBook: FC = () => {
       caretColor: NAMED_COLORS.PALE_GREY,
     }
   )
-
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
 
-  const [{ data: contacts, loaded }, addContact] = useAddressBook(
+  const [{ data: contacts = undefined, loaded }, addContact] = useAddressBook(
     $searchTerm,
     $sortOrder
   )
@@ -170,38 +170,56 @@ const AddressBook: FC = () => {
           </Box>
         </Flex>
         <Flex>
-          <AddContactButton onAdd={addContact} />
+          <AddContactButton
+            onAdd={(name, address) => addContact(name, address)}
+          />
         </Flex>
       </Flex>
-      <SearchSortField
-        SearchProps={{
-          onChange: e => $setSearchTerm(e.target.value),
-        }}
-        SortSelectProps={{
-          onSelectOption: ({ value }) => $setSortOrder(value),
-        }}
-      />
-      <Flex direction="column" width="100%">
-        <SimpleTable
-          onRowClick={contact =>
-            navigate(ROUTES.ADDRESS_BOOK + `/${contact._id}`)
-          }
-          data={loaded ? contacts : new Array(10).fill(null)}
-          columns={COLUMNS}
-          sx={{
-            tr: {
-              '[aria-label="book-details"]': {
-                color: $colors.caretColor,
-              },
-              _hover: {
-                '[aria-label="book-details"]': {
-                  color: $colors.hoverBorder,
-                },
-              },
-            },
-          }}
-        />
-      </Flex>
+      <Box display={loaded ? 'block' : 'none'}>
+        {contacts?.length === 0 && !$searchTerm ? (
+          <EmptyOverview
+            header="You don’t have any contacts"
+            description="Your address book is where you can manage all of your contacts, their names, and their public addresses"
+          />
+        ) : (
+          <>
+            <SearchSortField
+              SearchProps={{
+                onChange: e => $setSearchTerm(e.target.value),
+              }}
+              SortSelectProps={{
+                onSelectOption: ({ value }) => $setSortOrder(value),
+              }}
+            />
+            {contacts?.length === 0 ? (
+              <EmptyOverview
+                header="0 Results test"
+                description="There aren’t any contact with details that match your search input."
+              />
+            ) : (
+              <SimpleTable
+                onRowClick={contact =>
+                  navigate(ROUTES.ADDRESS_BOOK + `/${contact._id}`)
+                }
+                data={loaded ? contacts : new Array(10).fill(null)}
+                columns={COLUMNS}
+                sx={{
+                  tr: {
+                    '[aria-label="book-details"]': {
+                      color: $colors.caretColor,
+                    },
+                    _hover: {
+                      '[aria-label="book-details"]': {
+                        color: $colors.hoverBorder,
+                      },
+                    },
+                  },
+                }}
+              />
+            )}
+          </>
+        )}
+      </Box>
     </>
   )
 }

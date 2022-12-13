@@ -12,6 +12,7 @@ const useTransactions = (address: string, search?: string, sort?: SortType) => {
   )
 
   const loadTransactions = () =>
+    address &&
     promiseWrapper(
       window.DemoDataManager.findTransactionsByAddress(address, search, sort)
     )
