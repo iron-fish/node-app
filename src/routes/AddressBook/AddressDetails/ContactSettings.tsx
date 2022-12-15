@@ -18,7 +18,7 @@ import { ROUTES } from 'Routes/data'
 
 interface ContactSettingsProps {
   contact: Contact
-  onUpdate?: (name: string, address: string) => void
+  onUpdate?: (name: string, address: string) => Promise<void>
   onDelete?: (identity: string) => Promise<void>
 }
 

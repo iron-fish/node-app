@@ -16,7 +16,7 @@ import {
   CopyToClipboardButton,
   useIronToast,
 } from '@ironfish/ui-kit'
-import { FC, useState, useRef } from 'react'
+import { FC, useState, useRef, useCallback } from 'react'
 import { ROUTES } from '..'
 import IconEye from '@ironfish/ui-kit/dist/svgx/icon-eye'
 import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
