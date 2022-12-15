@@ -6,7 +6,7 @@ import SortType from 'Types/SortType'
 const useTransactions = (address: string, search?: string, sort?: SortType) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Transaction[]>()
   const addContact = useCallback(
-    (name, contactAddress) =>
+    (name: string, contactAddress: string) =>
       window.DemoDataManager.addContact(name, contactAddress),
     []
   )

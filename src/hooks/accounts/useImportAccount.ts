@@ -1,18 +1,19 @@
 import { useCallback } from 'react'
+import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 
 const useImportAccount = () => {
   const importAccountBySpendingKey = useCallback(
-    spendingKey =>
+    (spendingKey: string) =>
       window.DemoDataManager.importAccountBySpendingKey(spendingKey),
     []
   )
   const importAccountByMnemonicPhrase = useCallback(
-    mnemonicPhrase =>
+    (mnemonicPhrase: MnemonicPhraseType) =>
       window.DemoDataManager.importAccountByMnemonicPhrase(mnemonicPhrase),
     []
   )
   const importAccountByFile = useCallback(
-    file => window.DemoDataManager.importAccountByFile(file),
+    (file: File) => window.DemoDataManager.importAccountByFile(file),
     []
   )
 

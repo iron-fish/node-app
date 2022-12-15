@@ -6,7 +6,6 @@ import {
   FieldGroup,
   Flex,
   HStack,
-  LightMode,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -22,6 +21,7 @@ import {
   Icon,
   Image,
   Link,
+  LightMode,
 } from '@ironfish/ui-kit'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import { Account } from 'Data/types/Account'

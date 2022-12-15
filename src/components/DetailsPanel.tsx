@@ -10,11 +10,15 @@ import {
   DrawerCloseButton,
   NAMED_COLORS,
 } from '@ironfish/ui-kit'
-import { FC, useRef } from 'react'
+import { FC, useRef, ReactNode } from 'react'
 import InfoIcon from 'Svgx/Info'
 import CloseIcon from 'Svgx/CloseIcon'
 
-const DetailsPanel: FC = ({ children }) => {
+interface DetailsPanelProps {
+  children: ReactNode
+}
+
+const DetailsPanel: FC<DetailsPanelProps> = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   return (
