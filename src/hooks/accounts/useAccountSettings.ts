@@ -12,13 +12,12 @@ const useAccountSettings = (id: string) => {
     (accountId: string, currency: string) =>
       result.data
         ? window.AccountSettingsStorage.update(result.data._id, {
-            accountId,
             currency,
           }).then(() => loadAccountSettings(accountId))
         : window.AccountSettingsStorage.add({ accountId, currency }).then(() =>
             loadAccountSettings(accountId)
           ),
-    []
+    [JSON.stringify(result.data)]
   )
 
   useEffect(() => {
