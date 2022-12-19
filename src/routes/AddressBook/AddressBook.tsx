@@ -10,6 +10,7 @@ import {
   CopyValueToClipboard,
   useBreakpointValue,
   useColorModeValue,
+  useIronToast,
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import Send from 'Svgx/send'
@@ -113,6 +114,12 @@ const AddContactButton: FC<{
   onAdd: (name: string, address: string) => Promise<void>
 }> = ({ onAdd }) => {
   const [openAddContactModal, setOpenAddContactModal] = useState<boolean>(false)
+  const toast = useIronToast({
+    title: 'Contact Created',
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
 
   return (
     <>
@@ -126,7 +133,7 @@ const AddContactButton: FC<{
       </Button>
       <AddContactModal
         onAdd={(name, address) => {
-          onAdd(name, address)
+          onAdd(name, address).then(() => toast())
           setOpenAddContactModal(false)
         }}
         isOpen={openAddContactModal}

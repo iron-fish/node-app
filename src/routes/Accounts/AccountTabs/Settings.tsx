@@ -8,6 +8,7 @@ import {
   useColorModeValue,
   chakra,
   Link,
+  useIronToast,
 } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import DetailsPanel from 'Components/DetailsPanel'
@@ -70,6 +71,11 @@ const AccountSettings: FC<AccountSettingsProps> = ({
   const [{ data: settings, loaded }, updateSettings] = useAccountSettings(
     account?.identity
   )
+  const toast = useIronToast({
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
 
   useEffect(() => {
     if (settings && loaded) {
@@ -116,9 +122,9 @@ const AccountSettings: FC<AccountSettingsProps> = ({
             isDisabled={!checkChanges()}
             onClick={() => {
               Promise.all([
-                updateAccount(account.identity, name),
+                // updateAccount(account.id, name),
                 updateSettings(account.identity, currency.value),
-              ])
+              ]).then(() => toast({ title: 'Account Details Updated' }))
             }}
           >
             Save Changes
@@ -126,9 +132,10 @@ const AccountSettings: FC<AccountSettingsProps> = ({
           <Link
             alignSelf="center"
             onClick={() =>
-              deleteAccount(account.identity).then(
-                deleted => deleted && navigate(ROUTES.ACCOUNTS)
-              )
+              deleteAccount(account.identity).then(deleted => {
+                deleted && navigate(ROUTES.ACCOUNTS)
+                toast({ title: 'Account Removed' })
+              })
             }
           >
             <h4>Delete Account</h4>
