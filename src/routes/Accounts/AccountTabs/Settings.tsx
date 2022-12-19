@@ -12,7 +12,7 @@ import {
 } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import DetailsPanel from 'Components/DetailsPanel'
-import { FC, memo, useState, useEffect } from 'react'
+import { FC, memo, useState, useEffect, ChangeEvent } from 'react'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 import useAccountSettings from 'Hooks/accounts/useAccountSettings'
 import { useNavigate } from 'react-router-dom'
@@ -72,6 +72,7 @@ const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
   onDelete,
   ...modalProps
 }) => {
+  const [removePhrase, setRemovePhrase] = useState('')
   return (
     <ModalWindow
       {...modalProps}
@@ -88,11 +89,13 @@ const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
           </chakra.h4>
           <TextField
             label="Type REMOVE"
-            value="REMOVE"
             mb="32px"
             InputProps={{
-              isDisabled: true,
+              maxLength: 6,
             }}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setRemovePhrase(e.target.value)
+            }
           />
           <Flex>
             <Button
@@ -100,6 +103,7 @@ const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
               size="large"
               mr="24px"
               bgColor="#F15929"
+              isDisabled={removePhrase !== 'REMOVE'}
               onClick={() => onDelete()}
             >
               Remove Account
