@@ -8,6 +8,7 @@ import {
   MnemonicView,
   Checkbox,
   CopyToClipboardButton,
+  useIronToast,
 } from '@ironfish/ui-kit'
 import { FC, useState } from 'react'
 import { ROUTES } from '..'
@@ -27,6 +28,12 @@ const CreateAccount: FC<CreateAccountProps> = ({
   const [saved, setSaved] = useState<boolean>(false)
   const [accountName, setAccountName] = useState<string>('')
   const [{ data: phrase, loaded }, createAccount] = useCreateAccount()
+  const toast = useIronToast({
+    title: 'Account Created',
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
 
   const checkChanges: () => boolean = () => {
     return !saved || !accountName
@@ -107,8 +114,11 @@ const CreateAccount: FC<CreateAccountProps> = ({
           size="large"
           w={desktopMode ? undefined : '100%'}
           onClick={() => {
-            createAccount(accountName, phrase as MnemonicPhraseType).then(() =>
-              onCreate()
+            createAccount(accountName, phrase as MnemonicPhraseType).then(
+              () => {
+                onCreate()
+                toast()
+              }
             )
           }}
         >

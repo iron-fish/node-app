@@ -5,13 +5,13 @@ import {
   chakra,
   Flex,
   HStack,
-  LightMode,
   NAMED_COLORS,
   Skeleton,
   Stat,
   StatLabel,
   StatNumber,
   VStack,
+  LightMode,
 } from '@ironfish/ui-kit'
 import useNodeStatus from 'Hooks/node/useNodeStatus'
 import NodeOverviewImage from 'Svgx/NodeOverviewImage'
