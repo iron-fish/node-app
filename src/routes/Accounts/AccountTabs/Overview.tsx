@@ -39,7 +39,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
     $sortOrder
   )
 
-  return loaded && transactions.length === 0 && !$searchTerm ? null : (
+  return loaded && transactions?.length === 0 && !$searchTerm ? null : (
     <>
       <Box>
         <chakra.h3 pb="1rem">Transactions</chakra.h3>
@@ -77,7 +77,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               key: 'transaction-action-column',
               label: <chakra.h6>Action</chakra.h6>,
               render: transaction => (
-                <TransactionStatus status={transaction.status} />
+                <TransactionStatusView status={transaction.status} />
               ),
             },
             {
@@ -144,7 +144,7 @@ interface AccountOverviewProps {
 
 const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
   const [{ data: transactions = undefined, loaded }] = useTransactions(
-    account?.address
+    account?.id
   )
 
   const navigate = useNavigate()
@@ -238,14 +238,14 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
           </Box>
         </Box>
       </Flex>
-      <Box display={account?.address && loaded ? 'block' : 'none'}>
+      <Box display={account?.id && loaded ? 'block' : 'none'}>
         {transactions?.length === 0 ? (
           <EmptyOverview
             header="You don’t have any transactions"
             description="When your account compiles transactions they will be listed here. To produce a transactions, eitherF send or receive $IRON."
           />
         ) : (
-          <SearchTransactions address={account?.address} />
+          <SearchTransactions address={account?.id} />
         )}
       </Box>
     </>

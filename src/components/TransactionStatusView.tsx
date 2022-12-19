@@ -48,7 +48,7 @@ const getStatusMessage = (status: TransactionStatus) => {
   }
 }
 
-const TransactionStatus: FC<TransactionStatusProps> = ({ status }) => {
+const TransactionStatusView: FC<TransactionStatusProps> = ({ status }) => {
   const bgColor = useColorModeValue(
     NAMED_COLORS.LIGHT_GREY,
     NAMED_COLORS.DARK_GREY

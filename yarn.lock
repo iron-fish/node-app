@@ -3432,7 +3432,7 @@
     ws "7.5.1"
     yup "0.29.3"
 
-"@ironfish/ui-kit@^1.0.2":
+"@ironfish/ui-kit@1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-1.0.2.tgz#976975bba5c7e39d0c5d8e64de571d2aa801bcef"
   integrity sha512-xIiKF2jdAdI+Vp3jCY+2OBCWnWzmhGXDUZ3pqLBkyGFdj1Ir/YGrckHe4hgyZIetenVTOE/Zbzp4LhCJHhYsjA==
@@ -15578,6 +15578,14 @@ url-parse-lax@^3.0.0:
   integrity sha512-NjFKA0DidqPa5ciFcSrXnAltTtzz84ogy+NebPvfEgAck0+TNg4UJ4IN+fB7zRZfbgUf0syOo9MDxFkDSMuFaQ==
   dependencies:
     prepend-http "^2.0.0"
+
+url@0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/url/-/url-0.10.3.tgz#021e4d9c7705f21bbf37d03ceb58767402774c64"
+  integrity sha512-hzSUW2q06EqL1gKM/a+obYHLIO6ct2hwPuviqTTOcfFVc61UbfJ2Q32+uGL/HCPxKqrdGB5QUwIe7UqlDgwsOQ==
+  dependencies:
+    punycode "1.3.2"
+    querystring "0.2.0"
 
 use-callback-ref@^1.3.0:
   version "1.3.0"
