@@ -26,12 +26,12 @@ const primaryNavItems = [
     label: 'Address Book',
     icon: IconAddressBook,
   },
-]
-const secondaryNavItems = [
-  // { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
   { hotkey: 'N', to: '/node', label: 'Your Node', icon: IconNode },
-  // { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
 ]
+// const secondaryNavItems = [
+//   { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
+//   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
+// ]
 interface NavbarProps {
   offsetTop?: number
 }
@@ -65,7 +65,6 @@ export const Navbar: FC<NavbarProps> = ({ offsetTop = 0 }) => {
         <Nav list={primaryNavItems} />
       </Box>
       <Box marginTop="auto">
-        <Nav my="1rem" list={secondaryNavItems} />
         <ActiveStats />
         <Toggle />
       </Box>
