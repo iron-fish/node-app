@@ -13,14 +13,14 @@ import {
 } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import DetailsPanel from 'Components/DetailsPanel'
-import { FC, memo, useState, useEffect } from 'react'
+import { FC, memo, useState, useEffect, ChangeEvent } from 'react'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 import useAccountSettings from 'Hooks/accounts/useAccountSettings'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
-import { AccountValue } from '@ironfish/sdk'
+import Account from 'Types/Account'
 import ModalWindow from 'Components/ModalWindow'
-import useAccountBalance from 'Hooks/accounts/useAccountBalance'
+import { formatOreToTronWithLanguage } from 'Utils/number'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -40,7 +40,7 @@ const Information: FC = memo(() => {
 })
 
 interface AccountSettingsProps {
-  account: AccountValue
+  account: Account
   updateAccount: (identity: string, name: string) => void
   deleteAccount: (identity: string) => Promise<void>
 }
@@ -64,15 +64,16 @@ const CURRENCIES = [
 ]
 
 interface RemoveAccountModalProps extends Omit<ModalProps, 'children'> {
-  balance: number | bigint
+  account: Account
   onDelete: () => void
 }
 
 const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
-  balance,
+  account,
   onDelete,
   ...modalProps
 }) => {
+  const [removePhrase, setRemovePhrase] = useState('')
   return (
     <ModalWindow
       {...modalProps}
@@ -81,19 +82,21 @@ const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
       }}
     >
       <chakra.h2 mb="16px">Remove Account</chakra.h2>
-      {balance === 0 ? (
+      {account?.balance?.confirmed === BigInt(0) ? (
         <>
           <chakra.h4 mb="32px">
-            You’re about to remove “Account Name”. Please be sure to have
+            You’re about to remove “{account?.name}”. Please be sure to have
             written down your mnemonic phrase if you plan to import it.
           </chakra.h4>
           <TextField
             label="Type REMOVE"
-            value="REMOVE"
             mb="32px"
             InputProps={{
-              isDisabled: true,
+              maxLength: 6,
             }}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setRemovePhrase(e.target.value)
+            }
           />
           <Flex>
             <Button
@@ -101,6 +104,7 @@ const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
               size="large"
               mr="24px"
               bgColor="#F15929"
+              isDisabled={removePhrase !== 'REMOVE'}
               onClick={() => onDelete()}
             >
               Remove Account
@@ -118,7 +122,9 @@ const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
       ) : (
         <>
           <chakra.h4 mb="32px">
-            {`This account currently holds ${balance} $IRON. Please send this $IRON to another account before removing.`}
+            {`This account currently holds ${formatOreToTronWithLanguage(
+              account?.balance?.confirmed || 0
+            )} $IRON. Please send this $IRON to another account before removing.`}
           </chakra.h4>
           <Flex>
             <Link alignSelf="center" onClick={() => modalProps.onClose()}>
@@ -132,17 +138,16 @@ const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
 }
 
 interface RemoveAccountButtonProps {
-  accountId: string
+  account: Account
   onDelete: () => void
 }
 
 const RemoveAccountButton: FC<RemoveAccountButtonProps> = ({
-  accountId,
+  account,
   onDelete,
 }) => {
   const [openRemoveAccountModal, setOpenRemoveAccountModal] =
     useState<boolean>(false)
-  const { data: balance } = useAccountBalance(accountId)
 
   return (
     <>
@@ -150,7 +155,7 @@ const RemoveAccountButton: FC<RemoveAccountButtonProps> = ({
         <chakra.h4>Delete Account</chakra.h4>
       </Link>
       <RemoveAccountModal
-        balance={balance?.pending || 0}
+        account={account}
         onDelete={() => {
           onDelete()
           setOpenRemoveAccountModal(false)
@@ -233,7 +238,7 @@ const AccountSettings: FC<AccountSettingsProps> = ({
             Save Changes
           </Button>
           <RemoveAccountButton
-            accountId={account?.id}
+            account={account}
             onDelete={() =>
               deleteAccount(account?.name).then(() => {
                 navigate(ROUTES.ACCOUNTS, { state: { recheckAccounts: true } })

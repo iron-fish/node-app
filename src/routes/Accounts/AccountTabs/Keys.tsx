@@ -14,12 +14,12 @@ import AccountKeysImage from 'Svgx/AccountKeysImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 import DownloadIcon from '@ironfish/ui-kit/dist/svgx/download-icon'
-import { AccountValue } from '@ironfish/sdk'
+import Account from 'Types/Account'
 import randomWords from 'random-words'
 import { noop } from 'lodash'
 
 interface AccountKeysProps {
-  account: AccountValue
+  account: Account
 }
 
 const Information: FC = memo(() => {

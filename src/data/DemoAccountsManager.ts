@@ -117,6 +117,13 @@ class DemoAccountsManager {
           accountId: account.id,
           currency: 'USD',
         })
+        ACCOUNT_BALANCES[account.id] = {
+          confirmed: BigInt(0),
+          unconfirmed: BigInt(0),
+          pending: BigInt(0),
+          pendingCount: 0,
+          unconfirmedCount: 0,
+        }
         resolve(account)
       }, 500)
     })
@@ -147,6 +154,13 @@ class DemoAccountsManager {
           accountId: newAccount.id,
           currency: 'USD',
         })
+        ACCOUNT_BALANCES[newAccount.id] = {
+          confirmed: BigInt(0),
+          unconfirmed: BigInt(0),
+          pending: BigInt(0),
+          pendingCount: Math.ceil(Math.random() * 10),
+          unconfirmedCount: Math.ceil(Math.random() * 10),
+        }
         resolve(newAccount)
       }, 500)
     })
