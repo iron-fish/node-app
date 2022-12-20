@@ -58,7 +58,7 @@ export const Navbar: FC<NavbarProps> = ({ offsetTop = 0 }) => {
         [hotkey.toLowerCase()]: to,
       }))
     )
-    const handleNavigate = e => {
+    const handleNavigate = (e: KeyboardEvent) => {
       if (keys[e.key] && e.altKey) {
         navigate(keys[e.key])
       }
