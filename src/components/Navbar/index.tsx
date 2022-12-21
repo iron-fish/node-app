@@ -54,7 +54,7 @@ export const Navbar: FC<NavbarProps> = ({ offsetTop = 0 }) => {
   useEffect(() => {
     const keys = Object.assign(
       {},
-      ...primaryNavItems.concat(secondaryNavItems).map(({ hotkey, to }) => ({
+      ...primaryNavItems.map(({ hotkey, to }) => ({
         [hotkey.toLowerCase()]: to,
       }))
     )
