@@ -2,7 +2,8 @@ import { AccountValue } from '@ironfish/sdk'
 import noop from 'lodash/noop'
 import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
-import IIronfishManager from 'Types/IIronfishManager'
+import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
+import { ProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
 
@@ -57,6 +58,11 @@ export const IronFishManager: IIronfishManager = {
         payment.memo,
         transactionFee || 0.5
       ),
+  },
+  snapshot: {
+    start: (path: string) => window.DemoDataManager.snapshot.start(path),
+    status: () => window.DemoDataManager.snapshot.status(),
+    reset: () => window.DemoDataManager.snapshot.reset(),
   },
   nodeStatus: () => window.DemoDataManager.getNodeStatus(),
   peers: () => window.DemoDataManager.getNodePeers(),

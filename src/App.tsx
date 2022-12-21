@@ -1,5 +1,5 @@
 import './App.css'
-import { IronFishUIProvider } from '@ironfish/ui-kit'
+import { extendTheme, IronFishUIProvider, useStyles } from '@ironfish/ui-kit'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { ROUTES } from './routes'
 
@@ -11,7 +11,7 @@ import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import AddressBook from 'Routes/AddressBook'
 import AccountDetails from 'Routes/Accounts/AccountDetails'
-import Miner from 'Routes/Miner'
+// import Miner from 'Routes/Miner'
 import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressBook/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
@@ -19,6 +19,10 @@ import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 import { DataSyncProvider } from './providers/DataSyncProvider'
 import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
 import Initializing from 'Routes/Initializing'
+import { StepsStyleConfig as Steps } from 'chakra-ui-steps'
+import theme from '@ironfish/ui-kit/dist/theme/theme'
+import { useEffect } from 'react'
+import SnapshotFlow from 'Routes/SnapshotFlow'
 
 const breakpoints = {
   xs: '46.875rem', //750px
@@ -32,14 +36,64 @@ const breakpoints = {
   '2xl': '112.5rem', //1800px
 }
 
+const walletTheme = extendTheme({
+  ...theme,
+  components: {
+    ...theme.components,
+    Steps: {
+      ...Steps,
+      baseStyle: props => {
+        const styles = Steps.baseStyle(props)
+        return {
+          ...styles,
+          stepContainer: {
+            display: 'flex',
+            alignItems: 'center',
+            flexDir: 'column',
+          },
+          step: {
+            display: 'flex',
+            position: 'relative',
+            alignItems: 'start',
+          },
+          connector: {
+            ...styles.connector,
+            mt: '1.25rem',
+          },
+          labelContainer: {
+            display: 'flex',
+            flexDir: 'column',
+            justifyContent: 'center',
+            textAlign: 'center',
+            alignItems: 'center',
+            mt: '1rem',
+            'span:first-of-type': {
+              fontSize: '1.2rem',
+            },
+            'span:last-of-type': {
+              fontSize: '0.8rem',
+            },
+          },
+          description: {
+            minH: '1.1rem',
+            mt: '0.25rem',
+          },
+        }
+      },
+    },
+  },
+  breakpoints,
+})
+
 function App() {
   return (
-    <IronFishUIProvider theme={{ breakpoints }}>
+    <IronFishUIProvider theme={walletTheme}>
       <ElectronThemeChangeHandler />
       <DataSyncProvider>
         <HashRouter>
           <Routes>
             <Route element={<Initializing />}>
+              <Route element={<SnapshotFlow />} path={ROUTES.SNAPSHOT} />
               <Route element={<CreateLayout />}>
                 <Route path={ROUTES.ONBOARDING} element={<Action />} />
                 <Route path={ROUTES.CREATE} element={<CreateAccount />} />

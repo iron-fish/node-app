@@ -13,8 +13,10 @@ import { AccountMinerStatistic, MinerProps } from './types/AccountMiner'
 import { Contact } from './types/Contact'
 import Transaction from 'Types/Transaction'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
+import DemoSnapshotManager from './DemoSnapshotManager'
 
 class DemoDataManager {
+  snapshot: DemoSnapshotManager
   accounts: DemoAccountsManager
   transactions: DemoTransactionsManager
   addressBook: DemoAddressBookManager
@@ -28,6 +30,7 @@ class DemoDataManager {
     this.addressBook = new DemoAddressBookManager()
     this.miner = new DemoMinerManager()
     this.node = new DemoNodeManager()
+    this.snapshot = new DemoSnapshotManager()
     this.status = IronFishInitStatus.NOT_STARTED
   }
 

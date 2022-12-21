@@ -1,8 +1,8 @@
-import DemoDataManager from './data/DemoDataManager'
-import IStorage from 'Types/IStorage'
-import Contact from 'Types/Contact'
 import AccountSettings from 'Types/AccountSettings'
-import IIronfishManager from 'Types/IIronfishManager'
+import Contact from 'Types/Contact'
+import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
+import IStorage from 'Types/IStorage'
+import DemoDataManager from './data/DemoDataManager'
 
 declare global {
   interface Window {
