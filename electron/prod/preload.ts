@@ -1,14 +1,15 @@
-import { contextBridge, ipcRenderer } from 'electron'
 import { AccountValue } from '@ironfish/sdk'
+import { contextBridge, ipcRenderer } from 'electron'
 
-import SortType from 'Types/SortType'
-import IStorage from 'Types/IStorage'
 import Entity from 'Types/Entity'
+import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
 import IIronfishManager, {
-  IronfishAccountManagerAction,
   IronfishManagerAction,
-  IronfishTransactionManagerAction,
-} from 'Types/IIronfishManager'
+} from 'Types/IronfishManager/IIronfishManager'
+import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfishTransactionManager'
+import IStorage from 'Types/IStorage'
+import SortType from 'Types/SortType'
 import { Payment } from 'Types/Transaction'
 import '../common/preload'
 
@@ -51,6 +52,24 @@ contextBridge.exposeInMainWorld('IronfishManager', {
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.SYNC),
   peers: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.PEERS),
+  snapshot: {
+    start: (path: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.START,
+        path
+      ),
+    reset: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.RESET
+      ),
+    status: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.STATUS
+      ),
+  },
   accounts: {
     create: (name: string) =>
       ipcRenderer.invoke(

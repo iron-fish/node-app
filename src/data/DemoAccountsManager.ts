@@ -8,7 +8,7 @@ import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
-import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
+import { formatOreToTronWithLanguage } from 'Utils/number'
 
 const DEMO_ACCOUNTS: AccountValue[] = [
   {
@@ -193,7 +193,9 @@ class DemoAccountsManager {
             !search ||
             account.name.toLowerCase().includes(search) ||
             account.publicAddress.toLowerCase().includes(search) ||
-            CurrencyUtils.renderIron(account.balance.confirmed).includes(search)
+            formatOreToTronWithLanguage(account.balance.confirmed).includes(
+              search
+            )
         )
 
         if (sort) {

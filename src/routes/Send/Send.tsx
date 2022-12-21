@@ -27,7 +27,7 @@ import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
+import { ORE_TO_IRON } from 'Utils/number'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(

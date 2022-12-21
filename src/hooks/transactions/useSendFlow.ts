@@ -1,4 +1,4 @@
-import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
+import { ORE_TO_IRON } from 'Utils/number'
 import { useEffect, useState } from 'react'
 import Transaction, { TransactionStatus } from 'Types/Transaction'
 

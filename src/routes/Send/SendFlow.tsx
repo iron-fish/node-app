@@ -30,7 +30,7 @@ import CutAccount from 'Types/CutAccount'
 import { truncateHash } from 'Utils/hash'
 import useSendFlow from 'Hooks/transactions/useSendFlow'
 import Transaction, { TransactionStatus } from 'Types/Transaction'
-import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
+import { ORE_TO_IRON } from 'Utils/number'
 import useAddressBook from 'Hooks/addressBook/useAddressBook'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}

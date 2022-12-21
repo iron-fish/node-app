@@ -11,7 +11,7 @@ import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import AddressBook from 'Routes/AddressBook'
 import AccountDetails from 'Routes/Accounts/AccountDetails'
-import Miner from 'Routes/Miner'
+// import Miner from 'Routes/Miner'
 import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressBook/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
@@ -19,6 +19,7 @@ import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 import { DataSyncProvider } from './providers/DataSyncProvider'
 import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
 import Initializing from 'Routes/Initializing'
+import SnapshotFlow from 'Routes/SnapshotFlow'
 
 const breakpoints = {
   xs: '46.875rem', //750px
@@ -40,6 +41,7 @@ function App() {
         <HashRouter>
           <Routes>
             <Route element={<Initializing />}>
+              <Route element={<SnapshotFlow />} path={ROUTES.SNAPSHOT} />
               <Route element={<CreateLayout />}>
                 <Route path={ROUTES.ONBOARDING} element={<Action />} />
                 <Route path={ROUTES.CREATE} element={<CreateAccount />} />
