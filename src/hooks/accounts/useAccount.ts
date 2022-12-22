@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from 'react'
 import useAsyncDataWrapper from '../useAsyncDataWrapper'
-import { AccountValue } from '@ironfish/sdk'
+import Account from 'Types/Account'
 
 const useAccount = (id: string) => {
-  const [result, promiseWrapper] = useAsyncDataWrapper<AccountValue>()
+  const [result, promiseWrapper] = useAsyncDataWrapper<Account>()
 
   const loadAccount = (accountId: string) =>
     promiseWrapper(window.IronfishManager.accounts.get(accountId))

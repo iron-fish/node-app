@@ -8,6 +8,7 @@ import {
   useColorModeValue,
   TextField,
   Link,
+  useIronToast,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
@@ -17,7 +18,7 @@ import { ROUTES } from 'Routes/data'
 
 interface ContactSettingsProps {
   contact: Contact
-  onUpdate?: (name: string, address: string) => void
+  onUpdate?: (name: string, address: string) => Promise<void>
   onDelete?: (identity: string) => Promise<void>
 }
 
@@ -46,6 +47,11 @@ const ContactSettings: FC<ContactSettingsProps> = ({
   const [name, setName] = useState('')
   const [address, setAddress] = useState('')
   const navigate = useNavigate()
+  const toast = useIronToast({
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
 
   useEffect(() => {
     if (contact) {
@@ -82,14 +88,21 @@ const ContactSettings: FC<ContactSettingsProps> = ({
             variant="primary"
             mr="2rem"
             disabled={!checkChanges()}
-            onClick={() => onUpdate(name, address)}
+            onClick={() =>
+              onUpdate(name, address).then(() =>
+                toast({ title: 'Contact Details Updated' })
+              )
+            }
           >
             Save Changes
           </Button>
           <Link
             alignSelf="center"
             onClick={() => {
-              onDelete(contact._id).then(() => navigate(ROUTES.ADDRESS_BOOK))
+              onDelete(contact._id).then(() => {
+                navigate(ROUTES.ADDRESS_BOOK)
+                toast({ title: 'Contact Removed' })
+              })
             }}
           >
             <h4>Delete Contact</h4>

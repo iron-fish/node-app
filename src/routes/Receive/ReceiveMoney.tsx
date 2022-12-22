@@ -147,7 +147,7 @@ const ReceiveMoney: FC = () => {
             copyTooltipText="Copy to clipboard"
           />
         </Box>
-        <Box ml="4rem">
+        <Box>
           <DetailsPanel>
             <Information />
           </DetailsPanel>

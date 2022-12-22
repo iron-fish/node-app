@@ -12,11 +12,11 @@ import { FC, memo, useState } from 'react'
 import AccountKeysImage from 'Svgx/AccountKeysImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import DownloadIcon from '@ironfish/ui-kit/dist/svgx/download-icon'
-import { AccountValue } from '@ironfish/sdk'
 import PasswordField from 'Components/PasswordField'
+import Account from 'Types/Account'
 
 interface AccountKeysProps {
-  account: AccountValue
+  account: Account
   exportAccount: (id: string) => Promise<Omit<AccountValue, 'id'>>
 }
 

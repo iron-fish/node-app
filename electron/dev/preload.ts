@@ -47,6 +47,8 @@ contextBridge.exposeInMainWorld('IronfishManager', {
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.STOP),
   nodeStatus: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.NODE_STATUS),
+  sync: () =>
+    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.SYNC),
   peers: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.PEERS),
   accounts: {

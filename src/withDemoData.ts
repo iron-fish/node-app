@@ -70,6 +70,7 @@ export const IronFishManager: IIronfishManager = {
   nodeStatus: () => window.DemoDataManager.getNodeStatus(),
   peers: () => window.DemoDataManager.getNodePeers(),
   hasAnyAccount: () => window.DemoDataManager.hasAnyAccount(),
+  sync: () => Promise.resolve(),
   initialize: () => window.DemoDataManager.initialize(),
   start: () => window.DemoDataManager.start(),
   stop: () => window.DemoDataManager.stop(),

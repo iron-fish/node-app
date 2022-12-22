@@ -139,6 +139,7 @@ const Send: FC = () => {
                 border="none"
                 color={NAMED_COLORS.GREY}
                 fontSize="3rem"
+                px="1rem"
               >
                 $IRON
               </InputRightAddon>

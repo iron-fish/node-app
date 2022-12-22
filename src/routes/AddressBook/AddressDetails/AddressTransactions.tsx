@@ -6,6 +6,7 @@ import {
   NAMED_COLORS,
   Icon,
   Button,
+  Box,
 } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import Send from 'Svgx/send'
@@ -14,12 +15,15 @@ import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAddressTransactions'
 import SortType from 'Types/SortType'
 import Transaction from 'Types/Transaction'
+import EmptyOverview from 'Components/EmptyOverview'
 
 interface AddressTransactionsProps {
   address: string
 }
 
-const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
+const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
+  address,
+}) => {
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
   const [{ data: transactions, loaded }] = useTransactions(
@@ -50,7 +54,13 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
           },
         ]}
       />
-      <Flex direction="column" width="100%">
+
+      {transactions?.length === 0 ? (
+        <EmptyOverview
+          header="0 Results"
+          description="There aren’t any transactions with details that match your search input."
+        />
+      ) : (
         <CommonTable
           data={loaded ? transactions : new Array(10).fill(null)}
           columns={[
@@ -121,8 +131,25 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
             },
           ]}
         />
-      </Flex>
+      )}
     </Flex>
+  )
+}
+
+const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
+  const [{ data: transactions = undefined, loaded }] = useTransactions(address)
+
+  return (
+    <Box display={address && loaded ? 'block' : 'none'}>
+      {transactions?.length === 0 ? (
+        <EmptyOverview
+          header="You don’t have any transactions"
+          description="You don’t have any transaction with this contact yet. To produce a transactions, either send or receive $IRON. "
+        />
+      ) : (
+        <SearchAddressTransactions address={address} />
+      )}
+    </Box>
   )
 }
 

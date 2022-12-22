@@ -6,12 +6,16 @@ import Contact from 'Types/Contact'
 const useAddressBook = (searchTerm?: string, sort?: SortType) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Contact[]>()
   const addContact = useCallback(
-    (name, address) =>
+    (name: string, address: string) =>
       window.AddressBookStorage.add({ name, address }).then(() =>
         loadAddressBook()
       ),
     []
   )
+
+  const reloadContacts = useCallback(() => {
+    loadAddressBook()
+  }, [])
 
   const loadAddressBook = () =>
     promiseWrapper(window.AddressBookStorage.list(searchTerm, sort))
@@ -20,7 +24,7 @@ const useAddressBook = (searchTerm?: string, sort?: SortType) => {
     loadAddressBook()
   }, [searchTerm, sort])
 
-  return [result, addContact] as const
+  return [result, addContact, reloadContacts] as const
 }
 
 export default useAddressBook

@@ -43,6 +43,7 @@ const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
     const interval = setInterval(
       () => {
         loadStatus()
+        status?.blockchain.synced && window.IronfishManager.sync()
       },
       status?.blockchain.synced ? 10000 : 5000
     )

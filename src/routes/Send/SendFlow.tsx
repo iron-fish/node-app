@@ -6,7 +6,6 @@ import {
   FieldGroup,
   Flex,
   HStack,
-  LightMode,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -22,6 +21,7 @@ import {
   Icon,
   Image,
   Link,
+  LightMode,
 } from '@ironfish/ui-kit'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import Contact from 'Types/Contact'
@@ -248,15 +248,31 @@ const getProgress = (transaction: Transaction): number => {
   switch (transaction?.status) {
     case TransactionStatus.UNKNOWN:
       return 10
-    case TransactionStatus.UNCONFIRMED:
-      return 25
     case TransactionStatus.PENDING:
+      return 25
+    case TransactionStatus.UNCONFIRMED:
       return 50
     case TransactionStatus.CONFIRMED:
     case TransactionStatus.EXPIRED:
       return 100
     default:
       return 0
+  }
+}
+
+const getStatusAction = (transaction: Transaction): string => {
+  switch (transaction?.status) {
+    case TransactionStatus.UNKNOWN:
+      return 'Sending...'
+    case TransactionStatus.PENDING:
+      return 'Pending...'
+    case TransactionStatus.UNCONFIRMED:
+      return 'Waiting confirmations...'
+    case TransactionStatus.CONFIRMED:
+    case TransactionStatus.EXPIRED:
+      return 'Completed'
+    default:
+      return 'Preparing...'
   }
 }
 
@@ -295,7 +311,7 @@ const SendStep: FC<StepProps> = ({ amount, fee, from, to, memo, onSend }) => {
           </Box>
           <Box>
             <chakra.h5 color={NAMED_COLORS.GREY}>
-              15 seconds remaining
+              {getStatusAction(transaction)}
             </chakra.h5>
           </Box>
         </Flex>

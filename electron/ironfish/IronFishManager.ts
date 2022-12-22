@@ -23,7 +23,7 @@ import {
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
-import Transaction, { Payment } from 'Types/Transaction'
+import Transaction, { Payment, TransactionStatus } from 'Types/Transaction'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 
 class AccountManager implements IIronfishAccountManager {
@@ -121,18 +121,22 @@ class TransactionManager implements IIronfishTransactionManager {
     const account = this.node.wallet.getAccount(accountId)
     const headSequence = await this.node.wallet.getAccountHeadSequence(account)
     const fee = transactionFee || (await this.averageFee())
-    const transaction = await this.node.wallet.createTransaction(
+    const transaction = await this.node.wallet.pay(
+      this.node.memPool,
       account,
       [payment],
       BigInt(fee),
+      this.node.config.get('defaultTransactionExpirationSequenceDelta'),
       0
     )
 
-    return await this.resolveTransactionFields(
+    const result = await this.resolveTransactionFields(
       account,
       headSequence,
-      await account.getTransaction(transaction.hash())
+      await account.getTransactionByUnsignedHash(transaction.unsignedHash())
     )
+
+    return result
   }
 
   private async getFees(numOfBlocks = 100) {
@@ -186,18 +190,37 @@ class TransactionManager implements IIronfishTransactionManager {
     const account = this.node.wallet.getAccount(accountId)
     const headSequence = await this.node.wallet.getAccountHeadSequence(account)
     const transaction = await account.getTransactionByUnsignedHash(
-      Buffer.from(hash)
+      Buffer.from(hash, 'hex')
     )
-    await this.node.wallet.syncTransaction(
-      transaction.transaction,
-      transaction,
-      [account]
-    )
-    return await this.resolveTransactionFields(
-      account,
-      headSequence,
-      transaction
-    )
+
+    if (transaction) {
+      return await this.resolveTransactionFields(
+        account,
+        headSequence,
+        transaction
+      )
+    }
+
+    return null
+  }
+
+  private async status(
+    account: Account,
+    headSequence: number,
+    transaction: Readonly<TransactionValue>
+  ) {
+    let status
+    try {
+      status = await this.node.wallet.getTransactionStatus(
+        account,
+        transaction,
+        { headSequence }
+      )
+    } catch (e) {
+      status = TransactionStatus.UNKNOWN
+    }
+
+    return status
   }
 
   private async resolveTransactionFields(
@@ -205,25 +228,25 @@ class TransactionManager implements IIronfishTransactionManager {
     headSequence: number,
     transaction: Readonly<TransactionValue>
   ): Promise<Transaction> {
-    const status = await this.node.wallet.getTransactionStatus(
-      account,
-      transaction,
-      { headSequence }
-    )
-    const created = await this.node.chain.getBlock(transaction.blockHash)
+    const status = await this.status(account, headSequence, transaction)
+    const created = transaction?.blockHash
+      ? await this.node.chain.getBlock(transaction.blockHash)
+      : null
     const spends = []
-    let creator = false
-    for await (const spend of transaction.transaction.spends()) {
+    let creator
+    for await (const spend of transaction?.transaction?.spends() || []) {
       const noteHash = await account.getNoteHash(spend.nullifier)
 
       if (noteHash) {
-        creator = true
-        break
+        const decryptedNote = await account.getDecryptedNote(noteHash)
+        creator = decryptedNote
       }
 
       spends.push(spend)
     }
-    const notes = await account.getTransactionNotes(transaction.transaction)
+    const notes = transaction
+      ? await account.getTransactionNotes(transaction.transaction)
+      : []
 
     return {
       accountId: account.id,
@@ -239,14 +262,17 @@ class TransactionManager implements IIronfishTransactionManager {
         memo: n.note.memo(),
       })),
       spends,
-      creator,
+      creator: !!creator,
       from: creator ? account.publicAddress : '',
       to: creator ? '' : account.publicAddress,
-      created: created?.header?.timestamp,
+      created: created?.header?.timestamp || new Date(),
       amount: CurrencyUtils.renderIron(
         notes
           .map(note => note.note.value())
-          .reduce((prev, curr) => prev + curr, BigInt(0))
+          .reduce((prev, curr) => prev + curr, BigInt(0)) -
+          (creator?.note?.value()
+            ? creator?.note?.value() - transaction.transaction.fee()
+            : BigInt(0))
       ),
     }
   }
@@ -425,6 +451,10 @@ export class IronFishManager implements IIronfishManager {
       },
     }
     return Promise.resolve(status)
+  }
+
+  async sync(): Promise<void> {
+    await this.node.syncer.findPeer()
   }
 
   peers(): Promise<PeerResponse[]> {
