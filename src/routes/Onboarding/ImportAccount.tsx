@@ -141,7 +141,16 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           size="large"
           w={desktopMode ? undefined : '100%'}
           onClick={() => {
-            importByFile(file).then(() => onImport())
+            const reader = new FileReader()
+            reader.onload = e => {
+              const content = e.target.result
+              importByFile(JSON.parse(content.toString()))
+                .then(() => onImport())
+                .catch(() => {
+                  // TODO: add toast
+                })
+            }
+            reader.readAsText(file)
           }}
         >
           Import Account
@@ -242,12 +251,12 @@ const ImportAccount: FC<DesktopModeProps> = ({
       </chakra.h3>
       <Tabs>
         <TabList>
-          <Tab>Spending Key</Tab>
-          <Tab>Mnemonic Phrase</Tab>
+          {/* <Tab>Spending Key</Tab>
+          <Tab>Mnemonic Phrase</Tab> */}
           <Tab>File</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel w="100%" p={0}>
+          {/* <TabPanel w="100%" p={0}>
             <SpendingKeyTab
               desktopMode={desktopMode}
               onImport={handleOnImport}
@@ -258,7 +267,7 @@ const ImportAccount: FC<DesktopModeProps> = ({
               desktopMode={desktopMode}
               onImport={handleOnImport}
             />
-          </TabPanel>
+          </TabPanel> */}
           <TabPanel w="100%" p={0}>
             <ImportFileTab
               desktopMode={desktopMode}

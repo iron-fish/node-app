@@ -22,7 +22,7 @@ export const IronFishManager: IIronfishManager = {
     },
     get: (id: string) => window.DemoDataManager.getAccount(id),
     import: (account: AccountValue) =>
-      window.DemoDataManager.createAccount(account.name),
+      window.DemoDataManager.importAccount(account),
     list: (search: string, sort: SortType) =>
       window.DemoDataManager.getAccounts(search, sort),
     balance: (id: string) => window.DemoDataManager.getBalance(id),

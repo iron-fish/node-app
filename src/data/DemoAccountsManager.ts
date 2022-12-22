@@ -104,6 +104,9 @@ class DemoAccountsManager {
   create(name: string): Promise<AccountValue> {
     return new Promise(resolve => {
       setTimeout(() => {
+        if (DEMO_ACCOUNTS.find(account => name === account.name)) {
+          throw new Error(`Account already exists with the name ${name}`)
+        }
         const account = {
           id: nanoid(64),
           publicAddress: nanoid(64),
@@ -140,13 +143,21 @@ class DemoAccountsManager {
   import(account: Omit<AccountValue, 'id'>): Promise<AccountValue> {
     return new Promise(resolve => {
       setTimeout(() => {
+        if (DEMO_ACCOUNTS.find(({ name }) => name === account.name)) {
+          throw new Error(
+            `Account already exists with the name ${account.name}`
+          )
+        }
+
+        if (
+          DEMO_ACCOUNTS.find(
+            ({ spendingKey }) => spendingKey === account.spendingKey
+          )
+        ) {
+          throw new Error(`Account already exists with provided spending key`)
+        }
         const newAccount = {
           id: nanoid(64),
-          publicAddress: nanoid(64),
-          name: 'Imported Account',
-          incomingViewKey: nanoid(64),
-          outgoingViewKey: nanoid(64),
-          spendingKey: nanoid(64),
           ...account,
         }
         DEMO_ACCOUNTS.push(newAccount)
