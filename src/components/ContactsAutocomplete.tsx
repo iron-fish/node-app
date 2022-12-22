@@ -1,4 +1,4 @@
-import { FC, useMemo, useEffect, useState } from 'react'
+import { FC, useMemo, useEffect, useState, ReactNode } from 'react'
 import { Autocomplete, FlexProps, useDebounce } from '@ironfish/ui-kit'
 
 import useAddressBook from 'Hooks/addressBook/useAddressBook'
@@ -6,9 +6,16 @@ import Contact from 'Types/Contact'
 import { truncateHash } from 'Utils/hash'
 
 interface ContactsAutocompleteProps extends FlexProps {
-  contactId: string
+  address: string
   label: string
+  freeInput: boolean
   onSelectOption?: (account: Contact) => void
+}
+
+interface ContactOption {
+  label: ReactNode
+  helperText?: ReactNode
+  value: Contact
 }
 
 const getContactOptions = (contacts: Contact[] = []) =>
@@ -18,23 +25,54 @@ const getContactOptions = (contacts: Contact[] = []) =>
     value: contact,
   }))
 
+const isValidPublicAddress = (address: string) => address?.length === 86
+
+const getSelectedOption = (
+  options: ContactOption[] = [],
+  address: string,
+  freeInput: boolean
+) => {
+  let selectedOption = options?.find(
+    o => o.value._id === address || o.value.address === address
+  )
+
+  if (freeInput && isValidPublicAddress(address) && !selectedOption) {
+    selectedOption = {
+      label: address,
+      value: {
+        _id: address,
+        name: address,
+        address: address,
+      },
+    }
+  }
+
+  return selectedOption
+}
+
 const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
-  contactId,
+  address,
   label,
+  freeInput,
   onSelectOption,
   ...rest
 }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
   const $search = useDebounce($searchTerm, 500)
-  const [{ data: contacts, loaded: contactsLoaded }] = useAddressBook($search)
+  const [{ data: contacts = [], loaded: contactsLoaded }] =
+    useAddressBook($search)
 
   const options = useMemo(
     () => getContactOptions(contacts),
-    [JSON.stringify(contacts)]
+    [JSON.stringify(contacts.map(c => c._id))]
   )
 
   useEffect(() => {
-    const selectedOption = options.find(({ value }) => value._id === contactId)
+    const selectedOption = getSelectedOption(
+      options,
+      address || $searchTerm,
+      freeInput
+    )
     onSelectOption(selectedOption?.value || null)
   }, [options])
 
@@ -42,8 +80,21 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
     <Autocomplete
       label={label}
       options={options}
-      value={options.find(({ value }) => value._id === contactId)}
+      value={getSelectedOption(options, address || $searchTerm, freeInput)}
       onSelectOption={option => onSelectOption(option.value)}
+      onClose={() => {
+        if (
+          freeInput &&
+          options.length === 0 &&
+          isValidPublicAddress($searchTerm)
+        ) {
+          onSelectOption({
+            _id: $searchTerm,
+            address: $searchTerm,
+            name: $searchTerm,
+          })
+        }
+      }}
       InputProps={{
         placeholder: 'Input Text',
         onChange: e => $setSearchTerm(e.target.value),

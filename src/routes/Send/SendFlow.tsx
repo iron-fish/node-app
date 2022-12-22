@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -24,19 +24,24 @@ import {
   LightMode,
 } from '@ironfish/ui-kit'
 import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
-import { Account } from 'Data/types/Account'
 import Contact from 'Types/Contact'
 import SendIcon from 'Svgx/send'
+import CutAccount from 'Types/CutAccount'
 import { truncateHash } from 'Utils/hash'
+import useSendFlow from 'Hooks/transactions/useSendFlow'
+import Transaction, { TransactionStatus } from 'Types/Transaction'
+import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
+import useAddressBook from 'Hooks/addressBook/useAddressBook'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
 
 interface SendProps {
-  from: Account
+  from: CutAccount
   to: Contact
   amount: number
   memo: string
   fee: number
+  transaction: Transaction | null
 }
 
 interface DataPreviewLineProps extends StyleProps {
@@ -68,7 +73,7 @@ const DataPreviewLine: FC<DataPreviewLineProps> = ({
 interface StepProps extends SendProps {
   onConfirm: () => void
   onCancel: () => void
-  onSend: () => void
+  onSend: (transaction: Transaction) => void
 }
 
 const ConfirmStep: FC<StepProps> = ({
@@ -80,6 +85,20 @@ const ConfirmStep: FC<StepProps> = ({
   memo,
   fee,
 }) => {
+  const [contactName, setContactName] = useState('')
+  const [showAddName, setShowAddName] = useState(false)
+  const [toContact, setToContact] = useState<Contact>(to)
+  const [{ data: contacts }, addContact] = useAddressBook()
+
+  useEffect(() => {
+    const contact = contacts?.find(
+      ({ address }) => address === toContact.address
+    )
+    if (contact) {
+      setToContact(contact)
+    }
+  }, [JSON.stringify(contacts)])
+
   return (
     <>
       <ModalCloseButton
@@ -100,19 +119,69 @@ const ConfirmStep: FC<StepProps> = ({
           <DataPreviewLine
             title="To:"
             value={
-              <HStack w="100%" justifyContent="space-between">
-                {to.name && (
-                  <chakra.h4 whiteSpace="nowrap">{to.name}</chakra.h4>
+              <Flex direction="column">
+                <HStack w="100%" justifyContent="space-between">
+                  {toContact.name && toContact._id !== toContact.address ? (
+                    <chakra.h4 whiteSpace="nowrap">{toContact.name}</chakra.h4>
+                  ) : (
+                    <chakra.h4
+                      cursor="pointer"
+                      color={NAMED_COLORS.LIGHT_BLUE}
+                      whiteSpace="nowrap"
+                      onClick={() => setShowAddName(true)}
+                    >
+                      Add New Contact?
+                    </chakra.h4>
+                  )}
+                  <chakra.h5
+                    pl="4rem"
+                    color={NAMED_COLORS.GREY}
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                  >
+                    {truncateHash(to.address, 2, 16)}
+                  </chakra.h5>
+                </HStack>
+                {showAddName && (
+                  <Flex direction="column">
+                    <TextField
+                      label="Contact Name"
+                      my="1rem"
+                      value={contactName}
+                      InputProps={{
+                        onChange: e => setContactName(e.target.value),
+                      }}
+                    />
+                    <Flex>
+                      <Button
+                        variant="primary"
+                        size="medium"
+                        mr="1.5rem"
+                        isDisabled={!contactName.trim()}
+                        onClick={() => {
+                          addContact(contactName, to.address).then(() => {
+                            setShowAddName(false)
+                            setContactName('')
+                          })
+                        }}
+                      >
+                        Add Contact
+                      </Button>
+                      <Button
+                        _hover={{ textDecoration: 'unset' }}
+                        variant="link"
+                        size="medium"
+                        onClick={() => {
+                          setShowAddName(false)
+                          setContactName('')
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </Flex>
+                  </Flex>
                 )}
-                <chakra.h5
-                  pl="4rem"
-                  color={NAMED_COLORS.GREY}
-                  whiteSpace="nowrap"
-                  overflow="hidden"
-                >
-                  {truncateHash(to.address, 2, 16)}
-                </chakra.h5>
-              </HStack>
+              </Flex>
             }
             flexDirection={to.name ? 'column' : 'row'}
             w="100%"
@@ -122,7 +191,7 @@ const ConfirmStep: FC<StepProps> = ({
             title="Amount:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{amount}</chakra.h4>
+                <chakra.h4>{amount} $IRON</chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -132,7 +201,7 @@ const ConfirmStep: FC<StepProps> = ({
             title="Fee:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{fee} $IRON</chakra.h4>
+                <chakra.h4>{fee.toFixed(8)} $IRON</chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -142,7 +211,10 @@ const ConfirmStep: FC<StepProps> = ({
             title="Total:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{amount + fee} $IRON</chakra.h4>
+                <chakra.h4>
+                  {(amount * ORE_TO_IRON + fee * ORE_TO_IRON) / ORE_TO_IRON}
+                  &nbsp;$IRON
+                </chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -172,15 +244,59 @@ const ConfirmStep: FC<StepProps> = ({
   )
 }
 
-const SendStep: FC<StepProps> = ({ onSend }) => {
-  setTimeout(onSend, 5000)
+const getProgress = (transaction: Transaction): number => {
+  switch (transaction?.status) {
+    case TransactionStatus.UNKNOWN:
+      return 10
+    case TransactionStatus.PENDING:
+      return 25
+    case TransactionStatus.UNCONFIRMED:
+      return 50
+    case TransactionStatus.CONFIRMED:
+    case TransactionStatus.EXPIRED:
+      return 100
+    default:
+      return 0
+  }
+}
+
+const getStatusAction = (transaction: Transaction): string => {
+  switch (transaction?.status) {
+    case TransactionStatus.UNKNOWN:
+      return 'Sending...'
+    case TransactionStatus.PENDING:
+      return 'Pending...'
+    case TransactionStatus.UNCONFIRMED:
+      return 'Waiting confirmations...'
+    case TransactionStatus.CONFIRMED:
+    case TransactionStatus.EXPIRED:
+      return 'Completed'
+    default:
+      return 'Preparing...'
+  }
+}
+
+const SendStep: FC<StepProps> = ({ amount, fee, from, to, memo, onSend }) => {
+  const transaction = useSendFlow(from.id, amount, memo, to.address, fee)
+
+  useEffect(() => {
+    if (
+      transaction?.status === TransactionStatus.CONFIRMED ||
+      transaction?.status === TransactionStatus.EXPIRED
+    ) {
+      onSend(transaction)
+    }
+  }, [transaction?.status])
+
+  const progress = getProgress(transaction)
+
   return (
     <ModalBody p={0}>
       <chakra.h2 mb="1rem">Transaction Processing</chakra.h2>
       <chakra.h4 mb="2rem">
-        We are processing your transaction of 1.3232 $IRON. This may take a few
-        minutes. Once the transaction is processed there will be a link below
-        with your details.
+        We are processing your transaction of {amount} $IRON. This may take a
+        few minutes. Once the transaction is processed there will be a link
+        below with your details.
       </chakra.h4>
       <Box
         border="0.0625rem solid"
@@ -191,11 +307,11 @@ const SendStep: FC<StepProps> = ({ onSend }) => {
       >
         <Flex w="100%" justifyContent="space-between" mb="0.5rem">
           <Box>
-            <chakra.h4>0% Complete</chakra.h4>
+            <chakra.h4>{progress}% Complete</chakra.h4>
           </Box>
           <Box>
             <chakra.h5 color={NAMED_COLORS.GREY}>
-              15 seconds remaining
+              {getStatusAction(transaction)}
             </chakra.h5>
           </Box>
         </Flex>
@@ -218,7 +334,7 @@ const SendStep: FC<StepProps> = ({ onSend }) => {
   )
 }
 
-const ResultStep: FC<StepProps> = () => (
+const ResultStep: FC<StepProps> = ({ transaction }) => (
   <>
     <ModalCloseButton
       border="0.0625rem solid"
@@ -241,7 +357,7 @@ const ResultStep: FC<StepProps> = () => (
       <FieldGroup w="100%">
         <TextField
           label="Transaction Link"
-          value="https://explorer.ironfish.network/transaction/a717490d1d8aa25d8c64ca1ab78934e0b8bc7981b40de33359ec6a8137c26484"
+          value={`https://explorer.ironfish.network/transaction/${transaction.hash}`}
           InputProps={{
             textColor: NAMED_COLORS.LIGHT_BLUE,
             whiteSpace: 'nowrap',
@@ -251,7 +367,7 @@ const ResultStep: FC<StepProps> = () => (
             cursor: 'pointer',
             onClick: () =>
               window.open(
-                'https://explorer.ironfish.network/transaction/a717490d1d8aa25d8c64ca1ab78934e0b8bc7981b40de33359ec6a8137c26484',
+                `https://explorer.ironfish.network/transaction/${transaction.hash}`,
                 '_blank'
               ),
           }}
@@ -271,7 +387,7 @@ const ResultStep: FC<StepProps> = () => (
 
 const STEPS: FC<StepProps>[] = [ConfirmStep, SendStep, ResultStep]
 
-const SendFlow: FC<SendFlowProps> = ({
+const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
   from,
   to,
   amount,
@@ -280,6 +396,7 @@ const SendFlow: FC<SendFlowProps> = ({
   ...props
 }) => {
   const [currStep, setCurrentStep] = useState<number>(0)
+  const [transaction, setTransaction] = useState<Transaction | null>(null)
   const Step = STEPS[currStep]
 
   const handleClose = () => {
@@ -306,7 +423,9 @@ const SendFlow: FC<SendFlowProps> = ({
             onConfirm={() => {
               setCurrentStep(1)
             }}
-            onSend={() => {
+            transaction={transaction}
+            onSend={t => {
+              setTransaction(t)
               setCurrentStep(2)
             }}
             onCancel={handleClose}

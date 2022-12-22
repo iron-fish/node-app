@@ -26,20 +26,62 @@ const DARK_COLORS = {
 }
 
 const getWalletSyncStatus = (
-  status: 'stopped' | 'idle' | 'stopping' | 'syncing'
+  status: 'stopped' | 'idle' | 'stopping' | 'syncing',
+  chainSyncStatus = false
 ) => {
   switch (status) {
     case 'stopped':
       return 'Stropped'
     case 'idle':
-      return 'Synced'
+      return chainSyncStatus ? 'Synced' : 'Starting'
     case 'stopping':
       return 'Stopping'
     case 'syncing':
       return 'Syncing'
     default:
-      return 'Syncing'
+      return 'Idle'
   }
+}
+
+const DELIMETERS = [
+  {
+    unit: 's',
+    value: 60,
+  },
+  {
+    unit: 'm',
+    value: 60,
+  },
+  {
+    unit: 'h',
+    value: 24,
+  },
+]
+
+const renderTime = (time: number) => {
+  if (!time) {
+    return '...'
+  }
+  let remaining = time
+  const result = []
+  let index = 0
+  while (remaining > 0) {
+    result.push(
+      `${Math.floor(remaining % DELIMETERS[index].value)}${
+        DELIMETERS[index].unit
+      }`
+    )
+    remaining = Math.floor(remaining / DELIMETERS[index].value)
+
+    if (index === 2 && remaining > 0) {
+      result.push(`${remaining}d`)
+      break
+    } else {
+      index++
+    }
+  }
+
+  return result.reverse().join(' ')
 }
 
 const SyncStatus = forwardRef<HTMLDivElement, DataSyncContextProps>(
@@ -58,24 +100,27 @@ const SyncStatus = forwardRef<HTMLDivElement, DataSyncContextProps>(
         justifyContent="center"
       >
         <chakra.h5 color={loaded ? colors.text : colors.textWarn}>
-          Wallet Status: {getWalletSyncStatus(data?.blockSyncer.status)}
+          Wallet Status:{' '}
+          {getWalletSyncStatus(
+            data?.blockSyncer.status,
+            data?.blockchain.synced
+          )}
         </chakra.h5>
-        {!loaded && (
+        {!loaded && data?.blockSyncer.status === 'syncing' && (
           <>
             <chakra.h5 color={colors.textWarn}>
-              {`${(data?.blockSyncer.syncing.progress * 100).toFixed(0)}%`}
+              {`${(data?.blockSyncer.syncing.progress * 100).toFixed(2)}%`}
               {' | '}
-              {`${(data?.blockSyncer.syncing.blockSpeed / 1000).toFixed(0)}`}
-              {' seconds'}
+              {`${renderTime(
+                (Number(data?.blockchain?.totalSequences || 0) -
+                  Number(data?.blockchain?.head || 0)) /
+                  (data?.blockSyncer?.syncing?.speed || 1)
+              )}`}
             </chakra.h5>
             <chakra.h5 color={colors.textWarn}>
-              {`${Math.floor(
-                data?.blockSyncer.syncing.progress *
-                  data?.blockSyncer.syncing.speed *
-                  100
-              ).toLocaleString()}`}
+              {`${data?.blockchain.head}`}
               {' / '}
-              {`${(data?.blockSyncer.syncing.speed * 100).toLocaleString()}`}
+              {`${data?.blockchain.totalSequences}`}
               {' blocks'}
             </chakra.h5>
           </>
@@ -147,7 +192,7 @@ const StatusItem: FC<StatusItemProps> = ({ fullSize, minified, loaded }) => {
   )
 }
 
-const ActiveStats: FC<FlexProps> = props => {
+const ActiveStatus: FC<FlexProps> = props => {
   const { loaded, data } = useDataSync()
   const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
   return (
@@ -191,4 +236,4 @@ const ActiveStats: FC<FlexProps> = props => {
   )
 }
 
-export default ActiveStats
+export default ActiveStatus

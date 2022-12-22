@@ -1,13 +1,13 @@
-import { GetStatusResponse } from '@ironfish/sdk'
 import { useEffect, useState } from 'react'
+import NodeStatusResponse from 'Types/NodeStatusResponse'
 
 const useNodeStatus = () => {
   const [loaded, setLoaded] = useState<boolean>(false)
-  const [status, setNodeStatus] = useState<GetStatusResponse | undefined>()
+  const [status, setNodeStatus] = useState<NodeStatusResponse | undefined>()
   const [error, setError] = useState()
 
   const loadStatus = () => {
-    return window.DemoDataManager.getNodeStatus()
+    return window.IronfishManager.nodeStatus()
       .then(setNodeStatus)
       .catch(setError)
       .finally(() => setLoaded(true))

@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useEffect } from 'react'
+import { FC, useState } from 'react'
 import {
   Flex,
   chakra,
@@ -12,8 +12,9 @@ import { ChevronRightIcon } from '@chakra-ui/icons'
 import Send from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import SearchSortField from 'Components/Search&Sort'
-import useTransactions from 'Hooks/transactions/useTransactions'
+import useTransactions from 'Hooks/transactions/useAddressTransactions'
 import SortType from 'Types/SortType'
+import Transaction from 'Types/Transaction'
 import EmptyOverview from 'Components/EmptyOverview'
 
 interface AddressTransactionsProps {
@@ -36,11 +37,22 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
       <chakra.h3 mb="1rem">Transactions</chakra.h3>
       <SearchSortField
         SearchProps={{
-          onChange: e => $setSearchTerm(e.target.value),
+          value: $searchTerm,
+          onChange: e => $setSearchTerm(e.target.value.trimStart()),
         }}
         SortSelectProps={{
           onSelectOption: ({ value }) => $setSortOrder(value),
         }}
+        options={[
+          {
+            label: 'Newest to oldest',
+            value: SortType.DESC,
+          },
+          {
+            label: 'Oldest to oldest',
+            value: SortType.ASC,
+          },
+        ]}
       />
 
       {transactions?.length === 0 ? (
@@ -55,7 +67,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
             {
               key: 'action',
               label: 'Action',
-              render: transaction => (
+              render: (transaction: Transaction) => (
                 <Flex align="center" position="relative">
                   <Flex
                     w="1.625rem"
@@ -67,32 +79,38 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
                     background={NAMED_COLORS.LIGHT_GREY}
                   >
                     <Icon h={8}>
-                      {transaction.action === 'Send' ? <Send /> : <Receive />}
+                      {transaction.creator ? <Send /> : <Receive />}
                     </Icon>
                   </Flex>
-                  <chakra.h5 ml="2.375rem">{transaction.action}</chakra.h5>
+                  <chakra.h5 ml="2.375rem">{transaction.status}</chakra.h5>
                 </Flex>
               ),
             },
             {
               key: 'iron',
               label: '$IRON',
-              render: transaction => <h5>{transaction.iron}</h5>,
+              render: (transaction: Transaction) => (
+                <h5>{transaction.amount}</h5>
+              ),
             },
             {
               key: 'to',
               label: 'To',
-              render: transaction => <h5>{transaction.to}</h5>,
+              render: (transaction: Transaction) => <h5>{transaction.to}</h5>,
             },
             {
               key: 'date',
               label: 'Date',
-              render: transaction => <h5>{transaction.date}</h5>,
+              render: (transaction: Transaction) => (
+                <h5>{transaction.created.toISOString()}</h5>
+              ),
             },
             {
               key: 'memo',
               label: 'Memo',
-              render: transaction => <h5>{transaction.memo}</h5>,
+              render: (transaction: Transaction) => (
+                <h5>{transaction.notes?.at(0)?.memo}</h5>
+              ),
             },
             {
               key: 'actions',

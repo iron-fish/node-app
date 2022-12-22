@@ -1,26 +1,26 @@
 import { FC } from 'react'
 import { Flex, NAMED_COLORS, useColorModeValue, chakra } from '@ironfish/ui-kit'
-import TransactionStatusType from 'Types/TransactionStatusType'
+import { TransactionStatus } from 'Types/Transaction'
 import PendingIcon from '@ironfish/ui-kit/dist/svgx/pending-icon'
 import ConfirmedIcon from '@ironfish/ui-kit/dist/svgx/confirmed-icon'
 import ExpiredIcon from '@ironfish/ui-kit/dist/svgx/expired-icon'
 import AwaitIcon from '@ironfish/ui-kit/dist/svgx/await-icon'
 
 interface TransactionStatusProps {
-  status: TransactionStatusType
+  status: TransactionStatus
 }
 
-const getStatusIcon = (status: TransactionStatusType) => {
+const getStatusIcon = (status: TransactionStatus) => {
   switch (status) {
-    case TransactionStatusType.CONFIRMED:
+    case TransactionStatus.CONFIRMED:
       return <ConfirmedIcon />
-    case TransactionStatusType.PENDING:
+    case TransactionStatus.PENDING:
       return <PendingIcon />
-    case TransactionStatusType.EXPIRED:
+    case TransactionStatus.EXPIRED:
       return <ExpiredIcon color={'#F15929'} />
-    case TransactionStatusType.UNCONFIRMED:
+    case TransactionStatus.UNCONFIRMED:
       return <AwaitIcon />
-    case TransactionStatusType.UNKNOWN:
+    case TransactionStatus.UNKNOWN:
       return (
         <chakra.h4 mt="0.0625rem" ml="0.0625rem">
           ?
@@ -31,24 +31,24 @@ const getStatusIcon = (status: TransactionStatusType) => {
   }
 }
 
-const getStatusMessage = (status: TransactionStatusType) => {
+const getStatusMessage = (status: TransactionStatus) => {
   switch (status) {
-    case TransactionStatusType.CONFIRMED:
+    case TransactionStatus.CONFIRMED:
       return 'Confirmed'
-    case TransactionStatusType.PENDING:
+    case TransactionStatus.PENDING:
       return 'Pending'
-    case TransactionStatusType.EXPIRED:
+    case TransactionStatus.EXPIRED:
       return 'Expired'
-    case TransactionStatusType.UNCONFIRMED:
+    case TransactionStatus.UNCONFIRMED:
       return 'Awaiting confirmation'
-    case TransactionStatusType.UNKNOWN:
+    case TransactionStatus.UNKNOWN:
       return 'Unknown'
     default:
       break
   }
 }
 
-const TransactionStatus: FC<TransactionStatusProps> = ({ status }) => {
+const TransactionStatusView: FC<TransactionStatusProps> = ({ status }) => {
   const bgColor = useColorModeValue(
     NAMED_COLORS.LIGHT_GREY,
     NAMED_COLORS.DARK_GREY
@@ -62,7 +62,7 @@ const TransactionStatus: FC<TransactionStatusProps> = ({ status }) => {
         alignItems="center"
         justifyContent="center"
         backgroundColor={
-          status === TransactionStatusType.EXPIRED ? '#FFE2D9' : bgColor
+          status === TransactionStatus.EXPIRED ? '#FFE2D9' : bgColor
         }
       >
         {getStatusIcon(status)}
@@ -72,4 +72,4 @@ const TransactionStatus: FC<TransactionStatusProps> = ({ status }) => {
   )
 }
 
-export default TransactionStatus
+export default TransactionStatusView

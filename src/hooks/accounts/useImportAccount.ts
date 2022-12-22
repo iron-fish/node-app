@@ -1,19 +1,33 @@
+import { nanoid } from 'nanoid'
 import { useCallback } from 'react'
+import Account from 'Types/Account'
 import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 
 const useImportAccount = () => {
   const importAccountBySpendingKey = useCallback(
     (spendingKey: string) =>
-      window.DemoDataManager.importAccountBySpendingKey(spendingKey),
+      window.IronfishManager.accounts.import({
+        incomingViewKey: nanoid(64),
+        outgoingViewKey: nanoid(64),
+        name: 'Imported Account',
+        publicAddress: nanoid(64),
+        spendingKey: spendingKey,
+      }),
     []
   )
   const importAccountByMnemonicPhrase = useCallback(
     (mnemonicPhrase: MnemonicPhraseType) =>
-      window.DemoDataManager.importAccountByMnemonicPhrase(mnemonicPhrase),
+      window.IronfishManager.accounts.import({
+        incomingViewKey: nanoid(64),
+        outgoingViewKey: nanoid(64),
+        name: 'Imported Account',
+        publicAddress: nanoid(64),
+        spendingKey: nanoid(64),
+      }),
     []
   )
   const importAccountByFile = useCallback(
-    (file: File) => window.DemoDataManager.importAccountByFile(file),
+    (account: Account) => window.IronfishManager.accounts.import(account),
     []
   )
 

@@ -4,10 +4,16 @@ import SearchInput, { SearchInputProps } from './SearchInput'
 import SortSelect, { SelectFieldProps } from './SortSelect'
 import SortType from 'Types/SortType'
 
+interface SortSelectOption {
+  label: string
+  value: SortType
+}
+
 interface SearchSortFieldProps extends SearchInputProps {
   ContainerProps?: FlexProps
   SortSelectProps?: SelectFieldProps
   sortValue?: SortType
+  options?: SortSelectOption[]
 }
 
 const OPTIONS = [
@@ -25,6 +31,7 @@ const SearchSortField: FC<SearchSortFieldProps> = ({
   sortValue,
   ContainerProps,
   SortSelectProps,
+  options = OPTIONS,
   ...SearchProps
 }) => (
   <Flex
@@ -36,8 +43,8 @@ const SearchSortField: FC<SearchSortFieldProps> = ({
     <SearchInput {...SearchProps} />
     <SortSelect
       {...SortSelectProps}
-      options={OPTIONS}
-      value={OPTIONS.find(({ value }) => value === sortValue)}
+      options={options}
+      value={options.find(({ value }) => value === sortValue)}
     />
   </Flex>
 )

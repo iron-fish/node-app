@@ -26,8 +26,12 @@ const AccountDetails: FC = () => {
   const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
   const location = useLocation()
   const { accountId, order } = location.state as LocationStateProps
-  const [{ data: account, loaded }, updateAccount, deleteAccount] =
-    useAccount(accountId)
+  const [
+    { data: account, loaded },
+    updateAccount,
+    exportAccount,
+    deleteAccount,
+  ] = useAccount(accountId)
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
@@ -39,8 +43,10 @@ const AccountDetails: FC = () => {
         <Flex alignItems="end" mb="0.5rem">
           <chakra.h2 mr="1rem">{account?.name}</chakra.h2>
           <CopyValueToClipboard
-            label={<chakra.h5>{truncateHash(account?.address, 3)}</chakra.h5>}
-            value={account?.address}
+            label={
+              <chakra.h5>{truncateHash(account?.publicAddress, 3)}</chakra.h5>
+            }
+            value={account?.publicAddress}
             copyTooltipText="Copy to clipboard"
             copiedTooltipText="Copied"
             containerProps={{
@@ -66,7 +72,7 @@ const AccountDetails: FC = () => {
               <AccountOverview account={account} order={order} />
             </TabPanel>
             <TabPanel p="0" pt="2rem">
-              <AccountKeys account={account} />
+              <AccountKeys account={account} exportAccount={exportAccount} />
             </TabPanel>
             <TabPanel p="0" pt="2rem">
               <AccountSettings

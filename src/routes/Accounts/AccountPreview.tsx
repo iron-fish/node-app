@@ -17,20 +17,21 @@ import Caret from 'Svgx/caret-icon'
 import { useNavigate } from 'react-router-dom'
 import { truncateHash } from 'Utils/hash'
 import { ROUTES } from '..'
-import { Account } from 'Data/types/Account'
+import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
+import { formatOreToTronWithLanguage } from 'Utils/number'
 
-export interface AccountPreviewProps extends Account {
+export interface AccountPreviewProps extends CutAccount {
   order: number
 }
 
 const AccountPreview: FC<AccountPreviewProps> = ({
   order = 0,
   name,
-  balance = 0,
-  address,
-  identity,
+  publicAddress,
+  id,
+  balance,
 }) => {
   const navigate = useNavigate()
   const { loaded } = useDataSync()
@@ -56,7 +57,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       borderRadius="0.25rem"
       cursor="pointer"
       onClick={() =>
-        navigate(ROUTES.ACCOUNT, { state: { accountId: identity, order } })
+        navigate(ROUTES.ACCOUNT, { state: { accountId: id, order } })
       }
       sx={{
         transition: '0.3s',
@@ -111,7 +112,10 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       </Flex>
       <Box>
         <chakra.h5 pt="0.25rem">{name}</chakra.h5>
-        <chakra.h3 p="0.25rem 0">{balance} $IRON</chakra.h3>
+        <chakra.h3 p="0.25rem 0">
+          {formatOreToTronWithLanguage(balance.confirmed || BigInt(0))}
+          &nbsp;$IRON
+        </chakra.h3>
         <CopyValueToClipboard
           containerProps={{
             color: NAMED_COLORS.GREY,
@@ -124,8 +128,8 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             as: 'h5',
             mr: '0.5rem',
           }}
-          value={address}
-          label={truncateHash(address, 3)}
+          value={publicAddress}
+          label={truncateHash(publicAddress, 3)}
           copyTooltipText="Copy to clipboard"
           copiedTooltipText="Copied"
         />
@@ -136,9 +140,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              if (loaded) {
-                navigate(ROUTES.SEND, { state: { accountId: identity } })
-              }
+              navigate(ROUTES.SEND, { state: { accountId: id } })
             }}
           >
             <Button
@@ -161,9 +163,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              if (loaded) {
-                navigate(ROUTES.RECEIVE, { state: { accountId: identity } })
-              }
+              navigate(ROUTES.RECEIVE, { state: { accountId: id } })
             }}
           >
             <Button

@@ -13,6 +13,10 @@ const useAddressBook = (searchTerm?: string, sort?: SortType) => {
     []
   )
 
+  const reloadContacts = useCallback(() => {
+    loadAddressBook()
+  }, [])
+
   const loadAddressBook = () =>
     promiseWrapper(window.AddressBookStorage.list(searchTerm, sort))
 
@@ -20,7 +24,7 @@ const useAddressBook = (searchTerm?: string, sort?: SortType) => {
     loadAddressBook()
   }, [searchTerm, sort])
 
-  return [result, addContact] as const
+  return [result, addContact, reloadContacts] as const
 }
 
 export default useAddressBook

@@ -5,8 +5,7 @@ import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 const useCreateAccount = () => {
   const [result, promiseWrapper] = useAsyncDataWrapper<string[]>()
   const createAccount = useCallback(
-    (name: string, mnemonicPhrase: MnemonicPhraseType) =>
-      window.DemoDataManager.createAccount(name, mnemonicPhrase),
+    (name: string) => window.IronfishManager.accounts.create(name),
     []
   )
 

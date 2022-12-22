@@ -14,14 +14,16 @@ import Receive from 'Svgx/receive'
 import FeesImage from 'Svgx/FeesImage'
 import { truncateHash } from 'Utils/hash'
 import SearchSortField from 'Components/Search&Sort'
-import useTransactions from 'Hooks/transactions/useTransactions'
-import { Account } from 'Data/types/Account'
+import useTransactions from 'Hooks/transactions/useAcccountTransactions'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import TransactionStatus from 'Components/TransactionStatus'
+import Transaction from 'Types/Transaction'
+import TransactionStatusView from 'Components/TransactionStatusView'
+import Account from 'Types/Account'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
+import { formatOreToTronWithLanguage } from 'Utils/number'
 import EmptyOverview from 'Components/EmptyOverview'
 
 interface SearchTransactionsProps {
@@ -37,7 +39,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
     $sortOrder
   )
 
-  return loaded && transactions.length === 0 && !$searchTerm ? null : (
+  return loaded && transactions?.length === 0 && !$searchTerm ? null : (
     <>
       <Box>
         <chakra.h3 pb="1rem">Transactions</chakra.h3>
@@ -49,6 +51,16 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
           SortSelectProps={{
             onSelectOption: ({ value }) => $setSortOrder(value),
           }}
+          options={[
+            {
+              label: 'Newest to oldest',
+              value: SortType.DESC,
+            },
+            {
+              label: 'Oldest to oldest',
+              value: SortType.ASC,
+            },
+          ]}
         />
       </Box>
       {transactions?.length === 0 ? (
@@ -65,14 +77,16 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               key: 'transaction-action-column',
               label: <chakra.h6>Action</chakra.h6>,
               render: transaction => (
-                <TransactionStatus status={transaction.status} />
+                <TransactionStatusView status={transaction.status} />
               ),
             },
             {
               key: 'transaction-amount-column',
               label: <chakra.h6>$IRON</chakra.h6>,
               render: transaction => (
-                <chakra.h5>{transaction.amount}</chakra.h5>
+                <chakra.h5>
+                  {(transaction.creator ? '' : '+') + transaction.amount}
+                </chakra.h5>
               ),
             },
             {
@@ -88,13 +102,15 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
             {
               key: 'transaction-date-column',
               label: <chakra.h6>Date</chakra.h6>,
-              render: transaction => <chakra.h5>{transaction.date}</chakra.h5>,
+              render: (transaction: Transaction) => (
+                <chakra.h5>{transaction.created.toISOString()}</chakra.h5>
+              ),
             },
             {
               key: 'transaction-memo-column',
               label: <chakra.h6>Memo</chakra.h6>,
-              render: transaction => (
-                <chakra.h5>"{transaction.memo}"</chakra.h5>
+              render: (transaction: Transaction) => (
+                <chakra.h5>"{transaction.notes?.at(0)?.memo}"</chakra.h5>
               ),
             },
             {
@@ -128,7 +144,7 @@ interface AccountOverviewProps {
 
 const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
   const [{ data: transactions = undefined, loaded }] = useTransactions(
-    account?.address
+    account?.id
   )
 
   const navigate = useNavigate()
@@ -151,7 +167,9 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
               </Box>
               <Box mb="0.5rem">
                 <chakra.h2 color={NAMED_COLORS.DEEP_BLUE}>
-                  {account?.balance}
+                  {formatOreToTronWithLanguage(
+                    account?.balance.confirmed || BigInt(0)
+                  )}
                 </chakra.h2>
               </Box>
               <Box>
@@ -167,7 +185,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
                   }
                   onClick={() =>
                     navigate(ROUTES.SEND, {
-                      state: { accountId: account?.identity },
+                      state: { accountId: account?.id },
                     })
                   }
                   isDisabled={!synced}
@@ -187,7 +205,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
                   }
                   onClick={() =>
                     navigate(ROUTES.RECEIVE, {
-                      state: { accountId: account?.identity },
+                      state: { accountId: account?.id },
                     })
                   }
                   isDisabled={!synced}
@@ -212,18 +230,22 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
             <chakra.h4>Pending $IRON</chakra.h4>
           </Box>
           <Box mb="0.5rem">
-            <chakra.h2>{account?.pending}</chakra.h2>
+            <chakra.h2>
+              {formatOreToTronWithLanguage(
+                account?.balance.pending || BigInt(0)
+              )}
+            </chakra.h2>
           </Box>
         </Box>
       </Flex>
-      <Box display={account?.address && loaded ? 'block' : 'none'}>
+      <Box display={account?.id && loaded ? 'block' : 'none'}>
         {transactions?.length === 0 ? (
           <EmptyOverview
             header="You don’t have any transactions"
             description="When your account compiles transactions they will be listed here. To produce a transactions, eitherF send or receive $IRON."
           />
         ) : (
-          <SearchTransactions address={account?.address} />
+          <SearchTransactions address={account?.id} />
         )}
       </Box>
     </>

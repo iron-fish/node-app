@@ -5,10 +5,13 @@ import useAsyncDataWrapper from '../useAsyncDataWrapper'
 const useNodePeers = () => {
   const [result, promiseWrapper] = useAsyncDataWrapper<PeerResponse[]>()
 
-  const loadPeers = () => promiseWrapper(window.DemoDataManager.getNodePeers())
+  const loadPeers = () => promiseWrapper(window.IronfishManager.peers())
 
   useEffect(() => {
-    loadPeers()
+    const infinite = setInterval(() => {
+      loadPeers()
+    }, 5000)
+    return () => clearInterval(infinite)
   }, [])
 
   return result

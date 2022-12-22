@@ -11,7 +11,6 @@ import {
   useIronToast,
 } from '@ironfish/ui-kit'
 import { FC, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { ROUTES } from '..'
 import BackButtonLink from 'Components/BackButtonLink'
 import useCreateAccount from 'Hooks/accounts/useCreateAccount'
@@ -112,17 +111,13 @@ const CreateAccount: FC<CreateAccountProps> = ({
         <Button
           variant="primary"
           isDisabled={checkChanges()}
-          as={Link}
-          to={ROUTES.ACCOUNTS}
           size="large"
           w={desktopMode ? undefined : '100%'}
           onClick={() => {
-            createAccount(accountName, phrase as MnemonicPhraseType).then(
-              () => {
-                onCreate()
-                toast()
-              }
-            )
+            createAccount(accountName).then(() => {
+              onCreate()
+              toast()
+            })
           }}
         >
           Create Account

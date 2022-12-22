@@ -3,22 +3,22 @@ import {
   Button,
   chakra,
   Flex,
-  MnemonicView,
   NAMED_COLORS,
+  Spinner,
   useColorModeValue,
-  CopyToClipboardButton,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
-import { FC, memo, useState, useEffect } from 'react'
+import { FC, memo, useState } from 'react'
 import AccountKeysImage from 'Svgx/AccountKeysImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
-import { Account } from 'Data/types/Account'
-import useAccountKeys from 'Hooks/accounts/useAccountKeys'
-import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 import DownloadIcon from '@ironfish/ui-kit/dist/svgx/download-icon'
+import { AccountValue } from '@ironfish/sdk'
+import PasswordField from 'Components/PasswordField'
+import Account from 'Types/Account'
 
 interface AccountKeysProps {
   account: Account
+  exportAccount: (id: string) => Promise<Omit<AccountValue, 'id'>>
 }
 
 const Information: FC = memo(() => {
@@ -51,51 +51,68 @@ const Information: FC = memo(() => {
   )
 })
 
-const AccountKeys: FC<AccountKeysProps> = ({ account }) => {
-  const [phrase, setMnemonicPhrase] = useState<MnemonicPhraseType>()
+const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
+  const [exporting, setExporting] = useState<boolean>(false)
 
-  const [{ data, loaded }] = useAccountKeys(account?.identity)
-
-  useEffect(() => {
-    if (data && loaded) {
-      setMnemonicPhrase(data.mnemonicPhrase)
-    }
-  }, [data, loaded])
+  const handleExport = () => {
+    setExporting(true)
+    exportAccount(account.id)
+      .then(exportedAccount => {
+        const data = JSON.stringify(exportedAccount)
+        const file = new Blob([data], { type: 'text/plain' })
+        const element = document.createElement('a')
+        element.href = URL.createObjectURL(file)
+        element.download = account.name + '.json'
+        document.body.appendChild(element)
+        element.click()
+        document.removeChild(element)
+      })
+      .catch(e => {
+        //TODO: add toast on error
+      })
+      .finally(() => setExporting(false))
+  }
 
   return (
     <Flex mb="4rem">
       <Box w="37.25rem">
-        <MnemonicView
-          header={
-            <Flex gap="0.4375rem" mb="-0.4375rem">
-              <h6>Mnemonic phrase</h6>
-              <CopyToClipboardButton
-                value={phrase?.join(', ')}
-                copyTooltipText="CopyToClipBoard"
-                copiedTooltipText="Copied"
-              />
-            </Flex>
-          }
-          value={phrase}
-          isReadOnly={true}
-          placeholder="Empty"
-          onChange={words => setMnemonicPhrase(words as MnemonicPhraseType)}
+        <PasswordField
+          label="Spending Key"
+          placeholder="Enter key"
+          value={account?.spendingKey}
           mb="2rem"
+          InputProps={{
+            isReadOnly: true,
+          }}
+        />
+        <PasswordField
+          label="Incoming View Key"
+          placeholder="Enter key"
+          value={account?.incomingViewKey}
+          mb="2rem"
+          InputProps={{
+            isReadOnly: true,
+          }}
+        />
+        <PasswordField
+          label="Outgoing View Key"
+          placeholder="Enter key"
+          value={account?.outgoingViewKey}
+          mb="2rem"
+          InputProps={{
+            isReadOnly: true,
+          }}
         />
         <Flex>
           <Button
             variant="primary"
             size="medium"
             mr="2rem"
-            as="a"
-            href={
-              'data:text/plain;charset=utf-8,' +
-              encodeURIComponent(JSON.stringify(phrase))
-            }
-            download="keys.json"
-            leftIcon={<DownloadIcon />}
+            isDisabled={exporting}
+            onClick={handleExport}
+            leftIcon={exporting ? <Spinner /> : <DownloadIcon />}
           >
-            Export Keys
+            Export Account
           </Button>
         </Flex>
       </Box>

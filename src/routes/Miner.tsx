@@ -18,10 +18,10 @@ import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useMemo, useState } from 'react'
 import MinerInfoImage from 'Svgx/MinerInfoImage'
 import AccountsSelect from 'Components/AccountsSelect'
-import { Account } from 'Data/types/Account'
 import useMiner from 'Hooks/miner/useMiner'
 import useMinerSpeed from 'Hooks/miner/useMinerSpeed'
 import useMinedStatistic from 'Hooks/miner/useMinedStatistic'
+import CutAccount from 'Types/CutAccount'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -193,7 +193,7 @@ const MinedStatistic: FC<{ accountId: string | null }> = ({ accountId }) => {
 }
 
 const Miner: FC = () => {
-  const [account, setAccount] = useState<Account>(null)
+  const [account, setAccount] = useState<CutAccount>(null)
   const [result, startMining, stopMining] = useMiner()
 
   return (
@@ -204,10 +204,10 @@ const Miner: FC = () => {
           <AccountsSelect
             w="100%"
             label="Account"
-            accountId={account?.identity}
+            accountId={account?.id}
             onSelectOption={setAccount}
           />
-          <MinedStatistic accountId={account?.identity} />
+          <MinedStatistic accountId={account?.id} />
           <HStack w="calc(100% - 0.25rem)" spacing="2rem">
             <VStack
               layerStyle="card"
@@ -228,7 +228,7 @@ const Miner: FC = () => {
                 onChange={e =>
                   result.data === 'active'
                     ? stopMining()
-                    : startMining(account.identity)
+                    : startMining(account.id)
                 }
                 size="lg"
                 sx={{

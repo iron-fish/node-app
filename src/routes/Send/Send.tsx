@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, memo, useState } from 'react'
+import { ChangeEvent, FC, memo, useState, useEffect } from 'react'
 import {
   Box,
   Flex,
@@ -12,7 +12,9 @@ import {
   Button,
   Icon,
   InputProps,
+  Skeleton,
 } from '@ironfish/ui-kit'
+import floor from 'lodash/floor'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
 import DetailsPanel from 'Components/DetailsPanel'
@@ -20,11 +22,12 @@ import useFee from 'Hooks/transactions/useFee'
 import FeesImage from 'Svgx/FeesImage'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow'
-import { Account } from 'Data/types/Account'
 import Contact from 'Types/Contact'
 import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
+import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
+import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -82,16 +85,23 @@ const Send: FC = () => {
   const location = useLocation()
   const state = location.state as LocationStateProps
   const [amount, setAmount] = useState(0)
-  const [account, setAccount] = useState<Account>(null)
+  const [account, setAccount] = useState<CutAccount>(null)
   const [contact, setContact] = useState<Contact>(null)
   const [notes, setNotes] = useState('')
   const [startSendFlow, setStart] = useState(false)
-  const { data: fee, loaded: feeCalculated } = useFee(amount)
+  const [ownFee, setOwnFee] = useState(Number(0).toFixed(8))
+  const { data: fee, loaded: feeCalculated } = useFee()
   const $colors = useColorModeValue(
     { bg: NAMED_COLORS.DEEP_BLUE, color: NAMED_COLORS.WHITE },
     { bg: NAMED_COLORS.WHITE, color: NAMED_COLORS.DEEP_BLUE }
   )
   const { loaded } = useDataSync()
+
+  useEffect(() => {
+    if (fee) {
+      setOwnFee(floor(fee / ORE_TO_IRON, 8).toFixed(8))
+    }
+  }, [fee])
 
   const checkChanges: () => boolean = () =>
     !loaded || !(feeCalculated && account && contact && amount)
@@ -140,25 +150,35 @@ const Send: FC = () => {
             <AccountsSelect
               label="From Account"
               mb="2rem"
-              accountId={account?.identity || state?.accountId}
+              accountId={account?.id || state?.accountId}
               onSelectOption={setAccount}
             />
             <ContactsAutocomplete
               label={'To'}
-              contactId={contact?._id || state?.contactId}
+              address={contact?.address || state?.address}
               onSelectOption={setContact}
+              freeInput
               mb="2rem"
             />
             <Flex mb="2rem">
-              <TextField
-                w="calc(50% - 1rem)"
+              <Skeleton
+                variant="ironFish"
+                width="calc(50% - 1rem)"
                 mr="2rem"
-                label="Fee"
-                value={(amount * 0.01).toFixed(2)}
-                InputProps={{
-                  isReadOnly: true,
-                }}
-              />
+                isLoaded={feeCalculated}
+              >
+                <TextField
+                  label="Estimated Fee"
+                  value={ownFee}
+                  InputProps={{
+                    type: 'number',
+                    onBlur: e =>
+                      setOwnFee(
+                        e.target.value ? Number(e.target.value).toFixed(8) : '0'
+                      ),
+                  }}
+                />
+              </Skeleton>
               <TextField
                 w="calc(50% - 1rem)"
                 label={`Memo (${32 - notes.length} characters)`}
@@ -200,7 +220,7 @@ const Send: FC = () => {
         from={account}
         to={contact}
         memo={notes}
-        fee={fee}
+        fee={Number(ownFee) || fee}
       />
     </Flex>
   )
