@@ -14,6 +14,7 @@ import {
   HStack,
   MnemonicView,
   CopyToClipboardButton,
+  useIronToast,
 } from '@ironfish/ui-kit'
 import { FC, useState, useCallback, useRef } from 'react'
 import { ROUTES } from '..'
@@ -216,9 +217,17 @@ const ImportAccount: FC<DesktopModeProps> = ({
   onImport = () => undefined,
 }) => {
   const navigate = useNavigate()
+  const toast = useIronToast({
+    title: 'Account Imported',
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
+
   const handleOnImport = useCallback(() => {
     onImport()
     desktopMode && navigate(ROUTES.ACCOUNTS)
+    toast()
   }, [onImport])
 
   return (

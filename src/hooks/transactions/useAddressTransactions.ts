@@ -10,7 +10,7 @@ const useAddressTransactions = (
 ) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Transaction[]>()
   const addContact = useCallback(
-    (name, contactAddress) =>
+    (name: string, contactAddress: string) =>
       window.AddressBookStorage.add({ name, address: contactAddress }),
     []
   )

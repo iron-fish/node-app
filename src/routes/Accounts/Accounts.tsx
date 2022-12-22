@@ -18,7 +18,8 @@ import ModalWindow from 'Components/ModalWindow'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import SortType from 'Types/SortType'
-import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
+import { formatOreToTronWithLanguage } from 'Utils/number'
+import EmptyOverview from 'Components/EmptyOverview'
 
 interface ActionButtonsProps {
   showCreate: (show: boolean) => void
@@ -103,7 +104,7 @@ const Accounts = () => {
             <Skeleton minW="4rem" isLoaded={loaded}>
               <h5>
                 <b>
-                  {CurrencyUtils.encodeIron(
+                  {formatOreToTronWithLanguage(
                     accounts
                       ?.map(a => a.balance.confirmed || BigInt(0))
                       ?.reduce((a, b) => a + b, BigInt(0)) || BigInt(0)
@@ -132,15 +133,22 @@ const Accounts = () => {
         }}
       />
       <Flex mt="0.5rem" direction="column" width="100%">
-        {loaded
-          ? accounts.map((account, index) => (
+        {loaded ? (
+          accounts.length > 0 ? (
+            accounts.map((account, index) => (
               <AccountPreview
                 key={`${account.name}-${index}`}
                 {...account}
                 order={index}
               />
             ))
-          : null}
+          ) : (
+            <EmptyOverview
+              header="0 Results"
+              description="There aren’t any accounts with details that match your search input."
+            />
+          )
+        ) : null}
       </Flex>
       <ModalWindow
         isOpen={showCreateAccount}

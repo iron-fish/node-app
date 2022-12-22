@@ -5,7 +5,7 @@ import Contact from 'Types/Contact'
 const useContact = (id: string) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Contact>()
   const updateContact = useCallback(
-    (name, address) =>
+    (name: string, address: string) =>
       window.AddressBookStorage.update(id, { name, address }).then(() =>
         loadContact()
       ),

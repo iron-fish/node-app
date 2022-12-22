@@ -53,7 +53,7 @@ abstract class AbstractStorage<T extends Entity> implements IStorage<T> {
           if (err) {
             reject(err)
           } else {
-            return this.get(identity)
+            this.get(identity).then(res => resolve(res))
           }
         }
       )

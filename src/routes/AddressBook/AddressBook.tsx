@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useState, useEffect } from 'react'
 import {
   Box,
   Button,
@@ -10,6 +10,7 @@ import {
   CopyValueToClipboard,
   useBreakpointValue,
   useColorModeValue,
+  useIronToast,
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import Send from 'Svgx/send'
@@ -26,11 +27,18 @@ import ROUTES from 'Routes/data'
 import AddContactModal from './AddContactModal'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { stringToColor } from 'Utils/stringToColor'
+import EmptyOverview from 'Components/EmptyOverview'
 
 const AddContactButton: FC<{
   onAdd: (name: string, address: string) => Promise<void>
 }> = ({ onAdd }) => {
   const [openAddContactModal, setOpenAddContactModal] = useState<boolean>(false)
+  const toast = useIronToast({
+    title: 'Contact Created',
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
 
   return (
     <>
@@ -44,7 +52,7 @@ const AddContactButton: FC<{
       </Button>
       <AddContactModal
         onAdd={(name, address) => {
-          onAdd(name, address)
+          onAdd(name, address).then(() => toast())
           setOpenAddContactModal(false)
         }}
         isOpen={openAddContactModal}
@@ -54,7 +62,7 @@ const AddContactButton: FC<{
   )
 }
 
-const AddressBook: FC = () => {
+const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
   const navigate = useNavigate()
   const $colors = useColorModeValue(
     {
@@ -76,32 +84,21 @@ const AddressBook: FC = () => {
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
 
   const { loaded: synced } = useDataSync()
-  const [{ data: contacts, loaded }, addContact] = useAddressBook(
+  const [{ data: contacts, loaded }, , reloadContacts] = useAddressBook(
     $searchTerm,
     $sortOrder
   )
 
+  useEffect(() => {
+    reloadContacts()
+  }, [contactsAmount])
+
   return (
     <>
-      <Flex
-        mb="2.5rem"
-        justifyContent="space-between"
-        w="100%"
-        alignItems="center"
-      >
-        <Flex direction="column">
-          <Box>
-            <h2>Address Book</h2>
-          </Box>
-        </Flex>
-        <Flex>
-          <AddContactButton onAdd={addContact} />
-        </Flex>
-      </Flex>
       <SearchSortField
         SearchProps={{
           value: $searchTerm,
-          onChange: e => $setSearchTerm(e.target.value.trimStart()),
+          onChange: e => $setSearchTerm(e.target.value),
         }}
         SortSelectProps={{
           onSelectOption: ({ value }) => $setSortOrder(value),
@@ -117,7 +114,12 @@ const AddressBook: FC = () => {
           },
         ]}
       />
-      <Flex direction="column" width="100%">
+      {contacts?.length === 0 ? (
+        <EmptyOverview
+          header="0 Results test"
+          description="There aren’t any contact with details that match your search input."
+        />
+      ) : (
         <SimpleTable
           onRowClick={contact =>
             navigate(ROUTES.ADDRESS_BOOK + `/${contact._id}`)
@@ -216,7 +218,43 @@ const AddressBook: FC = () => {
             },
           }}
         />
+      )}
+    </>
+  )
+}
+
+const AddressBook: FC = () => {
+  const [{ data: contacts, loaded }, addContact] = useAddressBook()
+
+  return (
+    <>
+      <Flex
+        mb="2.5rem"
+        justifyContent="space-between"
+        w="100%"
+        alignItems="center"
+      >
+        <Flex direction="column">
+          <Box>
+            <h2>Address Book</h2>
+          </Box>
+        </Flex>
+        <Flex>
+          <AddContactButton
+            onAdd={(name, address) => addContact(name, address)}
+          />
+        </Flex>
       </Flex>
+      <Box display={loaded ? 'block' : 'none'}>
+        {contacts?.length === 0 ? (
+          <EmptyOverview
+            header="You don’t have any contacts"
+            description="Your address book is where you can manage all of your contacts, their names, and their public addresses"
+          />
+        ) : (
+          <ContactSearch contactsAmount={contacts?.length} />
+        )}
+      </Box>
     </>
   )
 }
