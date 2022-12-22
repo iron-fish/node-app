@@ -1,6 +1,11 @@
 import { FC, useCallback, useEffect, useState } from 'react'
 
-import { HStack, StyleProps, TextField } from '@ironfish/ui-kit'
+import {
+  HStack,
+  InputProps as InputPropsType,
+  StyleProps,
+  TextField,
+} from '@ironfish/ui-kit'
 import IconBlinkingEye from '@ironfish/ui-kit/dist/svgx/icon-blinkingEye'
 import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
 import debounce from 'lodash/debounce'
@@ -9,6 +14,7 @@ interface PasswordFieldProps extends StyleProps {
   label?: string
   placeholder?: string
   value?: string
+  InputProps?: InputPropsType
   onChange?: (pass: string) => void
 }
 
@@ -16,6 +22,7 @@ const PasswordField: FC<PasswordFieldProps> = ({
   label = 'Password',
   placeholder = 'Enter password',
   value,
+  InputProps,
   onChange = () => undefined,
   ...props
 }) => {
@@ -39,6 +46,7 @@ const PasswordField: FC<PasswordFieldProps> = ({
         onChange: onPasswordChange,
         type: show ? 'text' : 'password',
         placeholder: placeholder,
+        ...InputProps,
       }}
       value={pass}
       w="100%"
@@ -49,7 +57,6 @@ const PasswordField: FC<PasswordFieldProps> = ({
             closed={show}
             onClick={() => setShow(!show)}
           />
-          <IconInfo cursor={'pointer'} />
         </HStack>
       }
       {...props}

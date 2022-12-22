@@ -26,8 +26,12 @@ const AccountDetails: FC = () => {
   const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
   const location = useLocation()
   const { accountId, order } = location.state as LocationStateProps
-  const [{ data: account, loaded }, updateAccount, deleteAccount] =
-    useAccount(accountId)
+  const [
+    { data: account, loaded },
+    updateAccount,
+    exportAccount,
+    deleteAccount,
+  ] = useAccount(accountId)
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
@@ -68,7 +72,7 @@ const AccountDetails: FC = () => {
               <AccountOverview account={account} order={order} />
             </TabPanel>
             <TabPanel p="0" pt="2rem">
-              <AccountKeys account={account} />
+              <AccountKeys account={account} exportAccount={exportAccount} />
             </TabPanel>
             <TabPanel p="0" pt="2rem">
               <AccountSettings

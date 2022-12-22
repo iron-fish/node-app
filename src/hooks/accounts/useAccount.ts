@@ -15,6 +15,11 @@ const useAccount = (id: string) => {
     // )
   }, [])
 
+  const exportAccount = useCallback(
+    (identity: string) => window.IronfishManager.accounts.export(identity),
+    []
+  )
+
   const deleteAccount = useCallback(
     (name: string) => window.IronfishManager.accounts.delete(name),
     []
@@ -24,7 +29,7 @@ const useAccount = (id: string) => {
     id && loadAccount(id)
   }, [id])
 
-  return [result, updateAccount, deleteAccount] as const
+  return [result, updateAccount, exportAccount, deleteAccount] as const
 }
 
 export default useAccount
