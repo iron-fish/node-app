@@ -60,7 +60,7 @@ const optionsFilter = (option: OptionType, searchTerm: string) => {
   return _name?.includes(_search) || _address?.includes(_search)
 }
 
-const getOptionsFilter = (options, $searchTerm) => {
+const getOptionsFilter = (options: ContactOption[], $searchTerm: string) => {
   const filteredOptions = options.filter(option =>
     optionsFilter(option, $searchTerm)
   )
