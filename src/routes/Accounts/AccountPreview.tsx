@@ -140,7 +140,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              navigate(ROUTES.SEND, { state: { accountId: id } })
+              loaded && navigate(ROUTES.SEND, { state: { accountId: id } })
             }}
           >
             <Button
@@ -154,7 +154,6 @@ const AccountPreview: FC<AccountPreviewProps> = ({
                 </Icon>
               }
               isDisabled={!loaded}
-              disabled={!loaded}
             >
               <h5>Send</h5>
             </Button>
@@ -163,7 +162,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              navigate(ROUTES.RECEIVE, { state: { accountId: id } })
+              loaded && navigate(ROUTES.RECEIVE, { state: { accountId: id } })
             }}
           >
             <Button
@@ -177,7 +176,6 @@ const AccountPreview: FC<AccountPreviewProps> = ({
                 </Icon>
               }
               isDisabled={!loaded}
-              disabled={!loaded}
             >
               <h5>Receive</h5>
             </Button>
