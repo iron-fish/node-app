@@ -232,7 +232,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
           <Box mb="0.5rem">
             <chakra.h2>
               {formatOreToTronWithLanguage(
-                account?.balance.pending || BigInt(0)
+                account?.balance.unconfirmed || BigInt(0)
               )}
             </chakra.h2>
           </Box>

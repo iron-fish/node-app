@@ -1,4 +1,4 @@
-import { BoxKeyPair } from '@ironfish/rust-nodejs'
+import { BoxKeyPair, Asset } from '@ironfish/rust-nodejs'
 import {
   AccountValue,
   IronfishNode,
@@ -48,7 +48,10 @@ class AccountManager implements IIronfishAccountManager {
         id: account.id,
         name: account.name,
         publicAddress: account.publicAddress,
-        balance: await this.node.wallet.getBalance(account),
+        balance: await this.node.wallet.getBalance(
+          account,
+          Asset.nativeIdentifier()
+        ),
       }))
     )
 
@@ -99,7 +102,7 @@ class AccountManager implements IIronfishAccountManager {
   balance(id: string): Promise<AccountBalance> {
     const account = this.node.wallet.getAccount(id)
     if (account) {
-      return this.node.wallet.getBalance(account)
+      return this.node.wallet.getBalance(account, Asset.nativeIdentifier())
     }
 
     return Promise.reject(new Error(`Account with id=${id} was not found.`))
@@ -124,7 +127,7 @@ class TransactionManager implements IIronfishTransactionManager {
     const transaction = await this.node.wallet.pay(
       this.node.memPool,
       account,
-      [payment],
+      [{ ...payment, assetIdentifier: Asset.nativeIdentifier() }],
       BigInt(fee),
       this.node.config.get('defaultTransactionExpirationSequenceDelta'),
       0
@@ -133,7 +136,7 @@ class TransactionManager implements IIronfishTransactionManager {
     const result = await this.resolveTransactionFields(
       account,
       headSequence,
-      await account.getTransactionByUnsignedHash(transaction.unsignedHash())
+      await account.getTransaction(transaction.hash())
     )
 
     return result
@@ -189,9 +192,7 @@ class TransactionManager implements IIronfishTransactionManager {
   async get(hash: string, accountId: string): Promise<Transaction> {
     const account = this.node.wallet.getAccount(accountId)
     const headSequence = await this.node.wallet.getAccountHeadSequence(account)
-    const transaction = await account.getTransactionByUnsignedHash(
-      Buffer.from(hash, 'hex')
-    )
+    const transaction = await account.getTransaction(Buffer.from(hash, 'hex'))
 
     if (transaction) {
       return await this.resolveTransactionFields(
@@ -234,7 +235,7 @@ class TransactionManager implements IIronfishTransactionManager {
       : null
     const spends = []
     let creator
-    for await (const spend of transaction?.transaction?.spends() || []) {
+    for await (const spend of transaction?.transaction?.spends) {
       const noteHash = await account.getNoteHash(spend.nullifier)
 
       if (noteHash) {
@@ -253,8 +254,8 @@ class TransactionManager implements IIronfishTransactionManager {
       hash: transaction.transaction.unsignedHash().toString('hex'),
       isMinersFee: transaction.transaction.isMinersFee(),
       fee: transaction.transaction.fee().toString(),
-      notesCount: transaction.transaction.notesLength(),
-      spendsCount: transaction.transaction.spendsLength(),
+      notesCount: transaction.transaction.notes.length,
+      spendsCount: transaction.transaction.spends.length,
       expirationSequence: transaction.transaction.expirationSequence(),
       status,
       notes: notes.map(n => ({
@@ -493,21 +494,23 @@ export class IronFishManager implements IIronfishManager {
 
       result.push({
         state: peer.state.type,
+        identity: peer.state.identity,
+        version: peer.version,
+        head: peer.head?.toString('hex') || null,
+        sequence: peer.sequence !== null ? Number(peer.sequence) : null,
+        work: String(peer.work),
+        agent: peer.agent,
+        name: peer.name,
         address: peer.address,
         port: peer.port,
-        identity: peer.state.identity,
-        name: peer.name,
-        version: peer.version,
-        agent: peer.agent,
-        head: peer.head?.toString('hex') || null,
-        work: String(peer.work),
-        sequence: peer.sequence !== null ? Number(peer.sequence) : null,
-        connections: connections,
         error: peer.error !== null ? String(peer.error) : null,
+        connections: connections,
         connectionWebSocket: connectionWebSocket,
         connectionWebSocketError: connectionWebSocketError,
         connectionWebRTC: connectionWebRTC,
         connectionWebRTCError: connectionWebRTCError,
+        networkId: peer.networkId,
+        genesisBlockHash: peer.genesisBlockHash?.toString('hex') || null,
       })
     }
 
