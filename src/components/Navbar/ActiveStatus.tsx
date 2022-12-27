@@ -33,7 +33,7 @@ const getWalletSyncStatus = (
     case 'stopped':
       return 'Stropped'
     case 'idle':
-      return chainSyncStatus ? 'Synced' : 'Starting'
+      return 'Idle'
     case 'stopping':
       return 'Stopping'
     case 'syncing':
@@ -100,31 +100,30 @@ const SyncStatus = forwardRef<HTMLDivElement, DataSyncContextProps>(
         justifyContent="center"
       >
         <chakra.h5 color={loaded ? colors.text : colors.textWarn}>
-          Wallet Status:{' '}
-          {getWalletSyncStatus(
-            data?.blockSyncer.status,
-            data?.blockchain.synced
-          )}
+          Wallet Status: {getWalletSyncStatus(data?.blockSyncer.status)}
         </chakra.h5>
-        {!loaded && data?.blockSyncer.status === 'syncing' && (
-          <>
-            <chakra.h5 color={colors.textWarn}>
-              {`${(data?.blockSyncer.syncing.progress * 100).toFixed(2)}%`}
-              {' | '}
-              {`${renderTime(
-                (Number(data?.blockchain?.totalSequences || 0) -
-                  Number(data?.blockchain?.head || 0)) /
-                  (data?.blockSyncer?.syncing?.speed || 1)
-              )}`}
-            </chakra.h5>
-            <chakra.h5 color={colors.textWarn}>
-              {`${data?.blockchain.head}`}
-              {' / '}
-              {`${data?.blockchain.totalSequences}`}
-              {' blocks'}
-            </chakra.h5>
-          </>
-        )}
+        {!loaded &&
+          data?.blockSyncer.status !== 'stopped' &&
+          (data?.blockSyncer.status === 'syncing' ||
+            data?.blockSyncer.status === 'idle') && (
+            <>
+              <chakra.h5 color={colors.textWarn}>
+                {`${(data?.blockSyncer.syncing.progress * 100).toFixed(2)}%`}
+                {' | '}
+                {`${renderTime(
+                  (Number(data?.blockchain?.totalSequences || 0) -
+                    Number(data?.blockchain?.head || 0)) /
+                    (data?.blockSyncer?.syncing?.speed || 1)
+                )}`}
+              </chakra.h5>
+              <chakra.h5 color={colors.textWarn}>
+                {`${data?.blockchain.head}`}
+                {' / '}
+                {`${data?.blockchain.totalSequences}`}
+                {' blocks'}
+              </chakra.h5>
+            </>
+          )}
       </Flex>
     )
   }
@@ -211,7 +210,7 @@ const ActiveStatus: FC<FlexProps> = props => {
             <ConfirmedIcon color={colors.text} w="1.25rem" h="0.9375rem" />
           ) : (
             <chakra.h6 mt="0.0625rem">
-              {(data?.blockSyncer.syncing.progress * 100).toFixed(0)}%
+              {Math.floor(data?.blockSyncer.syncing.progress * 100)}%
             </chakra.h6>
           )
         }
