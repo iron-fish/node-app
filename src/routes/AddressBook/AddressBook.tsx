@@ -30,7 +30,7 @@ import { stringToColor } from 'Utils/stringToColor'
 import EmptyOverview from 'Components/EmptyOverview'
 
 const AddContactButton: FC<{
-  onAdd: (name: string, address: string) => Promise<void>
+  onAdd: (name: string, address: string) => Promise<Contact>
 }> = ({ onAdd }) => {
   const [openAddContactModal, setOpenAddContactModal] = useState<boolean>(false)
   const toast = useIronToast({

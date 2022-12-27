@@ -42,6 +42,7 @@ interface SendProps {
   memo: string
   fee: number
   transaction: Transaction | null
+  onCreateAccount: (contact: Contact) => void
 }
 
 interface DataPreviewLineProps extends StyleProps {
@@ -84,6 +85,7 @@ const ConfirmStep: FC<StepProps> = ({
   amount,
   memo,
   fee,
+  onCreateAccount,
 }) => {
   const [contactName, setContactName] = useState('')
   const [showAddName, setShowAddName] = useState(false)
@@ -159,9 +161,10 @@ const ConfirmStep: FC<StepProps> = ({
                         mr="1.5rem"
                         isDisabled={!contactName.trim()}
                         onClick={() => {
-                          addContact(contactName, to.address).then(() => {
+                          addContact(contactName, to.address).then(contact => {
                             setShowAddName(false)
                             setContactName('')
+                            onCreateAccount(contact)
                           })
                         }}
                       >
@@ -393,6 +396,7 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
   amount,
   memo,
   fee,
+  onCreateAccount,
   ...props
 }) => {
   const [currStep, setCurrentStep] = useState<number>(0)
@@ -429,6 +433,7 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
               setCurrentStep(2)
             }}
             onCancel={handleClose}
+            onCreateAccount={onCreateAccount}
           />
         </ModalContent>
       </Modal>

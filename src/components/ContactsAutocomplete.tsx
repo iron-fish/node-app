@@ -7,6 +7,7 @@ import Contact from 'Types/Contact'
 import { truncateHash } from 'Utils/hash'
 
 interface ContactsAutocompleteProps extends FlexProps {
+  contactId?: string
   address: string
   label: string
   freeInput: boolean
@@ -26,7 +27,7 @@ const getContactOptions = (contacts: Contact[] = []) =>
     value: contact,
   }))
 
-const isValidPublicAddress = (address: string) => address?.length === 86
+const isValidPublicAddress = (address: string) => address?.length === 64
 
 const getSelectedOption = (
   options: ContactOption[] = [],
@@ -72,11 +73,12 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
   label,
   freeInput,
   onSelectOption,
+  contactId,
   ...rest
 }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
   const $search = useDebounce($searchTerm, 500)
-  const [{ data: contacts = [], loaded: contactsLoaded }] =
+  const [{ data: contacts = [], loaded: contactsLoaded }, , reloadContacts] =
     useAddressBook($search)
 
   const startOptions = useRef([])
@@ -98,15 +100,20 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
     onSelectOption(selectedOption?.value || null)
   }, [options])
 
+  useEffect(() => {
+    const cont = contacts.find(({ _id }) => _id === contactId)
+    if (contactId && contactId !== address && !cont && $searchTerm) {
+      $setSearchTerm('')
+      reloadContacts()
+    }
+  }, [contactId])
+
   return (
     <Autocomplete
       label={label}
       options={options.length === 0 ? startOptions.current : options}
       value={getSelectedOption(options, address || $searchTerm, freeInput)}
-      onSelectOption={option => {
-        onSelectOption(option.value)
-        $setSearchTerm('')
-      }}
+      onSelectOption={option => onSelectOption(option.value)}
       filterOption={getOptionsFilter(options, $searchTerm)}
       onClose={() => {
         if (

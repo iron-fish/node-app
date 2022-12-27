@@ -155,6 +155,7 @@ const Send: FC = () => {
             />
             <ContactsAutocomplete
               label={'To'}
+              contactId={contact?._id}
               address={contact?.address || state?.address}
               onSelectOption={setContact}
               freeInput
@@ -221,6 +222,7 @@ const Send: FC = () => {
         to={contact}
         memo={notes}
         fee={Number(ownFee) || fee}
+        onCreateAccount={setContact}
       />
     </Flex>
   )
