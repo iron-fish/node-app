@@ -26,12 +26,11 @@ const DARK_COLORS = {
 }
 
 const getWalletSyncStatus = (
-  status: 'stopped' | 'idle' | 'stopping' | 'syncing',
-  chainSyncStatus = false
+  status: 'stopped' | 'idle' | 'stopping' | 'syncing'
 ) => {
   switch (status) {
     case 'stopped':
-      return 'Stropped'
+      return 'Stopped'
     case 'idle':
       return 'Idle'
     case 'stopping':
