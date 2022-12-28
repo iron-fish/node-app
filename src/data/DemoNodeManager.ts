@@ -53,6 +53,8 @@ const PEERS: PeerResponse[] = Array(23)
       connectionWebSocketError: '',
       connectionWebRTC: type < 0.5 ? 'CONNECTED' : '',
       connectionWebRTCError: '',
+      networkId: 13,
+      genesisBlockHash: 'peer.genesisBlockHash',
     }
   })
 
