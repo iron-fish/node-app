@@ -10,6 +10,7 @@ import {
   MathUtils,
   PeerResponse,
   Connection,
+  ConfigOptions,
 } from '@ironfish/sdk'
 import { TransactionValue } from '@ironfish/sdk/build/src/wallet/walletdb/transactionValue'
 import AccountBalance from 'Types/AccountBalance'
@@ -25,6 +26,7 @@ import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import Transaction, { Payment, TransactionStatus } from 'Types/Transaction'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
+import NodeSettingsManager from './NodeSettingsManager'
 
 class AccountManager implements IIronfishAccountManager {
   private node: IronfishNode
@@ -325,6 +327,7 @@ export class IronFishManager implements IIronfishManager {
   protected node: IronfishNode
   accounts: IIronfishAccountManager
   transactions: IIronfishTransactionManager
+  nodeSettings: NodeSettingsManager
 
   private getPrivateIdentity(): PrivateIdentity | undefined {
     const networkIdentity = this.sdk.internal.get('networkIdentity')
@@ -351,6 +354,7 @@ export class IronFishManager implements IIronfishManager {
 
       this.accounts = new AccountManager(this.node)
       this.transactions = new TransactionManager(this.node)
+      this.nodeSettings = new NodeSettingsManager(this.node)
 
       this.initStatus = IronFishInitStatus.INITIALIZED
     } catch (e) {
@@ -515,5 +519,17 @@ export class IronFishManager implements IIronfishManager {
     }
 
     return Promise.resolve(result)
+  }
+
+  getNodeConfig(): Promise<Partial<ConfigOptions>> {
+    return Promise.resolve(this.nodeSettings.getConfig())
+  }
+
+  async saveNodeConfig(values: Partial<ConfigOptions>): Promise<void> {
+    this.nodeSettings.setValues(values)
+    await this.nodeSettings.save()
+    await this.stop()
+    await this.initialize()
+    return this.start()
   }
 }

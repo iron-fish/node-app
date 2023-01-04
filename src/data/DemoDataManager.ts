@@ -1,4 +1,4 @@
-import { AccountValue, PeerResponse } from '@ironfish/sdk'
+import { AccountValue, ConfigOptions, PeerResponse } from '@ironfish/sdk'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
@@ -195,6 +195,18 @@ class DemoDataManager {
 
   getNodePeers(): Promise<PeerResponse[]> {
     return this.node.peers()
+  }
+
+  async getNodeConfig(): Promise<Partial<ConfigOptions>> {
+    return this.node.getConfig()
+  }
+
+  async saveNodeConfig(values: Partial<ConfigOptions>): Promise<void> {
+    this.node.setValues(values)
+    await this.node.save()
+    await this.stop()
+    await this.initialize()
+    return this.start()
   }
 }
 

@@ -1,4 +1,4 @@
-import { AccountValue } from '@ironfish/sdk'
+import { AccountValue, ConfigOptions } from '@ironfish/sdk'
 import noop from 'lodash/noop'
 import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
@@ -75,6 +75,9 @@ export const IronFishManager: IIronfishManager = {
   start: () => window.DemoDataManager.start(),
   stop: () => window.DemoDataManager.stop(),
   status: () => window.DemoDataManager.initStatus(),
+  getNodeConfig: () => window.DemoDataManager.getNodeConfig(),
+  saveNodeConfig: (values: Partial<ConfigOptions>) =>
+    window.DemoDataManager.saveNodeConfig(values),
 }
 
 export const AddressBookStorage: IStorage<Contact> = {

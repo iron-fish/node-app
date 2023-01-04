@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { Flex, Box } from '@ironfish/ui-kit'
+import { SettingsIcon } from '@chakra-ui/icons'
 
 import IconHome from 'Svgx/home'
 import IconSend from 'Svgx/send'
@@ -15,23 +16,40 @@ import IronFishLogo from 'Svgx/IronFishLogo'
 import HexFishLogo from 'Svgx/hexfish'
 
 import ActiveStatus from './ActiveStatus'
+import ROUTES from 'Routes/data'
 
 const primaryNavItems = [
-  { hotkey: 'A', to: '/accounts', label: 'Privacy Accounts', icon: IconHome },
-  { hotkey: 'S', to: '/send', label: 'Send $IRON', icon: IconSend },
-  { hotkey: 'R', to: '/receive', label: 'Receive $IRON', icon: IconReceive },
+  {
+    hotkey: 'A',
+    to: ROUTES.ACCOUNTS,
+    label: 'Privacy Accounts',
+    icon: IconHome,
+  },
+  { hotkey: 'S', to: ROUTES.SEND, label: 'Send $IRON', icon: IconSend },
+  {
+    hotkey: 'R',
+    to: ROUTES.RECEIVE,
+    label: 'Receive $IRON',
+    icon: IconReceive,
+  },
   {
     hotkey: 'B',
-    to: '/address-book',
+    to: ROUTES.ADDRESS_BOOK,
     label: 'Address Book',
     icon: IconAddressBook,
   },
-  { hotkey: 'N', to: '/node', label: 'Your Node', icon: IconNode },
+  { hotkey: 'N', to: ROUTES.NODE, label: 'Your Node', icon: IconNode },
 ]
-// const secondaryNavItems = [
-//   { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
-//   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
-// ]
+const secondaryNavItems = [
+  // { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
+  // { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
+  {
+    hotkey: 'C',
+    to: ROUTES.NODE_SETTINGS,
+    label: 'Settings',
+    icon: SettingsIcon,
+  },
+]
 interface NavbarProps {
   offsetTop?: number
 }
@@ -65,6 +83,7 @@ export const Navbar: FC<NavbarProps> = ({ offsetTop = 0 }) => {
         <Nav list={primaryNavItems} />
       </Box>
       <Box marginTop="auto">
+        <Nav list={secondaryNavItems} />
         <ActiveStatus />
         <Toggle />
       </Box>

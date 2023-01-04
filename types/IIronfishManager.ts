@@ -1,4 +1,4 @@
-import { AccountValue, PeerResponse } from '@ironfish/sdk'
+import { AccountValue, ConfigOptions, PeerResponse } from '@ironfish/sdk'
 import AccountBalance from './AccountBalance'
 import CutAccount from './CutAccount'
 import IronFishInitStatus from './IronfishInitStatus'
@@ -16,6 +16,8 @@ export enum IronfishManagerAction {
   PEERS = 'peers',
   HAS_ANY_ACCOUNT = 'hasAnyAccount',
   SYNC = 'sync',
+  GET_NODE_CONFIG = 'getNodeConfig',
+  SAVE_NODE_CONFIG = 'saveNodeConfig',
 }
 
 export enum IronfishAccountManagerAction {
@@ -88,6 +90,15 @@ export interface IIronfishManager {
   sync: () => Promise<void>
   nodeStatus: () => Promise<NodeStatusResponse>
   peers: () => Promise<PeerResponse[]>
+  getNodeConfig: () => Promise<Partial<ConfigOptions>>
+  saveNodeConfig: (values: Partial<ConfigOptions>) => Promise<void>
+}
+
+export interface INodeSettingsManager {
+  getConfig: () => Partial<ConfigOptions>
+  setValues: (values: Partial<ConfigOptions>) => void
+  save: () => Promise<void>
+  clearConfig: () => void
 }
 
 export default IIronfishManager

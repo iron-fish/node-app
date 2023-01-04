@@ -1,4 +1,4 @@
-import { PeerResponse } from '@ironfish/sdk'
+import { ConfigOptions, PeerResponse } from '@ironfish/sdk'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 import { BlockSyncerStatusType } from 'Types/BlockSyncerStatusType'
 
@@ -58,6 +58,17 @@ const PEERS: PeerResponse[] = Array(23)
     }
   })
 
+let DEMO_NODE_CONFIG: Partial<ConfigOptions> = {
+  nodeName: '',
+  blockGraffiti: '',
+  nodeWorkers: 6,
+  minPeers: -1,
+  maxPeers: 50,
+  blocksPerMessage: 5,
+}
+
+let DEMO_NODE_CONFIG_TMP: Partial<ConfigOptions> = {}
+
 class DemoNodeManager {
   status(): Promise<NodeStatusResponse> {
     return new Promise(resolve => {
@@ -107,6 +118,36 @@ class DemoNodeManager {
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(PEERS)
+      }, 500)
+    })
+  }
+
+  getConfig(): Partial<ConfigOptions> {
+    return { ...DEMO_NODE_CONFIG, ...DEMO_NODE_CONFIG_TMP }
+  }
+
+  setProperty<T, K extends keyof T>(obj: T, key: K, value: T[K]) {
+    obj[key] = value
+  }
+
+  setValues(values: Partial<ConfigOptions>): void {
+    for (const key in values) {
+      if (key in DEMO_NODE_CONFIG) {
+        this.setProperty(
+          DEMO_NODE_CONFIG_TMP,
+          key as keyof ConfigOptions,
+          values[key as keyof ConfigOptions]
+        )
+      }
+    }
+  }
+
+  async save(): Promise<void> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        DEMO_NODE_CONFIG = { ...DEMO_NODE_CONFIG, ...DEMO_NODE_CONFIG_TMP }
+        DEMO_NODE_CONFIG_TMP = {}
+        resolve()
       }, 500)
     })
   }
