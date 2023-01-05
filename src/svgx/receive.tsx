@@ -1,18 +1,19 @@
-import { SVGProps } from './types'
+import { Icon, IconProps } from '@ironfish/ui-kit'
 
-export const Icon = ({ style, fill = '#0d0c22' }: SVGProps) => (
-  <svg
-    width="24"
-    height="24"
+export const ReceiveIcon = (props: IconProps) => (
+  <Icon
+    width="24px"
+    height="24px"
     fill="none"
+    viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
-    style={style}
+    {...props}
   >
     <path
       d="M20 5.598 18.496 4 6.133 17.135V9.667H4V21h10.667v-2.267h-7.03L20 5.598Z"
-      fill={fill}
+      fill={'currentColor'}
     />
-  </svg>
+  </Icon>
 )
 
-export default Icon
+export default ReceiveIcon
