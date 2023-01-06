@@ -37,7 +37,7 @@ const getContactOptions = (contacts: Contact[] = []) =>
   }))
 
 const isValidPublicAddress = (address: string) =>
-  address ? address?.length === 64 : true
+  address ? address?.length === 43 : true
 
 const getSelectedOption = (
   options: ContactOption[] = [],
@@ -160,7 +160,7 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
       />
       {!$isValidAddress && (
         <chakra.h5 mt="1rem" color={NAMED_COLORS.RED}>
-          Invalid address. Recipient addresses are 64 characters long
+          Invalid address. Recipient addresses are 43 characters long
         </chakra.h5>
       )}
     </Box>
