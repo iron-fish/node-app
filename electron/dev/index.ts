@@ -21,20 +21,47 @@ initStorageCallbacks(ipcMain)
 
 ipcMain.handle(
   'ironfish-manager',
-  (e, action: IronfishManagerAction, ...args): Promise<any> =>
-    ironfishManager[action](...args)
+  (e, action: IronfishManagerAction, ...args): Promise<any> => {
+    let result
+    try {
+      result = ironfishManager[action](...args)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error)
+    }
+
+    return result
+  }
 )
 
 ipcMain.handle(
   'ironfish-manager-accounts',
-  (e, action: IronfishAccountManagerAction, ...args): Promise<any> =>
-    ironfishManager.accounts[action](...args)
+  (e, action: IronfishAccountManagerAction, ...args): Promise<any> => {
+    let result
+    try {
+      result = ironfishManager.accounts[action](...args)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error)
+    }
+
+    return result
+  }
 )
 
 ipcMain.handle(
   'ironfish-manager-transactions',
-  (e, action: IronfishTransactionManagerAction, ...args): Promise<any> =>
-    ironfishManager.transactions[action](...args)
+  (e, action: IronfishTransactionManagerAction, ...args): Promise<any> =>{
+    let result
+    try {
+      result = ironfishManager.transactions[action](...args)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error)
+    }
+
+    return result
+  }
 )
 
 process.on('exit', shutdownNode)

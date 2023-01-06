@@ -355,6 +355,8 @@ export class IronFishManager implements IIronfishManager {
       this.initStatus = IronFishInitStatus.INITIALIZED
     } catch (e) {
       this.initStatus = IronFishInitStatus.ERROR
+      // eslint-disable-next-line no-console
+      console.error(e)
     }
   }
 
