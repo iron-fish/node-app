@@ -1,4 +1,5 @@
 import { BoxKeyPair, Asset } from '@ironfish/rust-nodejs'
+import { sizeVarBytes } from 'bufio'
 import {
   AccountValue,
   IronfishNode,
@@ -261,11 +262,18 @@ class TransactionManager implements IIronfishTransactionManager {
       notes: notes.map(n => ({
         value: n.note.value(),
         memo: n.note.memo(),
+        sender: n.note.sender(),
       })),
-      spends,
+      spends: spends.map(spend => ({
+        commitment: spend.commitment.toString('hex'),
+        nullifier: spend.nullifier.toString('hex'),
+        size: spend.size,
+      })),
       creator: !!creator,
-      from: creator ? account.publicAddress : '',
-      to: creator ? '' : account.publicAddress,
+      blockHash: transaction.blockHash.toString('hex'),
+      size: sizeVarBytes(transaction.transaction),
+      from: creator ? account.publicAddress : notes.at(0)?.note?.sender(),
+      to: creator ? notes.map(n => n.note.sender()) : [account.publicAddress],
       created: created?.header?.timestamp || new Date(),
       amount: CurrencyUtils.renderIron(
         notes
@@ -298,7 +306,7 @@ class TransactionManager implements IIronfishTransactionManager {
         transaction =>
           !search ||
           transaction.from.toLowerCase().includes(search) ||
-          transaction.to.toLowerCase().includes(search) ||
+          transaction.to.find(a => a.toLowerCase().includes(search)) ||
           transaction.notes.find(note =>
             note.memo?.toLowerCase().includes(search)
           ) ||
@@ -313,9 +321,59 @@ class TransactionManager implements IIronfishTransactionManager {
   }
 
   async findByAddress(address: string, searchTerm?: string, sort?: SortType) {
-    const transactions: Transaction[] = await Promise.resolve([])
+    const transactions: Transaction[] = []
+    const accounts: Account[] = this.node.wallet.listAccounts()
+
+    for (const account of accounts) {
+      const headSequence = await this.node.wallet.getAccountHeadSequence(
+        account
+      )
+      for await (const transaction of account.getTransactions()) {
+        let creatorNote
+        for await (const spend of transaction?.transaction?.spends) {
+          const noteHash = await account.getNoteHash(spend.nullifier)
+
+          if (noteHash) {
+            const decryptedNote = await account.getDecryptedNote(noteHash)
+            creatorNote = decryptedNote
+            break
+          }
+        }
+        const notes = transaction
+          ? await account.getTransactionNotes(transaction.transaction)
+          : []
+        if (
+          creatorNote?.note.sender() === address ||
+          notes.find(n => n.note.sender() === address)
+        ) {
+          transactions.push(
+            await this.resolveTransactionFields(
+              account,
+              headSequence,
+              transaction
+            )
+          )
+        }
+      }
+    }
 
     return transactions
+      .filter(
+        transaction =>
+          !searchTerm ||
+          transaction.from.toLowerCase().includes(searchTerm) ||
+          transaction.to.find(a => a.toLowerCase().includes(searchTerm)) ||
+          transaction.notes.find(note =>
+            note.memo?.toLowerCase().includes(searchTerm)
+          ) ||
+          transaction.amount.toString().includes(searchTerm)
+      )
+      .sort((t1, t2) => {
+        const date1: number = (t1.created || new Date()).getTime()
+        const date2: number = (t2.created || new Date()).getTime()
+
+        return sort === SortType.ASC ? date1 - date2 : date2 - date1
+      })
   }
 }
 

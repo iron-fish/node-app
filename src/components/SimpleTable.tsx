@@ -30,7 +30,7 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
       <Thead>
         <Tr>
           {columns.map(column => (
-            <Th textTransform={textTransform} pl="2rem" key={column.key}>
+            <Th textTransform={textTransform} px="2rem" key={column.key}>
               {column.label}
             </Th>
           ))}

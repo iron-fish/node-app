@@ -15,7 +15,8 @@ import BackButtonLink from 'Components/BackButtonLink'
 import useAccount from 'Hooks/accounts/useAccount'
 import useTransaction from 'Hooks/transactions/useTransaction'
 import { truncateHash } from 'Utils/hash'
-import Transaction from 'Types/Transaction'
+import { formatOreToTronWithLanguage } from 'Utils/number'
+import Transaction, { Note, Spend } from 'Types/Transaction'
 import BlockInfoDifficultyIcon from 'Svgx/BlockInfoDifficultyIcon'
 import DifficultyIcon from 'Svgx/DifficultyIcon'
 import SizeIcon from 'Svgx/SizeIcon'
@@ -23,6 +24,8 @@ import BlockInfoTimestampIcon from 'Svgx/BlockInfoTimestampIcon'
 import InOutPutsIcon from 'Svgx/InOutPutsIcon'
 import LargeArrowLeftDown from 'Svgx/LargeArrowLeftDown'
 import LargeArrowRightUp from 'Svgx/LargeArrowRightUp'
+import SimpleTable from 'Components/SimpleTable'
+import ContactsPreview from 'Components/ContactsPreview'
 
 interface Card {
   render: (tx: Transaction) => ReactNode
@@ -36,14 +39,17 @@ const CARDS: Card[] = [
     icon: DifficultyIcon,
   },
   {
-    render: (tx: Transaction) => (
-      <CopyValueToClipboard
-        label={truncateHash(tx?.to || '', 2, 4)}
-        value={tx?.to || ''}
-        copyTooltipText={'Copy address to'}
-        copiedTooltipText={'Address copied'}
-      />
-    ),
+    render: (tx: Transaction) =>
+      tx?.to?.length > 1
+        ? tx?.to?.length + ' Addresses'
+        : tx?.to?.length === 1 && (
+            <CopyValueToClipboard
+              label={truncateHash(tx.to[0] || '', 2, 4)}
+              value={tx.to[0] || ''}
+              copyTooltipText={'Copy address to'}
+              copiedTooltipText={'Address copied'}
+            />
+          ),
     label: 'To',
     icon: DifficultyIcon,
   },
@@ -56,7 +62,7 @@ const CARDS: Card[] = [
     render: (tx: Transaction) => (
       <CopyValueToClipboard
         label={truncateHash(tx?.blockHash || '', 2, 4)}
-        value={tx?.to || ''}
+        value={tx?.blockHash || ''}
         copyTooltipText={'Copy block hash'}
         copiedTooltipText={'Block hash copied'}
       />
@@ -68,7 +74,7 @@ const CARDS: Card[] = [
     render: (tx: Transaction) => (
       <CopyValueToClipboard
         label={truncateHash(tx?.hash || '', 2, 4)}
-        value={tx?.to || ''}
+        value={tx?.hash || ''}
         copyTooltipText={'Copy Transaction hash'}
         copiedTooltipText={'Transaction hash copied'}
       />
@@ -82,7 +88,8 @@ const CARDS: Card[] = [
     icon: SizeIcon,
   },
   {
-    render: (tx: Transaction) => tx?.fee,
+    render: (tx: Transaction) =>
+      formatOreToTronWithLanguage(tx?.fee || 0) + ' $IRON',
     label: 'Fee',
     icon: BlockInfoDifficultyIcon,
   },
@@ -182,62 +189,68 @@ const TransactionOverview: FC = () => {
       </Box>
       <Flex w="100%">
         <Box w="calc(50% - 1.5rem)" mr="1rem">
-          <Box m="1rem">
-            <chakra.h5 color={color}>INPUTS</chakra.h5>
-          </Box>
-          {transaction?.spends?.map(spend => (
-            <Flex
-              border="1px solid"
-              borderColor={borderColor}
-              borderRadius="0.25rem"
-              h="5rem"
-              w="100%"
-              p="1rem"
-              mr="1rem"
-              mb="1rem"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Box mr="1rem">
-                <LargeArrowLeftDown />
-              </Box>
-              <Box
-                overflow="hidden"
-                whiteSpace="nowrap"
-                textOverflow="ellipsis"
-              >
-                {spend.nullifier}
-              </Box>
-            </Flex>
-          ))}
+          <SimpleTable
+            data={transaction?.spends || []}
+            w="100%"
+            columns={[
+              {
+                key: 'input-address',
+                label: 'INPUT ADDRESS',
+                render: (spend: Spend) => (
+                  <Flex alignItems="center">
+                    <Box mr="1rem">
+                      <LargeArrowLeftDown h="1.125rem" w="1.125rem" />
+                    </Box>
+                    <Box
+                      overflow="hidden"
+                      whiteSpace="nowrap"
+                      textOverflow="ellipsis"
+                    >
+                      <chakra.h5>
+                        {truncateHash(spend.nullifier, 2, 4)}
+                      </chakra.h5>
+                    </Box>
+                  </Flex>
+                ),
+              },
+            ]}
+          />
         </Box>
         <Box w="calc(50% - 1.5rem)">
-          <Box m="1rem">
-            <chakra.h5 color={color}>OUTPUTS</chakra.h5>
-          </Box>
-          {transaction?.notes?.map(note => (
-            <Flex
-              mr="1rem"
-              mb="1rem"
-              h="5rem"
-              p="1rem"
-              overflow="hidden"
-              whiteSpace="nowrap"
-              textOverflow="ellipsis"
-              border="1px solid"
-              borderColor={borderColor}
-              borderRadius="0.25rem"
-              alignItems="center"
-            >
-              <Box mr="1rem">
-                <LargeArrowRightUp />
-              </Box>
-              <Flex justifyContent="space-between" alignItems="center" w="100%">
-                <Box>{note.memo}</Box>
-                <Box>{note.value.toString()} $IRON</Box>
-              </Flex>
-            </Flex>
-          ))}
+          <SimpleTable
+            data={transaction?.notes || []}
+            w="100%"
+            columns={[
+              {
+                key: 'output-address',
+                label: 'OUTPUT ADDRESS',
+                render: (note: Note) => (
+                  <Flex alignItems="center">
+                    <Box mr="1rem">
+                      <LargeArrowRightUp h="1.125rem" w="1.125rem" />
+                    </Box>
+                    <chakra.h5>
+                      <ContactsPreview addresses={[note?.sender]} />
+                    </chakra.h5>
+                  </Flex>
+                ),
+              },
+              {
+                key: 'note-amount',
+                label: '$IRON',
+                render: (note: Note) => (
+                  <chakra.h5>
+                    {formatOreToTronWithLanguage(note?.value || 0)}
+                  </chakra.h5>
+                ),
+              },
+              {
+                key: 'note-memo',
+                label: 'Memo',
+                render: (note: Note) => <chakra.h5>{note?.memo}</chakra.h5>,
+              },
+            ]}
+          />
         </Box>
       </Flex>
     </Flex>
