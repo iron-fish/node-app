@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { FC } from 'react'
 import {
   Flex,
   NAMED_COLORS,
@@ -9,7 +9,6 @@ import {
 import { TransactionStatus } from 'Types/Transaction'
 import PendingIcon from '@ironfish/ui-kit/dist/svgx/pending-icon'
 import ExpiredIcon from '@ironfish/ui-kit/dist/svgx/expired-icon'
-import AwaitIcon from '@ironfish/ui-kit/dist/svgx/await-icon'
 import IconSend from 'Svgx/send'
 import IconReceive from 'Svgx/receive'
 
@@ -39,7 +38,7 @@ const LIGHT_MODE = {
 
 const DARK_MODE = {
   sent: {
-    bg: '#341E17',
+    bg: '#3E251B',
     icon: '#F15929',
   },
   received: {
@@ -83,6 +82,8 @@ const getStatusParams = (
       params.iconColors = isSent ? colors.sent : colors.received
       break
     case TransactionStatus.PENDING:
+    case TransactionStatus.UNKNOWN:
+    case TransactionStatus.UNCONFIRMED:
       params.icon = PendingIcon
       params.message = 'Pending'
       params.iconColors = colors.pending
@@ -90,18 +91,6 @@ const getStatusParams = (
     case TransactionStatus.EXPIRED:
       params.icon = ExpiredIcon
       params.message = 'Expired'
-      break
-    case TransactionStatus.UNCONFIRMED:
-      params.icon = AwaitIcon
-      params.message = 'Awaiting confirmation'
-      break
-    case TransactionStatus.UNKNOWN:
-      params.icon = ({ color }: { color: string }) => (
-        <chakra.h4 mt="0.0625rem" ml="0.0625rem" color={color}>
-          ?
-        </chakra.h4>
-      )
-      params.message = 'Unknown'
       break
     default:
       break
