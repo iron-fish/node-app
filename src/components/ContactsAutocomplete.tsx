@@ -1,5 +1,13 @@
 import { FC, useMemo, useEffect, useState, ReactNode, useRef } from 'react'
-import { Autocomplete, FlexProps, useDebounce } from '@ironfish/ui-kit'
+import {
+  Autocomplete,
+  FlexProps,
+  NAMED_COLORS,
+  useDebounce,
+  chakra,
+  Box,
+  BoxProps,
+} from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 
 import useAddressBook from 'Hooks/addressBook/useAddressBook'
@@ -12,6 +20,7 @@ interface ContactsAutocompleteProps extends FlexProps {
   label: string
   freeInput: boolean
   onSelectOption?: (account: Contact) => void
+  containerProps?: BoxProps
 }
 
 interface ContactOption {
@@ -27,7 +36,8 @@ const getContactOptions = (contacts: Contact[] = []) =>
     value: contact,
   }))
 
-const isValidPublicAddress = (address: string) => address?.length === 64
+const isValidPublicAddress = (address: string) =>
+  address ? address?.length === 64 : true
 
 const getSelectedOption = (
   options: ContactOption[] = [],
@@ -38,7 +48,7 @@ const getSelectedOption = (
     o => o.value._id === address || o.value.address === address
   )
 
-  if (freeInput && isValidPublicAddress(address) && !selectedOption) {
+  if (freeInput && !selectedOption) {
     selectedOption = {
       label: address,
       value: {
@@ -74,9 +84,11 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
   freeInput,
   onSelectOption,
   contactId,
+  containerProps,
   ...rest
 }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
+  const [$isValidAddress, setIsValidAddress] = useState(true)
   const $search = useDebounce($searchTerm, 500)
   const [{ data: contacts = [], loaded: contactsLoaded }, , reloadContacts] =
     useAddressBook($search)
@@ -109,36 +121,49 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
   }, [contactId])
 
   return (
-    <Autocomplete
-      label={label}
-      options={options.length === 0 ? startOptions.current : options}
-      value={getSelectedOption(options, address || $searchTerm, freeInput)}
-      onSelectOption={option => onSelectOption(option.value)}
-      filterOption={getOptionsFilter(options, $searchTerm)}
-      onClose={() => {
-        if (
-          freeInput &&
-          options.length === 0 &&
-          isValidPublicAddress($searchTerm)
-        ) {
-          onSelectOption({
-            _id: $searchTerm,
-            address: $searchTerm,
-            name: $searchTerm,
-          })
-        }
-      }}
-      isClearable={true}
-      onClear={() => {
-        onSelectOption(null)
-        $setSearchTerm('')
-      }}
-      InputProps={{
-        placeholder: 'Input Text',
-        onChange: e => $setSearchTerm(e.target.value),
-      }}
-      {...rest}
-    />
+    <Box {...containerProps}>
+      <Autocomplete
+        label={label}
+        options={options.length === 0 ? startOptions.current : options}
+        value={getSelectedOption(options, address || $searchTerm, freeInput)}
+        onSelectOption={option => {
+          setIsValidAddress(isValidPublicAddress(option.value.address))
+          onSelectOption(option.value)
+        }}
+        filterOption={getOptionsFilter(options, $searchTerm)}
+        onClose={() => {
+          if (freeInput && options.length === 0) {
+            setIsValidAddress(isValidPublicAddress($searchTerm))
+            onSelectOption({
+              _id: $searchTerm,
+              address: $searchTerm,
+              name: $searchTerm,
+            })
+          }
+        }}
+        isClearable={true}
+        onClear={() => {
+          onSelectOption(null)
+          $setSearchTerm('')
+          setIsValidAddress(true)
+        }}
+        InputProps={{
+          placeholder: 'Input Text',
+          onChange: e => $setSearchTerm(e.target.value),
+        }}
+        sx={{
+          ...(!$isValidAddress && {
+            borderColor: `${NAMED_COLORS.RED} !important`,
+          }),
+        }}
+        {...rest}
+      />
+      {!$isValidAddress && (
+        <chakra.h5 mt="1rem" color={NAMED_COLORS.RED}>
+          Invalid address. Recipient addresses are 64 characters long
+        </chakra.h5>
+      )}
+    </Box>
   )
 }
 

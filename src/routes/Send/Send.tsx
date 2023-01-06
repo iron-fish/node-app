@@ -159,7 +159,7 @@ const Send: FC = () => {
               address={contact?.address || state?.address}
               onSelectOption={setContact}
               freeInput
-              mb="2rem"
+              containerProps={{ mb: '2rem' }}
             />
             <Flex mb="2rem">
               <Skeleton
