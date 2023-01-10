@@ -12,9 +12,8 @@ import {
   Button,
   Icon,
   InputProps,
-  Skeleton,
+  SelectField,
 } from '@ironfish/ui-kit'
-import floor from 'lodash/floor'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
 import DetailsPanel from 'Components/DetailsPanel'
@@ -27,7 +26,7 @@ import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
+import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -81,6 +80,10 @@ const FloatInput: FC<FloatInputProps> = ({ amount, setAmount }) => {
   )
 }
 
+const hasEnoughIron = (balance: bigint, amount: bigint, fee: bigint) => {
+  return balance && amount && fee ? balance > amount + fee : true
+}
+
 const Send: FC = () => {
   const location = useLocation()
   const state = location.state as LocationStateProps
@@ -89,22 +92,34 @@ const Send: FC = () => {
   const [contact, setContact] = useState<Contact>(null)
   const [notes, setNotes] = useState('')
   const [startSendFlow, setStart] = useState(false)
-  const [ownFee, setOwnFee] = useState(Number(0).toFixed(8))
-  const { data: fee, loaded: feeCalculated } = useFee()
+  const [selectedFee, setSelectedFee] = useState<bigint>(BigInt(0))
+  const { data: fee = {}, loaded: feeCalculated } = useFee(account?.id, {
+    publicAddress: contact?.address,
+    amount: CurrencyUtils.decodeIron(amount),
+    memo: notes,
+  })
   const $colors = useColorModeValue(
-    { bg: NAMED_COLORS.DEEP_BLUE, color: NAMED_COLORS.WHITE },
-    { bg: NAMED_COLORS.WHITE, color: NAMED_COLORS.DEEP_BLUE }
+    {
+      bg: NAMED_COLORS.DEEP_BLUE,
+      color: NAMED_COLORS.WHITE,
+      warningBg: '#FFEDE8',
+    },
+    {
+      bg: NAMED_COLORS.WHITE,
+      color: NAMED_COLORS.DEEP_BLUE,
+      warningBg: '#3E251B',
+    }
   )
   const { loaded } = useDataSync()
 
-  useEffect(() => {
-    if (fee) {
-      setOwnFee(floor(fee / ORE_TO_IRON, 8).toFixed(8))
-    }
-  }, [fee])
-
   const checkChanges: () => boolean = () =>
-    !loaded || !(feeCalculated && account && contact && amount)
+    !loaded ||
+    !(selectedFee && account && contact && amount) ||
+    !hasEnoughIron(
+      account?.balance.confirmed,
+      CurrencyUtils.decodeIron(amount),
+      selectedFee
+    )
 
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
@@ -147,6 +162,26 @@ const Send: FC = () => {
             <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5>
           </Flex>
           <Box mr="-0.25rem">
+            {!hasEnoughIron(
+              account?.balance.confirmed,
+              CurrencyUtils.decodeIron(amount),
+              selectedFee
+            ) && (
+              <Flex
+                w="100%"
+                borderRadius="0.3125rem"
+                bg={$colors.warningBg}
+                h="4.3125rem"
+                mt="-1rem"
+                mb="1rem"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <chakra.h4 color={NAMED_COLORS.RED}>
+                  This account does not have enough funds for this transaction
+                </chakra.h4>
+              </Flex>
+            )}
             <AccountsSelect
               label="From Account"
               mb="2rem"
@@ -161,24 +196,17 @@ const Send: FC = () => {
               mb="2rem"
             />
             <Flex mb="2rem">
-              <Skeleton
-                variant="ironFish"
+              <SelectField
                 width="calc(50% - 1rem)"
                 mr="2rem"
-                isLoaded={feeCalculated}
-              >
-                <TextField
-                  label="Estimated Fee"
-                  value={ownFee}
-                  InputProps={{
-                    type: 'number',
-                    onBlur: e =>
-                      setOwnFee(
-                        e.target.value ? Number(e.target.value).toFixed(8) : '0'
-                      ),
-                  }}
-                />
-              </Skeleton>
+                label="Estimated Fee"
+                options={Object.entries(fee).map(([key, value]) => ({
+                  value: value,
+                  label: `${value} Ore`,
+                  helperText: `Transfer speed: ${key}`,
+                }))}
+                onSelectOption={selected => setSelectedFee(selected.value)}
+              />
               <TextField
                 w="calc(50% - 1rem)"
                 label={`Memo (${32 - notes.length} characters)`}
@@ -196,7 +224,6 @@ const Send: FC = () => {
             mb="2rem"
             p="2rem"
             isDisabled={checkChanges()}
-            disabled={checkChanges()}
             leftIcon={
               <Icon height={26} width={26}>
                 <SendIcon fill="currentColor" />
@@ -220,7 +247,7 @@ const Send: FC = () => {
         from={account}
         to={contact}
         memo={notes}
-        fee={Number(ownFee) || fee}
+        fee={Number(CurrencyUtils.encodeIron(selectedFee))}
       />
     </Flex>
   )

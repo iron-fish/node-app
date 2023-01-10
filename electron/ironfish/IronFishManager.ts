@@ -19,12 +19,15 @@ import {
   IIronfishAccountManager,
   TransactionFeeStatistic,
   IIronfishTransactionManager,
+  TransactionReceiver,
+  TransactionFeeEstimate,
 } from 'Types/IIronfishManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import Transaction, { Payment, TransactionStatus } from 'Types/Transaction'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
+import { PRIORITY_LEVELS } from '@ironfish/sdk/build/src/memPool/feeEstimator'
 
 class AccountManager implements IIronfishAccountManager {
   private node: IronfishNode
@@ -181,6 +184,24 @@ class TransactionManager implements IIronfishTransactionManager {
       p75: fees[Math.floor(fees.length * 0.75)],
       p100: fees[fees.length - 1],
     }
+  }
+
+  async estimateFeeWithPriority(
+    accountId: string,
+    receive: TransactionReceiver
+  ): Promise<TransactionFeeEstimate> {
+    const account = this.node.wallet.getAccount(accountId)
+    return Promise.all([
+      this.node.memPool.feeEstimator.estimateFee(PRIORITY_LEVELS[0], account, [
+        receive,
+      ]),
+      this.node.memPool.feeEstimator.estimateFee(PRIORITY_LEVELS[1], account, [
+        receive,
+      ]),
+      this.node.memPool.feeEstimator.estimateFee(PRIORITY_LEVELS[2], account, [
+        receive,
+      ]),
+    ]).then(([low, medium, high]) => ({ low, medium, high }))
   }
 
   async averageFee(numOfBlocks = 100): Promise<number> {

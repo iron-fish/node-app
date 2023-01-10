@@ -1,4 +1,8 @@
 import { nanoid } from 'nanoid'
+import {
+  TransactionFeeEstimate,
+  TransactionReceiver,
+} from 'Types/IIronfishManager'
 import SortType from 'Types/SortType'
 
 import Transaction, { TransactionStatus } from 'Types/Transaction'
@@ -189,6 +193,17 @@ class DemoTransactionsManager {
   calculateFee(amount: number): Promise<number> {
     return new Promise(resolve => {
       setTimeout(() => resolve(amount / 1000), 500)
+    })
+  }
+
+  estimateFeeWithPriority(
+    accountId: string,
+    receive: TransactionReceiver
+  ): Promise<TransactionFeeEstimate> {
+    return Promise.resolve({
+      low: BigInt(100),
+      medium: BigInt(200),
+      high: BigInt(300),
     })
   }
 

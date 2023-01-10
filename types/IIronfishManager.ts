@@ -33,6 +33,7 @@ export enum IronfishTransactionManagerAction {
   PAY = 'pay',
   FEES = 'fees',
   AVERAGE_FEE = 'averageFee',
+  ESTIMATE_FEE = 'estimateFeeWithPriority',
   FIND_BY_ACCOUNT_ID = 'findByAccountId',
   FIND_BY_ADDRESS = 'findByAddress',
 }
@@ -46,6 +47,18 @@ export interface TransactionFeeStatistic {
   p100: number
 }
 
+export interface TransactionFeeEstimate {
+  low: bigint
+  medium: bigint
+  high: bigint
+}
+
+export interface TransactionReceiver {
+  publicAddress: string
+  amount: bigint
+  memo: string
+}
+
 export interface IIronfishTransactionManager {
   get: (hash: string, accountId: string) => Promise<Transaction>
   pay: (
@@ -55,6 +68,10 @@ export interface IIronfishTransactionManager {
   ) => Promise<Transaction>
   fees: (numOfBlocks?: number) => Promise<TransactionFeeStatistic>
   averageFee: (numOfBlocks?: number) => Promise<number>
+  estimateFeeWithPriority: (
+    accountId: string,
+    receive: TransactionReceiver
+  ) => Promise<TransactionFeeEstimate>
   findByAccountId: (
     accountId: string,
     searchTerm?: string,
