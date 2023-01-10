@@ -29,8 +29,7 @@ const AddressDetails = () => {
   const { identity } = useParams()
   const navigate = useNavigate()
   const $color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
-  const [{ data: contact, loaded }, updateContact, deleteContact] =
-    useContact(identity)
+  const [{ data: contact }, updateContact, deleteContact] = useContact(identity)
   const { loaded: synced } = useDataSync()
 
   return (

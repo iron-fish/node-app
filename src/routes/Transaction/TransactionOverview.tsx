@@ -107,18 +107,12 @@ const CARDS: Card[] = [
 
 const TransactionOverview: FC = () => {
   const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
-  const borderColor = useColorModeValue(
-    NAMED_COLORS.LIGHT_GREY,
-    NAMED_COLORS.LIGHTER_GREY
-  )
   const { hash, accountId } = useLocation()?.state
-  const [{ data: account, loaded: accountLoaded, error: accountLoadError }] =
-    useAccount(accountId)
-  const {
-    loaded: transactionLoaded,
-    data: transaction,
-    error: txLoadError,
-  } = useTransaction(accountId, hash)
+  const [{ data: account, loaded: accountLoaded }] = useAccount(accountId)
+  const { loaded: transactionLoaded, data: transaction } = useTransaction(
+    accountId,
+    hash
+  )
 
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">

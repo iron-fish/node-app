@@ -169,7 +169,6 @@ const RemoveAccountButton: FC<RemoveAccountButtonProps> = ({
 
 const AccountSettings: FC<AccountSettingsProps> = ({
   account,
-  updateAccount,
   deleteAccount,
 }) => {
   const [name, setName] = useState<string>('')

@@ -1,5 +1,4 @@
 import { Icon, IconProps } from '@ironfish/ui-kit'
-import { SVGProps } from './types'
 
 export const SendIcon = (props: IconProps) => (
   <Icon

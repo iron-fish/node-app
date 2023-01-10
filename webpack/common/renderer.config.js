@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const rules = require('./rules')
 const plugins = require('./plugins')
 const { resolve } = require('path')
