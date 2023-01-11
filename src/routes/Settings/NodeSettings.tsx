@@ -1,38 +1,52 @@
 import { ConfigOptions } from '@ironfish/sdk'
-import { Flex, chakra, TextField, Button, Skeleton } from '@ironfish/ui-kit'
+import {
+  Flex,
+  chakra,
+  TextField,
+  Button,
+  Skeleton,
+  useIronToast,
+} from '@ironfish/ui-kit'
 import useNodeSettings from 'Hooks/node/useNodeSettings'
 import { FC, useState, useEffect } from 'react'
+import pick from 'lodash/pick'
+
+const SETTINGS_KEYS = [
+  'nodeName',
+  'blockGraffiti',
+  'nodeWorkers',
+  'minPeers',
+  'maxPeers',
+  'blocksPerMessage',
+]
 
 const NodeSettings: FC = () => {
   const [nodeSettings, setNodeSettings] = useState<Partial<ConfigOptions>>({})
   const [{ data, loaded }, saveSettings] = useNodeSettings()
+  const toast = useIronToast({
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
 
   useEffect(() => {
-    setNodeSettings({ ...data })
+    setNodeSettings(pick(data, SETTINGS_KEYS))
   }, [data])
 
-  const updateSettingValue = (key: string, value: any) =>
+  const updateSettingValue = (key: string, value: unknown) =>
     setNodeSettings(prev => ({
       ...prev,
       [key]: value,
     }))
 
-  const handleSaveSettings = () => saveSettings(nodeSettings)
+  const handleSaveSettings = () =>
+    saveSettings(nodeSettings).then(() => toast({ title: 'Settings saved' }))
 
   const hasChanges = () => {
-    const keys = [
-      'nodeName',
-      'blockGraffiti',
-      'nodeWorkers',
-      'minPeers',
-      'maxPeers',
-      'blocksPerMessage',
-    ]
-
     return !(
       data &&
       nodeSettings &&
-      keys.some(
+      SETTINGS_KEYS.some(
         (key: keyof ConfigOptions) =>
           data[key]?.toString() !== nodeSettings[key]?.toString()
       )
