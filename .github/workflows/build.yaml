@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v2       
     - uses: actions/setup-node@master
       with:
-        node-version: 16
+        node-version: 18.13
     - name: Install dependencies
       run: yarn
     - name: Build application
@@ -36,7 +36,7 @@ jobs:
     - uses: actions/checkout@v2       
     - uses: actions/setup-node@master
       with:
-        node-version: 16
+        node-version: 18.13
     - name: Install dependencies
       run: yarn
     - name: Build application
