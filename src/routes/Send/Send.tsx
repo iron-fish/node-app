@@ -81,7 +81,12 @@ const FloatInput: FC<FloatInputProps> = ({ amount, setAmount }) => {
 }
 
 const hasEnoughIron = (balance: bigint, amount: bigint, fee: bigint) => {
-  return balance && amount && fee ? balance > amount + fee : true
+  const zero = BigInt(0)
+  return (balance || balance === zero) &&
+    (amount || amount === zero) &&
+    (fee || fee === zero)
+    ? balance >= amount + fee
+    : true
 }
 
 const Send: FC = () => {
@@ -94,7 +99,7 @@ const Send: FC = () => {
   const [startSendFlow, setStart] = useState(false)
   const [selectedFee, setSelectedFee] = useState<bigint>(BigInt(0))
   const { data: fee = {}, loaded: feeCalculated } = useFee(account?.id, {
-    publicAddress: contact?.address,
+    publicAddress: contact?.address || '',
     amount: CurrencyUtils.decodeIron(amount),
     memo: notes,
   })
