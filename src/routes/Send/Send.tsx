@@ -1,18 +1,18 @@
-import { ChangeEvent, FC, memo, useState, useEffect } from 'react'
+import { FC, memo, useState, useEffect } from 'react'
 import {
   Box,
   Flex,
   chakra,
   NAMED_COLORS,
-  Input,
   InputGroup,
   InputRightAddon,
   useColorModeValue,
   TextField,
   Button,
   Icon,
-  InputProps,
   SelectField,
+  NumberInput,
+  NumberInputField,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
@@ -27,6 +27,7 @@ import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
+import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -46,40 +47,6 @@ const Information: FC = memo(() => {
   )
 })
 
-interface FloatInputProps {
-  amount: number
-  setAmount: (value: number) => void
-  InputProps?: InputProps
-}
-
-const FloatInput: FC<FloatInputProps> = ({ amount, setAmount }) => {
-  const [value, setValue] = useState(amount.toFixed(2).toString())
-
-  const handleNumber = (e: ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value
-
-    if (input.match(/^([0-9]{1,})?(\.)?([0-9]{1,})?$/)) {
-      setValue(input)
-    }
-  }
-
-  const handleFloat = () => {
-    setAmount(parseFloat(value || '0'))
-  }
-
-  return (
-    <Input
-      variant="unstyled"
-      fontSize="3rem"
-      width={value.length * 1.8 + 'rem'}
-      value={value}
-      onChange={handleNumber}
-      onBlur={handleFloat}
-      textAlign="end"
-    />
-  )
-}
-
 const hasEnoughIron = (balance: bigint, amount: bigint, fee: bigint) => {
   const zero = BigInt(0)
   return (balance || balance === zero) &&
@@ -89,18 +56,42 @@ const hasEnoughIron = (balance: bigint, amount: bigint, fee: bigint) => {
     : true
 }
 
+const getPrecision = (val: string) => {
+  let precision = 2
+  const dotIndex = val.indexOf('.')
+  if (dotIndex === -1) {
+    return precision
+  }
+  const part = val.slice(dotIndex + 1)
+  precision = part.length
+  for (let i = part.length - 1; i >= 2; i--) {
+    if (part[i] === '0') {
+      precision--
+    } else {
+      break
+    }
+  }
+  return precision
+}
+
+const getEstimatedFeeOption = (priority: string, value: bigint) => ({
+  value: value,
+  label: `${value} Ore`,
+  helperText: `Transfer speed: ${priority}`,
+})
+
 const Send: FC = () => {
   const location = useLocation()
   const state = location.state as LocationStateProps
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState('0.00')
   const [account, setAccount] = useState<CutAccount>(null)
   const [contact, setContact] = useState<Contact>(null)
   const [notes, setNotes] = useState('')
   const [startSendFlow, setStart] = useState(false)
-  const [selectedFee, setSelectedFee] = useState<bigint>(BigInt(0))
-  const { data: fee = {}, loaded: feeCalculated } = useFee(account?.id, {
+  const [selectedFee, setSelectedFee] = useState<OptionType>()
+  const { data: fee, loaded: feeCalculated } = useFee(account?.id, {
     publicAddress: contact?.address || '',
-    amount: CurrencyUtils.decodeIron(amount),
+    amount: CurrencyUtils.decodeIron(amount || 0),
     memo: notes,
   })
   const $colors = useColorModeValue(
@@ -117,13 +108,20 @@ const Send: FC = () => {
   )
   const { loaded } = useDataSync()
 
+  useEffect(() => {
+    if (Number(amount) !== 0 && !selectedFee?.label) {
+      fee?.medium &&
+        setSelectedFee(getEstimatedFeeOption('medium', fee?.medium))
+    }
+  }, [amount])
+
   const checkChanges: () => boolean = () =>
     !loaded ||
-    !(selectedFee && account && contact && amount) ||
+    !(selectedFee?.value && account && contact && amount) ||
     !hasEnoughIron(
       account?.balance.confirmed,
-      CurrencyUtils.decodeIron(amount),
-      selectedFee
+      CurrencyUtils.decodeIron(amount || 0),
+      selectedFee.value
     )
 
   return (
@@ -153,7 +151,27 @@ const Send: FC = () => {
               alignItems="baseline"
               my="1rem"
             >
-              <FloatInput amount={amount} setAmount={setAmount} />
+              <NumberInput
+                value={amount}
+                onChange={valueString => {
+                  setAmount(valueString)
+                }}
+                precision={getPrecision(amount)}
+                display="flex"
+              >
+                <NumberInputField
+                  fontSize="3rem"
+                  width={amount.length * 1.8 + 'rem'}
+                  minW="3rem"
+                  h="100%"
+                  p="0rem"
+                  textAlign="end"
+                  border="none"
+                  _focusVisible={{
+                    border: 'none',
+                  }}
+                />
+              </NumberInput>
               <InputRightAddon
                 bg="transparent"
                 border="none"
@@ -169,8 +187,8 @@ const Send: FC = () => {
           <Box mr="-0.25rem">
             {!hasEnoughIron(
               account?.balance.confirmed,
-              CurrencyUtils.decodeIron(amount),
-              selectedFee
+              CurrencyUtils.decodeIron(amount || 0),
+              selectedFee?.value
             ) && (
               <Flex
                 w="100%"
@@ -205,12 +223,11 @@ const Send: FC = () => {
                 width="calc(50% - 1rem)"
                 mr="2rem"
                 label="Estimated Fee"
-                options={Object.entries(fee).map(([key, value]) => ({
-                  value: value,
-                  label: `${value} Ore`,
-                  helperText: `Transfer speed: ${key}`,
-                }))}
-                onSelectOption={selected => setSelectedFee(selected.value)}
+                value={selectedFee}
+                options={Object.entries(fee || {}).map(([key, value]) =>
+                  getEstimatedFeeOption(key, value)
+                )}
+                onSelectOption={selected => setSelectedFee(selected)}
               />
               <TextField
                 w="calc(50% - 1rem)"
@@ -248,11 +265,11 @@ const Send: FC = () => {
       <SendFlow
         isOpen={startSendFlow}
         onClose={() => setStart(false)}
-        amount={amount}
+        amount={Number(amount)}
         from={account}
         to={contact}
         memo={notes}
-        fee={Number(CurrencyUtils.encodeIron(selectedFee))}
+        fee={Number(CurrencyUtils.encodeIron(selectedFee?.value || 0))}
       />
     </Flex>
   )
