@@ -9,7 +9,7 @@ const useFee = (accountId: string, receiver: TransactionReceiver) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<TransactionFeeEstimate>()
 
   const calculateFee = () => {
-    if (accountId && receiver.amount) {
+    if (accountId && (receiver?.amount || receiver?.amount === BigInt(0))) {
       return promiseWrapper(
         window.IronfishManager.transactions.estimateFeeWithPriority(
           accountId,
