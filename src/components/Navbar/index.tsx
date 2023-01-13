@@ -43,12 +43,6 @@ const primaryNavItems = [
 const secondaryNavItems = [
   // { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
   // { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
-  {
-    hotkey: 'C',
-    to: ROUTES.NODE_SETTINGS,
-    label: 'Settings',
-    icon: SettingsIcon,
-  },
 ]
 interface NavbarProps {
   offsetTop?: number
@@ -83,7 +77,6 @@ export const Navbar: FC<NavbarProps> = ({ offsetTop = 0 }) => {
         <Nav list={primaryNavItems} />
       </Box>
       <Box marginTop="auto">
-        <Nav list={secondaryNavItems} />
         <ActiveStatus />
         <Toggle />
       </Box>

@@ -11,7 +11,6 @@ export const ROUTES = {
   ADDRESS_BOOK_DETAILS: '/address-book/:identity',
   RESOURCES: '/resources',
   NODE: '/node',
-  NODE_SETTINGS: '/node-settings',
   MINER: '/miner',
 }
 
