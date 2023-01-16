@@ -1,11 +1,5 @@
-import {
-  FC,
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from 'react'
+import { FC, createContext, useContext, useState, useEffect } from 'react'
+import { Outlet } from 'react-router-dom'
 
 import NodeStatusResponse from 'Types/NodeStatusResponse'
 
@@ -19,11 +13,7 @@ const DataSyncContext = createContext<DataSyncContextProps>({
   loaded: false,
 })
 
-interface DataSyncProviderProps {
-  children: ReactNode
-}
-
-const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
+const DataSyncProvider: FC = () => {
   const [loaded, setLoaded] = useState<boolean>(false)
   const [status, setNodeStatus] = useState<NodeStatusResponse | undefined>()
   const [error, setError] = useState()
@@ -54,7 +44,7 @@ const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
 
   return (
     <DataSyncContext.Provider value={value}>
-      {children}
+      <Outlet />
     </DataSyncContext.Provider>
   )
 }

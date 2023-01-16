@@ -70,6 +70,7 @@ export const IronFishManager: IIronfishManager = {
   },
   snapshot: {
     start: (path: string) => window.DemoDataManager.snapshot.start(path),
+    manifest: () => window.DemoDataManager.snapshot.manifest(),
     status: () => window.DemoDataManager.snapshot.status(),
     reset: () => window.DemoDataManager.snapshot.reset(),
   },
@@ -78,6 +79,9 @@ export const IronFishManager: IIronfishManager = {
   hasAnyAccount: () => window.DemoDataManager.hasAnyAccount(),
   sync: () => Promise.resolve(),
   initialize: () => window.DemoDataManager.initialize(),
+  chainProgress: () => window.DemoDataManager.node.chainProgress(),
+  downloadChainSnapshot: (path: string) =>
+    window.DemoDataManager.downloadSnapshot(path),
   start: () => window.DemoDataManager.start(),
   stop: () => window.DemoDataManager.stop(),
   status: () => window.DemoDataManager.initStatus(),

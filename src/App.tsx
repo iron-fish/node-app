@@ -19,7 +19,6 @@ import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 import { DataSyncProvider } from './providers/DataSyncProvider'
 import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
 import Initializing from 'Routes/Initializing'
-import SnapshotFlow from 'Routes/SnapshotFlow'
 
 const breakpoints = {
   xs: '46.875rem', //750px
@@ -37,11 +36,10 @@ function App() {
   return (
     <IronFishUIProvider theme={{ breakpoints }}>
       <ElectronThemeChangeHandler />
-      <DataSyncProvider>
-        <HashRouter>
-          <Routes>
-            <Route element={<Initializing />}>
-              <Route element={<SnapshotFlow />} path={ROUTES.SNAPSHOT} />
+      <HashRouter>
+        <Routes>
+          <Route element={<Initializing />}>
+            <Route element={<DataSyncProvider />}>
               <Route element={<CreateLayout />}>
                 <Route path={ROUTES.ONBOARDING} element={<Action />} />
                 <Route path={ROUTES.CREATE} element={<CreateAccount />} />
@@ -62,9 +60,9 @@ function App() {
                 {/* <Route path={ROUTES.MINER} element={<Miner />} /> */}
               </Route>
             </Route>
-          </Routes>
-        </HashRouter>
-      </DataSyncProvider>
+          </Route>
+        </Routes>
+      </HashRouter>
     </IronFishUIProvider>
   )
 }

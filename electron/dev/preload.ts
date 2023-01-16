@@ -42,6 +42,17 @@ contextBridge.exposeInMainWorld('IronfishManager', {
       'ironfish-manager',
       IronfishManagerAction.HAS_ANY_ACCOUNT
     ),
+  chainProgress: () =>
+    ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.CHAIN_PROGRESS
+    ),
+  downloadChainSnapshot: (path: string) =>
+    ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.DOWNLOAD_SNAPSHOT,
+      path
+    ),
   start: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.START),
   stop: () =>
@@ -162,6 +173,11 @@ contextBridge.exposeInMainWorld('IronfishManager', {
       ipcRenderer.invoke(
         'ironfish-manager-snapshot',
         IronfishSnaphotManagerAction.STATUS
+      ),
+    manifest: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.MANIFEST
       ),
   },
 } as IIronfishManager)

@@ -1,6 +1,5 @@
 export const ROUTES = {
   ONBOARDING: '/',
-  SNAPSHOT: '/snapshot',
   CREATE: '/create',
   IMPORT: '/import',
   OVERVIEW: '/overview',

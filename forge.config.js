@@ -26,9 +26,9 @@ const COMMON_CONFIG = {
 const ENV_CONFIGS = {
   dev: {
     plugins: [
-      {
-        name: '@electron-forge/plugin-webpack',
-        config: {
+      [
+        '@electron-forge/plugin-webpack',
+        {
           mainConfig: './webpack/dev/main.config.js',
           renderer: {
             config: './webpack/common/renderer.config.js',
@@ -44,7 +44,7 @@ const ENV_CONFIGS = {
             ],
           },
         },
-      },
+      ],
     ],
   },
   demo: {

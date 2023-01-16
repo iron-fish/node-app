@@ -1,7 +1,9 @@
+import { nanoid } from 'nanoid'
 import {
   IIronfishSnapshotManager,
   ProgressStatus,
   ProgressType,
+  SnapshotManifest,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 
 class DemoSnapshotManager implements IIronfishSnapshotManager {
@@ -9,6 +11,18 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
   async start(pathToSave: string) {
     this.execute(ProgressStatus.DOWLOADING)
   }
+
+  manifest(): Promise<SnapshotManifest> {
+    return Promise.resolve({
+      block_sequence: 675443,
+      checksum: nanoid(64),
+      database_version: 1204,
+      file_name: 'manifest.tar.gz',
+      file_size: 378965234,
+      timestamp: new Date().getTime(),
+    })
+  }
+
   private async execute(status: ProgressStatus) {
     this.stat = {
       status: status,

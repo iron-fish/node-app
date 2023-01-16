@@ -6,7 +6,7 @@ import SortType from 'Types/SortType'
 import DemoAccountsManager from './DemoAccountsManager'
 import DemoAddressBookManager from './DemoAddressBookManager'
 import DemoMinerManager from './DemoMinerManager'
-import DemoNodeManager from './DemoNodeManager'
+import DemoNodeManager, { STATUS } from './DemoNodeManager'
 import DemoTransactionsManager from './DemoTransactionsManager'
 import { AccountSettings } from './types/Account'
 import { AccountMinerStatistic, MinerProps } from './types/AccountMiner'
@@ -55,6 +55,9 @@ class DemoDataManager {
   }
 
   async start(): Promise<void> {
+    if (this.status === IronFishInitStatus.DOWNLOAD_SNAPSHOT) {
+      this.node.complete()
+    }
     this.status = IronFishInitStatus.STARTING_NODE
     await new Promise(resolve =>
       setTimeout(() => {
@@ -68,6 +71,16 @@ class DemoDataManager {
     await new Promise(resolve =>
       setTimeout(() => {
         this.status = IronFishInitStatus.NOT_STARTED
+        resolve(undefined)
+      }, 2000)
+    )
+  }
+
+  async downloadSnapshot(path: string): Promise<void> {
+    await new Promise(resolve =>
+      setTimeout(() => {
+        this.status = IronFishInitStatus.DOWNLOAD_SNAPSHOT
+        this.snapshot.start(path)
         resolve(undefined)
       }, 2000)
     )

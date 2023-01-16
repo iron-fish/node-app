@@ -26,6 +26,7 @@ const createWindow = () => {
       icon: __dirname + '/app.ico',
       title: 'Iron Fish Wallet',
       webPreferences: {
+        enableRemoteModule: true,
         contextIsolation: true,
         // nodeIntegrationInWorker: true,
         preload: WALLET_PRELOAD_WEBPACK_ENTRY,
@@ -54,6 +55,17 @@ const createWindow = () => {
 
 ipcMain.handle('theme-mode-change', (e, mode: 'light' | 'dark' | 'system') => {
   nativeTheme.themeSource = mode
+})
+
+ipcMain.handle('dialog:openDirectory', async () => {
+  const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+    properties: ['openDirectory'],
+  })
+  if (canceled) {
+    return
+  } else {
+    return filePaths[0]
+  }
 })
 
 // This method will be called when Electron has finished

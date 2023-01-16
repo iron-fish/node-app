@@ -4,7 +4,7 @@ import { BlockSyncerStatusType } from 'Types/BlockSyncerStatusType'
 
 const BLOCK_SPEED = 60000
 
-const STATUS: NodeStatusResponse = {
+export const STATUS: NodeStatusResponse = {
   node: {
     status: NodeStatusType.STARTED,
     nodeName: 'My Node Name Example',
@@ -59,6 +59,11 @@ const PEERS: PeerResponse[] = Array(23)
   })
 
 class DemoNodeManager {
+  complete(): void {
+    STATUS.blockSyncer.syncing.progress = 1
+    STATUS.blockchain.head = STATUS.blockchain.totalSequences
+    STATUS.blockSyncer.status = BlockSyncerStatusType.IDLE
+  }
   status(): Promise<NodeStatusResponse> {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -109,6 +114,10 @@ class DemoNodeManager {
         resolve(PEERS)
       }, 500)
     })
+  }
+
+  chainProgress(): Promise<number> {
+    return Promise.resolve(STATUS.blockSyncer.syncing?.progress || null)
   }
 }
 

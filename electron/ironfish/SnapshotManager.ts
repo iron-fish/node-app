@@ -33,14 +33,17 @@ class SnapshotManager implements IIronfishSnapshotManager {
     }
   }
 
+  async manifest(): Promise<SnapshotManifest> {
+    return (await axios.get<SnapshotManifest>(MANIFEST_URL)).data
+  }
+
   async start(pathToSave: string): Promise<void> {
     if (!this.node) {
       this.progress.hasError = true
       this.progress.error = 'Node is not initialized'
       return
     }
-    const manifest = (await axios.get<SnapshotManifest>(MANIFEST_URL)).data
-
+    const manifest = await this.manifest()
     if (manifest.database_version > VERSION_DATABASE_CHAIN) {
       this.progress.hasError = true
       this.progress.error =

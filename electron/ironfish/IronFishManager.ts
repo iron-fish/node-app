@@ -62,7 +62,10 @@ export class IronFishManager implements IIronfishManager {
   }
 
   async start(): Promise<void> {
-    if (this.initStatus !== IronFishInitStatus.INITIALIZED) {
+    if (
+      this.initStatus !== IronFishInitStatus.INITIALIZED &&
+      this.initStatus !== IronFishInitStatus.DOWNLOAD_SNAPSHOT
+    ) {
       throw new Error(
         'SDK and node is not initialized. Please call init method first.'
       )
@@ -97,6 +100,10 @@ export class IronFishManager implements IIronfishManager {
 
   status(): Promise<IronFishInitStatus> {
     return Promise.resolve(this.initStatus)
+  }
+
+  chainProgress(): Promise<number> {
+    return Promise.resolve(this.node.chain.getProgress())
   }
 
   nodeStatus(): Promise<NodeStatusResponse> {
@@ -218,5 +225,18 @@ export class IronFishManager implements IIronfishManager {
     }
 
     return Promise.resolve(result)
+  }
+
+  async downloadChainSnapshot(path: string): Promise<void> {
+    if (
+      this.initStatus < IronFishInitStatus.INITIALIZED ||
+      this.initStatus === IronFishInitStatus.ERROR
+    ) {
+      return Promise.reject(new Error('Node is not initialized.'))
+    }
+    await this.node.shutdown()
+    await this.node.closeDB()
+    this.initStatus = IronFishInitStatus.DOWNLOAD_SNAPSHOT
+    return this.snapshot.start(path)
   }
 }

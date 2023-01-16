@@ -1,6 +1,7 @@
 import { Meter } from '@ironfish/sdk'
 
 export enum IronfishSnaphotManagerAction {
+  MANIFEST = 'manifest',
   START = 'start',
   STATUS = 'status',
   RESET = 'reset',
@@ -36,6 +37,7 @@ export type SnapshotManifest = {
 
 export interface IIronfishSnapshotManager {
   start: (pathToSave: string) => Promise<void>
+  manifest: () => Promise<SnapshotManifest>
   reset: () => Promise<void>
   status: () => Promise<Omit<ProgressType, 'statistic'>>
 }

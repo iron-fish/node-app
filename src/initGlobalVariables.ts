@@ -11,6 +11,7 @@ declare global {
     AddressBookStorage: IStorage<Contact>
     AccountSettingsStorage: IStorage<AccountSettings>
     setElectronThemeMode: (mode: string) => void
+    selectFolder: () => Promise<string>
     IronfishManager: IIronfishManager
   }
 }

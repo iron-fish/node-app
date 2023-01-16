@@ -33,24 +33,12 @@ const getActiveStep = (status: ProgressStatus): number => {
   }
 }
 
-const renderCount = (
-  current: number,
-  total: number,
-  status: ProgressStatus
-) => {
+const renderCount = (current: number, total: number) => {
   if (!total) {
     return null
   }
 
-  if (
-    status === ProgressStatus.DOWLOADING ||
-    status === ProgressStatus.UNARHIVING ||
-    status === ProgressStatus.CLEARING_CHAIN_DB
-  ) {
-    return sizeFormat(current) + '/' + sizeFormat(total)
-  }
-
-  return current + '/' + total
+  return sizeFormat(current) + '/' + sizeFormat(total)
 }
 
 const StepProgress: FC<{
@@ -63,9 +51,7 @@ const StepProgress: FC<{
         <chakra.h5>Progress</chakra.h5>
       </Box>
       <Box>
-        <chakra.h5>
-          {renderCount(status?.current, status?.total, status?.status)}
-        </chakra.h5>
+        <chakra.h5>{renderCount(status?.current, status?.total)}</chakra.h5>
       </Box>
     </Flex>
     <Box w="100%">
@@ -118,14 +104,18 @@ const SnapshotFlow: FC = () => {
   )
 
   useEffect(() => {
-    window.IronfishManager.snapshot.start('D:/testPath')
-
     const interval = setInterval(() => {
       window.IronfishManager.snapshot.status().then(setStatus)
     }, 1000)
 
     return () => clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    if (status?.status === ProgressStatus.COMPLETED) {
+      window.IronfishManager.start()
+    }
+  }, [status?.status])
 
   const activeStep = getActiveStep(status?.status)
 
