@@ -122,7 +122,7 @@ const TransactionOverview: FC = () => {
           to={ROUTES.ACCOUNTS}
           label={'Back to all accounts'}
         />
-        <Flex alignItems="end" mb="4rem">
+        <Flex alignItems="end" mb="2.5rem">
           <Skeleton isLoaded={accountLoaded} minW="8rem" h="1.75rem" mr="1rem">
             <chakra.h2 mr="1rem">{account?.name}</chakra.h2>
           </Skeleton>
@@ -142,11 +142,24 @@ const TransactionOverview: FC = () => {
           </Skeleton>
         </Flex>
       </Box>
-      <Box mb="3rem">
-        <chakra.h3 mb="2rem">Transaction Information</chakra.h3>
-        <Flex w="100%" wrap="wrap">
+      <Box mb="2.5rem">
+        <chakra.h3 mb="1rem">Transaction Information</chakra.h3>
+        <Flex
+          w="100%"
+          justifyContent="space-between"
+          alignItems="center"
+          flexFlow="row wrap"
+          _after={{ flex: 'auto' }}
+        >
           {CARDS.map((card: Card) => (
-            <Skeleton isLoaded={transactionLoaded} mr="1rem" mb="1rem">
+            <Skeleton
+              isLoaded={transactionLoaded}
+              mr="1rem"
+              mb="1rem"
+              minW="19rem"
+              h="7.5rem"
+              flex="1 0 auto"
+            >
               <Box
                 layerStyle="card"
                 h="7.5rem"
@@ -179,7 +192,7 @@ const TransactionOverview: FC = () => {
         </Flex>
       </Box>
       <Box>
-        <chakra.h3 mb="2rem">Inputs / Outputs</chakra.h3>
+        <chakra.h3 mb="1rem">Inputs / Outputs</chakra.h3>
       </Box>
       <Flex w="100%">
         <Box w="calc(50% - 1.5rem)" mr="1rem">
