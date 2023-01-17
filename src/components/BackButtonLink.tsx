@@ -7,14 +7,18 @@ import {
   LinkProps,
   Flex,
 } from '@ironfish/ui-kit'
-import { Link as RouterLink } from 'react-router-dom'
+import {
+  Link as RouterLink,
+  LinkProps as RouterLinkProps,
+} from 'react-router-dom'
 
-interface BackButtonLinkProps extends LinkProps {
+interface BackButtonLinkProps
+  extends LinkProps,
+    Omit<RouterLinkProps, 'color'> {
   label: string
-  to: string
 }
 
-const BackButtonLink: FC<BackButtonLinkProps> = ({ to, label, ...rest }) => {
+const BackButtonLink: FC<BackButtonLinkProps> = ({ label, ...rest }) => {
   const $colors = useColorModeValue(
     {
       chevron: NAMED_COLORS.BLACK,
@@ -36,7 +40,6 @@ const BackButtonLink: FC<BackButtonLinkProps> = ({ to, label, ...rest }) => {
       alignItems="center"
       cursor="pointer"
       as={RouterLink}
-      to={to}
       {...rest}
       _hover={{
         color: $colors.linkHover,

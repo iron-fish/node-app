@@ -46,6 +46,9 @@ const CARDS: Card[] = [
             <CopyValueToClipboard
               label={truncateHash(tx.to[0] || '', 2, 4)}
               value={tx.to[0] || ''}
+              iconButtonProps={{
+                color: NAMED_COLORS.GREY,
+              }}
               copyTooltipText={'Copy address to'}
               copiedTooltipText={'Address copied'}
             />
@@ -63,6 +66,9 @@ const CARDS: Card[] = [
       <CopyValueToClipboard
         label={truncateHash(tx?.blockHash || '', 2, 4)}
         value={tx?.blockHash || ''}
+        iconButtonProps={{
+          color: NAMED_COLORS.GREY,
+        }}
         copyTooltipText={'Copy block hash'}
         copiedTooltipText={'Block hash copied'}
       />
@@ -74,6 +80,9 @@ const CARDS: Card[] = [
     render: (tx: Transaction) => (
       <CopyValueToClipboard
         label={truncateHash(tx?.hash || '', 2, 4)}
+        iconButtonProps={{
+          color: NAMED_COLORS.GREY,
+        }}
         value={tx?.hash || ''}
         copyTooltipText={'Copy Transaction hash'}
         copiedTooltipText={'Transaction hash copied'}
@@ -119,8 +128,9 @@ const TransactionOverview: FC = () => {
       <Box>
         <BackButtonLink
           mb="1rem"
-          to={ROUTES.ACCOUNTS}
-          label={'Back to all accounts'}
+          to={ROUTES.ACCOUNT}
+          state={{ accountId: accountId }}
+          label={'Back to Account Overview'}
         />
         <Flex alignItems="end" mb="2.5rem">
           <Skeleton isLoaded={accountLoaded} minW="8rem" h="1.75rem" mr="1rem">
@@ -214,7 +224,15 @@ const TransactionOverview: FC = () => {
                       textOverflow="ellipsis"
                     >
                       <chakra.h5>
-                        {truncateHash(spend.nullifier, 2, 4)}
+                        <CopyValueToClipboard
+                          copiedTooltipText="Input address copied"
+                          copyTooltipText="Copy Input address"
+                          label={truncateHash(spend.nullifier, 2, 4)}
+                          value={spend.nullifier}
+                          iconButtonProps={{
+                            color: NAMED_COLORS.GREY,
+                          }}
+                        />
                       </chakra.h5>
                     </Box>
                   </Flex>
