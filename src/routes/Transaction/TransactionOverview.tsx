@@ -165,18 +165,12 @@ const TransactionOverview: FC = () => {
             <Skeleton
               isLoaded={transactionLoaded}
               mr="1rem"
-              mb="1rem"
+              mb="1.25rem"
               minW="19rem"
               h="7.5rem"
               flex="1 0 auto"
             >
-              <Box
-                layerStyle="card"
-                h="7.5rem"
-                minW="19rem"
-                mr="1rem"
-                mb="1rem"
-              >
+              <Box layerStyle="card" h="7.5rem" minW="19rem">
                 <Flex
                   w="100%"
                   h="100%"
@@ -272,6 +266,9 @@ const TransactionOverview: FC = () => {
               {
                 key: 'note-memo',
                 label: 'Memo',
+                ItemProps: {
+                  paddingLeft: '1rem',
+                },
                 render: (note: Note) => <chakra.h5>{note?.memo}</chakra.h5>,
               },
             ]}
