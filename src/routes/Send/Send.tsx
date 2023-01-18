@@ -27,7 +27,7 @@ import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
+import { formatOreToTronWithLanguage, ORE_TO_IRON } from 'Utils/number'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -99,7 +99,7 @@ const Send: FC = () => {
 
   useEffect(() => {
     if (fee) {
-      setOwnFee(floor(fee / ORE_TO_IRON, 8).toFixed(8))
+      setOwnFee(formatOreToTronWithLanguage(fee))
     }
   }, [fee])
 
@@ -216,11 +216,11 @@ const Send: FC = () => {
       <SendFlow
         isOpen={startSendFlow}
         onClose={() => setStart(false)}
-        amount={amount}
+        amount={BigInt(amount * ORE_TO_IRON)}
         from={account}
         to={contact}
         memo={notes}
-        fee={Number(ownFee) || fee}
+        fee={BigInt(Number(ownFee) * ORE_TO_IRON) || fee}
       />
     </Flex>
   )

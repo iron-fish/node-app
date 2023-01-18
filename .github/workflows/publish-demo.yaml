@@ -10,10 +10,10 @@ jobs:
   # publish_on_linux:
   #   runs-on: ubuntu-latest
   #   steps:
-  #   - uses: actions/checkout@v2       
+  #   - uses: actions/checkout@v2
   #   - uses: actions/setup-node@master
   #     with:
-  #       node-version: 16
+  #       node-version: 18.13
   #   - name: install dependencies
   #     run: yarn
   #   - name: publish
@@ -27,21 +27,21 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@master
       with:
-        node-version: 16
+        node-version: 18.13
     - name: install dependencies
       run: yarn
     - name: publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: yarn publish:demo
-      
+
   publish_on_win:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2       
+    - uses: actions/checkout@v2
     - uses: actions/setup-node@master
       with:
-        node-version: 16
+        node-version: 18.13
     - name: install dependencies
       run: yarn
     - name: publish

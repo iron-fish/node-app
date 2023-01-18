@@ -7,10 +7,10 @@ jobs:
   #   name: 'Check build on Linux'
   #   runs-on: ubuntu-latest
   #   steps:
-  #   - uses: actions/checkout@v2       
+  #   - uses: actions/checkout@v2
   #   - uses: actions/setup-node@master
   #     with:
-  #       node-version: 16
+  #       node-version: 18.13
   #   - name: Install dependencies
   #     run: yarn
   #   - name: Build application
@@ -20,23 +20,23 @@ jobs:
     name: 'Check build on Mac'
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2       
+    - uses: actions/checkout@v2
     - uses: actions/setup-node@master
       with:
-        node-version: 16
+        node-version: 18.13
     - name: Install dependencies
       run: yarn
     - name: Build application
       run: yarn build:production
-      
+
   build_on_win:
     name: 'Check build on Windows'
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2       
+    - uses: actions/checkout@v2
     - uses: actions/setup-node@master
       with:
-        node-version: 16
+        node-version: 18.13
     - name: Install dependencies
       run: yarn
     - name: Build application

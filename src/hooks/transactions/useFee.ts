@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
 
 const useFee = () => {
-  const [result, promiseWrapper] = useAsyncDataWrapper<number>()
+  const [result, promiseWrapper] = useAsyncDataWrapper<bigint>()
 
   const calculateFee = () =>
     promiseWrapper(window.IronfishManager.transactions.averageFee(10))
