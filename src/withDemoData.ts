@@ -29,7 +29,7 @@ export const IronFishManager: IIronfishManager = {
   },
   transactions: {
     averageFee: (numOfBlocks?) => {
-      return Promise.resolve(BigInt(Math.random() * 100))
+      return Promise.resolve(BigInt(Math.round(Math.random() * 1000)))
     },
     fees: (numOfBlocks?) => {
       return Promise.resolve({

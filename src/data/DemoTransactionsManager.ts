@@ -213,7 +213,7 @@ class DemoTransactionsManager {
           isMinersFee: false,
           notes: [
             {
-              value: BigInt(amount),
+              value: amount,
               memo: memo,
             },
           ],
