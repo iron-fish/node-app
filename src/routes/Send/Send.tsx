@@ -14,7 +14,6 @@ import {
   InputProps,
   Skeleton,
 } from '@ironfish/ui-kit'
-import floor from 'lodash/floor'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
 import DetailsPanel from 'Components/DetailsPanel'
@@ -27,7 +26,7 @@ import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
+import { decodeIron, formatOreToTronWithLanguage } from 'Utils/number'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -99,7 +98,7 @@ const Send: FC = () => {
 
   useEffect(() => {
     if (fee) {
-      setOwnFee(floor(fee / ORE_TO_IRON, 8).toFixed(8))
+      setOwnFee(formatOreToTronWithLanguage(fee))
     }
   }, [fee])
 
@@ -217,12 +216,12 @@ const Send: FC = () => {
       <SendFlow
         isOpen={startSendFlow}
         onClose={() => setStart(false)}
-        amount={amount}
+        amount={decodeIron(amount.toFixed(8))}
         from={account}
         to={contact}
         memo={notes}
-        fee={Number(ownFee) || fee}
         onCreateAccount={setContact}
+        fee={decodeIron(ownFee) || fee}
       />
     </Flex>
   )

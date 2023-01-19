@@ -9,7 +9,7 @@ import {
   Box,
 } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import Send from 'Svgx/send'
+import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAddressTransactions'
@@ -79,7 +79,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
                     background={NAMED_COLORS.LIGHT_GREY}
                   >
                     <Icon h={8}>
-                      {transaction.creator ? <Send /> : <Receive />}
+                      {transaction.creator ? <SendIcon /> : <Receive />}
                     </Icon>
                   </Flex>
                   <chakra.h5 ml="2.375rem">{transaction.status}</chakra.h5>

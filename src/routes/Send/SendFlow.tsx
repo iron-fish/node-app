@@ -30,7 +30,7 @@ import CutAccount from 'Types/CutAccount'
 import { truncateHash } from 'Utils/hash'
 import useSendFlow from 'Hooks/transactions/useSendFlow'
 import Transaction, { TransactionStatus } from 'Types/Transaction'
-import { ORE_TO_IRON } from '@ironfish/sdk/build/src/utils/currency'
+import { formatOreToTronWithLanguage } from 'Utils/number'
 import useAddressBook from 'Hooks/addressBook/useAddressBook'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
@@ -38,9 +38,9 @@ interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
 interface SendProps {
   from: CutAccount
   to: Contact
-  amount: number
+  amount: bigint
   memo: string
-  fee: number
+  fee: bigint
   transaction: Transaction | null
   onCreateAccount: (contact: Contact) => void
 }
@@ -194,7 +194,9 @@ const ConfirmStep: FC<StepProps> = ({
             title="Amount:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{amount} $IRON</chakra.h4>
+                <chakra.h4>
+                  {formatOreToTronWithLanguage(amount)} $IRON
+                </chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -204,7 +206,7 @@ const ConfirmStep: FC<StepProps> = ({
             title="Fee:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{fee.toFixed(8)} $IRON</chakra.h4>
+                <chakra.h4>{formatOreToTronWithLanguage(fee)} $IRON</chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -215,7 +217,7 @@ const ConfirmStep: FC<StepProps> = ({
             value={
               <HStack w="100%" justifyContent="space-between">
                 <chakra.h4>
-                  {(amount * ORE_TO_IRON + fee * ORE_TO_IRON) / ORE_TO_IRON}
+                  {formatOreToTronWithLanguage(amount + fee)}
                   &nbsp;$IRON
                 </chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
@@ -297,9 +299,12 @@ const SendStep: FC<StepProps> = ({ amount, fee, from, to, memo, onSend }) => {
     <ModalBody p={0}>
       <chakra.h2 mb="1rem">Transaction Processing</chakra.h2>
       <chakra.h4 mb="2rem">
-        We are processing your transaction of {amount} $IRON. This may take a
-        few minutes. Once the transaction is processed there will be a link
-        below with your details.
+        <>
+          We are processing your transaction of{' '}
+          {formatOreToTronWithLanguage(amount)} $IRON. This may take a few
+          minutes. Once the transaction is processed there will be a link below
+          with your details.
+        </>
       </chakra.h4>
       <Box
         border="0.0625rem solid"

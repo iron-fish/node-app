@@ -26,7 +26,7 @@ export interface Transaction {
   fee: string
   notesCount: number
   spendsCount: number
-  expirationSequence: number
+  expiration: number
   status: TransactionStatus
   notes: Note[]
   spends: Spend[]

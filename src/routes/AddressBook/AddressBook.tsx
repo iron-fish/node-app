@@ -13,7 +13,7 @@ import {
   useIronToast,
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
-import Send from 'Svgx/send'
+import SendIcon from 'Svgx/send'
 import Caret from 'Svgx/caret-icon'
 import HexFishCircle from 'Components/HexFishCircle'
 import { truncateHash } from 'Utils/hash'
@@ -182,7 +182,7 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
                       <Button
                         leftIcon={
                           <Icon height={8}>
-                            <Send fill="currentColor" />
+                            <SendIcon />
                           </Icon>
                         }
                         variant="primary"
