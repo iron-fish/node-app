@@ -216,7 +216,7 @@ const Send: FC = () => {
       <SendFlow
         isOpen={startSendFlow}
         onClose={() => setStart(false)}
-        amount={decodeIron(amount)}
+        amount={decodeIron(amount.toFixed(8))}
         from={account}
         to={contact}
         memo={notes}
