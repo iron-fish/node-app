@@ -529,7 +529,6 @@ export class IronFishManager implements IIronfishManager {
     this.nodeSettings.setValues(values)
     await this.nodeSettings.save()
     await this.stop()
-    await this.initialize()
     return this.start()
   }
 }
