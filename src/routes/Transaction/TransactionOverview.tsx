@@ -99,7 +99,7 @@ const CARDS: Card[] = [
   },
   {
     render: (tx: Transaction) =>
-      formatOreToTronWithLanguage(tx?.fee || 0) + ' $IRON',
+      formatOreToTronWithLanguage(BigInt(tx?.fee || 0)) + ' $IRON',
     label: 'Fee',
     icon: BlockInfoDifficultyIcon,
   },
@@ -252,7 +252,7 @@ const TransactionOverview: FC = () => {
                 label: '$IRON',
                 render: (note: Note) => (
                   <chakra.h5>
-                    {formatOreToTronWithLanguage(note?.value || 0)}
+                    {formatOreToTronWithLanguage(note?.value || BigInt(0))}
                   </chakra.h5>
                 ),
               },

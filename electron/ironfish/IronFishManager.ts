@@ -338,9 +338,7 @@ class TransactionManager implements IIronfishTransactionManager {
     const accounts: Account[] = this.node.wallet.listAccounts()
 
     for (const account of accounts) {
-      const headSequence = await this.node.wallet.getAccountHeadSequence(
-        account
-      )
+      const head = await account.getHead()
       for await (const transaction of account.getTransactions()) {
         let creatorNote
         for await (const spend of transaction?.transaction?.spends) {
@@ -362,7 +360,7 @@ class TransactionManager implements IIronfishTransactionManager {
           transactions.push(
             await this.resolveTransactionFields(
               account,
-              headSequence,
+              head.sequence,
               transaction
             )
           )
