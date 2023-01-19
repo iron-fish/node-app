@@ -15,7 +15,7 @@ const useSendFlow = (
         accountId,
         {
           amount,
-          memo: memo,
+          memo,
           publicAddress: to,
         },
         fee

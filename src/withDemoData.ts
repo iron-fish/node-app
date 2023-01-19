@@ -2,7 +2,7 @@ import { AccountValue } from '@ironfish/sdk'
 import noop from 'lodash/noop'
 import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
-import IIronfishManager from 'Types/IIronfishManager'
+import IIronfishManager, { TransactionReceiver } from 'Types/IIronfishManager'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
 
@@ -31,6 +31,14 @@ export const IronFishManager: IIronfishManager = {
     averageFee: (numOfBlocks?) => {
       return Promise.resolve(BigInt(Math.round(Math.random() * 1000)))
     },
+    estimateFeeWithPriority: (
+      accountId: string,
+      receive: TransactionReceiver
+    ) =>
+      window.DemoDataManager.transactions.estimateFeeWithPriority(
+        accountId,
+        receive
+      ),
     fees: (numOfBlocks?) => {
       return Promise.resolve({
         startBlock: 0,
