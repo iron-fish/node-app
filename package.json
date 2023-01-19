@@ -6,7 +6,6 @@
   "repository": "https://github.com/iron-fish/wallet-app",
   "author": "iron-fish",
   "license": "MPL-2.0",
-  "private": false,
   "scripts": {
     "start": "nps start",
     "start:dev": "nps start.dev",

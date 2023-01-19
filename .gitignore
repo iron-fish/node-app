@@ -6,6 +6,10 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# Yarn
+.yarn
+.yarnrc.yml
+
 address_book.db
 accounts_settings.db
 
