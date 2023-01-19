@@ -27,7 +27,7 @@ import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { formatOreToTronWithLanguage, ORE_TO_IRON } from 'Utils/number'
+import { decodeIron, formatOreToTronWithLanguage } from 'Utils/number'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -216,11 +216,11 @@ const Send: FC = () => {
       <SendFlow
         isOpen={startSendFlow}
         onClose={() => setStart(false)}
-        amount={BigInt(amount * ORE_TO_IRON)}
+        amount={decodeIron(amount)}
         from={account}
         to={contact}
         memo={notes}
-        fee={BigInt(Number(ownFee) * ORE_TO_IRON) || fee}
+        fee={decodeIron(ownFee) || fee}
       />
     </Flex>
   )
