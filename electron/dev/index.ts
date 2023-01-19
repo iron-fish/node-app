@@ -51,7 +51,7 @@ ipcMain.handle(
 
 ipcMain.handle(
   'ironfish-manager-transactions',
-  (e, action: IronfishTransactionManagerAction, ...args): Promise<any> =>{
+  (e, action: IronfishTransactionManagerAction, ...args): Promise<any> => {
     let result
     try {
       result = ironfishManager.transactions[action](...args)
