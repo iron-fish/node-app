@@ -9,7 +9,7 @@ import {
   NAMED_COLORS,
 } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import Send from 'Svgx/send'
+import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import FeesImage from 'Svgx/FeesImage'
 import { truncateHash } from 'Utils/hash'
@@ -77,7 +77,10 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               key: 'transaction-action-column',
               label: <chakra.h6>Action</chakra.h6>,
               render: transaction => (
-                <TransactionStatusView status={transaction.status} />
+                <TransactionStatusView
+                  status={transaction.status}
+                  isSent={transaction.creator}
+                />
               ),
             },
             {
@@ -180,7 +183,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
                   borderColor="transparent"
                   leftIcon={
                     <Icon height={8}>
-                      <Send fill="currentColor" />
+                      <SendIcon />
                     </Icon>
                   }
                   onClick={() =>
@@ -200,7 +203,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
                   mr="1rem"
                   leftIcon={
                     <Icon height={8}>
-                      <Receive fill="currentColor" />
+                      <Receive />
                     </Icon>
                   }
                   onClick={() =>

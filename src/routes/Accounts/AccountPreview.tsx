@@ -11,7 +11,7 @@ import {
   CopyValueToClipboard,
   useColorModeValue,
 } from '@ironfish/ui-kit'
-import Send from 'Svgx/send'
+import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import Caret from 'Svgx/caret-icon'
 import { useNavigate } from 'react-router-dom'
@@ -150,7 +150,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
               mr="1rem"
               leftIcon={
                 <Icon height={8}>
-                  <Send fill="currentColor" />
+                  <SendIcon />
                 </Icon>
               }
               isDisabled={!loaded}
@@ -172,7 +172,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
               mr="1rem"
               leftIcon={
                 <Icon height={8}>
-                  <Receive fill="currentColor" />
+                  <Receive />
                 </Icon>
               }
               isDisabled={!loaded}

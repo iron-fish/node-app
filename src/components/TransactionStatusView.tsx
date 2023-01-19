@@ -1,58 +1,109 @@
 import { FC } from 'react'
-import { Flex, NAMED_COLORS, useColorModeValue, chakra } from '@ironfish/ui-kit'
+import {
+  Flex,
+  NAMED_COLORS,
+  useColorModeValue,
+  chakra,
+  IconProps,
+} from '@ironfish/ui-kit'
 import { TransactionStatus } from 'Types/Transaction'
 import PendingIcon from '@ironfish/ui-kit/dist/svgx/pending-icon'
-import ConfirmedIcon from '@ironfish/ui-kit/dist/svgx/confirmed-icon'
 import ExpiredIcon from '@ironfish/ui-kit/dist/svgx/expired-icon'
-import AwaitIcon from '@ironfish/ui-kit/dist/svgx/await-icon'
+import IconSend from 'Svgx/send'
+import IconReceive from 'Svgx/receive'
 
 interface TransactionStatusProps {
   status: TransactionStatus
+  isSent: boolean
 }
 
-const getStatusIcon = (status: TransactionStatus) => {
+const LIGHT_MODE = {
+  sent: {
+    bg: '#FFE4DC',
+    icon: '#F15929',
+  },
+  received: {
+    bg: '#EBFBF4',
+    icon: '#335A48',
+  },
+  pending: {
+    bg: '#FEF8C3',
+    icon: '#7C7322',
+  },
+  default: {
+    bg: NAMED_COLORS.LIGHT_GREY,
+    icon: NAMED_COLORS.GREY,
+  },
+}
+
+const DARK_MODE = {
+  sent: {
+    bg: '#3E251B',
+    icon: '#F15929',
+  },
+  received: {
+    bg: '#192D23',
+    icon: '#5FC89A',
+  },
+  pending: {
+    bg: '#403B10',
+    icon: '#E7D95C',
+  },
+  default: {
+    bg: NAMED_COLORS.DARK_GREY,
+    icon: NAMED_COLORS.WHITE,
+  },
+}
+
+interface StatusParams {
+  iconColors: { bg: string; icon: string }
+  message: string
+  icon?: FC
+}
+
+const getStatusParams = (
+  status: TransactionStatus,
+  isSent: boolean
+): StatusParams => {
+  const colors = useColorModeValue(LIGHT_MODE, DARK_MODE)
+  const params: StatusParams = {
+    message: '',
+    iconColors: colors.default,
+  }
   switch (status) {
     case TransactionStatus.CONFIRMED:
-      return <ConfirmedIcon />
+      params.icon = (props: IconProps) =>
+        isSent ? (
+          <IconSend width="0.875rem" height="0.875rem" {...props} />
+        ) : (
+          <IconReceive width="0.875rem" height="0.875rem" {...props} />
+        )
+      params.message = isSent ? 'Sent' : 'Received'
+      params.iconColors = isSent ? colors.sent : colors.received
+      break
     case TransactionStatus.PENDING:
-      return <PendingIcon />
-    case TransactionStatus.EXPIRED:
-      return <ExpiredIcon color={'#F15929'} />
-    case TransactionStatus.UNCONFIRMED:
-      return <AwaitIcon />
     case TransactionStatus.UNKNOWN:
-      return (
-        <chakra.h4 mt="0.0625rem" ml="0.0625rem">
-          ?
-        </chakra.h4>
-      )
+    case TransactionStatus.UNCONFIRMED:
+      params.icon = PendingIcon
+      params.message = 'Pending'
+      params.iconColors = colors.pending
+      break
+    case TransactionStatus.EXPIRED:
+      params.icon = ExpiredIcon
+      params.message = 'Expired'
+      break
     default:
       break
   }
+  return params
 }
 
-const getStatusMessage = (status: TransactionStatus) => {
-  switch (status) {
-    case TransactionStatus.CONFIRMED:
-      return 'Confirmed'
-    case TransactionStatus.PENDING:
-      return 'Pending'
-    case TransactionStatus.EXPIRED:
-      return 'Expired'
-    case TransactionStatus.UNCONFIRMED:
-      return 'Awaiting confirmation'
-    case TransactionStatus.UNKNOWN:
-      return 'Unknown'
-    default:
-      break
-  }
-}
-
-const TransactionStatusView: FC<TransactionStatusProps> = ({ status }) => {
-  const bgColor = useColorModeValue(
-    NAMED_COLORS.LIGHT_GREY,
-    NAMED_COLORS.DARK_GREY
-  )
+const TransactionStatusView: FC<TransactionStatusProps> = ({
+  status,
+  isSent,
+}) => {
+  const { icon, iconColors, message } = getStatusParams(status, isSent)
+  const Icon = icon as FC<IconProps>
   return (
     <Flex alignItems="center" gap="0.75rem">
       <Flex
@@ -61,13 +112,11 @@ const TransactionStatusView: FC<TransactionStatusProps> = ({ status }) => {
         borderRadius="50%"
         alignItems="center"
         justifyContent="center"
-        backgroundColor={
-          status === TransactionStatus.EXPIRED ? '#FFE2D9' : bgColor
-        }
+        backgroundColor={iconColors.bg}
       >
-        {getStatusIcon(status)}
+        <Icon color={iconColors.icon} />
       </Flex>
-      <chakra.h5>{getStatusMessage(status)}</chakra.h5>
+      <chakra.h5>{message}</chakra.h5>
     </Flex>
   )
 }

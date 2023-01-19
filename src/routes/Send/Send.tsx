@@ -26,8 +26,8 @@ import LocationStateProps from 'Types/LocationState'
 import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { CurrencyUtils } from '@ironfish/sdk/build/src/utils/currency'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
+import { decodeIron, formatOreToTronWithLanguage } from 'Utils/number'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -265,11 +265,11 @@ const Send: FC = () => {
       <SendFlow
         isOpen={startSendFlow}
         onClose={() => setStart(false)}
-        amount={Number(amount)}
+        amount={decodeIron(amount.toFixed(8))}
         from={account}
         to={contact}
         memo={notes}
-        fee={Number(CurrencyUtils.encodeIron(selectedFee?.value || 0))}
+        fee={selectedFee?.value}
       />
     </Flex>
   )

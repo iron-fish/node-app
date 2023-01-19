@@ -12,7 +12,7 @@ const AccountBalance: FC<{
   accountId,
   skeletonProps,
   renderBalance = balance =>
-    formatOreToTronWithLanguage(balance?.confirmed || '0'),
+    formatOreToTronWithLanguage(balance?.confirmed || BigInt(0)),
 }) => {
   const { loaded, data: balance } = useAccountBalance(accountId)
   return (
