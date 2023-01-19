@@ -1,4 +1,4 @@
-import { formatFixed } from '@ethersproject/bignumber'
+import { formatFixed, parseFixed } from '@ethersproject/bignumber'
 
 export const formatOreToTronWithLanguage = (
   ore: bigint,
@@ -9,6 +9,10 @@ export const formatOreToTronWithLanguage = (
   return `${Number(significant).toLocaleString(
     language || navigator.language
   )}${fractional ? '.' + fractional : '.0'}`
+}
+
+export const decodeIron = (amount: string | number): bigint => {
+  return parseFixed(amount.toString(), 8).toBigInt()
 }
 
 export const ORE_TO_IRON = 100000000
