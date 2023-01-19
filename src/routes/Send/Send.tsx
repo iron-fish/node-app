@@ -91,7 +91,7 @@ const Send: FC = () => {
   const [selectedFee, setSelectedFee] = useState<OptionType>()
   const { data: fee, loaded: feeCalculated } = useFee(account?.id, {
     publicAddress: contact?.address || '',
-    amount: CurrencyUtils.decodeIron(amount || 0),
+    amount: decodeIron(amount || 0),
     memo: notes,
   })
   const $colors = useColorModeValue(
@@ -120,7 +120,7 @@ const Send: FC = () => {
     !(selectedFee?.value && account && contact && amount) ||
     !hasEnoughIron(
       account?.balance.confirmed,
-      CurrencyUtils.decodeIron(amount || 0),
+      decodeIron(amount || 0),
       selectedFee.value
     )
 
@@ -187,7 +187,7 @@ const Send: FC = () => {
           <Box mr="-0.25rem">
             {!hasEnoughIron(
               account?.balance.confirmed,
-              CurrencyUtils.decodeIron(amount || 0),
+              decodeIron(amount || 0),
               selectedFee?.value
             ) && (
               <Flex
@@ -265,7 +265,7 @@ const Send: FC = () => {
       <SendFlow
         isOpen={startSendFlow}
         onClose={() => setStart(false)}
-        amount={decodeIron(amount.toFixed(8))}
+        amount={decodeIron(amount)}
         from={account}
         to={contact}
         memo={notes}
