@@ -49,7 +49,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     status: TransactionStatus.CONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
-    expirationSequence: 0,
+    expiration: 0,
     notesCount: 0,
     spendsCount: 0,
   },
@@ -76,7 +76,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     status: TransactionStatus.EXPIRED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
-    expirationSequence: 0,
+    expiration: 0,
     notesCount: 0,
     spendsCount: 0,
   },
@@ -103,7 +103,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     status: TransactionStatus.PENDING,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
-    expirationSequence: 0,
+    expiration: 0,
     notesCount: 0,
     spendsCount: 0,
   },
@@ -136,7 +136,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     status: TransactionStatus.UNCONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
-    expirationSequence: 0,
+    expiration: 0,
     notesCount: 0,
     spendsCount: 0,
   },
@@ -169,7 +169,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     status: TransactionStatus.UNKNOWN,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
-    expirationSequence: 0,
+    expiration: 0,
     notesCount: 0,
     spendsCount: 0,
   },
@@ -196,7 +196,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     status: TransactionStatus.CONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
-    expirationSequence: 0,
+    expiration: 0,
     notesCount: 0,
     spendsCount: 0,
   },
@@ -285,9 +285,9 @@ class DemoTransactionsManager {
     accountId: string,
     from: string,
     to: string,
-    amount: number,
+    amount: bigint,
     memo: string,
-    fee: number
+    fee: bigint
   ): Promise<Transaction> {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -304,7 +304,7 @@ class DemoTransactionsManager {
           isMinersFee: false,
           notes: [
             {
-              value: BigInt(amount),
+              value: amount,
               memo: memo,
               sender: from,
             },
@@ -312,7 +312,7 @@ class DemoTransactionsManager {
           spends: [],
           status: TransactionStatus.CONFIRMED,
           accountId: accountId,
-          expirationSequence: 0,
+          expiration: 0,
           notesCount: 0,
           spendsCount: 0,
         }

@@ -104,10 +104,10 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         hash,
         accountId
       ),
-    pay: (accountId: string, payment: Payment, transactionFee?: number) =>
+    send: (accountId: string, payment: Payment, transactionFee?: bigint) =>
       ipcRenderer.invoke(
         'ironfish-manager-transactions',
-        IronfishTransactionManagerAction.PAY,
+        IronfishTransactionManagerAction.SEND,
         accountId,
         payment,
         transactionFee

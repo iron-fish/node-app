@@ -29,16 +29,16 @@ export const IronFishManager: IIronfishManager = {
   },
   transactions: {
     averageFee: (numOfBlocks?) => {
-      return Promise.resolve(Math.random() * 10)
+      return Promise.resolve(BigInt(Math.round(Math.random() * 1000)))
     },
     fees: (numOfBlocks?) => {
       return Promise.resolve({
         startBlock: 0,
         endBlock: 100,
-        p25: 0.25,
-        p50: 0.5,
-        p75: 0.75,
-        p100: 1,
+        p25: BigInt(250),
+        p50: BigInt(500),
+        p75: BigInt(750),
+        p100: BigInt(1000),
       })
     },
     findByAccountId: (accountId, searchTerm?, sort?) => {
@@ -57,14 +57,14 @@ export const IronFishManager: IIronfishManager = {
     },
     get: (hash, accountId) =>
       window.DemoDataManager.transactions.get(hash, accountId),
-    pay: (accountId, payment, transactionFee?) =>
+    send: (accountId, payment, transactionFee?) =>
       window.DemoDataManager.transactions.send(
         accountId,
         accountId,
         payment.publicAddress,
-        Number(payment.amount),
+        payment.amount,
         payment.memo,
-        transactionFee || 0.5
+        transactionFee || BigInt(100)
       ),
   },
   nodeStatus: () => window.DemoDataManager.getNodeStatus(),

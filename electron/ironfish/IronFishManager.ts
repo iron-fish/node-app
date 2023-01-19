@@ -49,10 +49,7 @@ class AccountManager implements IIronfishAccountManager {
         id: account.id,
         name: account.name,
         publicAddress: account.publicAddress,
-        balance: await this.node.wallet.getBalance(
-          account,
-          Asset.nativeIdentifier()
-        ),
+        balance: await this.balance(account.id),
       }))
     )
 
@@ -100,10 +97,21 @@ class AccountManager implements IIronfishAccountManager {
     return Promise.resolve(account)
   }
 
-  balance(id: string): Promise<AccountBalance> {
+  async balance(
+    id: string,
+    assetId: Buffer = Asset.nativeId()
+  ): Promise<AccountBalance> {
     const account = this.node.wallet.getAccount(id)
     if (account) {
-      return this.node.wallet.getBalance(account, Asset.nativeIdentifier())
+      const balance = await this.node.wallet.getBalance(account, assetId)
+      const asset = await this.node.chain.getAssetById(assetId)
+      return {
+        ...balance,
+        asset: {
+          id: asset.id.toString('hex'),
+          name: asset?.name.toString('utf8') || '',
+        },
+      }
     }
 
     return Promise.reject(new Error(`Account with id=${id} was not found.`))
@@ -117,26 +125,26 @@ class TransactionManager implements IIronfishTransactionManager {
     this.node = node
   }
 
-  async pay(
+  async send(
     accountId: string,
     payment: Payment,
-    transactionFee?: number
+    transactionFee?: bigint
   ): Promise<Transaction> {
     const account = this.node.wallet.getAccount(accountId)
-    const headSequence = await this.node.wallet.getAccountHeadSequence(account)
+    const head = await account.getHead()
     const fee = transactionFee || (await this.averageFee())
-    const transaction = await this.node.wallet.pay(
+    const transaction = await this.node.wallet.send(
       this.node.memPool,
       account,
-      [{ ...payment, assetIdentifier: Asset.nativeIdentifier() }],
-      BigInt(fee),
-      this.node.config.get('defaultTransactionExpirationSequenceDelta'),
+      [{ ...payment, assetId: Asset.nativeId() }],
+      fee,
+      this.node.config.get('transactionExpirationDelta'),
       0
     )
 
     const result = await this.resolveTransactionFields(
       account,
-      headSequence,
+      head.sequence,
       await account.getTransaction(transaction.hash())
     )
 
@@ -146,7 +154,7 @@ class TransactionManager implements IIronfishTransactionManager {
   private async getFees(numOfBlocks = 100) {
     let startBlock
     const endBlock = this.node.chain.latest.sequence
-    const fees: number[] = []
+    const fees: bigint[] = []
 
     let hash = this.node.chain.latest.hash
 
@@ -157,7 +165,7 @@ class TransactionManager implements IIronfishTransactionManager {
       if (block) {
         startBlock = block.header.sequence
         block.transactions.forEach(transaction => {
-          !transaction.isMinersFee() && fees.push(Number(transaction.fee()))
+          !transaction.isMinersFee() && fees.push(transaction.fee())
         })
       }
     }
@@ -172,7 +180,7 @@ class TransactionManager implements IIronfishTransactionManager {
   async fees(numOfBlocks = 100): Promise<TransactionFeeStatistic> {
     const { startBlock, endBlock, fees } = await this.getFees(numOfBlocks)
 
-    fees.sort((a, b) => a - b)
+    fees.sort((a, b) => Number(a) - Number(b))
 
     return {
       startBlock,
@@ -184,21 +192,26 @@ class TransactionManager implements IIronfishTransactionManager {
     }
   }
 
-  async averageFee(numOfBlocks = 100): Promise<number> {
+  async averageFee(numOfBlocks = 100): Promise<bigint> {
     const { fees } = await this.getFees(numOfBlocks)
-
-    return fees.reduce((prev, curr) => prev + curr, 0) / fees.length
+    const totalFees = Number(
+      CurrencyUtils.encodeIron(
+        fees.reduce((prev, curr) => prev + curr, BigInt(0))
+      )
+    )
+    const average = totalFees / fees.length
+    return CurrencyUtils.decodeIron(average.toFixed(8))
   }
 
   async get(hash: string, accountId: string): Promise<Transaction> {
     const account = this.node.wallet.getAccount(accountId)
-    const headSequence = await this.node.wallet.getAccountHeadSequence(account)
+    const head = await account.getHead()
     const transaction = await account.getTransaction(Buffer.from(hash, 'hex'))
 
     if (transaction) {
       return await this.resolveTransactionFields(
         account,
-        headSequence,
+        head.sequence,
         transaction
       )
     }
@@ -257,7 +270,7 @@ class TransactionManager implements IIronfishTransactionManager {
       fee: transaction.transaction.fee().toString(),
       notesCount: transaction.transaction.notes.length,
       spendsCount: transaction.transaction.spends.length,
-      expirationSequence: transaction.transaction.expirationSequence(),
+      expiration: transaction.transaction.expiration(),
       status,
       notes: notes.map(n => ({
         value: n.note.value(),
@@ -292,11 +305,11 @@ class TransactionManager implements IIronfishTransactionManager {
     sort?: SortType
   ): Promise<Transaction[]> {
     const account = this.node.wallet.getAccount(accountId)
-    const headSequence = await this.node.wallet.getAccountHeadSequence(account)
+    const head = await account.getHead()
     const transactions = []
     for await (const transaction of account.getTransactions()) {
       transactions.push(
-        await this.resolveTransactionFields(account, headSequence, transaction)
+        await this.resolveTransactionFields(account, head.sequence, transaction)
       )
     }
     const search = searchTerm?.toLowerCase()
