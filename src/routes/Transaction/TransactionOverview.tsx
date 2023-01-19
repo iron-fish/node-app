@@ -8,6 +8,7 @@ import {
   NAMED_COLORS,
   useColorModeValue,
   Skeleton,
+  Grid,
 } from '@ironfish/ui-kit'
 import size from 'byte-size'
 import { ROUTES } from '..'
@@ -154,22 +155,14 @@ const TransactionOverview: FC = () => {
       </Box>
       <Box mb="2.5rem">
         <chakra.h3 mb="1rem">Transaction Information</chakra.h3>
-        <Flex
+        <Grid
           w="100%"
-          justifyContent="space-between"
-          alignItems="center"
-          flexFlow="row wrap"
-          _after={{ flex: 'auto' }}
+          templateColumns="repeat(auto-fit, minmax(19rem, 1fr))"
+          autoRows="7.75rem"
+          gap="1rem"
         >
           {CARDS.map((card: Card) => (
-            <Skeleton
-              isLoaded={transactionLoaded}
-              mr="1rem"
-              mb="1.25rem"
-              minW="19rem"
-              h="7.5rem"
-              flex="1 0 auto"
-            >
+            <Skeleton isLoaded={transactionLoaded} minW="19rem" h="7.5rem">
               <Box layerStyle="card" h="7.5rem" minW="19rem">
                 <Flex
                   w="100%"
@@ -193,12 +186,12 @@ const TransactionOverview: FC = () => {
               </Box>
             </Skeleton>
           ))}
-        </Flex>
+        </Grid>
       </Box>
       <Box>
         <chakra.h3 mb="1rem">Inputs / Outputs</chakra.h3>
       </Box>
-      <Flex w="100%">
+      <Flex w="100%" justifyContent="space-between">
         <Box w="calc(50% - 1.5rem)" mr="1rem">
           <SimpleTable
             data={transaction?.spends || []}
