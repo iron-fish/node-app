@@ -22,7 +22,7 @@ const Information: FC = memo(() => {
     NAMED_COLORS.LIGHT_GREY
   )
   return (
-    <Box maxWidth="21.5rem">
+    <Box maxWidth="21.5rem" mt="1rem">
       <chakra.h3 mb="1rem">Settings</chakra.h3>
       <chakra.h5 mb="2rem" color={textColor}>
         Change your node settings to fit you needs
