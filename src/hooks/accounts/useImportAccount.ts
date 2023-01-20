@@ -16,6 +16,7 @@ const useImportAccount = () => {
     []
   )
   const importAccountByMnemonicPhrase = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (mnemonicPhrase: MnemonicPhraseType) =>
       window.IronfishManager.accounts.import({
         incomingViewKey: nanoid(64),

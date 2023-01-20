@@ -134,9 +134,9 @@ class DemoDataManager {
     accountId: string,
     from: string,
     to: string,
-    amount: number,
+    amount: bigint,
     memo: string,
-    fee: number
+    fee: bigint
   ): Promise<Transaction> {
     return this.transactions.send(accountId, from, to, amount, memo, fee)
   }

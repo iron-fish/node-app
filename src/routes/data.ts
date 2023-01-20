@@ -5,6 +5,7 @@ export const ROUTES = {
   OVERVIEW: '/overview',
   ACCOUNTS: '/accounts',
   ACCOUNT: '/account',
+  TRANSACTION: '/transaction',
   SEND: '/send',
   RECEIVE: '/receive',
   ADDRESS_BOOK: '/address-book',

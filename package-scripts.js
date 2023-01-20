@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { crossEnv } = require('nps-utils')
 
 module.exports = {

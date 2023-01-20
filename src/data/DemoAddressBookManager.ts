@@ -33,11 +33,6 @@ const DEMO_ADDRESS_BOOK: Contact[] = [
     name: 'Jason',
     address: 'OSAblUtjE_cda1CD_baWcpiEWBM3qp0SnZXANluiM7G4psf7Z6ojb3nXFIFaQdBx',
   },
-  {
-    identity: '5',
-    name: '',
-    address: 'OSAblUtjE_cda1CD_baWcpiEWBM3qp0SnZXANluiM7G4psf7Z6ojb3nXFIFaQdBx',
-  },
 ]
 
 class DemoAddressBookManager {
@@ -66,6 +61,24 @@ class DemoAddressBookManager {
       setTimeout(() => {
         resolve(
           DEMO_ADDRESS_BOOK.find(contact => contact.identity === identity)
+        )
+      }, 500)
+    })
+  }
+
+  find(entity: Partial<Omit<Contact, 'identity'>>): Promise<Contact> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(
+          DEMO_ADDRESS_BOOK.find(
+            contact =>
+              contact.name
+                .toLowerCase()
+                .includes((entity.name || '').toLowerCase()) &&
+              contact.address
+                .toLowerCase()
+                .includes((entity.address || '').toLowerCase())
+          )
         )
       }, 500)
     })

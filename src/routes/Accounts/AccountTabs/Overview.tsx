@@ -9,10 +9,9 @@ import {
   NAMED_COLORS,
 } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import Send from 'Svgx/send'
+import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import FeesImage from 'Svgx/FeesImage'
-import { truncateHash } from 'Utils/hash'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAcccountTransactions'
 import { useNavigate } from 'react-router-dom'
@@ -25,12 +24,14 @@ import Account from 'Types/Account'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import EmptyOverview from 'Components/EmptyOverview'
+import ContactsPreview from 'Components/ContactsPreview'
 
 interface SearchTransactionsProps {
   address: string
 }
 
 const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
+  const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
   const [{ data: transactions = undefined, loaded }] = useTransactions(
@@ -72,12 +73,20 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
         <CommonTable
           textTransform="capitalize"
           data={loaded ? transactions : new Array(10).fill(null)}
+          onRowClick={(data: Transaction) =>
+            navigate(ROUTES.TRANSACTION, {
+              state: { accountId: data.accountId, hash: data.hash },
+            })
+          }
           columns={[
             {
               key: 'transaction-action-column',
               label: <chakra.h6>Action</chakra.h6>,
               render: transaction => (
-                <TransactionStatusView status={transaction.status} />
+                <TransactionStatusView
+                  status={transaction.status}
+                  isSent={transaction.creator}
+                />
               ),
             },
             {
@@ -91,13 +100,15 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
             },
             {
               key: 'transaction-to-column',
-              label: <chakra.h6>To</chakra.h6>,
-              render: transaction =>
-                transaction.to ? (
-                  <chakra.h5>{truncateHash(transaction.to, 3)}</chakra.h5>
-                ) : (
-                  <chakra.h5 color={NAMED_COLORS.GREY}>n/a</chakra.h5>
-                ),
+              label: <chakra.h6>From/To</chakra.h6>,
+              render: (transaction: Transaction) => (
+                <ContactsPreview
+                  addresses={
+                    transaction.creator ? transaction.to : [transaction.from]
+                  }
+                  notes={transaction.notes}
+                />
+              ),
             },
             {
               key: 'transaction-date-column',
@@ -180,7 +191,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
                   borderColor="transparent"
                   leftIcon={
                     <Icon height={8}>
-                      <Send fill="currentColor" />
+                      <SendIcon />
                     </Icon>
                   }
                   onClick={() =>
@@ -200,7 +211,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
                   mr="1rem"
                   leftIcon={
                     <Icon height={8}>
-                      <Receive fill="currentColor" />
+                      <Receive />
                     </Icon>
                   }
                   onClick={() =>

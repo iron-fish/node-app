@@ -14,7 +14,7 @@ import {
 } from '@ironfish/ui-kit'
 import { useParams, useNavigate } from 'react-router-dom'
 
-import Send from 'Svgx/send'
+import SendIcon from 'Svgx/send'
 import HexFishCircle from 'Components/HexFishCircle'
 import BackButtonLink from 'Components/BackButtonLink'
 import { truncateHash } from 'Utils/hash'
@@ -29,8 +29,7 @@ const AddressDetails = () => {
   const { identity } = useParams()
   const navigate = useNavigate()
   const $color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
-  const [{ data: contact, loaded }, updateContact, deleteContact] =
-    useContact(identity)
+  const [{ data: contact }, updateContact, deleteContact] = useContact(identity)
   const { loaded: synced } = useDataSync()
 
   return (
@@ -63,7 +62,7 @@ const AddressDetails = () => {
         <Button
           leftIcon={
             <Icon height={8}>
-              <Send fill="currentColor" />
+              <SendIcon />
             </Icon>
           }
           ml="2rem"

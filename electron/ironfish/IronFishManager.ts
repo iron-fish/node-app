@@ -1,4 +1,5 @@
 import { BoxKeyPair, Asset } from '@ironfish/rust-nodejs'
+import { sizeVarBytes } from 'bufio'
 import {
   AccountValue,
   IronfishNode,
@@ -20,6 +21,8 @@ import {
   IIronfishAccountManager,
   TransactionFeeStatistic,
   IIronfishTransactionManager,
+  TransactionReceiver,
+  TransactionFeeEstimate,
 } from 'Types/IIronfishManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import WalletAccount from 'Types/Account'
@@ -27,6 +30,7 @@ import SortType from 'Types/SortType'
 import Transaction, { Payment, TransactionStatus } from 'Types/Transaction'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 import NodeSettingsManager from './NodeSettingsManager'
+import { PRIORITY_LEVELS } from '@ironfish/sdk/build/src/memPool/feeEstimator'
 
 class AccountManager implements IIronfishAccountManager {
   private node: IronfishNode
@@ -50,10 +54,7 @@ class AccountManager implements IIronfishAccountManager {
         id: account.id,
         name: account.name,
         publicAddress: account.publicAddress,
-        balance: await this.node.wallet.getBalance(
-          account,
-          Asset.nativeIdentifier()
-        ),
+        balance: await this.balance(account.id),
       }))
     )
 
@@ -101,10 +102,21 @@ class AccountManager implements IIronfishAccountManager {
     return Promise.resolve(account)
   }
 
-  balance(id: string): Promise<AccountBalance> {
+  async balance(
+    id: string,
+    assetId: Buffer = Asset.nativeId()
+  ): Promise<AccountBalance> {
     const account = this.node.wallet.getAccount(id)
     if (account) {
-      return this.node.wallet.getBalance(account, Asset.nativeIdentifier())
+      const balance = await this.node.wallet.getBalance(account, assetId)
+      const asset = await this.node.chain.getAssetById(assetId)
+      return {
+        ...balance,
+        asset: {
+          id: asset.id.toString('hex'),
+          name: asset?.name.toString('utf8') || '',
+        },
+      }
     }
 
     return Promise.reject(new Error(`Account with id=${id} was not found.`))
@@ -118,26 +130,26 @@ class TransactionManager implements IIronfishTransactionManager {
     this.node = node
   }
 
-  async pay(
+  async send(
     accountId: string,
     payment: Payment,
-    transactionFee?: number
+    transactionFee?: bigint
   ): Promise<Transaction> {
     const account = this.node.wallet.getAccount(accountId)
-    const headSequence = await this.node.wallet.getAccountHeadSequence(account)
+    const head = await account.getHead()
     const fee = transactionFee || (await this.averageFee())
-    const transaction = await this.node.wallet.pay(
+    const transaction = await this.node.wallet.send(
       this.node.memPool,
       account,
-      [{ ...payment, assetIdentifier: Asset.nativeIdentifier() }],
-      BigInt(fee),
-      this.node.config.get('defaultTransactionExpirationSequenceDelta'),
+      [{ ...payment, assetId: Asset.nativeId() }],
+      fee,
+      this.node.config.get('transactionExpirationDelta'),
       0
     )
 
     const result = await this.resolveTransactionFields(
       account,
-      headSequence,
+      head.sequence,
       await account.getTransaction(transaction.hash())
     )
 
@@ -147,7 +159,7 @@ class TransactionManager implements IIronfishTransactionManager {
   private async getFees(numOfBlocks = 100) {
     let startBlock
     const endBlock = this.node.chain.latest.sequence
-    const fees: number[] = []
+    const fees: bigint[] = []
 
     let hash = this.node.chain.latest.hash
 
@@ -158,7 +170,7 @@ class TransactionManager implements IIronfishTransactionManager {
       if (block) {
         startBlock = block.header.sequence
         block.transactions.forEach(transaction => {
-          !transaction.isMinersFee() && fees.push(Number(transaction.fee()))
+          !transaction.isMinersFee() && fees.push(transaction.fee())
         })
       }
     }
@@ -173,7 +185,7 @@ class TransactionManager implements IIronfishTransactionManager {
   async fees(numOfBlocks = 100): Promise<TransactionFeeStatistic> {
     const { startBlock, endBlock, fees } = await this.getFees(numOfBlocks)
 
-    fees.sort((a, b) => a - b)
+    fees.sort((a, b) => Number(a) - Number(b))
 
     return {
       startBlock,
@@ -185,21 +197,44 @@ class TransactionManager implements IIronfishTransactionManager {
     }
   }
 
-  async averageFee(numOfBlocks = 100): Promise<number> {
-    const { fees } = await this.getFees(numOfBlocks)
+  async estimateFeeWithPriority(
+    accountId: string,
+    receive: TransactionReceiver
+  ): Promise<TransactionFeeEstimate> {
+    const account = this.node.wallet.getAccount(accountId)
+    return Promise.all([
+      this.node.memPool.feeEstimator.estimateFee(PRIORITY_LEVELS[0], account, [
+        receive,
+      ]),
+      this.node.memPool.feeEstimator.estimateFee(PRIORITY_LEVELS[1], account, [
+        receive,
+      ]),
+      this.node.memPool.feeEstimator.estimateFee(PRIORITY_LEVELS[2], account, [
+        receive,
+      ]),
+    ]).then(([low, medium, high]) => ({ low, medium, high }))
+  }
 
-    return fees.reduce((prev, curr) => prev + curr, 0) / fees.length
+  async averageFee(numOfBlocks = 100): Promise<bigint> {
+    const { fees } = await this.getFees(numOfBlocks)
+    const totalFees = Number(
+      CurrencyUtils.encodeIron(
+        fees.reduce((prev, curr) => prev + curr, BigInt(0))
+      )
+    )
+    const average = totalFees / fees.length
+    return CurrencyUtils.decodeIron(average.toFixed(8))
   }
 
   async get(hash: string, accountId: string): Promise<Transaction> {
     const account = this.node.wallet.getAccount(accountId)
-    const headSequence = await this.node.wallet.getAccountHeadSequence(account)
+    const head = await account.getHead()
     const transaction = await account.getTransaction(Buffer.from(hash, 'hex'))
 
     if (transaction) {
       return await this.resolveTransactionFields(
         account,
-        headSequence,
+        head.sequence,
         transaction
       )
     }
@@ -258,16 +293,23 @@ class TransactionManager implements IIronfishTransactionManager {
       fee: transaction.transaction.fee().toString(),
       notesCount: transaction.transaction.notes.length,
       spendsCount: transaction.transaction.spends.length,
-      expirationSequence: transaction.transaction.expirationSequence(),
+      expiration: transaction.transaction.expiration(),
       status,
       notes: notes.map(n => ({
         value: n.note.value(),
         memo: n.note.memo(),
+        sender: n.note.sender(),
       })),
-      spends,
+      spends: spends.map(spend => ({
+        commitment: spend.commitment.toString('hex'),
+        nullifier: spend.nullifier.toString('hex'),
+        size: spend.size,
+      })),
       creator: !!creator,
-      from: creator ? account.publicAddress : '',
-      to: creator ? '' : account.publicAddress,
+      blockHash: transaction.blockHash.toString('hex'),
+      size: sizeVarBytes(transaction.transaction),
+      from: creator ? account.publicAddress : notes.at(0)?.note?.sender(),
+      to: creator ? notes.map(n => n.note.sender()) : [account.publicAddress],
       created: created?.header?.timestamp || new Date(),
       amount: CurrencyUtils.renderIron(
         notes
@@ -286,11 +328,11 @@ class TransactionManager implements IIronfishTransactionManager {
     sort?: SortType
   ): Promise<Transaction[]> {
     const account = this.node.wallet.getAccount(accountId)
-    const headSequence = await this.node.wallet.getAccountHeadSequence(account)
+    const head = await account.getHead()
     const transactions = []
     for await (const transaction of account.getTransactions()) {
       transactions.push(
-        await this.resolveTransactionFields(account, headSequence, transaction)
+        await this.resolveTransactionFields(account, head.sequence, transaction)
       )
     }
     const search = searchTerm?.toLowerCase()
@@ -300,7 +342,7 @@ class TransactionManager implements IIronfishTransactionManager {
         transaction =>
           !search ||
           transaction.from.toLowerCase().includes(search) ||
-          transaction.to.toLowerCase().includes(search) ||
+          transaction.to.find(a => a.toLowerCase().includes(search)) ||
           transaction.notes.find(note =>
             note.memo?.toLowerCase().includes(search)
           ) ||
@@ -315,9 +357,57 @@ class TransactionManager implements IIronfishTransactionManager {
   }
 
   async findByAddress(address: string, searchTerm?: string, sort?: SortType) {
-    const transactions: Transaction[] = await Promise.resolve([])
+    const transactions: Transaction[] = []
+    const accounts: Account[] = this.node.wallet.listAccounts()
+
+    for (const account of accounts) {
+      const head = await account.getHead()
+      for await (const transaction of account.getTransactions()) {
+        let creatorNote
+        for await (const spend of transaction?.transaction?.spends) {
+          const noteHash = await account.getNoteHash(spend.nullifier)
+
+          if (noteHash) {
+            const decryptedNote = await account.getDecryptedNote(noteHash)
+            creatorNote = decryptedNote
+            break
+          }
+        }
+        const notes = transaction
+          ? await account.getTransactionNotes(transaction.transaction)
+          : []
+        if (
+          creatorNote?.note.sender() === address ||
+          notes.find(n => n.note.sender() === address)
+        ) {
+          transactions.push(
+            await this.resolveTransactionFields(
+              account,
+              head.sequence,
+              transaction
+            )
+          )
+        }
+      }
+    }
 
     return transactions
+      .filter(
+        transaction =>
+          !searchTerm ||
+          transaction.from.toLowerCase().includes(searchTerm) ||
+          transaction.to.find(a => a.toLowerCase().includes(searchTerm)) ||
+          transaction.notes.find(note =>
+            note.memo?.toLowerCase().includes(searchTerm)
+          ) ||
+          transaction.amount.toString().includes(searchTerm)
+      )
+      .sort((t1, t2) => {
+        const date1: number = (t1.created || new Date()).getTime()
+        const date2: number = (t2.created || new Date()).getTime()
+
+        return sort === SortType.ASC ? date1 - date2 : date2 - date1
+      })
   }
 }
 
@@ -359,6 +449,8 @@ export class IronFishManager implements IIronfishManager {
       this.initStatus = IronFishInitStatus.INITIALIZED
     } catch (e) {
       this.initStatus = IronFishInitStatus.ERROR
+      // eslint-disable-next-line no-console
+      console.error(e)
     }
   }
 

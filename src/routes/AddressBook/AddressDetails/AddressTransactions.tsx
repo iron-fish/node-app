@@ -9,13 +9,15 @@ import {
   Box,
 } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import Send from 'Svgx/send'
+import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAddressTransactions'
 import SortType from 'Types/SortType'
 import Transaction from 'Types/Transaction'
 import EmptyOverview from 'Components/EmptyOverview'
+import { useNavigate } from 'react-router-dom'
+import ROUTES from 'Routes/data'
 
 interface AddressTransactionsProps {
   address: string
@@ -24,6 +26,7 @@ interface AddressTransactionsProps {
 const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
   address,
 }) => {
+  const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
   const [{ data: transactions, loaded }] = useTransactions(
@@ -63,6 +66,11 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
       ) : (
         <CommonTable
           data={loaded ? transactions : new Array(10).fill(null)}
+          onRowClick={(txn: Transaction) => {
+            navigate(ROUTES.TRANSACTION, {
+              state: { accountId: txn.accountId, hash: txn.hash },
+            })
+          }}
           columns={[
             {
               key: 'action',
@@ -79,7 +87,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
                     background={NAMED_COLORS.LIGHT_GREY}
                   >
                     <Icon h={8}>
-                      {transaction.creator ? <Send /> : <Receive />}
+                      {transaction.creator ? <SendIcon /> : <Receive />}
                     </Icon>
                   </Flex>
                   <chakra.h5 ml="2.375rem">{transaction.status}</chakra.h5>

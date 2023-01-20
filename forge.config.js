@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { resolve } = require('path')
 
 const COMMON_CONFIG = {

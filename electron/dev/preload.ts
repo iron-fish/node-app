@@ -8,6 +8,7 @@ import IIronfishManager, {
   IronfishAccountManagerAction,
   IronfishManagerAction,
   IronfishTransactionManagerAction,
+  TransactionReceiver,
 } from 'Types/IIronfishManager'
 import { Payment } from 'Types/Transaction'
 import '../common/preload'
@@ -115,10 +116,10 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         hash,
         accountId
       ),
-    pay: (accountId: string, payment: Payment, transactionFee?: number) =>
+    send: (accountId: string, payment: Payment, transactionFee?: bigint) =>
       ipcRenderer.invoke(
         'ironfish-manager-transactions',
-        IronfishTransactionManagerAction.PAY,
+        IronfishTransactionManagerAction.SEND,
         accountId,
         payment,
         transactionFee
@@ -134,6 +135,16 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         'ironfish-manager-transactions',
         IronfishTransactionManagerAction.AVERAGE_FEE,
         numOfBlocks
+      ),
+    estimateFeeWithPriority: (
+      accountId: string,
+      receive: TransactionReceiver
+    ) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-transactions',
+        IronfishTransactionManagerAction.ESTIMATE_FEE,
+        accountId,
+        receive
       ),
     findByAccountId: (
       accountId: string,
@@ -157,6 +168,7 @@ contextBridge.exposeInMainWorld('IronfishManager', {
       ),
   },
 } as IIronfishManager)
+
 contextBridge.exposeInMainWorld(
   'AddressBookStorage',
   wrapMethodsWithCallbacks('address-book')

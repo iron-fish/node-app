@@ -32,9 +32,10 @@ export enum IronfishAccountManagerAction {
 
 export enum IronfishTransactionManagerAction {
   GET = 'get',
-  PAY = 'pay',
+  SEND = 'send',
   FEES = 'fees',
   AVERAGE_FEE = 'averageFee',
+  ESTIMATE_FEE = 'estimateFeeWithPriority',
   FIND_BY_ACCOUNT_ID = 'findByAccountId',
   FIND_BY_ADDRESS = 'findByAddress',
 }
@@ -42,21 +43,37 @@ export enum IronfishTransactionManagerAction {
 export interface TransactionFeeStatistic {
   startBlock: number
   endBlock: number
-  p25: number
-  p50: number
-  p75: number
-  p100: number
+  p25: bigint
+  p50: bigint
+  p75: bigint
+  p100: bigint
+}
+
+export interface TransactionFeeEstimate {
+  low: bigint
+  medium: bigint
+  high: bigint
+}
+
+export interface TransactionReceiver {
+  publicAddress: string
+  amount: bigint
+  memo: string
 }
 
 export interface IIronfishTransactionManager {
   get: (hash: string, accountId: string) => Promise<Transaction>
-  pay: (
+  send: (
     accountId: string,
     payment: Payment,
-    transactionFee?: number
+    transactionFee?: bigint
   ) => Promise<Transaction>
   fees: (numOfBlocks?: number) => Promise<TransactionFeeStatistic>
-  averageFee: (numOfBlocks?: number) => Promise<number>
+  averageFee: (numOfBlocks?: number) => Promise<bigint>
+  estimateFeeWithPriority: (
+    accountId: string,
+    receive: TransactionReceiver
+  ) => Promise<TransactionFeeEstimate>
   findByAccountId: (
     accountId: string,
     searchTerm?: string,
