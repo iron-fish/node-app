@@ -25,6 +25,7 @@ import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import EmptyOverview from 'Components/EmptyOverview'
 import ContactsPreview from 'Components/ContactsPreview'
+import SyncWarningMessage from 'Components/SyncWarningMessage'
 
 interface SearchTransactionsProps {
   address: string
@@ -162,6 +163,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
   const { loaded: synced } = useDataSync()
   return (
     <>
+      <SyncWarningMessage mb="2rem" />
       <Flex w="100%" pb="2rem">
         <Box
           layerStyle="card"
@@ -170,6 +172,8 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
           w="100%"
           minWidth="18rem"
           mr="1rem"
+          ml="0rem"
+          mt="0rem"
         >
           <Flex justifyContent="space-between" alignItems="center">
             <Box m="2rem">
@@ -236,6 +240,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
           p="2rem"
           borderRadius="0.25rem"
           minWidth="17.5rem"
+          mt="0rem"
         >
           <Box>
             <chakra.h4>Pending $IRON</chakra.h4>
