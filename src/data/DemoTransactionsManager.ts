@@ -12,13 +12,44 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     amount: '-12',
     created: new Date('2022-08-26T08:43:00.770Z'),
     creator: true,
-    fee: '0.012',
+    fee: '12000',
     from: 'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
-    to: '97fu1x7AXPO9pmQcMpvyfeyR8AWBeHPmv6bPdB1cE946BpgwAbTESdNrSUDVrbhr',
+    to: [
+      'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
+      'sbVxDJmJHGSKCfom0i33HRPFQvRY4t55ZVSSUwPuhRZcbIvJ0ou4hPHKv3HtGmOi',
+      'sbVxDJmJHGSKCfom0i33HRPFQvRY4t55ZVSSUwPuhRZcbIvJ0ou4hPHKv3HtGmOs',
+    ],
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [{ value: BigInt(100000), memo: 'dziakyi' }],
-    spends: [],
+    notes: [
+      {
+        value: BigInt(100000),
+        memo: 'dziakyi',
+        sender:
+          'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+      },
+      {
+        value: BigInt(10000),
+        memo: 'to you',
+        sender:
+          'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+      },
+      {
+        value: BigInt(10000),
+        memo: 'to you',
+        sender:
+          'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+      },
+    ],
+    spends: [
+      {
+        commitment: nanoid(64),
+        nullifier: nanoid(64),
+        size: Math.floor(Math.random() * 100000),
+      },
+    ],
+    size: Math.round(Math.random() * 100000),
+    blockHash: nanoid(64),
     status: TransactionStatus.CONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
@@ -30,13 +61,22 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     amount: '10',
     creator: false,
     created: new Date('2022-08-25T08:43:00.770Z'),
-    fee: '0.01',
-    to: 'DhUuMS51CioZSQVEp05nzXklomlelMqDWK70DNLLg4vNobtJSKJhNkZ8gOVGVymu',
-    from: 'xXqWJOahmVrQQ5paK1Kb7gAS2QkEPYG43G7RfzSnQElDu9WZmVCmhWi8PO39hr9q',
+    fee: '10000',
+    to: ['pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D'],
+    from: 'OOlgJpCs_om-pVc7vhew3R58cfI5N0Stn4KKZNOVmx2tSN-2wHZTMqFqtL9ackOV',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [{ value: BigInt(100000), memo: 'thanks' }],
+    notes: [
+      {
+        value: BigInt(100000),
+        memo: 'thanks',
+        sender:
+          'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
+      },
+    ],
     spends: [],
+    size: Math.round(Math.random() * 100000),
+    blockHash: nanoid(64),
     status: TransactionStatus.EXPIRED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
@@ -48,13 +88,22 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     amount: '100',
     creator: false,
     created: new Date('2022-08-24T08:43:00.770Z'),
-    fee: '0.1',
-    to: 'MXaagM3oWH3OXzffgFOo6nbYxqc9Z7SiF5zhFooG0yB5M1xnSd3r4hPmmrSKhvJC',
-    from: 'xHubwKNZc906tiN3GBqDPCYtWVSCItx9bpC6UD1I72b943c0eMSS9ipWq3NKJOID',
+    fee: '10000',
+    to: ['pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D'],
+    from: 'OSAblUtjE_cda1CD_baWcpiEWBM3qp0SnZXANluiM7G4psf7Z6ojb3nXFIFaQdBx',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [{ value: BigInt(100000), memo: 'welcome message' }],
+    notes: [
+      {
+        value: BigInt(100000),
+        memo: 'welcome message',
+        sender:
+          'sbVxDJmJHGSKCfom0i33HRPFQvRY4t55ZVSSUwPuhRZcbIvJ0ou4hPHKv3HtGmOi',
+      },
+    ],
     spends: [],
+    size: Math.round(Math.random() * 100000),
+    blockHash: nanoid(64),
     status: TransactionStatus.PENDING,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
@@ -66,13 +115,28 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     amount: '-1235',
     created: new Date('2022-08-23T08:43:00.770Z'),
     creator: true,
-    fee: '0.01235',
-    from: 'tQ2ntaJtntysj6ufqzIbLOzOvktPuMVsDHWTSTovMWJU2HIhbLb6NqvbaNxANjgU',
-    to: 'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
+    fee: '12350',
+    from: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+    to: ['R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6'],
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [{ value: BigInt(100000), memo: 'aloha' }],
-    spends: [],
+    notes: [
+      {
+        value: BigInt(100000),
+        memo: 'aloha',
+        sender:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+      },
+    ],
+    spends: [
+      {
+        commitment: nanoid(64),
+        nullifier: nanoid(64),
+        size: Math.floor(Math.random() * 100000),
+      },
+    ],
+    size: Math.round(Math.random() * 100000),
+    blockHash: nanoid(64),
     status: TransactionStatus.UNCONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
@@ -84,13 +148,28 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     amount: '-121',
     created: new Date('2022-08-21T08:43:00.770Z'),
     creator: true,
-    fee: '0.0121',
+    fee: '12100',
     from: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
-    to: 'eBpm3UivfNtMdVf82e8fzUACM5tuZGEmeB0S1z8gyYLpECW5Ct1295DD05Lh2X04',
+    to: ['7C5NxoCyjt86wtEEHEF1d60omCsaH9tFO6Tf6Rn0jqowxowgbBtCoapcSxn0jrXN'],
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [{ value: BigInt(100000), memo: 'Have A GOOD DAY' }],
-    spends: [],
+    notes: [
+      {
+        value: BigInt(100000),
+        memo: 'Have A GOOD DAY',
+        sender:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+      },
+    ],
+    spends: [
+      {
+        commitment: nanoid(64),
+        nullifier: nanoid(64),
+        size: Math.floor(Math.random() * 100000),
+      },
+    ],
+    size: Math.round(Math.random() * 100000),
+    blockHash: nanoid(64),
     status: TransactionStatus.UNKNOWN,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
@@ -102,13 +181,22 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     amount: '12',
     creator: false,
     created: new Date('2022-08-22T08:43:00.770Z'),
-    fee: '0.0012',
-    to: 'XCT3LdATRBhBbbxzEsoZwAfvjQiSSbNwwa5IagFWKev0RYhTKjFJNyBXKR61AF3L',
-    from: 'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
+    fee: '12000',
+    to: ['pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D'],
+    from: 'OOlgJpCs_om-pVc7vhew3R58cfI5N0Stn4KKZNOVmx2tSN-2wHZTMqFqtL9ackOV',
     hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
-    notes: [{ value: BigInt(100000), memo: 'TASTY' }],
+    notes: [
+      {
+        value: BigInt(100000),
+        memo: 'TASTY',
+        sender:
+          'OOlgJpCs_om-pVc7vhew3R58cfI5N0Stn4KKZNOVmx2tSN-2wHZTMqFqtL9ackOV',
+      },
+    ],
     spends: [],
+    size: Math.round(Math.random() * 100000),
+    blockHash: nanoid(64),
     status: TransactionStatus.CONFIRMED,
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
@@ -140,11 +228,12 @@ class DemoTransactionsManager {
         const search = searchTerm?.toLowerCase()
         const transactions = DEMO_TRANSACTIONS.filter(
           transaction =>
-            (transaction.from === address || transaction.to === address) &&
+            (transaction.from === address ||
+              transaction.to.includes(address)) &&
             (!search ||
               transaction.hash.toLowerCase().includes(search) ||
               transaction.from.toLowerCase().includes(search) ||
-              transaction.to.toLowerCase().includes(search) ||
+              transaction.to.find(a => a.toLowerCase().includes(search)) ||
               transaction.notes.find(note =>
                 note.memo?.toLowerCase().includes(search)
               ) ||
@@ -174,7 +263,7 @@ class DemoTransactionsManager {
             (!search ||
               transaction.hash.toLowerCase().includes(search) ||
               transaction.from.toLowerCase().includes(search) ||
-              transaction.to.toLowerCase().includes(search) ||
+              transaction.to.find(a => a.toLowerCase().includes(search)) ||
               transaction.notes.find(note =>
                 note.memo?.toLowerCase().includes(search)
               ) ||
@@ -223,13 +312,16 @@ class DemoTransactionsManager {
           creator: true,
           fee: fee.toString(),
           from: from,
-          to: to,
+          to: [to],
           hash: nanoid(64),
+          size: Math.round(Math.random() * 100000),
+          blockHash: nanoid(64),
           isMinersFee: false,
           notes: [
             {
               value: amount,
               memo: memo,
+              sender: from,
             },
           ],
           spends: [],

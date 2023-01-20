@@ -11,7 +11,7 @@ import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import ImportAccount from 'Routes/Onboarding/ImportAccount'
 import AddressBook from 'Routes/AddressBook'
 import AccountDetails from 'Routes/Accounts/AccountDetails'
-import Miner from 'Routes/Miner'
+// import Miner from 'Routes/Miner'
 import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressBook/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
@@ -19,6 +19,7 @@ import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
 import { DataSyncProvider } from './providers/DataSyncProvider'
 import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
 import Initializing from 'Routes/Initializing'
+import TransactionOverview from 'Routes/Transaction/TransactionOverview'
 
 const breakpoints = {
   xs: '46.875rem', //750px
@@ -51,6 +52,10 @@ function App() {
                 <Route path={ROUTES.RECEIVE} element={<ReceiveMoney />} />
                 <Route path={ROUTES.SEND} element={<Send />} />
                 <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
+                <Route
+                  path={ROUTES.TRANSACTION}
+                  element={<TransactionOverview />}
+                />
                 <Route
                   path={ROUTES.ADDRESS_BOOK_DETAILS}
                   element={<AddressDetails />}

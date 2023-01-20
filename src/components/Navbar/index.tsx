@@ -15,18 +15,45 @@ import IronFishLogo from 'Svgx/IronFishLogo'
 import HexFishLogo from 'Svgx/hexfish'
 
 import ActiveStatus from './ActiveStatus'
+import ROUTES from 'Routes/data'
+import { NavItemProps } from './NavItem'
 
-const primaryNavItems = [
-  { hotkey: 'A', to: '/accounts', label: 'Privacy Accounts', icon: IconHome },
-  { hotkey: 'S', to: '/send', label: 'Send $IRON', icon: IconSend },
-  { hotkey: 'R', to: '/receive', label: 'Receive $IRON', icon: IconReceive },
+const primaryNavItems: NavItemProps[] = [
+  {
+    hotkey: 'A',
+    to: ROUTES.ACCOUNTS,
+    label: 'Privacy Accounts',
+    icon: IconHome,
+    aliases: [ROUTES.ACCOUNT, ROUTES.TRANSACTION],
+  },
+  {
+    hotkey: 'S',
+    to: ROUTES.SEND,
+    label: 'Send $IRON',
+    icon: IconSend,
+    aliases: [],
+  },
+  {
+    hotkey: 'R',
+    to: ROUTES.RECEIVE,
+    label: 'Receive $IRON',
+    icon: IconReceive,
+    aliases: [],
+  },
   {
     hotkey: 'B',
-    to: '/address-book',
+    to: ROUTES.ADDRESS_BOOK,
     label: 'Address Book',
     icon: IconAddressBook,
+    aliases: [ROUTES.ADDRESS_BOOK_DETAILS],
   },
-  { hotkey: 'N', to: '/node', label: 'Your Node', icon: IconNode },
+  {
+    hotkey: 'N',
+    to: ROUTES.NODE,
+    label: 'Your Node',
+    icon: IconNode,
+    aliases: [],
+  },
 ]
 // const secondaryNavItems = [
 //   { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },

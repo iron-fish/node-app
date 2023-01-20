@@ -96,12 +96,14 @@ export const AddressBookStorage: IStorage<Contact> = {
   delete: (identity: string) =>
     window.DemoDataManager.deleteContact(identity).then(noop),
   find: (entity: Partial<Omit<Contact, '_id'>>) =>
-    window.DemoDataManager.getAddressBook(entity.name)
-      .then(data => (data.length > 0 ? data[0] : null))
-      .then(contact => ({
-        _id: contact.identity,
-        ...contact,
-      })),
+    window.DemoDataManager.addressBook.find(entity).then(data =>
+      data
+        ? {
+            _id: data.identity,
+            ...data,
+          }
+        : null
+    ),
   get: (identity: string) =>
     window.DemoDataManager.getContact(identity).then(contact => ({
       _id: contact.identity,

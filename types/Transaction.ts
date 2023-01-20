@@ -1,8 +1,13 @@
-import { Spend } from '@ironfish/sdk'
-
 export interface Note {
   value: bigint
   memo: string
+  sender: string
+}
+
+export interface Spend {
+  nullifier: string
+  commitment: string
+  size: number
 }
 
 export interface Payment {
@@ -28,11 +33,13 @@ export interface Transaction {
   spendsCount: number
   expiration: number
   status: TransactionStatus
+  size: number
+  blockHash: string
   notes: Note[]
   spends: Spend[]
   creator: boolean
   from: string
-  to: string
+  to: string[]
   created: Date
   amount: string
 }
