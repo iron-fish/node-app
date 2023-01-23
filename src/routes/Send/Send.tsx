@@ -27,7 +27,8 @@ import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
-import { decodeIron, formatOreToTronWithLanguage } from 'Utils/number'
+import { decodeIron } from 'Utils/number'
+import SyncWarningMessage from 'Components/SyncWarningMessage'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -80,6 +81,38 @@ const getEstimatedFeeOption = (priority: string, value: bigint) => ({
   helperText: `Transfer speed: ${priority}`,
 })
 
+interface SendButtonProps {
+  setStart: (start: boolean) => void
+  checkChanges: () => boolean
+}
+
+const SendButton: FC<SendButtonProps> = ({ setStart, checkChanges }) => {
+  const { loaded: synced } = useDataSync()
+  return (
+    <Box>
+      <SyncWarningMessage
+        message="You cannot send a transaction while your wallet is syncing"
+        mb="2rem"
+      />
+      <Button
+        variant="primary"
+        borderRadius="4rem"
+        mb="2rem"
+        p="2rem"
+        isDisabled={!synced || checkChanges()}
+        leftIcon={
+          <Icon height={26} width={26}>
+            <SendIcon fill="currentColor" />
+          </Icon>
+        }
+        onClick={() => setStart(true)}
+      >
+        <chakra.h4>Send $IRON</chakra.h4>
+      </Button>
+    </Box>
+  )
+}
+
 const Send: FC = () => {
   const location = useLocation()
   const state = location.state as LocationStateProps
@@ -106,7 +139,6 @@ const Send: FC = () => {
       warningBg: '#3E251B',
     }
   )
-  const { loaded } = useDataSync()
 
   useEffect(() => {
     if (Number(amount) !== 0 && !selectedFee?.label) {
@@ -115,8 +147,7 @@ const Send: FC = () => {
     }
   }, [amount])
 
-  const checkChanges: () => boolean = () =>
-    !loaded ||
+  const checkChanges = (): boolean =>
     !(selectedFee?.value && account && contact && amount) ||
     !hasEnoughIron(
       account?.balance.confirmed,
@@ -240,21 +271,7 @@ const Send: FC = () => {
               />
             </Flex>
           </Box>
-          <Button
-            variant="primary"
-            borderRadius="4rem"
-            mb="2rem"
-            p="2rem"
-            isDisabled={checkChanges()}
-            leftIcon={
-              <Icon height={26} width={26}>
-                <SendIcon fill="currentColor" />
-              </Icon>
-            }
-            onClick={() => setStart(true)}
-          >
-            <chakra.h4>Send $IRON</chakra.h4>
-          </Button>
+          <SendButton checkChanges={checkChanges} setStart={setStart} />
         </Box>
         <Box>
           <DetailsPanel>
