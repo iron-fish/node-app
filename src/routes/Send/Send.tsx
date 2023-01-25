@@ -244,10 +244,11 @@ const Send: FC = () => {
             />
             <ContactsAutocomplete
               label={'To'}
+              contactId={contact?._id}
               address={contact?.address || state?.address}
               onSelectOption={setContact}
               freeInput
-              mb="2rem"
+              containerProps={{ mb: '2rem' }}
             />
             <Flex mb="2rem">
               <SelectField
@@ -286,6 +287,7 @@ const Send: FC = () => {
         from={account}
         to={contact}
         memo={notes}
+        onCreateAccount={setContact}
         fee={selectedFee?.value}
       />
     </Flex>
