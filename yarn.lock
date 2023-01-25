@@ -4614,66 +4614,66 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ironfish/rust-nodejs-darwin-arm64@npm:0.1.22":
-  version: 0.1.22
-  resolution: "@ironfish/rust-nodejs-darwin-arm64@npm:0.1.22"
+"@ironfish/rust-nodejs-darwin-arm64@npm:0.1.23":
+  version: 0.1.23
+  resolution: "@ironfish/rust-nodejs-darwin-arm64@npm:0.1.23"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@ironfish/rust-nodejs-darwin-x64@npm:0.1.22":
-  version: 0.1.22
-  resolution: "@ironfish/rust-nodejs-darwin-x64@npm:0.1.22"
+"@ironfish/rust-nodejs-darwin-x64@npm:0.1.23":
+  version: 0.1.23
+  resolution: "@ironfish/rust-nodejs-darwin-x64@npm:0.1.23"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@ironfish/rust-nodejs-linux-arm64-gnu@npm:0.1.22":
-  version: 0.1.22
-  resolution: "@ironfish/rust-nodejs-linux-arm64-gnu@npm:0.1.22"
+"@ironfish/rust-nodejs-linux-arm64-gnu@npm:0.1.23":
+  version: 0.1.23
+  resolution: "@ironfish/rust-nodejs-linux-arm64-gnu@npm:0.1.23"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"@ironfish/rust-nodejs-linux-arm64-musl@npm:0.1.22":
-  version: 0.1.22
-  resolution: "@ironfish/rust-nodejs-linux-arm64-musl@npm:0.1.22"
+"@ironfish/rust-nodejs-linux-arm64-musl@npm:0.1.23":
+  version: 0.1.23
+  resolution: "@ironfish/rust-nodejs-linux-arm64-musl@npm:0.1.23"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"@ironfish/rust-nodejs-linux-x64-gnu@npm:0.1.22":
-  version: 0.1.22
-  resolution: "@ironfish/rust-nodejs-linux-x64-gnu@npm:0.1.22"
+"@ironfish/rust-nodejs-linux-x64-gnu@npm:0.1.23":
+  version: 0.1.23
+  resolution: "@ironfish/rust-nodejs-linux-x64-gnu@npm:0.1.23"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@ironfish/rust-nodejs-linux-x64-musl@npm:0.1.22":
-  version: 0.1.22
-  resolution: "@ironfish/rust-nodejs-linux-x64-musl@npm:0.1.22"
+"@ironfish/rust-nodejs-linux-x64-musl@npm:0.1.23":
+  version: 0.1.23
+  resolution: "@ironfish/rust-nodejs-linux-x64-musl@npm:0.1.23"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@ironfish/rust-nodejs-win32-x64-msvc@npm:0.1.22":
-  version: 0.1.22
-  resolution: "@ironfish/rust-nodejs-win32-x64-msvc@npm:0.1.22"
+"@ironfish/rust-nodejs-win32-x64-msvc@npm:0.1.23":
+  version: 0.1.23
+  resolution: "@ironfish/rust-nodejs-win32-x64-msvc@npm:0.1.23"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@ironfish/rust-nodejs@npm:0.1.22, @ironfish/rust-nodejs@npm:^0.1.22":
-  version: 0.1.22
-  resolution: "@ironfish/rust-nodejs@npm:0.1.22"
+"@ironfish/rust-nodejs@npm:0.1.23, @ironfish/rust-nodejs@npm:^0.1.23":
+  version: 0.1.23
+  resolution: "@ironfish/rust-nodejs@npm:0.1.23"
   dependencies:
-    "@ironfish/rust-nodejs-darwin-arm64": 0.1.22
-    "@ironfish/rust-nodejs-darwin-x64": 0.1.22
-    "@ironfish/rust-nodejs-linux-arm64-gnu": 0.1.22
-    "@ironfish/rust-nodejs-linux-arm64-musl": 0.1.22
-    "@ironfish/rust-nodejs-linux-x64-gnu": 0.1.22
-    "@ironfish/rust-nodejs-linux-x64-musl": 0.1.22
-    "@ironfish/rust-nodejs-win32-x64-msvc": 0.1.22
+    "@ironfish/rust-nodejs-darwin-arm64": 0.1.23
+    "@ironfish/rust-nodejs-darwin-x64": 0.1.23
+    "@ironfish/rust-nodejs-linux-arm64-gnu": 0.1.23
+    "@ironfish/rust-nodejs-linux-arm64-musl": 0.1.23
+    "@ironfish/rust-nodejs-linux-x64-gnu": 0.1.23
+    "@ironfish/rust-nodejs-linux-x64-musl": 0.1.23
+    "@ironfish/rust-nodejs-win32-x64-msvc": 0.1.23
   dependenciesMeta:
     "@ironfish/rust-nodejs-darwin-arm64":
       optional: true
@@ -4689,16 +4689,16 @@ __metadata:
       optional: true
     "@ironfish/rust-nodejs-win32-x64-msvc":
       optional: true
-  checksum: c7d54d2322952b04b93fe9dfee17077e9d845f2a8656b72888598903130e814d25bbe1bd460df4f66c2ea47048fe81ccc067bb5f54b0bfba8dcbb612155c031f
+  checksum: f7876b70b77c515d5663e74f941c42620ea55f13f717a09bd6be89cf5d16471e80ee5c6f3db05395aa6521fa1cb9c8e935bf5fb9b38195aa774a38d5389379be
   languageName: node
   linkType: hard
 
-"@ironfish/sdk@npm:^0.0.38":
-  version: 0.0.38
-  resolution: "@ironfish/sdk@npm:0.0.38"
+"@ironfish/sdk@npm:^0.0.39":
+  version: 0.0.39
+  resolution: "@ironfish/sdk@npm:0.0.39"
   dependencies:
     "@ethersproject/bignumber": 5.7.0
-    "@ironfish/rust-nodejs": 0.1.22
+    "@ironfish/rust-nodejs": 0.1.23
     "@napi-rs/blake-hash": 1.3.1
     axios: 0.21.4
     blru: 0.1.6
@@ -4723,7 +4723,7 @@ __metadata:
     uuid: 8.3.2
     ws: 7.5.1
     yup: 0.29.3
-  checksum: 728d91b2e7ee148ace80c080a090284e5afe8acb4cf27b9c6e2019ac71bf62b2dd8b93938bc00969ecdb82c711185915e7d80acac03280727286ee5466d867f5
+  checksum: 234c5de30c0862f994f6c1f45eba55c323a7f5fedecee71ba430961818b7fbbde0866a79dc995365eb25ebe20c6b43854865d59e32ed0aae8ee39fbadec6f910
   languageName: node
   linkType: hard
 
@@ -21366,8 +21366,8 @@ __metadata:
     "@electron-forge/maker-zip": 6.0.0-beta.66
     "@electron-forge/plugin-webpack": 6.0.0-beta.66
     "@electron-forge/publisher-github": 6.0.0-beta.66
-    "@ironfish/rust-nodejs": ^0.1.22
-    "@ironfish/sdk": ^0.0.38
+    "@ironfish/rust-nodejs": ^0.1.23
+    "@ironfish/sdk": ^0.0.39
     "@ironfish/ui-kit": 1.1.3
     "@testing-library/jest-dom": ^5.16.4
     "@testing-library/user-event": ^14.2.0

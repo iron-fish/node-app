@@ -20,6 +20,7 @@ import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import SortType from 'Types/SortType'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import EmptyOverview from 'Components/EmptyOverview'
+import SyncWarningMessage from 'Components/SyncWarningMessage'
 
 interface ActionButtonsProps {
   showCreate: (show: boolean) => void
@@ -132,6 +133,7 @@ const Accounts = () => {
           onSelectOption: ({ value }) => $setSortOrder(value),
         }}
       />
+      <SyncWarningMessage mt="2rem" />
       <Flex mt="0.5rem" direction="column" width="100%">
         {loaded ? (
           accounts.length > 0 ? (

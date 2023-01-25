@@ -191,7 +191,7 @@ const StatusItem: FC<StatusItemProps> = ({ fullSize, minified, loaded }) => {
 }
 
 const ActiveStatus: FC<FlexProps> = props => {
-  const { loaded, data } = useDataSync()
+  const { loaded: synced, data } = useDataSync()
   const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
   return (
     <Flex
@@ -202,10 +202,10 @@ const ActiveStatus: FC<FlexProps> = props => {
       {...props}
     >
       <StatusItem
-        loaded={loaded}
-        fullSize={<SyncStatus data={data} loaded={loaded} />}
+        loaded={synced}
+        fullSize={<SyncStatus data={data} loaded={synced} />}
         minified={
-          loaded ? (
+          synced ? (
             <ConfirmedIcon color={colors.text} w="1.25rem" h="0.9375rem" />
           ) : (
             <chakra.h6 mt="0.0625rem">
