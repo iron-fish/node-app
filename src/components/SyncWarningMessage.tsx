@@ -26,6 +26,7 @@ const SyncWarningMessage: FC<SyncWarningMessageProps> = ({
       height="4.3125rem"
       justifyContent="center"
       alignItems="center"
+      px="1rem"
       {...rest}
     >
       <chakra.h4 color={$colors.text}>{message}</chakra.h4>

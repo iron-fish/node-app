@@ -148,7 +148,7 @@ const Send: FC = () => {
   }, [amount])
 
   const checkChanges = (): boolean =>
-    !(selectedFee?.value && account && contact && amount) ||
+    !(selectedFee?.value && account && contact && Number(amount)) ||
     !hasEnoughIron(
       account?.balance.confirmed,
       decodeIron(amount || 0),
