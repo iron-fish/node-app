@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { resolve } = require('path')
-const fs = require('fs')
 const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
@@ -30,13 +29,6 @@ module.exports = {
         {
           from: resolve('./electron/app.ico'),
           to: resolve('./.webpack/main/app.ico'),
-        },
-        {
-          from: resolve(
-            './node_modules/@ironfish/sdk/build/src/migrations/data'
-          ),
-          filter: path => path.endsWith('.js') && !path.endsWith('index.js'),
-          to: resolve('./.webpack/main/migrations'),
         },
       ],
     }),
