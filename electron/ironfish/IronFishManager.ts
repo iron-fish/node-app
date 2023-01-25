@@ -1,5 +1,6 @@
 import { BoxKeyPair, Asset } from '@ironfish/rust-nodejs'
 import { sizeVarBytes } from 'bufio'
+import { v4 as uuid } from 'uuid'
 import {
   AccountValue,
   IronfishNode,
@@ -11,6 +12,9 @@ import {
   MathUtils,
   PeerResponse,
   Connection,
+  getPackageFrom,
+  LevelupDatabase,
+  Strategy,
 } from '@ironfish/sdk'
 import { TransactionValue } from '@ironfish/sdk/build/src/wallet/walletdb/transactionValue'
 import AccountBalance from 'Types/AccountBalance'
@@ -29,6 +33,8 @@ import SortType from 'Types/SortType'
 import Transaction, { Payment, TransactionStatus } from 'Types/Transaction'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 import { PRIORITY_LEVELS } from '@ironfish/sdk/build/src/memPool/feeEstimator'
+// eslint-disable-next-line no-restricted-imports
+import pkg from '../../package.json'
 
 class AccountManager implements IIronfishAccountManager {
   private node: IronfishNode
@@ -431,22 +437,39 @@ export class IronFishManager implements IIronfishManager {
     try {
       //Initializing Iron Fish SDK
       this.initStatus = IronFishInitStatus.INITIALIZING_SDK
-      this.sdk = await IronfishSdk.init()
+      this.sdk = await IronfishSdk.init({
+        pkg: getPackageFrom(pkg),
+      })
+
+      if (!this.sdk.internal.get('telemetryNodeId')) {
+        this.sdk.internal.set('telemetryNodeId', uuid())
+        await this.sdk.internal.save()
+      }
 
       //Initializing Iron Fish node
       this.initStatus = IronFishInitStatus.INITIALIZING_NODE
       const privateIdentity = this.getPrivateIdentity()
-      this.node = await this.sdk.node({ privateIdentity: privateIdentity })
+      this.node = await this.sdk.node({
+        privateIdentity: privateIdentity,
+        autoSeed: true,
+      })
+
       await NodeUtils.waitForOpen(this.node)
+
+      const newSecretKey = Buffer.from(
+        this.node.peerNetwork.localPeer.privateIdentity.secretKey
+      ).toString('hex')
+      this.node.internal.set('networkIdentity', newSecretKey)
+      await this.node.internal.save()
 
       this.accounts = new AccountManager(this.node)
       this.transactions = new TransactionManager(this.node)
 
       this.initStatus = IronFishInitStatus.INITIALIZED
     } catch (e) {
-      this.initStatus = IronFishInitStatus.ERROR
       // eslint-disable-next-line no-console
-      console.error(e)
+      console.error(e, this.initStatus)
+      this.initStatus = IronFishInitStatus.ERROR
     }
   }
 
