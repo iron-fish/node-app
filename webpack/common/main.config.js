@@ -20,6 +20,9 @@ module.exports = {
   module: {
     rules: require('./rules'),
   },
+  externals: {
+    '@ironfish/sdk': '@ironfish/sdk',
+  },
   plugins: [
     new CopyPlugin({
       patterns: [
