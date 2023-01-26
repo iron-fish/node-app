@@ -28,7 +28,7 @@ interface AddressTransactionsProps {
 
 const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
   address,
-  contact
+  contact,
 }) => {
   const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
@@ -171,7 +171,7 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({
           description="You don’t have any transaction with this contact yet. To produce a transactions, either send or receive $IRON. "
         />
       ) : (
-        <SearchAddressTransactions address={address} contact={contact}/>
+        <SearchAddressTransactions address={address} contact={contact} />
       )}
     </Box>
   )
