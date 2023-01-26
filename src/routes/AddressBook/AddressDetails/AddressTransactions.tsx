@@ -18,6 +18,7 @@ import Transaction from 'Types/Transaction'
 import EmptyOverview from 'Components/EmptyOverview'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
+import ContactsPreview from 'Components/ContactsPreview'
 
 interface AddressTransactionsProps {
   address: string
@@ -104,7 +105,12 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
             {
               key: 'to',
               label: 'To',
-              render: (transaction: Transaction) => <h5>{transaction.to}</h5>,
+              render: (transaction: Transaction) => (
+                <ContactsPreview
+                  addresses={transaction.to}
+                  notes={transaction.notes}
+                />
+              ),
             },
             {
               key: 'date',
