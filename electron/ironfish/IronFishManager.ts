@@ -292,7 +292,7 @@ class TransactionManager implements IIronfishTransactionManager {
 
     return {
       accountId: account.id,
-      hash: transaction.transaction.unsignedHash().toString('hex'),
+      hash: transaction.transaction.hash().toString('hex'),
       isMinersFee: transaction.transaction.isMinersFee(),
       fee: transaction.transaction.fee().toString(),
       notesCount: transaction.transaction.notes.length,
