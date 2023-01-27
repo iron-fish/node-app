@@ -4,13 +4,10 @@ import {
   chakra,
   CommonTable,
   NAMED_COLORS,
-  Icon,
   Button,
   Box,
 } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import SendIcon from 'Svgx/send'
-import Receive from 'Svgx/receive'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAddressTransactions'
 import SortType from 'Types/SortType'
@@ -20,6 +17,7 @@ import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import ContactsPreview from 'Components/ContactsPreview'
 import Contact from 'Types/Contact'
+import TransactionStatusView from 'Components/TransactionStatusView'
 
 interface AddressTransactionsProps {
   address: string
@@ -84,22 +82,10 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               key: 'action',
               label: 'Action',
               render: (transaction: Transaction) => (
-                <Flex align="center" position="relative">
-                  <Flex
-                    w="1.625rem"
-                    h="1.625rem"
-                    position="absolute"
-                    borderRadius="50%"
-                    align="center"
-                    justify="center"
-                    background={NAMED_COLORS.LIGHT_GREY}
-                  >
-                    <Icon h={8}>
-                      {transaction.creator ? <SendIcon /> : <Receive />}
-                    </Icon>
-                  </Flex>
-                  <chakra.h5 ml="2.375rem">{transaction.status}</chakra.h5>
-                </Flex>
+                <TransactionStatusView
+                  status={transaction.status}
+                  isSent={transaction.creator}
+                />
               ),
             },
             {
