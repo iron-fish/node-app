@@ -9,6 +9,8 @@ import {
   PeerResponse,
   Connection,
   getPackageFrom,
+  VERSION_DATABASE_CHAIN,
+  VERSION_DATABASE_ACCOUNTS,
 } from '@ironfish/sdk'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
@@ -38,6 +40,26 @@ export class IronFishManager implements IIronfishManager {
     }
   }
 
+  async checkForMigrations(): Promise<void> {
+    this.initStatus = IronFishInitStatus.CHECKING_FOR_MIGRATIONS
+    if (!this.node.chain.db.isOpen) {
+      await this.node.chain.db.open()
+    }
+    if (!this.node.wallet.walletDb.db.isOpen) {
+      await this.node.wallet.walletDb.db.open()
+    }
+    const chainDbVersion = await this.node.chain.db.getVersion()
+    const walletDbVersion = await this.node.wallet.walletDb.db.getVersion()
+    if (
+      chainDbVersion !== VERSION_DATABASE_CHAIN ||
+      walletDbVersion !== VERSION_DATABASE_ACCOUNTS
+    ) {
+      this.sdk.config.setOverride('databaseMigrate', true)
+    }
+    await this.node.chain.db.close()
+    await this.node.wallet.walletDb.db.close()
+  }
+
   async initialize(): Promise<void> {
     try {
       //Initializing Iron Fish SDK
@@ -58,6 +80,8 @@ export class IronFishManager implements IIronfishManager {
         privateIdentity: privateIdentity,
         autoSeed: true,
       })
+
+      await this.checkForMigrations()
 
       await NodeUtils.waitForOpen(this.node)
 
