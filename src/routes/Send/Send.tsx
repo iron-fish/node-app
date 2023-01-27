@@ -129,14 +129,14 @@ const Send: FC = () => {
   })
   const $colors = useColorModeValue(
     {
-      bg: NAMED_COLORS.DEEP_BLUE,
-      color: NAMED_COLORS.WHITE,
-      warningBg: '#FFEDE8',
-    },
-    {
       bg: NAMED_COLORS.WHITE,
       color: NAMED_COLORS.DEEP_BLUE,
       warningBg: '#3E251B',
+    },
+    {
+      bg: NAMED_COLORS.DEEP_BLUE,
+      color: NAMED_COLORS.WHITE,
+      warningBg: '#FFEDE8',
     }
   )
 
@@ -169,7 +169,7 @@ const Send: FC = () => {
             alignItems="center"
             w="inherit"
             h="16rem"
-            bg={`${$colors.bg} !important`}
+            bg={$colors.bg}
             color={$colors.color}
             mb="2rem"
             borderRadius="0.25rem"
