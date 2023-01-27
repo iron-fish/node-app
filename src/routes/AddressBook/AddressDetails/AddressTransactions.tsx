@@ -30,7 +30,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
 }) => {
   const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
-  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
+  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
   const [{ data: transactions, loaded }] = useTransactions(
     address,
     $searchTerm,
@@ -48,6 +48,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
         SortSelectProps={{
           onSelectOption: ({ value }) => $setSortOrder(value),
         }}
+        sortValue={$sortOrder}
         options={[
           {
             label: 'Newest to oldest',
