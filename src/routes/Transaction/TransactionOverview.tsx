@@ -117,7 +117,7 @@ const CARDS: Card[] = [
 
 const TransactionOverview: FC = () => {
   const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
-  const { hash, accountId } = useLocation()?.state
+  const { hash, accountId, contactId } = useLocation()?.state
   const [{ data: account, loaded: accountLoaded }] = useAccount(accountId)
   const { loaded: transactionLoaded, data: transaction } = useTransaction(
     accountId,
@@ -129,9 +129,13 @@ const TransactionOverview: FC = () => {
       <Box>
         <BackButtonLink
           mb="1rem"
-          to={ROUTES.ACCOUNT}
+          to={
+            contactId ? ROUTES.ADDRESS_BOOK + `/${contactId}` : ROUTES.ACCOUNT
+          }
           state={{ accountId: accountId }}
-          label={'Back to Account Overview'}
+          label={
+            contactId ? 'Back to Contact Overview' : 'Back to Account Overview'
+          }
         />
         <Flex alignItems="end" mb="2.5rem">
           <Skeleton isLoaded={accountLoaded} minW="8rem" h="1.75rem" mr="1rem">

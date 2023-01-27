@@ -4,13 +4,10 @@ import {
   chakra,
   CommonTable,
   NAMED_COLORS,
-  Icon,
   Button,
   Box,
 } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import SendIcon from 'Svgx/send'
-import Receive from 'Svgx/receive'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAddressTransactions'
 import SortType from 'Types/SortType'
@@ -19,14 +16,17 @@ import EmptyOverview from 'Components/EmptyOverview'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import ContactsPreview from 'Components/ContactsPreview'
+import Contact from 'Types/Contact'
 import TransactionStatusView from 'Components/TransactionStatusView'
 
 interface AddressTransactionsProps {
   address: string
+  contact: Contact
 }
 
 const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
   address,
+  contact,
 }) => {
   const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
@@ -70,7 +70,11 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
           data={loaded ? transactions : new Array(10).fill(null)}
           onRowClick={(txn: Transaction) => {
             navigate(ROUTES.TRANSACTION, {
-              state: { accountId: txn.accountId, hash: txn.hash },
+              state: {
+                accountId: txn.accountId,
+                hash: txn.hash,
+                contactId: contact._id,
+              },
             })
           }}
           columns={[
@@ -139,7 +143,10 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
   )
 }
 
-const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
+const AddressTransactions: FC<AddressTransactionsProps> = ({
+  address,
+  contact,
+}) => {
   const [{ data: transactions = undefined, loaded }] = useTransactions(address)
 
   return (
@@ -150,7 +157,7 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
           description="You don’t have any transaction with this contact yet. To produce a transactions, either send or receive $IRON. "
         />
       ) : (
-        <SearchAddressTransactions address={address} />
+        <SearchAddressTransactions address={address} contact={contact} />
       )}
     </Box>
   )
