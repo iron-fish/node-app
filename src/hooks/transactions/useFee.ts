@@ -3,7 +3,7 @@ import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
 import {
   TransactionFeeEstimate,
   TransactionReceiver,
-} from 'Types/IIronfishManager'
+} from 'Types/IronfishManager/IIronfishTransactionManager'
 
 const useFee = (accountId: string, receiver: TransactionReceiver) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<TransactionFeeEstimate>()

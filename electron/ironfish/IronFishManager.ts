@@ -10,11 +10,9 @@ import {
   Connection,
   getPackageFrom,
 } from '@ironfish/sdk'
-import {
-  IIronfishManager,
-  IIronfishAccountManager,
-  IIronfishTransactionManager,
-} from 'Types/IIronfishManager'
+import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
+import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
+import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTransactionManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 // eslint-disable-next-line no-restricted-imports

@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid'
 import {
   TransactionFeeEstimate,
   TransactionReceiver,
-} from 'Types/IIronfishManager'
+} from 'Types/IronfishManager/IIronfishTransactionManager'
 import SortType from 'Types/SortType'
 
 import Transaction, { TransactionStatus } from 'Types/Transaction'

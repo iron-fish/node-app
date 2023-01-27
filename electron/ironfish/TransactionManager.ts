@@ -8,7 +8,7 @@ import {
   TransactionFeeStatistic,
   TransactionFeeEstimate,
   TransactionReceiver,
-} from 'Types/IIronfishManager'
+} from 'Types/IronfishManager/IIronfishTransactionManager'
 import SortType from 'Types/SortType'
 import Transaction, { Payment, TransactionStatus } from 'Types/Transaction'
 

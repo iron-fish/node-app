@@ -1,5 +1,5 @@
 import { AccountValue, CurrencyUtils, IronfishNode } from '@ironfish/sdk'
-import { IIronfishAccountManager } from 'Types/IIronfishManager'
+import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import { Asset } from '@ironfish/rust-nodejs'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'

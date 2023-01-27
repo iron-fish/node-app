@@ -4,12 +4,15 @@ import { AccountValue } from '@ironfish/sdk'
 import SortType from 'Types/SortType'
 import IStorage from 'Types/IStorage'
 import Entity from 'Types/Entity'
-import IIronfishManager, {
-  IronfishAccountManagerAction,
+import {
+  IIronfishManager,
   IronfishManagerAction,
-  IronfishTransactionManagerAction,
+} from 'Types/IronfishManager/IIronfishManager'
+import {
   TransactionReceiver,
-} from 'Types/IIronfishManager'
+  IronfishTransactionManagerAction,
+} from 'Types/IronfishManager/IIronfishTransactionManager'
+import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
 import { Payment } from 'Types/Transaction'
 import '../common/preload'
 

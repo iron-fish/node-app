@@ -2,11 +2,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 //@ts-nocheck
 import { ipcMain } from 'electron'
-import {
-  IronfishAccountManagerAction,
-  IronfishManagerAction,
-  IronfishTransactionManagerAction,
-} from 'Types/IIronfishManager'
+import { IronfishManagerAction } from 'Types/IronfishManager/IIronfishManager'
+import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
+import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfishTransactionManager'
 import initStorageCallbacks from '../common/initStorage'
 import { IronFishManager } from '../ironfish/IronFishManager'
 import '../common/index'
