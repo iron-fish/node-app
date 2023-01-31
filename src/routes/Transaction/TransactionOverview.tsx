@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   Box,
@@ -9,6 +9,7 @@ import {
   useColorModeValue,
   Skeleton,
   Grid,
+  useIronToast,
 } from '@ironfish/ui-kit'
 import size from 'byte-size'
 import { ROUTES } from '..'
@@ -17,7 +18,7 @@ import useAccount from 'Hooks/accounts/useAccount'
 import useTransaction from 'Hooks/transactions/useTransaction'
 import { truncateHash } from 'Utils/hash'
 import { formatOreToTronWithLanguage } from 'Utils/number'
-import Transaction, { Note, Spend } from 'Types/Transaction'
+import Transaction, { Note, Spend, TransactionStatus } from 'Types/Transaction'
 import BlockInfoDifficultyIcon from 'Svgx/BlockInfoDifficultyIcon'
 import DifficultyIcon from 'Svgx/DifficultyIcon'
 import SizeIcon from 'Svgx/SizeIcon'
@@ -27,6 +28,7 @@ import LargeArrowLeftDown from 'Svgx/LargeArrowLeftDown'
 import LargeArrowRightUp from 'Svgx/LargeArrowRightUp'
 import SimpleTable from 'Components/SimpleTable'
 import ContactsPreview from 'Components/ContactsPreview'
+import InfoBadge from 'Components/InfoBadge'
 
 interface Card {
   render: (tx: Transaction) => ReactNode
@@ -119,10 +121,44 @@ const TransactionOverview: FC = () => {
   const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
   const { hash, accountId, contactId } = useLocation()?.state
   const [{ data: account, loaded: accountLoaded }] = useAccount(accountId)
-  const { loaded: transactionLoaded, data: transaction } = useTransaction(
-    accountId,
-    hash
-  )
+  const [{ loaded: transactionLoaded, data: transaction }, loadTransaction] =
+    useTransaction(accountId, hash)
+  const [, setTransactionState] = useState<TransactionStatus | undefined>()
+  const toast = useIronToast({
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    setTransactionState(prev => {
+      if (!prev) {
+        if (transaction?.status === TransactionStatus.PENDING) {
+          interval = setInterval(() => loadTransaction(), 10000)
+          return TransactionStatus.PENDING
+        }
+      }
+      if (
+        prev === TransactionStatus.PENDING &&
+        transaction?.status === TransactionStatus.CONFIRMED
+      ) {
+        clearInterval(interval)
+        toast({ title: 'Transaction Sent' })
+        return undefined
+      }
+      if (
+        prev === TransactionStatus.PENDING &&
+        transaction?.status === TransactionStatus.EXPIRED
+      ) {
+        clearInterval(interval)
+        toast({ title: 'Transaction Expired' })
+        return undefined
+      }
+    })
+
+    return () => clearInterval(interval)
+  }, [transaction?.status])
 
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
@@ -158,7 +194,12 @@ const TransactionOverview: FC = () => {
         </Flex>
       </Box>
       <Box mb="2.5rem">
-        <chakra.h3 mb="1rem">Transaction Information</chakra.h3>
+        <Flex mb="1rem">
+          <chakra.h3 alignSelf="center">Transaction Information</chakra.h3>
+          {transaction?.status === TransactionStatus.PENDING && (
+            <InfoBadge message="Pending" alignSelf="baseline" ml="1rem" />
+          )}
+        </Flex>
         <Grid
           w="100%"
           templateColumns="repeat(auto-fit, minmax(19rem, 1fr))"
