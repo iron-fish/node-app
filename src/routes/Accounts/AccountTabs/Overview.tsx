@@ -63,6 +63,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
           SortSelectProps={{
             onSelectOption: ({ value }) => $setSortOrder(value),
           }}
+          sortValue={$sortOrder}
           options={[
             {
               label: 'Newest to oldest',
