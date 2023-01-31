@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -26,6 +26,7 @@ import { formatOreToTronWithLanguage } from 'Utils/number'
 import EmptyOverview from 'Components/EmptyOverview'
 import ContactsPreview from 'Components/ContactsPreview'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
+import useAccountBalance from 'Hooks/accounts/useAccountBalance'
 
 interface SearchTransactionsProps {
   address: string
@@ -35,11 +36,20 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
   const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
-  const [{ data: transactions = undefined, loaded }] = useTransactions(
-    address,
-    $searchTerm,
-    $sortOrder
-  )
+  const {
+    data: transactions = undefined,
+    loaded,
+    actions: { reload },
+  } = useTransactions(address, $searchTerm, $sortOrder)
+
+  useEffect(() => {
+    let interval: NodeJS.Timer
+    if (loaded) {
+      interval = setInterval(reload, 5000)
+    }
+
+    return () => interval && clearInterval(interval)
+  }, [loaded])
 
   return loaded && transactions?.length === 0 && !$searchTerm ? null : (
     <>
@@ -73,7 +83,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
       ) : (
         <CommonTable
           textTransform="capitalize"
-          data={loaded ? transactions : new Array(10).fill(null)}
+          data={!!transactions ? transactions : new Array(10).fill(null)}
           onRowClick={(data: Transaction) =>
             navigate(ROUTES.TRANSACTION, {
               state: { accountId: data.accountId, hash: data.hash },
@@ -155,9 +165,20 @@ interface AccountOverviewProps {
 }
 
 const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
-  const [{ data: transactions = undefined, loaded }] = useTransactions(
+  const { data: transactions = undefined, loaded } = useTransactions(
     account?.id
   )
+  const [{ data: balance, loaded: balanceLoaded }, reloadBalance] =
+    useAccountBalance(account?.id)
+
+  useEffect(() => {
+    let interval: NodeJS.Timer
+    if (balanceLoaded) {
+      interval = setInterval(reloadBalance, 5000)
+    }
+
+    return () => interval && clearInterval(interval)
+  }, [balanceLoaded])
 
   const navigate = useNavigate()
   const { loaded: synced } = useDataSync()
@@ -182,9 +203,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
               </Box>
               <Box mb="0.5rem">
                 <chakra.h2 color={NAMED_COLORS.DEEP_BLUE}>
-                  {formatOreToTronWithLanguage(
-                    account?.balance.confirmed || BigInt(0)
-                  )}
+                  {formatOreToTronWithLanguage(balance?.confirmed || BigInt(0))}
                 </chakra.h2>
               </Box>
               <Box>
@@ -247,9 +266,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
           </Box>
           <Box mb="0.5rem">
             <chakra.h2>
-              {formatOreToTronWithLanguage(
-                account?.balance.unconfirmed || BigInt(0)
-              )}
+              {formatOreToTronWithLanguage(balance?.unconfirmed || BigInt(0))}
             </chakra.h2>
           </Box>
         </Box>

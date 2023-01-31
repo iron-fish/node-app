@@ -12,7 +12,9 @@ const useAccountBalance = (id: string) => {
     id && loadAccountBalance(id)
   }, [id])
 
-  return result
+  const reload = () => loadAccountBalance(id)
+
+  return [result, reload] as const
 }
 
 export default useAccountBalance
