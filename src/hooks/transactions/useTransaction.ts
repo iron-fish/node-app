@@ -12,7 +12,12 @@ const useTransaction = (accountId: string, txHash: string) => {
     accountId && txHash && loadTransaction()
   }, [accountId, txHash])
 
-  return [result, loadTransaction] as const
+  return {
+    ...result,
+    actions: {
+      reload: loadTransaction,
+    },
+  }
 }
 
 export default useTransaction

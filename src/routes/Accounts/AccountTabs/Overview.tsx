@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useState, useEffect } from 'react'
 import {
   Box,
   Button,
@@ -7,6 +7,7 @@ import {
   Flex,
   Icon,
   NAMED_COLORS,
+  useIronToast,
 } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import SendIcon from 'Svgx/send'
@@ -18,7 +19,7 @@ import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import Transaction from 'Types/Transaction'
+import Transaction, { TransactionStatus } from 'Types/Transaction'
 import TransactionStatusView from 'Components/TransactionStatusView'
 import Account from 'Types/Account'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
@@ -26,6 +27,8 @@ import { formatOreToTronWithLanguage } from 'Utils/number'
 import EmptyOverview from 'Components/EmptyOverview'
 import ContactsPreview from 'Components/ContactsPreview'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
+import differenceBy from 'lodash/differenceBy'
+import intersectionBy from 'lodash/intersectionBy'
 
 interface SearchTransactionsProps {
   address: string
@@ -35,11 +38,77 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
   const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
-  const [{ data: transactions = undefined, loaded }] = useTransactions(
-    address,
-    $searchTerm,
-    $sortOrder
-  )
+  const {
+    data: transactions = undefined,
+    loaded,
+    actions: { reload },
+  } = useTransactions(address, $searchTerm, $sortOrder)
+  const [, setTransactionsState] = useState([])
+  const toast = useIronToast({
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
+
+  useEffect(() => {
+    let interval: NodeJS.Timer
+    if (loaded) {
+      interval = setInterval(reload, 5000)
+    }
+
+    return () => interval && clearInterval(interval)
+  }, [loaded])
+
+  useEffect(() => {
+    setTransactionsState(prevTransactions => {
+      if (!transactions) {
+        return []
+      }
+
+      const formattedTransactions = transactions.map(({ hash, status }) => ({
+        hash,
+        status,
+      }))
+
+      // check only fetched transactions
+      let nextTransactions = intersectionBy(
+        prevTransactions,
+        transactions,
+        'hash'
+      )
+
+      // if fetched more then was add missing
+      if (transactions.length > prevTransactions.length) {
+        nextTransactions = nextTransactions.concat(
+          differenceBy(formattedTransactions, prevTransactions, 'hash')
+        )
+      }
+
+      const pendingTransactions = formattedTransactions.filter(
+        t =>
+          t.status === TransactionStatus.PENDING ||
+          t.status === TransactionStatus.UNCONFIRMED ||
+          t.status === TransactionStatus.UNKNOWN
+      )
+
+      const prevPendingTransactions = nextTransactions.filter(
+        t =>
+          t.status === TransactionStatus.PENDING ||
+          t.status === TransactionStatus.UNCONFIRMED ||
+          t.status === TransactionStatus.UNKNOWN
+      )
+
+      const txnCount =
+        transactions.length > prevTransactions.length
+          ? differenceBy(pendingTransactions, prevPendingTransactions, 'hash')
+          : differenceBy(prevPendingTransactions, pendingTransactions, 'hash')
+
+      if (txnCount.length) {
+        toast({ title: 'Transaction Sent' })
+      }
+      return transactions.map(({ hash, status }) => ({ hash, status }))
+    })
+  }, [loaded])
 
   return loaded && transactions?.length === 0 && !$searchTerm ? null : (
     <>
@@ -60,7 +129,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               value: SortType.DESC,
             },
             {
-              label: 'Oldest to oldest',
+              label: 'Oldest to newest',
               value: SortType.ASC,
             },
           ]}
@@ -74,7 +143,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
       ) : (
         <CommonTable
           textTransform="capitalize"
-          data={loaded ? transactions : new Array(10).fill(null)}
+          data={!!transactions ? transactions : new Array(10).fill(null)}
           onRowClick={(data: Transaction) =>
             navigate(ROUTES.TRANSACTION, {
               state: { accountId: data.accountId, hash: data.hash },
@@ -156,7 +225,7 @@ interface AccountOverviewProps {
 }
 
 const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
-  const [{ data: transactions = undefined, loaded }] = useTransactions(
+  const { data: transactions = undefined, loaded } = useTransactions(
     account?.id
   )
 

@@ -121,8 +121,11 @@ const TransactionOverview: FC = () => {
   const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
   const { hash, accountId, contactId } = useLocation()?.state
   const [{ data: account, loaded: accountLoaded }] = useAccount(accountId)
-  const [{ loaded: transactionLoaded, data: transaction }, loadTransaction] =
-    useTransaction(accountId, hash)
+  const {
+    loaded: transactionLoaded,
+    data: transaction,
+    actions: { reload },
+  } = useTransaction(accountId, hash)
   const [, setTransactionState] = useState<TransactionStatus | undefined>()
   const toast = useIronToast({
     containerStyle: {
@@ -131,34 +134,40 @@ const TransactionOverview: FC = () => {
   })
 
   useEffect(() => {
-    let interval: NodeJS.Timeout
+    let interval: NodeJS.Timer
+    if (
+      transactionLoaded &&
+      (transaction.status === TransactionStatus.PENDING ||
+        transaction.status === TransactionStatus.UNCONFIRMED ||
+        transaction.status === TransactionStatus.UNKNOWN)
+    ) {
+      interval = setInterval(() => {
+        reload()
+      }, 1000)
+    }
+
+    return () => interval && clearInterval(interval)
+  }, [transactionLoaded])
+
+  useEffect(() => {
     setTransactionState(prev => {
-      if (!prev) {
-        if (transaction?.status === TransactionStatus.PENDING) {
-          interval = setInterval(() => loadTransaction(), 10000)
-          return TransactionStatus.PENDING
-        }
-      }
       if (
-        prev === TransactionStatus.PENDING &&
-        transaction?.status === TransactionStatus.CONFIRMED
+        !prev &&
+        transaction?.status !== TransactionStatus.CONFIRMED &&
+        transaction?.status !== TransactionStatus.EXPIRED
       ) {
-        clearInterval(interval)
+        return transaction?.status
+      }
+      if (prev && transaction?.status === TransactionStatus.CONFIRMED) {
         toast({ title: 'Transaction Sent' })
         return undefined
       }
-      if (
-        prev === TransactionStatus.PENDING &&
-        transaction?.status === TransactionStatus.EXPIRED
-      ) {
-        clearInterval(interval)
+      if (prev && transaction?.status === TransactionStatus.EXPIRED) {
         toast({ title: 'Transaction Expired' })
         return undefined
       }
     })
-
-    return () => clearInterval(interval)
-  }, [transaction?.status])
+  }, [transactionLoaded])
 
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
@@ -196,7 +205,9 @@ const TransactionOverview: FC = () => {
       <Box mb="2.5rem">
         <Flex mb="1rem">
           <chakra.h3 alignSelf="center">Transaction Information</chakra.h3>
-          {transaction?.status === TransactionStatus.PENDING && (
+          {(transaction?.status === TransactionStatus.PENDING ||
+            transaction?.status === TransactionStatus.UNCONFIRMED ||
+            transaction?.status === TransactionStatus.UNKNOWN) && (
             <InfoBadge message="Pending" alignSelf="baseline" ml="1rem" />
           )}
         </Flex>
@@ -206,8 +217,13 @@ const TransactionOverview: FC = () => {
           autoRows="7.75rem"
           gap="1rem"
         >
-          {CARDS.map((card: Card) => (
-            <Skeleton isLoaded={transactionLoaded} minW="19rem" h="7.5rem">
+          {CARDS.map((card: Card, index) => (
+            <Skeleton
+              key={`${card.label}-${index}`}
+              isLoaded={!!transaction}
+              minW="19rem"
+              h="7.5rem"
+            >
               <Box layerStyle="card" h="7.5rem" minW="19rem">
                 <Flex
                   w="100%"
