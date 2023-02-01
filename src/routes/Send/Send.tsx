@@ -29,6 +29,7 @@ import { useDataSync } from 'Providers/DataSyncProvider'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import { decodeIron } from 'Utils/number'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
+import { RawTransactionFee } from 'Types/IronfishManager/IIronfishTransactionManager'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -48,7 +49,7 @@ const Information: FC = memo(() => {
   )
 })
 
-const hasEnoughIron = (balance: bigint, amount: bigint, fee: bigint) => {
+const hasEnoughIron = (balance: bigint, amount: bigint, fee = BigInt(0)) => {
   const zero = BigInt(0)
   return (balance || balance === zero) &&
     (amount || amount === zero) &&
@@ -75,9 +76,9 @@ const getPrecision = (val: string) => {
   return precision
 }
 
-const getEstimatedFeeOption = (priority: string, value: bigint) => ({
+const getEstimatedFeeOption = (priority: string, value: RawTransactionFee) => ({
   value: value,
-  label: `${value} Ore`,
+  label: `${value.fee} Ore`,
   helperText: `Transfer speed: ${priority}`,
 })
 
@@ -148,11 +149,11 @@ const Send: FC = () => {
   }, [amount])
 
   const checkChanges = (): boolean =>
-    !(selectedFee?.value && account && contact && Number(amount)) ||
+    !(selectedFee?.value.fee && account && contact && Number(amount)) ||
     !hasEnoughIron(
       account?.balance.confirmed,
       decodeIron(amount || 0),
-      selectedFee.value
+      selectedFee.value.fee
     )
 
   return (
@@ -219,7 +220,7 @@ const Send: FC = () => {
             {!hasEnoughIron(
               account?.balance.confirmed,
               decodeIron(amount || 0),
-              selectedFee?.value
+              selectedFee?.value.fee
             ) && (
               <Flex
                 w="100%"
@@ -288,7 +289,7 @@ const Send: FC = () => {
         to={contact}
         memo={notes}
         onCreateAccount={setContact}
-        fee={selectedFee?.value}
+        fee={selectedFee?.value.fee}
       />
     </Flex>
   )

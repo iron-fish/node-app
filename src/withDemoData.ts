@@ -3,7 +3,10 @@ import noop from 'lodash/noop'
 import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
 import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
-import { TransactionReceiver } from 'Types/IronfishManager/IIronfishTransactionManager'
+import {
+  RawTransactionFee,
+  TransactionReceiver,
+} from 'Types/IronfishManager/IIronfishTransactionManager'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
 
@@ -75,6 +78,8 @@ export const IronFishManager: IIronfishManager = {
         payment.memo,
         transactionFee || BigInt(100)
       ),
+    sendTxn: (accountId: string, serializedTxn: Buffer) =>
+      window.DemoDataManager.transactions.sendTxn(accountId, serializedTxn),
   },
   nodeStatus: () => window.DemoDataManager.getNodeStatus(),
   peers: () => window.DemoDataManager.getNodePeers(),

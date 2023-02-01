@@ -20,10 +20,14 @@ export interface TransactionFeeStatistic {
   p100: bigint
 }
 
+export interface RawTransactionFee {
+  serializedTxn: Buffer
+  fee: bigint
+}
 export interface TransactionFeeEstimate {
-  low: bigint
-  medium: bigint
-  high: bigint
+  low: RawTransactionFee
+  medium: RawTransactionFee
+  high: RawTransactionFee
 }
 
 export interface TransactionReceiver {
@@ -39,6 +43,7 @@ export interface IIronfishTransactionManager {
     payment: Payment,
     transactionFee?: bigint
   ) => Promise<Transaction>
+  sendTxn: (accountId: string, serializedTxn: Buffer) => Promise<Transaction>
   fees: (numOfBlocks?: number) => Promise<TransactionFeeStatistic>
   averageFee: (numOfBlocks?: number) => Promise<bigint>
   estimateFeeWithPriority: (

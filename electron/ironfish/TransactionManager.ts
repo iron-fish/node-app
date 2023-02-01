@@ -1,5 +1,11 @@
 import { Asset } from '@ironfish/rust-nodejs'
-import { Account, CurrencyUtils, IronfishNode } from '@ironfish/sdk'
+import {
+  Account,
+  CurrencyUtils,
+  IronfishNode,
+  RawTransaction,
+  RawTransactionSerde,
+} from '@ironfish/sdk'
 import { PRIORITY_LEVELS } from '@ironfish/sdk/build/src/memPool/feeEstimator'
 import { TransactionValue } from '@ironfish/sdk/build/src/wallet/walletdb/transactionValue'
 import { sizeVarBytes } from 'bufio'
@@ -43,6 +49,25 @@ class TransactionManager implements IIronfishTransactionManager {
     )
 
     return result
+  }
+
+  async sendTxn(
+    accountId: string,
+    serializedTsx: Buffer
+  ): Promise<Transaction> {
+    const account = this.node.wallet.getAccount(accountId)
+    const head = await account.getHead()
+    const rawTransaction = RawTransactionSerde.deserialize(serializedTsx)
+    const transaction = await this.node.wallet.postTransaction(
+      rawTransaction,
+      this.node.memPool
+    )
+
+    return await this.resolveTransactionFields(
+      account,
+      head.sequence,
+      await account.getTransaction(transaction.hash())
+    )
   }
 
   private async getFees(numOfBlocks = 100) {
@@ -90,18 +115,56 @@ class TransactionManager implements IIronfishTransactionManager {
     accountId: string,
     receive: TransactionReceiver
   ): Promise<TransactionFeeEstimate> {
+    const estimatedFeeRates = this.node.memPool.feeEstimator.estimateFeeRates()
+    const feeRates = new Set([
+      estimatedFeeRates.low ?? BigInt(1),
+      estimatedFeeRates.medium ?? BigInt(1),
+      estimatedFeeRates.high ?? BigInt(1),
+    ])
+
     const account = this.node.wallet.getAccount(accountId)
-    return Promise.all([
-      this.node.memPool.feeEstimator.estimateFee(PRIORITY_LEVELS[0], account, [
-        receive,
-      ]),
-      this.node.memPool.feeEstimator.estimateFee(PRIORITY_LEVELS[1], account, [
-        receive,
-      ]),
-      this.node.memPool.feeEstimator.estimateFee(PRIORITY_LEVELS[2], account, [
-        receive,
-      ]),
-    ]).then(([low, medium, high]) => ({ low, medium, high }))
+
+    const allPromises: Promise<RawTransaction>[] = []
+
+    feeRates.forEach(feeRate => {
+      allPromises.push(
+        this.node.wallet.createTransaction(
+          account,
+          [
+            {
+              publicAddress: receive.publicAddress,
+              amount: receive.amount,
+              memo: receive.memo,
+              assetId: Asset.nativeId(),
+            },
+          ],
+          [],
+          [],
+          {
+            feeRate,
+            expirationDelta: this.node.config.get('transactionExpirationDelta'),
+          }
+        )
+      )
+    })
+
+    const [lowTxn, mediumTxn, highTxn]: Array<RawTransaction> =
+      await Promise.all(allPromises)
+
+    return {
+      low: {
+        serializedTxn: RawTransactionSerde.serialize(lowTxn),
+        fee: lowTxn.fee,
+      },
+      medium: {
+        serializedTxn: RawTransactionSerde.serialize(mediumTxn),
+        fee: mediumTxn.fee,
+      },
+      high: {
+        serializedTxn: RawTransactionSerde.serialize(highTxn),
+        fee: highTxn.fee,
+      },
+    }
   }
 
   async averageFee(numOfBlocks = 100): Promise<bigint> {
