@@ -69,7 +69,7 @@ const DataPreviewLine: FC<DataPreviewLineProps> = ({
 )
 
 interface StepProps extends SendProps {
-  onConfirm: () => Promise<void>
+  onConfirm: () => void
   onCancel: () => void
 }
 
@@ -340,11 +340,10 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
             amount={amount}
             memo={memo}
             fee={fee}
-            onConfirm={() =>
-              send().then(() => {
-                setCurrentStep(1)
-              })
-            }
+            onConfirm={() => {
+              setCurrentStep(1)
+              send()
+            }}
             transaction={transaction}
             onCancel={handleClose}
             onCreateAccount={onCreateAccount}
