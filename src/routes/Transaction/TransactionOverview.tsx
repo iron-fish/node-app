@@ -131,13 +131,13 @@ const TransactionOverview: FC = () => {
       transactionLoaded &&
       (transaction.status === TransactionStatus.PENDING ||
         transaction.status === TransactionStatus.UNCONFIRMED ||
-        TransactionStatus.UNKNOWN)
+        transaction.status === TransactionStatus.UNKNOWN)
     ) {
-      interval = setInterval(reload, 1000)
+      interval = setInterval(reload, 5000)
     }
 
     return () => interval && clearInterval(interval)
-  })
+  }, [transactionLoaded])
 
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
