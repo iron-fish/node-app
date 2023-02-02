@@ -73,7 +73,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
       // check only fetched transactions
       let nextTransactions = intersectionBy(
         prevTransactions,
-        transactions,
+        formattedTransactions,
         'hash'
       )
 
