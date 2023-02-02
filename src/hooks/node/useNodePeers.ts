@@ -1,9 +1,9 @@
-import { PeerResponse } from '@ironfish/sdk'
 import { useEffect } from 'react'
+import Peer from 'Types/Peer'
 import useAsyncDataWrapper from '../useAsyncDataWrapper'
 
 const useNodePeers = () => {
-  const [result, promiseWrapper] = useAsyncDataWrapper<PeerResponse[]>()
+  const [result, promiseWrapper] = useAsyncDataWrapper<Peer[]>()
 
   const loadPeers = () => promiseWrapper(window.IronfishManager.peers())
 
