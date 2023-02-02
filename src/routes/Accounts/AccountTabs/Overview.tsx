@@ -221,10 +221,9 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
 
 interface AccountOverviewProps {
   account: Account
-  order: number
 }
 
-const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
+const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
   const { data: transactions = undefined, loaded } = useTransactions(
     account?.id
   )
@@ -237,7 +236,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
       <Flex w="100%" pb="2rem">
         <Box
           layerStyle="card"
-          bg={`${accountGradientByOrder(order)} !important`}
+          bg={`${accountGradientByOrder(account.order)} !important`}
           borderRadius="0.25rem"
           w="100%"
           minWidth="18rem"
@@ -253,7 +252,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
               <Box mb="0.5rem">
                 <chakra.h2 color={NAMED_COLORS.DEEP_BLUE}>
                   {formatOreToTronWithLanguage(
-                    account?.balance.confirmed || BigInt(0)
+                    account.balance.confirmed || BigInt(0)
                   )}
                 </chakra.h2>
               </Box>
@@ -270,7 +269,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
                   }
                   onClick={() =>
                     navigate(ROUTES.SEND, {
-                      state: { accountId: account?.id },
+                      state: { accountId: account.id },
                     })
                   }
                   isDisabled={!synced}
@@ -290,7 +289,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
                   }
                   onClick={() =>
                     navigate(ROUTES.RECEIVE, {
-                      state: { accountId: account?.id },
+                      state: { accountId: account.id },
                     })
                   }
                   isDisabled={!synced}
@@ -318,20 +317,20 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
           <Box mb="0.5rem">
             <chakra.h2>
               {formatOreToTronWithLanguage(
-                account?.balance.unconfirmed || BigInt(0)
+                account.balance.unconfirmed || BigInt(0)
               )}
             </chakra.h2>
           </Box>
         </Box>
       </Flex>
-      <Box display={account?.id && loaded ? 'block' : 'none'}>
+      <Box display={account.id && loaded ? 'block' : 'none'}>
         {transactions?.length === 0 ? (
           <EmptyOverview
             header="You don’t have any transactions"
             description="When your account compiles transactions they will be listed here. To produce a transactions, eitherF send or receive $IRON."
           />
         ) : (
-          <SearchTransactions address={account?.id} />
+          <SearchTransactions address={account.id} />
         )}
       </Box>
     </>

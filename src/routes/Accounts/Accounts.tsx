@@ -138,11 +138,7 @@ const Accounts = () => {
         {loaded ? (
           accounts.length > 0 ? (
             accounts.map((account, index) => (
-              <AccountPreview
-                key={`${account.name}-${index}`}
-                {...account}
-                order={index}
-              />
+              <AccountPreview key={`${account.name}-${index}`} {...account} />
             ))
           ) : (
             <EmptyOverview
