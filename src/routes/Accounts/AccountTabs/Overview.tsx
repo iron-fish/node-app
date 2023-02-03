@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -29,6 +29,7 @@ import ContactsPreview from 'Components/ContactsPreview'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
 import differenceBy from 'lodash/differenceBy'
 import intersectionBy from 'lodash/intersectionBy'
+import useAccountBalance from 'Hooks/accounts/useAccountBalance'
 
 interface SearchTransactionsProps {
   address: string
@@ -227,6 +228,17 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
   const { data: transactions = undefined, loaded } = useTransactions(
     account?.id
   )
+  const [{ data: balance, loaded: balanceLoaded }, reloadBalance] =
+    useAccountBalance(account?.id)
+
+  useEffect(() => {
+    let interval: NodeJS.Timer
+    if (balanceLoaded) {
+      interval = setInterval(reloadBalance, 5000)
+    }
+
+    return () => interval && clearInterval(interval)
+  }, [balanceLoaded])
 
   const navigate = useNavigate()
   const { loaded: synced } = useDataSync()
@@ -251,9 +263,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
               </Box>
               <Box mb="0.5rem">
                 <chakra.h2 color={NAMED_COLORS.DEEP_BLUE}>
-                  {formatOreToTronWithLanguage(
-                    account.balance.confirmed || BigInt(0)
-                  )}
+                  {formatOreToTronWithLanguage(balance?.confirmed || BigInt(0))}
                 </chakra.h2>
               </Box>
               <Box>
@@ -316,9 +326,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
           </Box>
           <Box mb="0.5rem">
             <chakra.h2>
-              {formatOreToTronWithLanguage(
-                account.balance.unconfirmed || BigInt(0)
-              )}
+              {formatOreToTronWithLanguage(balance?.unconfirmed || BigInt(0))}
             </chakra.h2>
           </Box>
         </Box>

@@ -141,9 +141,7 @@ const TransactionOverview: FC = () => {
         transaction.status === TransactionStatus.UNCONFIRMED ||
         transaction.status === TransactionStatus.UNKNOWN)
     ) {
-      interval = setInterval(() => {
-        reload()
-      }, 1000)
+      interval = setInterval(reload, 5000)
     }
 
     return () => interval && clearInterval(interval)
