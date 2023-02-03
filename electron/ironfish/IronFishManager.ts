@@ -42,40 +42,47 @@ export class IronFishManager implements IIronfishManager {
     }
   }
 
+  private async initializeSdk(): Promise<void> {
+    //Initializing Iron Fish SDK
+    this.initStatus = IronFishInitStatus.INITIALIZING_SDK
+    this.sdk = await IronfishSdk.init({
+      pkg: getPackageFrom(pkg),
+    })
+
+    if (!this.sdk.internal.get('telemetryNodeId')) {
+      this.sdk.internal.set('telemetryNodeId', uuid())
+      await this.sdk.internal.save()
+    }
+  }
+
+  private async initializeNode(): Promise<void> {
+    //Initializing Iron Fish node
+    this.initStatus = IronFishInitStatus.INITIALIZING_NODE
+    const privateIdentity = this.getPrivateIdentity()
+    this.node = await this.sdk.node({
+      privateIdentity: privateIdentity,
+      autoSeed: true,
+    })
+
+    await NodeUtils.waitForOpen(this.node)
+
+    const newSecretKey = Buffer.from(
+      this.node.peerNetwork.localPeer.privateIdentity.secretKey
+    ).toString('hex')
+    this.node.internal.set('networkIdentity', newSecretKey)
+    await this.node.internal.save()
+
+    this.accounts = new AccountManager(this.node)
+    this.transactions = new TransactionManager(this.node)
+    this.nodeSettings = new NodeSettingsManager(this.node)
+
+    this.initStatus = IronFishInitStatus.INITIALIZED
+  }
+
   async initialize(): Promise<void> {
     try {
-      //Initializing Iron Fish SDK
-      this.initStatus = IronFishInitStatus.INITIALIZING_SDK
-      this.sdk = await IronfishSdk.init({
-        pkg: getPackageFrom(pkg),
-      })
-
-      if (!this.sdk.internal.get('telemetryNodeId')) {
-        this.sdk.internal.set('telemetryNodeId', uuid())
-        await this.sdk.internal.save()
-      }
-
-      //Initializing Iron Fish node
-      this.initStatus = IronFishInitStatus.INITIALIZING_NODE
-      const privateIdentity = this.getPrivateIdentity()
-      this.node = await this.sdk.node({
-        privateIdentity: privateIdentity,
-        autoSeed: true,
-      })
-
-      await NodeUtils.waitForOpen(this.node)
-
-      const newSecretKey = Buffer.from(
-        this.node.peerNetwork.localPeer.privateIdentity.secretKey
-      ).toString('hex')
-      this.node.internal.set('networkIdentity', newSecretKey)
-      await this.node.internal.save()
-
-      this.accounts = new AccountManager(this.node)
-      this.transactions = new TransactionManager(this.node)
-      this.nodeSettings = new NodeSettingsManager(this.node)
-
-      this.initStatus = IronFishInitStatus.INITIALIZED
+      await this.initializeSdk()
+      await this.initializeNode()
     } catch (e) {
       this.initStatus = IronFishInitStatus.ERROR
       // eslint-disable-next-line no-console
@@ -250,7 +257,7 @@ export class IronFishManager implements IIronfishManager {
     this.nodeSettings.setValues(values)
     await this.nodeSettings.save()
     await this.stop()
-    await this.initialize()
+    await this.initializeNode()
     return this.start()
   }
 }
