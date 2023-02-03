@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   Box,
@@ -17,7 +17,7 @@ import useAccount from 'Hooks/accounts/useAccount'
 import useTransaction from 'Hooks/transactions/useTransaction'
 import { truncateHash } from 'Utils/hash'
 import { formatOreToTronWithLanguage } from 'Utils/number'
-import Transaction, { Note, Spend } from 'Types/Transaction'
+import Transaction, { Note, Spend, TransactionStatus } from 'Types/Transaction'
 import BlockInfoDifficultyIcon from 'Svgx/BlockInfoDifficultyIcon'
 import DifficultyIcon from 'Svgx/DifficultyIcon'
 import SizeIcon from 'Svgx/SizeIcon'
@@ -119,10 +119,25 @@ const TransactionOverview: FC = () => {
   const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
   const { hash, accountId, contactId } = useLocation()?.state
   const [{ data: account, loaded: accountLoaded }] = useAccount(accountId)
-  const { loaded: transactionLoaded, data: transaction } = useTransaction(
-    accountId,
-    hash
-  )
+  const {
+    loaded: transactionLoaded,
+    data: transaction,
+    actions: { reload },
+  } = useTransaction(accountId, hash)
+
+  useEffect(() => {
+    let interval: NodeJS.Timer
+    if (
+      transactionLoaded &&
+      (transaction.status === TransactionStatus.PENDING ||
+        transaction.status === TransactionStatus.UNCONFIRMED ||
+        transaction.status === TransactionStatus.UNKNOWN)
+    ) {
+      interval = setInterval(reload, 5000)
+    }
+
+    return () => interval && clearInterval(interval)
+  }, [transactionLoaded])
 
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
@@ -166,7 +181,7 @@ const TransactionOverview: FC = () => {
           gap="1rem"
         >
           {CARDS.map((card: Card) => (
-            <Skeleton isLoaded={transactionLoaded} minW="19rem" h="7.5rem">
+            <Skeleton isLoaded={!!transaction} minW="19rem" h="7.5rem">
               <Box layerStyle="card" h="7.5rem" minW="19rem">
                 <Flex
                   w="100%"

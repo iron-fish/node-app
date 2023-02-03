@@ -29,7 +29,13 @@ const useAccountTransactions = (
     accountId && loadTransactions()
   }, [accountId, search, sort])
 
-  return [result, addContact] as const
+  return {
+    ...result,
+    actions: {
+      addContact: addContact,
+      reload: loadTransactions,
+    },
+  }
 }
 
 export default useAccountTransactions
