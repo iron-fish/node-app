@@ -43,7 +43,11 @@ const SETTINGS_KEYS = [
 
 const NodeSettings: FC = () => {
   const [nodeSettings, setNodeSettings] = useState<Partial<ConfigOptions>>({})
-  const [{ data, loaded }, saveSettings] = useNodeSettings()
+  const {
+    data,
+    loaded,
+    actions: { saveSettings },
+  } = useNodeSettings()
   const toast = useIronToast({
     containerStyle: {
       mb: '1rem',
@@ -60,10 +64,11 @@ const NodeSettings: FC = () => {
       [key]: value,
     }))
 
-  const handleSaveSettings = () =>
+  const handleSaveSettings = () => {
     saveSettings(nodeSettings).then(() => toast({ title: 'Settings saved' }))
+  }
 
-  const hasChanges = () => {
+  const hasNoChanges = () => {
     return !(
       data &&
       nodeSettings &&
@@ -78,7 +83,7 @@ const NodeSettings: FC = () => {
     <Flex>
       <Flex direction="column" w="37.25rem">
         <Flex gap="2rem">
-          <Skeleton w="50%" my="1rem" variant="ironFish" isLoaded={loaded}>
+          <Skeleton w="50%" my="1rem" variant="ironFish" isLoaded={!!data}>
             <TextField
               label="Node name"
               value={nodeSettings?.nodeName}
@@ -87,7 +92,7 @@ const NodeSettings: FC = () => {
               }}
             />
           </Skeleton>
-          <Skeleton w="50%" my="1rem" variant="ironFish" isLoaded={loaded}>
+          <Skeleton w="50%" my="1rem" variant="ironFish" isLoaded={!!data}>
             <TextField
               label="Block graffiti"
               value={nodeSettings?.blockGraffiti}
@@ -98,7 +103,7 @@ const NodeSettings: FC = () => {
             />
           </Skeleton>
         </Flex>
-        <Skeleton my="1rem" variant="ironFish" isLoaded={loaded}>
+        <Skeleton my="1rem" variant="ironFish" isLoaded={!!data}>
           <Flex gap="2rem">
             <TextField
               label="Min Peers"
@@ -121,7 +126,7 @@ const NodeSettings: FC = () => {
           </Flex>
         </Skeleton>
         <Flex gap="2rem">
-          <Skeleton w="50%" my="1rem" variant="ironFish" isLoaded={loaded}>
+          <Skeleton w="50%" my="1rem" variant="ironFish" isLoaded={!!data}>
             <TextField
               label="Node workers"
               value={nodeSettings?.nodeWorkers?.toString()}
@@ -132,7 +137,7 @@ const NodeSettings: FC = () => {
               }}
             />
           </Skeleton>
-          <Skeleton w="50%" variant="ironFish" my="1rem" isLoaded={loaded}>
+          <Skeleton w="50%" variant="ironFish" my="1rem" isLoaded={!!data}>
             <TextField
               label="Blocks Per Message"
               value={nodeSettings?.blocksPerMessage?.toString()}
@@ -149,7 +154,7 @@ const NodeSettings: FC = () => {
             variant="primary"
             size="large"
             onClick={handleSaveSettings}
-            isDisabled={hasChanges()}
+            isDisabled={!loaded || hasNoChanges()}
           >
             Save settings
           </Button>

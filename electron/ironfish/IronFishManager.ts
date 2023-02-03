@@ -14,6 +14,7 @@ import {
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTransactionManager'
+import { INodeSettingsManager } from 'Types/IronfishManager/INodeSettingsManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 // eslint-disable-next-line no-restricted-imports
@@ -28,7 +29,7 @@ export class IronFishManager implements IIronfishManager {
   protected node: IronfishNode
   accounts: IIronfishAccountManager
   transactions: IIronfishTransactionManager
-  nodeSettings: NodeSettingsManager
+  nodeSettings: INodeSettingsManager
 
   private getPrivateIdentity(): PrivateIdentity | undefined {
     const networkIdentity = this.sdk.internal.get('networkIdentity')
@@ -249,6 +250,7 @@ export class IronFishManager implements IIronfishManager {
     this.nodeSettings.setValues(values)
     await this.nodeSettings.save()
     await this.stop()
+    await this.initialize()
     return this.start()
   }
 }

@@ -9,9 +9,12 @@ const useNodeSettings = () => {
     promiseWrapper(window.IronfishManager.getNodeConfig())
 
   const saveSettings = useCallback(
-    (values: Partial<ConfigOptions>) =>
-      window.IronfishManager.saveNodeConfig(values).then(() => loadSettings()),
-
+    async (values: Partial<ConfigOptions>) =>
+      promiseWrapper(
+        window.IronfishManager.saveNodeConfig(values).then(() =>
+          window.IronfishManager.getNodeConfig()
+        )
+      ),
     []
   )
 
@@ -19,7 +22,7 @@ const useNodeSettings = () => {
     loadSettings()
   }, [])
 
-  return [result, saveSettings] as const
+  return { ...result, actions: { saveSettings } }
 }
 
 export default useNodeSettings

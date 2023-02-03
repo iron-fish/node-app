@@ -4,7 +4,7 @@ import {
   Config,
   ConfigOptions,
 } from '@ironfish/sdk'
-import { INodeSettingsManager } from 'Types/IIronfishManager'
+import { INodeSettingsManager } from 'Types/IronfishManager/INodeSettingsManager'
 
 class NodeSettingsManager implements INodeSettingsManager {
   private config: Config

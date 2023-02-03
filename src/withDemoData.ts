@@ -76,6 +76,13 @@ export const IronFishManager: IIronfishManager = {
         transactionFee || BigInt(100)
       ),
   },
+  nodeSettings: {
+    getConfig: () => window.DemoDataManager.nodeSettings.getConfig(),
+    setValues: (values: Partial<ConfigOptions>) =>
+      window.DemoDataManager.nodeSettings.setValues(values),
+    save: () => window.DemoDataManager.nodeSettings.save(),
+    clearConfig: () => window.DemoDataManager.nodeSettings.clearConfig(),
+  },
   nodeStatus: () => window.DemoDataManager.getNodeStatus(),
   peers: () => window.DemoDataManager.getNodePeers(),
   hasAnyAccount: () => window.DemoDataManager.hasAnyAccount(),

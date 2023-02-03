@@ -13,10 +13,12 @@ import { AccountMinerStatistic, MinerProps } from './types/AccountMiner'
 import { Contact } from './types/Contact'
 import Transaction from 'Types/Transaction'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
+import DemoNodeSettingsManager from './DemoNodeSettingsManager'
 
 class DemoDataManager {
   accounts: DemoAccountsManager
   transactions: DemoTransactionsManager
+  nodeSettings: DemoNodeSettingsManager
   addressBook: DemoAddressBookManager
   miner: DemoMinerManager
   node: DemoNodeManager
@@ -28,6 +30,7 @@ class DemoDataManager {
     this.addressBook = new DemoAddressBookManager()
     this.miner = new DemoMinerManager()
     this.node = new DemoNodeManager()
+    this.nodeSettings = new DemoNodeSettingsManager()
     this.status = IronFishInitStatus.NOT_STARTED
   }
 
@@ -198,12 +201,12 @@ class DemoDataManager {
   }
 
   async getNodeConfig(): Promise<Partial<ConfigOptions>> {
-    return this.node.getConfig()
+    return this.nodeSettings.getConfig()
   }
 
   async saveNodeConfig(values: Partial<ConfigOptions>): Promise<void> {
-    this.node.setValues(values)
-    await this.node.save()
+    this.nodeSettings.setValues(values)
+    await this.nodeSettings.save()
     await this.stop()
     await this.initialize()
     return this.start()
