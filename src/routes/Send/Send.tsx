@@ -120,13 +120,13 @@ const Send: FC = () => {
   const [amount, setAmount] = useState('0.00')
   const [account, setAccount] = useState<CutAccount>(null)
   const [contact, setContact] = useState<Contact>(null)
-  const [notes, setNotes] = useState('')
+  const [txnMemo, setTxnMemo] = useState('')
   const [startSendFlow, setStart] = useState(false)
   const [selectedFee, setSelectedFee] = useState<OptionType>()
   const { data: fee, loaded: feeCalculated } = useFee(account?.id, {
     publicAddress: contact?.address || '',
     amount: decodeIron(amount || 0),
-    memo: notes,
+    memo: txnMemo,
   })
   const $colors = useColorModeValue(
     {
@@ -264,10 +264,10 @@ const Send: FC = () => {
               />
               <TextField
                 w="calc(50% - 1rem)"
-                label={`Memo (${32 - notes.length} characters)`}
-                value={notes}
+                label={`Memo (${32 - txnMemo.length} characters)`}
+                value={txnMemo}
                 InputProps={{
-                  onChange: e => setNotes(e.target.value.substring(0, 32)),
+                  onChange: e => setTxnMemo(e.target.value.substring(0, 32)),
                   maxLength: 32,
                 }}
               />
@@ -287,7 +287,7 @@ const Send: FC = () => {
         amount={decodeIron(amount || 0)}
         from={account}
         to={contact}
-        memo={notes}
+        memo={txnMemo}
         onCreateAccount={setContact}
         fee={selectedFee?.value.fee}
       />
