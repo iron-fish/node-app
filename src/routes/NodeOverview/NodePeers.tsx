@@ -15,15 +15,15 @@ const NodePeers: FC = () => {
   const sizes = useBreakpointValue({
     base: {
       parts: 2,
-      maxW: '8rem',
+      minW: '8rem',
     },
     md: {
       parts: 3,
-      maxW: '12rem',
+      minW: '12rem',
     },
     lg: {
       parts: 4,
-      maxW: '16rem',
+      minW: '16rem',
     },
   })
   return (
@@ -34,7 +34,8 @@ const NodePeers: FC = () => {
           key: 'peer-id',
           label: 'Peer ID',
           WrapperProps: {
-            maxW: sizes.maxW,
+            w: '33%',
+            minW: sizes.minW,
           },
           render: ({ identity }) => (
             <CopyValueToClipboard
@@ -48,6 +49,9 @@ const NodePeers: FC = () => {
         {
           key: 'connection-type',
           label: 'Connection Type',
+          WrapperProps: {
+            w: '33%',
+          },
           render: ({ connectionWebRTC, connectionWebSocket }) =>
             connectionWebRTC
               ? 'WebRTC'
@@ -58,6 +62,9 @@ const NodePeers: FC = () => {
         {
           key: 'peer-address',
           label: 'Address',
+          WrapperProps: {
+            w: '33%',
+          },
           render: ({ address, country }) => (
             <Flex alignItems="center">
               {country && (
