@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { resolve } = require('path')
+const spawn = require('cross-spawn')
 
 const COMMON_CONFIG = {
   packagerConfig: {
@@ -23,6 +24,31 @@ const COMMON_CONFIG = {
       config: {},
     },
   ],
+  hooks: {
+    readPackageJson: async (forgeConfig, packageJson) => {
+      // only copy deps if there isn't any
+      if (Object.keys(packageJson.dependencies).length === 0) {
+        const originalPackageJson = require('./package.json')
+        const webpackConfigJs = require('./webpack/common/main.config.js')
+        Object.keys(webpackConfigJs.externals).forEach(package => {
+          packageJson.dependencies[package] =
+            originalPackageJson.dependencies[package]
+        })
+      }
+      return packageJson
+    },
+    packageAfterPrune: (forgeConfig, buildPath) => {
+      try {
+        spawn.sync('npm', ['install'], {
+          cwd: buildPath,
+          stdio: 'inherit',
+        })
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e)
+      }
+    },
+  },
 }
 const ENV_CONFIGS = {
   dev: {

@@ -34,7 +34,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
   balance,
 }) => {
   const navigate = useNavigate()
-  const { loaded } = useDataSync()
+  const { loaded: synced } = useDataSync()
   const $colors = useColorModeValue(
     {
       bg: NAMED_COLORS.WHITE,
@@ -140,7 +140,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              loaded && navigate(ROUTES.SEND, { state: { accountId: id } })
+              synced && navigate(ROUTES.SEND, { state: { accountId: id } })
             }}
           >
             <Button
@@ -153,7 +153,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
                   <SendIcon />
                 </Icon>
               }
-              isDisabled={!loaded}
+              isDisabled={!synced}
             >
               <h5>Send</h5>
             </Button>
@@ -162,7 +162,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              loaded && navigate(ROUTES.RECEIVE, { state: { accountId: id } })
+              synced && navigate(ROUTES.RECEIVE, { state: { accountId: id } })
             }}
           >
             <Button
@@ -175,7 +175,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
                   <Receive />
                 </Icon>
               }
-              isDisabled={!loaded}
+              isDisabled={!synced}
             >
               <h5>Receive</h5>
             </Button>

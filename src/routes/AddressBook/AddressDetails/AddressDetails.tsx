@@ -84,7 +84,7 @@ const AddressDetails = () => {
         </TabList>
         <TabPanels>
           <TabPanel pl="0rem">
-            <AddressTransactions address={contact?.address} />
+            <AddressTransactions address={contact?.address} contact={contact} />
           </TabPanel>
           <TabPanel p="0rem">
             <ContactSettings

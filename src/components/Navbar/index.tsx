@@ -55,20 +55,20 @@ const primaryNavItems: NavItemProps[] = [
     aliases: [],
   },
 ]
-interface NavbarProps {
-  offsetTop?: number
-}
+// const secondaryNavItems = [
+//   { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
+//   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
+// ]
 
-export const Navbar: FC<NavbarProps> = ({ offsetTop = 0 }) => {
+export const Navbar: FC = () => {
   return (
     <Flex
       bg="inherit"
       height="100%"
       maxHeight="100vh"
       p="3rem 1rem 1rem"
-      pt={`${3 + offsetTop}rem`}
       w={{ base: '5.5rem', sm: '16.4375rem' }}
-      transition="width 0.3s ease-in-out, padding 0.3s ease-in-out"
+      transition="width 0.3s ease-in-out"
       position="fixed"
       left="0"
       top="0"
