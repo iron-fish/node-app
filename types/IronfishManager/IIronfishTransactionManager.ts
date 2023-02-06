@@ -4,7 +4,6 @@ import Transaction, { Payment } from '../Transaction'
 export enum IronfishTransactionManagerAction {
   GET = 'get',
   SEND = 'send',
-  SEND_TXN = 'sendTxn',
   FEES = 'fees',
   AVERAGE_FEE = 'averageFee',
   ESTIMATE_FEE = 'estimateFeeWithPriority',
@@ -21,14 +20,10 @@ export interface TransactionFeeStatistic {
   p100: bigint
 }
 
-export interface RawTransactionFee {
-  serializedTxn: Buffer
-  fee: bigint
-}
 export interface TransactionFeeEstimate {
-  low: RawTransactionFee
-  medium: RawTransactionFee
-  high: RawTransactionFee
+  low?: bigint
+  medium?: bigint
+  high?: bigint
 }
 
 export interface IIronfishTransactionManager {
@@ -38,7 +33,6 @@ export interface IIronfishTransactionManager {
     payment: Payment,
     transactionFee?: bigint
   ) => Promise<Transaction>
-  sendTxn: (accountId: string, serializedTxn: Buffer) => Promise<Transaction>
   fees: (numOfBlocks?: number) => Promise<TransactionFeeStatistic>
   averageFee: (numOfBlocks?: number) => Promise<bigint>
   estimateFeeWithPriority: (

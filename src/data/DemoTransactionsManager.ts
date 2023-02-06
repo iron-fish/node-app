@@ -288,9 +288,9 @@ class DemoTransactionsManager {
     receive: Payment
   ): Promise<TransactionFeeEstimate> {
     return Promise.resolve({
-      low: { serializedTxn: new Buffer('test'), fee: BigInt(1) },
-      medium: { serializedTxn: new Buffer('test'), fee: BigInt(2) },
-      high: { serializedTxn: new Buffer('test'), fee: BigInt(3) },
+      low: BigInt(1),
+      medium: BigInt(2),
+      high: BigInt(3),
     })
   }
 
@@ -331,40 +331,6 @@ class DemoTransactionsManager {
         }
         DEMO_TRANSACTIONS.push(transaction)
         resolve(transaction)
-      }, 500)
-    })
-  }
-
-  sendTxn(accountId: string, serializedTxn: Buffer): Promise<Transaction> {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        // const transaction: Transaction = {
-        //   amount: amount.toString(),
-        //   created: new Date(),
-        //   creator: true,
-        //   fee: fee.toString(),
-        //   from: from,
-        //   to: [to],
-        //   hash: nanoid(64),
-        //   size: Math.round(Math.random() * 100000),
-        //   blockHash: nanoid(64),
-        //   isMinersFee: false,
-        //   notes: [
-        //     {
-        //       value: amount,
-        //       memo: memo,
-        //       sender: from,
-        //     },
-        //   ],
-        //   spends: [],
-        //   status: TransactionStatus.CONFIRMED,
-        //   accountId: accountId,
-        //   expiration: 0,
-        //   notesCount: 0,
-        //   spendsCount: 0,
-        // }
-        // DEMO_TRANSACTIONS.push(transaction)
-        // resolve(transaction)
       }, 500)
     })
   }

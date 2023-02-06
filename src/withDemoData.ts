@@ -72,8 +72,6 @@ export const IronFishManager: IIronfishManager = {
         payment.memo,
         transactionFee || BigInt(100)
       ),
-    sendTxn: (accountId: string, serializedTxn: Buffer) =>
-      window.DemoDataManager.transactions.sendTxn(accountId, serializedTxn),
   },
   nodeStatus: () => window.DemoDataManager.getNodeStatus(),
   peers: () => window.DemoDataManager.getNodePeers(),

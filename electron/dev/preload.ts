@@ -113,13 +113,6 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         payment,
         transactionFee
       ),
-    sendTxn: (accountId: string, serializedTxn: Buffer) =>
-      ipcRenderer.invoke(
-        'ironfish-manager-transactions',
-        IronfishTransactionManagerAction.SEND_TXN,
-        accountId,
-        serializedTxn
-      ),
     fees: (numOfBlocks = 100) =>
       ipcRenderer.invoke(
         'ironfish-manager-transactions',

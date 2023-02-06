@@ -48,25 +48,6 @@ class TransactionManager implements IIronfishTransactionManager {
     return result
   }
 
-  async sendTxn(
-    accountId: string,
-    serializedTsx: Buffer
-  ): Promise<Transaction> {
-    const account = this.node.wallet.getAccount(accountId)
-    const head = await account.getHead()
-    const rawTransaction = RawTransactionSerde.deserialize(serializedTsx)
-    const transaction = await this.node.wallet.postTransaction(
-      rawTransaction,
-      this.node.memPool
-    )
-
-    return await this.resolveTransactionFields(
-      account,
-      head.sequence,
-      await account.getTransaction(transaction.hash())
-    )
-  }
-
   private async getFees(numOfBlocks = 100) {
     let startBlock
     const endBlock = this.node.chain.latest.sequence
@@ -113,11 +94,11 @@ class TransactionManager implements IIronfishTransactionManager {
     receive: Payment
   ): Promise<TransactionFeeEstimate> {
     const estimatedFeeRates = this.node.memPool.feeEstimator.estimateFeeRates()
-    const feeRates = [
+    const feeRates = new Set([
       estimatedFeeRates.low || BigInt(1),
       estimatedFeeRates.medium || BigInt(1),
       estimatedFeeRates.high || BigInt(1),
-    ]
+    ])
 
     const account = this.node.wallet.getAccount(accountId)
 
@@ -145,22 +126,14 @@ class TransactionManager implements IIronfishTransactionManager {
       )
     })
 
-    const [lowTxn, mediumTxn, highTxn]: Array<RawTransaction> =
-      await Promise.all(allPromises)
+    const [low, medium, high]: Array<RawTransaction> = await Promise.all(
+      allPromises
+    )
 
     return {
-      low: {
-        serializedTxn: RawTransactionSerde.serialize(lowTxn),
-        fee: lowTxn.fee,
-      },
-      medium: {
-        serializedTxn: RawTransactionSerde.serialize(mediumTxn),
-        fee: mediumTxn.fee,
-      },
-      high: {
-        serializedTxn: RawTransactionSerde.serialize(highTxn),
-        fee: highTxn.fee,
-      },
+      ...(low && { low: low.fee }),
+      ...(medium && { medium: medium.fee }),
+      ...(high && { high: high.fee }),
     }
   }
 

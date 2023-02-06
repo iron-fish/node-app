@@ -33,7 +33,7 @@ const createWindow = () => {
     })
 
     mainWindow.maximize()
-    mainWindow.webContents.openDevTools()
+
     if (process.env.MODE === 'dev') {
       // Open the DevTools.
       mainWindow.webContents.openDevTools()

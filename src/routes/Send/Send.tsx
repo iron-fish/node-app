@@ -27,9 +27,9 @@ import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
-import { decodeIron } from 'Utils/number'
+import { decodeIron, formatOreToTronWithLanguage } from 'Utils/number'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
-import { RawTransactionFee } from 'Types/IronfishManager/IIronfishTransactionManager'
+import { TransactionFeeEstimate } from 'Types/IronfishManager/IIronfishTransactionManager'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -77,10 +77,10 @@ const getPrecision = (val: string) => {
   return precision
 }
 
-const getEstimatedFeeOption = (priority: string, value: RawTransactionFee) => ({
+const getEstimatedFeeOption = (priority: string, value: bigint) => ({
   value: value,
-  label: `${value.fee} Ore`,
-  helperText: `Transfer speed: ${priority}`,
+  label: `${formatOreToTronWithLanguage(value)}`,
+  helperText: `${priority}`,
 })
 
 interface SendButtonProps {
@@ -115,6 +115,15 @@ const SendButton: FC<SendButtonProps> = ({ setStart, checkChanges }) => {
   )
 }
 
+const getDefaultFee = (fees: TransactionFeeEstimate) => {
+  if (fees?.medium) {
+    return { fee: fees?.medium, name: 'medium' }
+  }
+  if (fees?.low) {
+    return { fee: fees?.low, name: 'low' }
+  }
+}
+
 const Send: FC = () => {
   const location = useLocation()
   const state = location.state as LocationStateProps
@@ -124,7 +133,7 @@ const Send: FC = () => {
   const [txnMemo, setTxnMemo] = useState('')
   const [startSendFlow, setStart] = useState(false)
   const [selectedFee, setSelectedFee] = useState<OptionType>()
-  const { data: fee, loaded: feeCalculated } = useEstimatedFee(account?.id, {
+  const { data: fees, loaded: feeCalculated } = useEstimatedFee(account?.id, {
     publicAddress: contact?.address || '',
     amount: decodeIron(amount || 0),
     memo: txnMemo,
@@ -144,21 +153,28 @@ const Send: FC = () => {
 
   useEffect(() => {
     if (Number(amount) !== 0 && !selectedFee?.label) {
-      fee?.medium &&
-        setSelectedFee(getEstimatedFeeOption('medium', fee?.medium))
+      const preselectedFee = getDefaultFee(fees)
+      preselectedFee &&
+        setSelectedFee(
+          getEstimatedFeeOption(preselectedFee.name, preselectedFee.fee)
+        )
     }
   }, [amount])
 
   useEffect(() => {
-    fee?.medium && setSelectedFee(getEstimatedFeeOption('medium', fee?.medium))
+    const preselectedFee = getDefaultFee(fees)
+    preselectedFee &&
+      setSelectedFee(
+        getEstimatedFeeOption(preselectedFee.name, preselectedFee.fee)
+      )
   }, [feeCalculated])
 
   const checkChanges = (): boolean =>
-    !(selectedFee?.value.fee && account && contact && Number(amount)) ||
+    !(selectedFee?.value && account && contact && Number(amount)) ||
     !hasEnoughIron(
       account?.balance.confirmed,
       decodeIron(amount || 0),
-      selectedFee.value.fee
+      selectedFee.value
     )
 
   return (
@@ -225,7 +241,7 @@ const Send: FC = () => {
             {!hasEnoughIron(
               account?.balance.confirmed,
               decodeIron(amount || 0),
-              selectedFee?.value.fee
+              selectedFee?.value
             ) && (
               <Flex
                 w="100%"
@@ -260,9 +276,9 @@ const Send: FC = () => {
               <SelectField
                 width="calc(50% - 1rem)"
                 mr="2rem"
-                label="Estimated Fee"
+                label="Estimated Fee $IRON"
                 value={selectedFee}
-                options={Object.entries(fee || {}).map(([key, value]) =>
+                options={Object.entries(fees || {}).map(([key, value]) =>
                   getEstimatedFeeOption(key, value)
                 )}
                 onSelectOption={selected => setSelectedFee(selected)}
@@ -294,7 +310,7 @@ const Send: FC = () => {
         to={contact}
         memo={txnMemo}
         onCreateAccount={setContact}
-        fee={selectedFee?.value.fee}
+        fee={selectedFee?.value}
       />
     </Flex>
   )
