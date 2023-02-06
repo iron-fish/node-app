@@ -6,14 +6,12 @@ import {
   RawTransaction,
   RawTransactionSerde,
 } from '@ironfish/sdk'
-import { PRIORITY_LEVELS } from '@ironfish/sdk/build/src/memPool/feeEstimator'
 import { TransactionValue } from '@ironfish/sdk/build/src/wallet/walletdb/transactionValue'
 import { sizeVarBytes } from 'bufio'
 import {
   IIronfishTransactionManager,
   TransactionFeeStatistic,
   TransactionFeeEstimate,
-  TransactionReceiver,
 } from 'Types/IronfishManager/IIronfishTransactionManager'
 import SortType from 'Types/SortType'
 import Transaction, { Payment, TransactionStatus } from 'Types/Transaction'
@@ -32,12 +30,11 @@ class TransactionManager implements IIronfishTransactionManager {
   ): Promise<Transaction> {
     const account = this.node.wallet.getAccount(accountId)
     const head = await account.getHead()
-    const fee = transactionFee || (await this.averageFee())
     const transaction = await this.node.wallet.send(
       this.node.memPool,
       account,
       [{ ...payment, assetId: Asset.nativeId() }],
-      fee,
+      transactionFee,
       this.node.config.get('transactionExpirationDelta'),
       0
     )
@@ -113,14 +110,14 @@ class TransactionManager implements IIronfishTransactionManager {
 
   async estimateFeeWithPriority(
     accountId: string,
-    receive: TransactionReceiver
+    receive: Payment
   ): Promise<TransactionFeeEstimate> {
     const estimatedFeeRates = this.node.memPool.feeEstimator.estimateFeeRates()
-    const feeRates = new Set([
-      estimatedFeeRates.low ?? BigInt(1),
-      estimatedFeeRates.medium ?? BigInt(1),
-      estimatedFeeRates.high ?? BigInt(1),
-    ])
+    const feeRates = [
+      estimatedFeeRates.low || BigInt(1),
+      estimatedFeeRates.medium || BigInt(1),
+      estimatedFeeRates.high || BigInt(1),
+    ]
 
     const account = this.node.wallet.getAccount(accountId)
 

@@ -1,10 +1,7 @@
-import { RawTransaction } from '@ironfish/sdk'
 import { nanoid } from 'nanoid'
-import {
-  TransactionFeeEstimate,
-  TransactionReceiver,
-} from 'Types/IronfishManager/IIronfishTransactionManager'
+import { TransactionFeeEstimate } from 'Types/IronfishManager/IIronfishTransactionManager'
 import SortType from 'Types/SortType'
+import { Payment } from 'Types/Transaction'
 
 import Transaction, { TransactionStatus } from 'Types/Transaction'
 
@@ -288,7 +285,7 @@ class DemoTransactionsManager {
 
   estimateFeeWithPriority(
     accountId: string,
-    receive: TransactionReceiver
+    receive: Payment
   ): Promise<TransactionFeeEstimate> {
     return Promise.resolve({
       low: { serializedTxn: new Buffer('test'), fee: BigInt(1) },

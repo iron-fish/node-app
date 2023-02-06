@@ -8,10 +8,7 @@ import {
   IIronfishManager,
   IronfishManagerAction,
 } from 'Types/IronfishManager/IIronfishManager'
-import {
-  TransactionReceiver,
-  IronfishTransactionManagerAction,
-} from 'Types/IronfishManager/IIronfishTransactionManager'
+import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfishTransactionManager'
 import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
 import { Payment } from 'Types/Transaction'
 import '../common/preload'
@@ -119,7 +116,8 @@ contextBridge.exposeInMainWorld('IronfishManager', {
     sendTxn: (accountId: string, serializedTxn: Buffer) =>
       ipcRenderer.invoke(
         'ironfish-manager-transactions',
-        IronfishTransactionManagerAction.SEND,
+        IronfishTransactionManagerAction.SEND_TXN,
+        accountId,
         serializedTxn
       ),
     fees: (numOfBlocks = 100) =>
@@ -134,10 +132,7 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         IronfishTransactionManagerAction.AVERAGE_FEE,
         numOfBlocks
       ),
-    estimateFeeWithPriority: (
-      accountId: string,
-      receive: TransactionReceiver
-    ) =>
+    estimateFeeWithPriority: (accountId: string, receive: Payment) =>
       ipcRenderer.invoke(
         'ironfish-manager-transactions',
         IronfishTransactionManagerAction.ESTIMATE_FEE,

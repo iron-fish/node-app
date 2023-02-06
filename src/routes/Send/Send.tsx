@@ -17,7 +17,7 @@ import {
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
 import DetailsPanel from 'Components/DetailsPanel'
-import useFee from 'Hooks/transactions/useFee'
+import useEstimatedFee from 'Hooks/transactions/useEstimatedFee'
 import FeesImage from 'Svgx/FeesImage'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow'
@@ -51,9 +51,10 @@ const Information: FC = memo(() => {
 
 const hasEnoughIron = (balance: bigint, amount: bigint, fee = BigInt(0)) => {
   const zero = BigInt(0)
-  return (balance || balance === zero) &&
-    (amount || amount === zero) &&
-    (fee || fee === zero)
+  if (balance === zero) {
+    return false
+  }
+  return balance && (amount || amount === zero) && (fee || fee === zero)
     ? balance >= amount + fee
     : true
 }
@@ -123,7 +124,7 @@ const Send: FC = () => {
   const [txnMemo, setTxnMemo] = useState('')
   const [startSendFlow, setStart] = useState(false)
   const [selectedFee, setSelectedFee] = useState<OptionType>()
-  const { data: fee, loaded: feeCalculated } = useFee(account?.id, {
+  const { data: fee, loaded: feeCalculated } = useEstimatedFee(account?.id, {
     publicAddress: contact?.address || '',
     amount: decodeIron(amount || 0),
     memo: txnMemo,
@@ -147,6 +148,10 @@ const Send: FC = () => {
         setSelectedFee(getEstimatedFeeOption('medium', fee?.medium))
     }
   }, [amount])
+
+  useEffect(() => {
+    fee?.medium && setSelectedFee(getEstimatedFeeOption('medium', fee?.medium))
+  }, [feeCalculated])
 
   const checkChanges = (): boolean =>
     !(selectedFee?.value.fee && account && contact && Number(amount)) ||

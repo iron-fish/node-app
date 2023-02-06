@@ -1,7 +1,7 @@
 export interface AsyncDataProps<T> {
   loaded: boolean
   data?: T
-  error?: object
+  error?: Error
 }
 
 export default AsyncDataProps
