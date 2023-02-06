@@ -94,6 +94,8 @@ const Initializing: FC = () => {
         'Initializing Iron Fish SDK'}
       {initStatus === IronFishInitStatus.INITIALIZING_NODE &&
         'Initializing Iron Fish Node'}
+      {initStatus === IronFishInitStatus.CHECKING_FOR_MIGRATIONS &&
+        'Checking for migrations'}
       {initStatus === IronFishInitStatus.STARTING_NODE &&
         'Starting Iron Fish Node'}
       {initStatus === IronFishInitStatus.ERROR && 'Something went wrong'}
