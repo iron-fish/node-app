@@ -30,7 +30,9 @@ import ArrowRight from 'Svgx/ArrowRight'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from 'Routes/data'
 
-interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
+interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {
+  cleanUp: () => void
+}
 
 interface SendProps {
   from: CutAccount
@@ -256,9 +258,6 @@ const ResultStep: FC<StepProps> = ({ from, amount, transaction }) => {
         borderColor={NAMED_COLORS.LIGHT_GREY}
         top="1.5rem"
         right="1.5rem"
-        onClick={() =>
-          navigate(ROUTES.ACCOUNT, { state: { accountId: from.id } })
-        }
         _focus={{
           boxShadow: 'none',
         }}
@@ -271,21 +270,33 @@ const ResultStep: FC<StepProps> = ({ from, amount, transaction }) => {
           minutes. This transaction will appear in your activity as pending
           until it’s been processed.
         </chakra.h4>
-        <Button
-          variant="primary"
-          size="small"
-          rightIcon={<ArrowRight mr="-0.5rem" />}
-          onClick={() =>
-            navigate(ROUTES.TRANSACTION, {
-              state: {
-                accountId: from.id,
-                hash: transaction.hash,
-              },
-            })
-          }
-        >
-          View Account Activity
-        </Button>
+        <Flex gap="2rem">
+          <Button
+            variant="primary"
+            size="small"
+            rightIcon={<ArrowRight mr="-0.5rem" />}
+            onClick={() =>
+              navigate(ROUTES.TRANSACTION, {
+                state: {
+                  accountId: from.id,
+                  hash: transaction.hash,
+                },
+              })
+            }
+          >
+            View Transaction
+          </Button>
+          <Button
+            variant="primary"
+            size="small"
+            rightIcon={<ArrowRight mr="-0.5rem" />}
+            onClick={() =>
+              navigate(ROUTES.ACCOUNT, { state: { accountId: from.id } })
+            }
+          >
+            View Account Activity
+          </Button>
+        </Flex>
       </ModalBody>
     </>
   )
@@ -309,6 +320,9 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
   const handleClose = () => {
     setCurrentStep(0)
     props.onClose && props.onClose()
+    if (props.cleanUp && currStep > 0) {
+      props.cleanUp()
+    }
   }
 
   const send = () =>
@@ -326,7 +340,12 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
 
   return (
     <LightMode>
-      <Modal {...props} closeOnOverlayClick={false} onClose={handleClose}>
+      <Modal
+        {...props}
+        closeOnOverlayClick={false}
+        closeOnEsc={false}
+        onClose={handleClose}
+      >
         <ModalOverlay />
         <ModalContent
           w="37.5rem"
