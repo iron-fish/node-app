@@ -270,7 +270,17 @@ const ResultStep: FC<StepProps> = ({ from, amount, transaction }) => {
           minutes. This transaction will appear in your activity as pending
           until it’s been processed.
         </chakra.h4>
-        <Flex gap="2rem">
+        <Flex gap="1rem">
+          <Button
+            variant="primary"
+            size="small"
+            rightIcon={<ArrowRight mr="-0.5rem" />}
+            onClick={() =>
+              navigate(ROUTES.ACCOUNT, { state: { accountId: from.id } })
+            }
+          >
+            View Account Activity
+          </Button>
           <Button
             variant="primary"
             size="small"
@@ -285,16 +295,6 @@ const ResultStep: FC<StepProps> = ({ from, amount, transaction }) => {
             }
           >
             View Transaction
-          </Button>
-          <Button
-            variant="primary"
-            size="small"
-            rightIcon={<ArrowRight mr="-0.5rem" />}
-            onClick={() =>
-              navigate(ROUTES.ACCOUNT, { state: { accountId: from.id } })
-            }
-          >
-            View Account Activity
           </Button>
         </Flex>
       </ModalBody>
