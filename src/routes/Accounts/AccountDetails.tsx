@@ -43,9 +43,10 @@ const AccountDetails: FC = () => {
         <Flex alignItems="end" mb="0.5rem">
           <chakra.h2 mr="1rem">{account?.name}</chakra.h2>
           <CopyValueToClipboard
-            label={
-              <chakra.h5>{truncateHash(account?.publicAddress, 3)}</chakra.h5>
-            }
+            label={truncateHash(account?.publicAddress, 3)}
+            labelProps={{
+              as: 'h5',
+            }}
             value={account?.publicAddress}
             copyTooltipText="Copy to clipboard"
             copiedTooltipText="Copied"

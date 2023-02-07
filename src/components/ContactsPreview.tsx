@@ -23,11 +23,10 @@ const ContactPreview: FC<{ address: string }> = ({ address }) => {
   const contact = useContact(address)
   return (
     <CopyValueToClipboard
-      label={
-        <chakra.h5>
-          {contact?.data ? contact.data.name : truncateHash(address, 2)}
-        </chakra.h5>
-      }
+      label={contact?.data ? contact.data.name : truncateHash(address, 2)}
+      labelProps={{
+        as: 'h5',
+      }}
       value={address}
       copyTooltipText={'Copy address'}
       copiedTooltipText={'Address successfuly copied'}

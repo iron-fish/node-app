@@ -1,6 +1,5 @@
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
 import { useCallback, useEffect } from 'react'
-import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 
 const useCreateAccount = () => {
   const [result, promiseWrapper] = useAsyncDataWrapper<string[]>()
