@@ -6,10 +6,12 @@ import {
   NodeUtils,
   PrivateIdentity,
   MathUtils,
-  PeerResponse,
   Connection,
   getPackageFrom,
+  VERSION_DATABASE_CHAIN,
+  VERSION_DATABASE_ACCOUNTS,
 } from '@ironfish/sdk'
+import geoip from 'geoip-lite'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
@@ -18,6 +20,7 @@ import pkg from '../../package.json'
 import AccountManager from './AccountManager'
 import TransactionManager from './TransactionManager'
 import AssetManager from './AssetManager'
+import Peer from 'Types/Peer'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -36,6 +39,26 @@ export class IronFishManager implements IIronfishManager {
     ) {
       return BoxKeyPair.fromHex(networkIdentity)
     }
+  }
+
+  async checkForMigrations(): Promise<void> {
+    this.initStatus = IronFishInitStatus.CHECKING_FOR_MIGRATIONS
+    if (!this.node.chain.db.isOpen) {
+      await this.node.chain.db.open()
+    }
+    if (!this.node.wallet.walletDb.db.isOpen) {
+      await this.node.wallet.walletDb.db.open()
+    }
+    const chainDbVersion = await this.node.chain.db.getVersion()
+    const walletDbVersion = await this.node.wallet.walletDb.db.getVersion()
+    if (
+      chainDbVersion !== VERSION_DATABASE_CHAIN ||
+      walletDbVersion !== VERSION_DATABASE_ACCOUNTS
+    ) {
+      this.sdk.config.setOverride('databaseMigrate', true)
+    }
+    await this.node.chain.db.close()
+    await this.node.wallet.walletDb.db.close()
   }
 
   async initialize(): Promise<void> {
@@ -58,6 +81,8 @@ export class IronFishManager implements IIronfishManager {
         privateIdentity: privateIdentity,
         autoSeed: true,
       })
+
+      await this.checkForMigrations()
 
       await NodeUtils.waitForOpen(this.node)
 
@@ -179,8 +204,8 @@ export class IronFishManager implements IIronfishManager {
     await this.node.syncer.findPeer()
   }
 
-  peers(): Promise<PeerResponse[]> {
-    const result: PeerResponse[] = []
+  peers(): Promise<Peer[]> {
+    const result: Peer[] = []
 
     for (const peer of this.node.peerNetwork.peerManager.peers) {
       if (peer.state.type !== 'CONNECTED') {
@@ -223,6 +248,7 @@ export class IronFishManager implements IIronfishManager {
         agent: peer.agent,
         name: peer.name,
         address: peer.address,
+        country: geoip.lookup(peer.address)?.country,
         port: peer.port,
         error: peer.error !== null ? String(peer.error) : null,
         connections: connections,
