@@ -11,7 +11,10 @@ import SortType from 'Types/SortType'
 import CurrencyAsset from 'Types/CurrencyAsset'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 
-const DEMO_ACCOUNTS: AccountValue[] = [
+const DEMO_ACCOUNTS: AccountValue[] = []
+
+//TODO return before merging
+const DEMO_ACCOUNTS1: AccountValue[] = [
   {
     id: 'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     name: 'Primary Account',
