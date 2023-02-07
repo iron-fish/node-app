@@ -6,12 +6,12 @@ import {
   NodeUtils,
   PrivateIdentity,
   MathUtils,
-  PeerResponse,
   Connection,
   getPackageFrom,
   VERSION_DATABASE_CHAIN,
   VERSION_DATABASE_ACCOUNTS,
 } from '@ironfish/sdk'
+import geoip from 'geoip-lite'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTransactionManager'
@@ -21,6 +21,7 @@ import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 import pkg from '../../package.json'
 import AccountManager from './AccountManager'
 import TransactionManager from './TransactionManager'
+import Peer from 'Types/Peer'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -202,8 +203,8 @@ export class IronFishManager implements IIronfishManager {
     await this.node.syncer.findPeer()
   }
 
-  peers(): Promise<PeerResponse[]> {
-    const result: PeerResponse[] = []
+  peers(): Promise<Peer[]> {
+    const result: Peer[] = []
 
     for (const peer of this.node.peerNetwork.peerManager.peers) {
       if (peer.state.type !== 'CONNECTED') {
@@ -246,6 +247,7 @@ export class IronFishManager implements IIronfishManager {
         agent: peer.agent,
         name: peer.name,
         address: peer.address,
+        country: geoip.lookup(peer.address)?.country,
         port: peer.port,
         error: peer.error !== null ? String(peer.error) : null,
         connections: connections,

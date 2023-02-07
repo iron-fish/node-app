@@ -57,6 +57,8 @@ const ENV_CONFIGS = {
         '@electron-forge/plugin-webpack',
         {
           mainConfig: './webpack/dev/main.config.js',
+          devContentSecurityPolicy:
+            "connect-src 'self' https://cdn.jsdelivr.net/gh/umidbekk/react-flag-kit@1/assets/* 'unsave-eval'",
           renderer: {
             config: './webpack/common/renderer.config.js',
             entryPoints: [
@@ -80,6 +82,8 @@ const ENV_CONFIGS = {
         '@electron-forge/plugin-webpack',
         {
           mainConfig: './webpack/demo/main.config.js',
+          devContentSecurityPolicy:
+            "connect-src 'self' https://cdn.jsdelivr.net/gh/umidbekk/react-flag-kit@1/assets/* 'unsave-eval'",
           renderer: {
             config: './webpack/common/renderer.config.js',
             entryPoints: [
@@ -117,6 +121,8 @@ const ENV_CONFIGS = {
         '@electron-forge/plugin-webpack',
         {
           mainConfig: './webpack/prod/main.config.js',
+          devContentSecurityPolicy:
+            "connect-src 'self' https://cdn.jsdelivr.net/gh/umidbekk/react-flag-kit@1/assets/* 'unsave-eval'",
           renderer: {
             config: './webpack/common/renderer.config.js',
             entryPoints: [
