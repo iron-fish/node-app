@@ -15,6 +15,7 @@ import {
 import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
 import { Payment } from 'Types/Transaction'
 import '../common/preload'
+import { IronfishAssetManagerActions } from 'Types/IronfishManager/IIronfishAssetManager'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
   storageName: string
@@ -55,6 +56,22 @@ contextBridge.exposeInMainWorld('IronfishManager', {
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.SYNC),
   peers: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.PEERS),
+  assets: {
+    list: (search?: string, offset?: number, max?: number) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-assets',
+        IronfishAssetManagerActions.LIST,
+        search,
+        offset,
+        max
+      ),
+    get: (id: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-assets',
+        IronfishAssetManagerActions.GET,
+        id
+      ),
+  },
   accounts: {
     create: (name: string) =>
       ipcRenderer.invoke(
