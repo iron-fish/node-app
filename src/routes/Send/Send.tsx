@@ -29,7 +29,7 @@ import { useDataSync } from 'Providers/DataSyncProvider'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import { decodeIron, formatOreToTronWithLanguage } from 'Utils/number'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
-import { TransactionFeeEstimate } from 'Types/IronfishManager/IIronfishTransactionManager'
+import capitalize from 'lodash/capitalize'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -80,7 +80,7 @@ const getPrecision = (val: string) => {
 const getEstimatedFeeOption = (priority: string, value: bigint) => ({
   value: value,
   label: `${formatOreToTronWithLanguage(value)}`,
-  helperText: `${priority}`,
+  helperText: `${priority === 'medium' ? 'Average' : capitalize(priority)}`,
 })
 
 interface SendButtonProps {
@@ -115,15 +115,6 @@ const SendButton: FC<SendButtonProps> = ({ setStart, checkChanges }) => {
   )
 }
 
-const getDefaultFee = (fees: TransactionFeeEstimate) => {
-  if (fees?.medium) {
-    return { fee: fees?.medium, name: 'medium' }
-  }
-  if (fees?.low) {
-    return { fee: fees?.low, name: 'low' }
-  }
-}
-
 const Send: FC = () => {
   const location = useLocation()
   const state = location.state as LocationStateProps
@@ -151,22 +142,26 @@ const Send: FC = () => {
     }
   )
 
+  const feeOptions = Object.entries(fees || {}).map(([key, value]) =>
+    getEstimatedFeeOption(key, value)
+  )
+
   useEffect(() => {
     if (Number(amount) !== 0 && !selectedFee?.label) {
-      const preselectedFee = getDefaultFee(fees)
-      preselectedFee &&
-        setSelectedFee(
-          getEstimatedFeeOption(preselectedFee.name, preselectedFee.fee)
-        )
+      fees?.medium &&
+        setSelectedFee(getEstimatedFeeOption('medium', fees?.medium))
     }
   }, [amount])
 
   useEffect(() => {
-    const preselectedFee = getDefaultFee(fees)
-    preselectedFee &&
-      setSelectedFee(
-        getEstimatedFeeOption(preselectedFee.name, preselectedFee.fee)
+    if (selectedFee) {
+      const selectedOption = feeOptions.find(
+        ({ helperText }) => selectedFee.helperText === helperText
       )
+      if (selectedOption) {
+        setSelectedFee(selectedOption)
+      }
+    }
   }, [feeCalculated])
 
   const checkChanges = (): boolean =>
@@ -278,9 +273,7 @@ const Send: FC = () => {
                 mr="2rem"
                 label="Estimated Fee $IRON"
                 value={selectedFee}
-                options={Object.entries(fees || {}).map(([key, value]) =>
-                  getEstimatedFeeOption(key, value)
-                )}
+                options={feeOptions}
                 onSelectOption={selected => setSelectedFee(selected)}
               />
               <TextField

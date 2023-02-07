@@ -39,7 +39,7 @@ const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    setLoaded(true)
+    setLoaded(status?.blockchain.synced)
     const interval = setInterval(
       () => {
         loadStatus()

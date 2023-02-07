@@ -94,11 +94,11 @@ class TransactionManager implements IIronfishTransactionManager {
     receive: Payment
   ): Promise<TransactionFeeEstimate> {
     const estimatedFeeRates = this.node.memPool.feeEstimator.estimateFeeRates()
-    const feeRates = new Set([
+    const feeRates = [
       estimatedFeeRates.low || BigInt(1),
       estimatedFeeRates.medium || BigInt(1),
       estimatedFeeRates.high || BigInt(1),
-    ])
+    ]
 
     const account = this.node.wallet.getAccount(accountId)
 
@@ -131,9 +131,9 @@ class TransactionManager implements IIronfishTransactionManager {
     )
 
     return {
-      ...(low && { low: low.fee }),
-      ...(medium && { medium: medium.fee }),
-      ...(high && { high: high.fee }),
+      low: low.fee,
+      medium: medium.fee,
+      high: high.fee,
     }
   }
 
