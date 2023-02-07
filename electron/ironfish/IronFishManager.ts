@@ -11,21 +11,21 @@ import {
   getPackageFrom,
 } from '@ironfish/sdk'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
-import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
-import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTransactionManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 // eslint-disable-next-line no-restricted-imports
 import pkg from '../../package.json'
 import AccountManager from './AccountManager'
 import TransactionManager from './TransactionManager'
+import AssetManager from './AssetManager'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   protected sdk: IronfishSdk
   protected node: IronfishNode
-  accounts: IIronfishAccountManager
-  transactions: IIronfishTransactionManager
+  accounts: AccountManager
+  transactions: TransactionManager
+  assets: AssetManager
 
   private getPrivateIdentity(): PrivateIdentity | undefined {
     const networkIdentity = this.sdk.internal.get('networkIdentity')
@@ -67,8 +67,9 @@ export class IronFishManager implements IIronfishManager {
       this.node.internal.set('networkIdentity', newSecretKey)
       await this.node.internal.save()
 
-      this.accounts = new AccountManager(this.node)
-      this.transactions = new TransactionManager(this.node)
+      this.assets = new AssetManager(this.node)
+      this.accounts = new AccountManager(this.node, this.assets)
+      this.transactions = new TransactionManager(this.node, this.assets)
 
       this.initStatus = IronFishInitStatus.INITIALIZED
     } catch (e) {

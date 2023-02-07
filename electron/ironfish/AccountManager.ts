@@ -5,12 +5,18 @@ import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import CutAccount from 'Types/CutAccount'
 import AccountBalance from 'Types/AccountBalance'
+import AbstractManager from './AbstractManager'
+import AssetManager from './AssetManager'
 
-class AccountManager implements IIronfishAccountManager {
-  private node: IronfishNode
+class AccountManager
+  extends AbstractManager
+  implements IIronfishAccountManager
+{
+  private assetManager: AssetManager
 
-  constructor(node: IronfishNode) {
-    this.node = node
+  constructor(node: IronfishNode, assetManager: AssetManager) {
+    super(node)
+    this.assetManager = assetManager
   }
 
   async create(name: string): Promise<WalletAccount> {

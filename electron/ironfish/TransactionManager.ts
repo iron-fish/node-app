@@ -11,12 +11,18 @@ import {
 } from 'Types/IronfishManager/IIronfishTransactionManager'
 import SortType from 'Types/SortType'
 import Transaction, { Payment, TransactionStatus } from 'Types/Transaction'
+import AbstractManager from './AbstractManager'
+import AssetManager from './AssetManager'
 
-class TransactionManager implements IIronfishTransactionManager {
-  private node: IronfishNode
+class TransactionManager
+  extends AbstractManager
+  implements IIronfishTransactionManager
+{
+  private assetManager: AssetManager
 
-  constructor(node: IronfishNode) {
-    this.node = node
+  constructor(node: IronfishNode, assetManager: AssetManager) {
+    super(node)
+    this.assetManager = assetManager
   }
 
   async send(

@@ -4,6 +4,7 @@ import NodeStatusResponse from 'Types/NodeStatusResponse'
 
 import { IIronfishAccountManager } from './IIronfishAccountManager'
 import { IIronfishTransactionManager } from './IIronfishTransactionManager'
+import IIronfishAssetManager from './IIronfishAssetManager'
 
 export enum IronfishManagerAction {
   INITIALIZE = 'initialize',
@@ -19,6 +20,7 @@ export enum IronfishManagerAction {
 export interface IIronfishManager {
   accounts: IIronfishAccountManager
   transactions: IIronfishTransactionManager
+  assets: IIronfishAssetManager
   initialize: () => Promise<void>
   hasAnyAccount: () => Promise<boolean>
   start: () => Promise<void>
