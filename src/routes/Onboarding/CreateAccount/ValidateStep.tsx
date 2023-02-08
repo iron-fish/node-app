@@ -12,10 +12,8 @@ import StepProps from './StepProps'
 interface MnemonicValidationError {
   header?: string
   message?: string
-  inputError?: {
-    isInvalid: boolean
-    errors: boolean[]
-  }
+  isInvalid?: boolean
+  isInvalidInputs?: boolean[]
 }
 
 const ValidateStep: FC<StepProps> = ({
@@ -33,29 +31,22 @@ const ValidateStep: FC<StepProps> = ({
 
   useEffect(() => {
     const filledCells = inputtedPhrase.filter(i => !!i)
-    const inputError = {
+    const inputError: MnemonicValidationError = {
       isInvalid: false,
-      errors: inputtedPhrase.map(i => !i),
+      isInvalidInputs: inputtedPhrase.map(i => !i),
     }
     if (filledCells.length > 0 && filledCells.length < phrase.length) {
       inputError.isInvalid = true
-      setError({
-        header: 'Please fill out your entire phrase',
-        message:
-          'You’re missing one or more words in your seed phrase. Fill out the words in highlighted in red.',
-        inputError,
-      })
+      inputError.header = 'Please fill out your entire phrase'
+      inputError.message =
+        'You’re missing one or more words in your seed phrase. Fill out the words in highlighted in red.'
     } else if (filledCells.length > 0 && checkChanges()) {
       inputError.isInvalid = true
-      setError({
-        header: 'Incorrect recovery phrase',
-        message:
-          'The phrase you entered is incorrect. Either the phrase is invalid or your words are out of order.',
-        inputError,
-      })
-    } else {
-      setError({ inputError })
+      inputError.header = 'Incorrect recovery phrase'
+      inputError.message =
+        'The phrase you entered is incorrect. Either the phrase is invalid or your words are out of order.'
     }
+    setError(inputError)
   }, [inputtedPhrase])
 
   return (
@@ -78,9 +69,10 @@ const ValidateStep: FC<StepProps> = ({
         onChange={setInputtedPhrase}
         visible={true}
         isReadOnly={false}
-        error={error?.inputError}
+        isInvalid={error.isInvalid}
+        isInvalidInputs={error.isInvalidInputs}
       />
-      {error && (
+      {error?.header && error?.message && (
         <Box mt="0.75rem">
           <chakra.h5 color={NAMED_COLORS.RED} mb="0.5rem">
             {error.header}
