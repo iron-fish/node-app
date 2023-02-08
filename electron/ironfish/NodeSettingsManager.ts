@@ -37,10 +37,7 @@ class NodeSettingsManager implements INodeSettingsManager {
   }
 
   clearConfig(): void {
-    for (const key of Object.keys(this.config.loaded)) {
-      const configKey = key as keyof ConfigOptions
-      delete this.config.loaded[configKey]
-    }
+    this.config.loaded = {}
   }
 }
 

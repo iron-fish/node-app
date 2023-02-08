@@ -11,7 +11,7 @@ import {
   NAMED_COLORS,
 } from '@ironfish/ui-kit'
 import useNodeSettings from 'Hooks/node/useNodeSettings'
-import { FC, useState, useEffect, memo } from 'react'
+import { FC, useState, useEffect, memo, useMemo } from 'react'
 import pick from 'lodash/pick'
 import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
@@ -68,16 +68,18 @@ const NodeSettings: FC = () => {
     saveSettings(nodeSettings).then(() => toast({ title: 'Settings saved' }))
   }
 
-  const hasNoChanges = () => {
-    return !(
-      data &&
-      nodeSettings &&
-      SETTINGS_KEYS.some(
-        (key: keyof ConfigOptions) =>
-          data[key]?.toString() !== nodeSettings[key]?.toString()
-      )
-    )
-  }
+  const hasNoChanges = useMemo(
+    () =>
+      !(
+        data &&
+        nodeSettings &&
+        SETTINGS_KEYS.some(
+          (key: keyof ConfigOptions) =>
+            data[key]?.toString() !== nodeSettings[key]?.toString()
+        )
+      ),
+    [data, nodeSettings]
+  )
 
   return (
     <Flex>
@@ -154,7 +156,7 @@ const NodeSettings: FC = () => {
             variant="primary"
             size="large"
             onClick={handleSaveSettings}
-            isDisabled={!loaded || hasNoChanges()}
+            isDisabled={!loaded || hasNoChanges}
           >
             Save settings
           </Button>
