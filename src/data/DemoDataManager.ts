@@ -14,9 +14,11 @@ import { AccountMinerStatistic, MinerProps } from './types/AccountMiner'
 import { Contact } from './types/Contact'
 import Transaction from 'Types/Transaction'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
+import DemoAssetManager from './DemoAssetManager'
 
 class DemoDataManager {
   accounts: DemoAccountsManager
+  assets: DemoAssetManager
   transactions: DemoTransactionsManager
   addressBook: DemoAddressBookManager
   miner: DemoMinerManager
@@ -25,6 +27,7 @@ class DemoDataManager {
 
   constructor() {
     this.accounts = new DemoAccountsManager()
+    this.assets = new DemoAssetManager()
     this.transactions = new DemoTransactionsManager()
     this.addressBook = new DemoAddressBookManager()
     this.miner = new DemoMinerManager()

@@ -71,6 +71,11 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         IronfishAssetManagerActions.GET,
         id
       ),
+    default: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-assets',
+        IronfishAssetManagerActions.DEFAULT
+      ),
   },
   accounts: {
     create: (name: string) =>

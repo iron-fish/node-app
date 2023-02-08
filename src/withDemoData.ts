@@ -8,6 +8,12 @@ import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
 
 export const IronFishManager: IIronfishManager = {
+  assets: {
+    list: (s?: string, offset?: number, max?: number) =>
+      window.DemoDataManager.assets.list(s, offset, max),
+    get: (id: string) => window.DemoDataManager.assets.get(id),
+    default: () => window.DemoDataManager.assets.default(),
+  },
   accounts: {
     create: (name: string) => window.DemoDataManager.createAccount(name),
     delete: (name: string) => window.DemoDataManager.deleteAccount(name),
