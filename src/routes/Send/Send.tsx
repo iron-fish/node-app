@@ -77,10 +77,23 @@ const getPrecision = (val: string) => {
   return precision
 }
 
+const getPriorityLabel = (priority: string) => {
+  switch (priority) {
+    case 'low':
+      return 'Slow'
+    case 'medium':
+      return 'Average'
+    case 'high':
+      return 'Fast'
+    default:
+      return priority
+  }
+}
+
 const getEstimatedFeeOption = (priority: string, value: bigint) => ({
   value: value,
   label: `${formatOreToTronWithLanguage(value)}`,
-  helperText: `${priority === 'medium' ? 'Average' : capitalize(priority)}`,
+  helperText: getPriorityLabel(priority),
 })
 
 interface SendButtonProps {
