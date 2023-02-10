@@ -256,7 +256,10 @@ const TransactionOverview: FC = () => {
         flexDirection={{ base: 'column', md: 'row' }}
         gap={{ base: 0, md: '1rem' }}
       >
-        <Box w={{ base: '100%', md: '50%' }} mb={{ base: '-2rem', md: 0 }}>
+        <Box
+          w={{ base: '100%', md: '50%' }}
+          mb={{ base: transaction?.spends?.length ? '-2rem' : 0, md: 0 }}
+        >
           <WalletCommonTable
             data={transaction?.spends || []}
             w="100%"
