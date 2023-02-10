@@ -206,11 +206,12 @@ class DemoAccountsManager {
     return new Promise(resolve =>
       setTimeout(() => {
         const search = searchTerm?.toLowerCase()
-        const accounts = DEMO_ACCOUNTS.map(account => ({
+        const accounts = DEMO_ACCOUNTS.map((account, index) => ({
           id: account.id,
           publicAddress: account.publicAddress,
           name: account.name,
           balance: ACCOUNT_BALANCES[account.id],
+          order: index,
         })).filter(
           account =>
             !search ||
@@ -235,10 +236,12 @@ class DemoAccountsManager {
   }
 
   findById(id: string): Promise<WalletAccount | null> {
-    const account: WalletAccount = DEMO_ACCOUNTS.find(a => a.id === id)
+    const accountIndex = DEMO_ACCOUNTS.findIndex(a => a.id === id)
+    const account: WalletAccount = DEMO_ACCOUNTS[accountIndex]
 
     if (account) {
       account.balance = ACCOUNT_BALANCES[account.id]
+      account.order = accountIndex
     }
 
     return new Promise(resolve => setTimeout(() => resolve(account), 500))

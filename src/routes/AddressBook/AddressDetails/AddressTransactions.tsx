@@ -64,7 +64,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
             value: SortType.DESC,
           },
           {
-            label: 'Oldest to oldest',
+            label: 'Oldest to newest',
             value: SortType.ASC,
           },
         ]}

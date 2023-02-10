@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   Box,
@@ -9,6 +9,7 @@ import {
   useColorModeValue,
   Skeleton,
   Grid,
+  useIronToast,
 } from '@ironfish/ui-kit'
 import size from 'byte-size'
 import { ROUTES } from '..'
@@ -27,6 +28,7 @@ import LargeArrowLeftDown from 'Svgx/LargeArrowLeftDown'
 import LargeArrowRightUp from 'Svgx/LargeArrowRightUp'
 import SimpleTable from 'Components/SimpleTable'
 import ContactsPreview from 'Components/ContactsPreview'
+import InfoBadge from 'Components/InfoBadge'
 
 interface Card {
   render: (tx: Transaction) => ReactNode
@@ -124,6 +126,12 @@ const TransactionOverview: FC = () => {
     data: transaction,
     actions: { reload },
   } = useTransaction(accountId, hash)
+  const [, setTransactionState] = useState<TransactionStatus | undefined>()
+  const toast = useIronToast({
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
 
   useEffect(() => {
     let interval: NodeJS.Timer
@@ -137,6 +145,26 @@ const TransactionOverview: FC = () => {
     }
 
     return () => interval && clearInterval(interval)
+  }, [transactionLoaded])
+
+  useEffect(() => {
+    setTransactionState(prev => {
+      if (
+        !prev &&
+        transaction?.status !== TransactionStatus.CONFIRMED &&
+        transaction?.status !== TransactionStatus.EXPIRED
+      ) {
+        return transaction?.status
+      }
+      if (prev && transaction?.status === TransactionStatus.CONFIRMED) {
+        toast({ title: 'Transaction Sent' })
+        return undefined
+      }
+      if (prev && transaction?.status === TransactionStatus.EXPIRED) {
+        toast({ title: 'Transaction Expired' })
+        return undefined
+      }
+    })
   }, [transactionLoaded])
 
   return (
@@ -174,15 +202,27 @@ const TransactionOverview: FC = () => {
         </Flex>
       </Box>
       <Box mb="2.5rem">
-        <chakra.h3 mb="1rem">Transaction Information</chakra.h3>
+        <Flex mb="1rem">
+          <chakra.h3 alignSelf="center">Transaction Information</chakra.h3>
+          {(transaction?.status === TransactionStatus.PENDING ||
+            transaction?.status === TransactionStatus.UNCONFIRMED ||
+            transaction?.status === TransactionStatus.UNKNOWN) && (
+            <InfoBadge message="Pending" alignSelf="baseline" ml="1rem" />
+          )}
+        </Flex>
         <Grid
           w="100%"
           templateColumns="repeat(auto-fit, minmax(19rem, 1fr))"
           autoRows="7.75rem"
           gap="1rem"
         >
-          {CARDS.map((card: Card) => (
-            <Skeleton isLoaded={!!transaction} minW="19rem" h="7.5rem">
+          {CARDS.map((card: Card, index) => (
+            <Skeleton
+              key={`${card.label}-${index}`}
+              isLoaded={!!transaction}
+              minW="19rem"
+              h="7.5rem"
+            >
               <Box layerStyle="card" h="7.5rem" minW="19rem">
                 <Flex
                   w="100%"
