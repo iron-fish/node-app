@@ -24,11 +24,12 @@ class AccountManager implements IIronfishAccountManager {
     const accounts = this.node.wallet.listAccounts()
 
     const result: CutAccount[] = await Promise.all(
-      accounts.map(async account => ({
+      accounts.map(async (account, index) => ({
         id: account.id,
         name: account.name,
         publicAddress: account.publicAddress,
         balance: await this.balance(account.id),
+        order: index,
       }))
     )
 
@@ -50,12 +51,16 @@ class AccountManager implements IIronfishAccountManager {
   }
 
   async get(id: string): Promise<WalletAccount | null> {
-    const account: WalletAccount = this.node.wallet.getAccount(id)?.serialize()
-    if (account) {
-      account.balance = await this.balance(account.id)
+    const accounts = this.node.wallet.listAccounts()
+    const accountIndex = accounts.findIndex(a => a.id === id)
+    if (accountIndex === -1) {
+      return null
     }
+    const account: WalletAccount = accounts[accountIndex].serialize()
+    account.balance = await this.balance(account.id)
+    account.order = accountIndex
 
-    return Promise.resolve(account || null)
+    return account
   }
 
   async delete(name: string): Promise<void> {
