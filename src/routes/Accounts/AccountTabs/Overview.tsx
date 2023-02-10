@@ -1,13 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import {
-  Box,
-  Button,
-  chakra,
-  CommonTable,
-  Flex,
-  Icon,
-  NAMED_COLORS,
-} from '@ironfish/ui-kit'
+import { Box, Button, chakra, Flex, Icon, NAMED_COLORS } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
@@ -27,6 +19,7 @@ import EmptyOverview from 'Components/EmptyOverview'
 import ContactsPreview from 'Components/ContactsPreview'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
 import useAccountBalance from 'Hooks/accounts/useAccountBalance'
+import WalletCommonTable from 'Components/WalletCommonTable'
 
 interface SearchTransactionsProps {
   address: string
@@ -82,8 +75,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
           description="There aren’t any transactions with details that match your search input. "
         />
       ) : (
-        <CommonTable
-          textTransform="capitalize"
+        <WalletCommonTable
           data={!!transactions ? transactions : new Array(10).fill(null)}
           onRowClick={(data: Transaction) =>
             navigate(ROUTES.TRANSACTION, {

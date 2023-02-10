@@ -25,8 +25,8 @@ import BlockInfoTimestampIcon from 'Svgx/BlockInfoTimestampIcon'
 import InOutPutsIcon from 'Svgx/InOutPutsIcon'
 import LargeArrowLeftDown from 'Svgx/LargeArrowLeftDown'
 import LargeArrowRightUp from 'Svgx/LargeArrowRightUp'
-import SimpleTable from 'Components/SimpleTable'
 import ContactsPreview from 'Components/ContactsPreview'
+import WalletCommonTable from 'Components/WalletCommonTable'
 
 interface Card {
   render: (tx: Transaction) => ReactNode
@@ -210,9 +210,14 @@ const TransactionOverview: FC = () => {
       <Box>
         <chakra.h3 mb="1rem">Inputs / Outputs</chakra.h3>
       </Box>
-      <Flex w="100%" justifyContent="space-between">
-        <Box w="calc(50% - 1.5rem)" mr="1rem">
-          <SimpleTable
+      <Flex
+        w="100%"
+        justifyContent="space-between"
+        flexDirection={{ base: 'column', md: 'row' }}
+        gap={{ base: 0, md: '1rem' }}
+      >
+        <Box w={{ base: '100%', md: '50%' }} mb={{ base: '-2rem', md: 0 }}>
+          <WalletCommonTable
             data={transaction?.spends || []}
             w="100%"
             columns={[
@@ -247,8 +252,8 @@ const TransactionOverview: FC = () => {
             ]}
           />
         </Box>
-        <Box w="calc(50% - 1.5rem)">
-          <SimpleTable
+        <Box w={{ base: '100%', md: '50%' }}>
+          <WalletCommonTable
             data={transaction?.notes || []}
             w="100%"
             columns={[
