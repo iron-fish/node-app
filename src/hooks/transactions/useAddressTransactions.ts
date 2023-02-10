@@ -28,7 +28,15 @@ const useAddressTransactions = (
     address && loadTransactions(address, searchTerm, sortOrder)
   }, [address, searchTerm, sortOrder])
 
-  return [result, addContact] as const
+  const reload = () => loadTransactions(address, searchTerm, sortOrder)
+
+  return {
+    ...result,
+    actions: {
+      addContact: addContact,
+      reload: reload,
+    },
+  }
 }
 
 export default useAddressTransactions

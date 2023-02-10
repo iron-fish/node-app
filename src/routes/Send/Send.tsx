@@ -302,6 +302,12 @@ const Send: FC = () => {
       </Flex>
       <SendFlow
         isOpen={startSendFlow}
+        cleanUp={() => {
+          setContact(null)
+          setTxnMemo('')
+          setSelectedFee(null)
+          setAmount('0.00')
+        }}
         onClose={() => setStart(false)}
         amount={decodeIron(amount || 0)}
         from={account}

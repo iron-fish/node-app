@@ -109,7 +109,7 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
             value: SortType.DESC,
           },
           {
-            label: 'Oldest to oldest',
+            label: 'Oldest to newest',
             value: SortType.ASC,
           },
         ]}

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import {
   Flex,
   chakra,
@@ -31,11 +31,20 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
   const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
-  const [{ data: transactions, loaded }] = useTransactions(
-    address,
-    $searchTerm,
-    $sortOrder
-  )
+  const {
+    data: transactions,
+    loaded,
+    actions: { reload },
+  } = useTransactions(address, $searchTerm, $sortOrder)
+
+  useEffect(() => {
+    let interval: NodeJS.Timer
+    if (loaded) {
+      interval = setInterval(reload, 5000)
+    }
+
+    return () => interval && clearInterval(interval)
+  }, [loaded])
 
   return (
     <Flex direction="column" mt="1rem">
@@ -55,7 +64,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
             value: SortType.DESC,
           },
           {
-            label: 'Oldest to oldest',
+            label: 'Oldest to newest',
             value: SortType.ASC,
           },
         ]}
@@ -68,7 +77,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
         />
       ) : (
         <CommonTable
-          data={loaded ? transactions : new Array(10).fill(null)}
+          data={!!transactions ? transactions : new Array(10).fill(null)}
           onRowClick={(txn: Transaction) => {
             navigate(ROUTES.TRANSACTION, {
               state: {
@@ -148,7 +157,7 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({
   address,
   contact,
 }) => {
-  const [{ data: transactions = undefined, loaded }] = useTransactions(address)
+  const { data: transactions = undefined, loaded } = useTransactions(address)
 
   return (
     <Box display={address && loaded ? 'block' : 'none'}>

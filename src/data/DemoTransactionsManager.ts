@@ -4,10 +4,11 @@ import SortType from 'Types/SortType'
 import { Payment } from 'Types/Transaction'
 
 import Transaction, { TransactionStatus } from 'Types/Transaction'
+import { formatOreToTronWithLanguage } from 'Utils/number'
 
 const DEMO_TRANSACTIONS: Transaction[] = [
   {
-    amount: '-12',
+    amount: formatOreToTronWithLanguage(BigInt('-1200000')),
     created: new Date('2022-08-26T08:43:00.770Z'),
     creator: true,
     fee: '12000',
@@ -17,7 +18,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
       'sbVxDJmJHGSKCfom0i33HRPFQvRY4t55ZVSSUwPuhRZcbIvJ0ou4hPHKv3HtGmOi',
       'sbVxDJmJHGSKCfom0i33HRPFQvRY4t55ZVSSUwPuhRZcbIvJ0ou4hPHKv3HtGmOs',
     ],
-    hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
+    hash: 'v1V2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92B1',
     isMinersFee: false,
     notes: [
       {
@@ -56,13 +57,13 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     spendsCount: 0,
   },
   {
-    amount: '10',
+    amount: formatOreToTronWithLanguage(BigInt('100000')),
     creator: false,
     created: new Date('2022-08-25T08:43:00.770Z'),
     fee: '10000',
     to: ['pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D'],
     from: 'OOlgJpCs_om-pVc7vhew3R58cfI5N0Stn4KKZNOVmx2tSN-2wHZTMqFqtL9ackOV',
-    hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
+    hash: 'v2V2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92B2',
     isMinersFee: false,
     notes: [
       {
@@ -83,13 +84,13 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     spendsCount: 0,
   },
   {
-    amount: '100',
+    amount: formatOreToTronWithLanguage(BigInt('1000000')),
     creator: false,
     created: new Date('2022-08-24T08:43:00.770Z'),
     fee: '10000',
     to: ['pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D'],
     from: 'OSAblUtjE_cda1CD_baWcpiEWBM3qp0SnZXANluiM7G4psf7Z6ojb3nXFIFaQdBx',
-    hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
+    hash: 'v3V2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92B3',
     isMinersFee: false,
     notes: [
       {
@@ -110,13 +111,13 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     spendsCount: 0,
   },
   {
-    amount: '-1235',
+    amount: formatOreToTronWithLanguage(BigInt('-12345000')),
     created: new Date('2022-08-23T08:43:00.770Z'),
     creator: true,
     fee: '12350',
     from: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
     to: ['R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6'],
-    hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
+    hash: 'v4V2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92B4',
     isMinersFee: false,
     notes: [
       {
@@ -143,13 +144,13 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     spendsCount: 0,
   },
   {
-    amount: '-121',
+    amount: formatOreToTronWithLanguage(BigInt('-1210000')),
     created: new Date('2022-08-21T08:43:00.770Z'),
     creator: true,
     fee: '12100',
     from: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
     to: ['7C5NxoCyjt86wtEEHEF1d60omCsaH9tFO6Tf6Rn0jqowxowgbBtCoapcSxn0jrXN'],
-    hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
+    hash: 'v5V2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92B5',
     isMinersFee: false,
     notes: [
       {
@@ -176,13 +177,13 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     spendsCount: 0,
   },
   {
-    amount: '12',
+    amount: formatOreToTronWithLanguage(BigInt('120000')),
     creator: false,
     created: new Date('2022-08-22T08:43:00.770Z'),
     fee: '12000',
     to: ['pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D'],
     from: 'OOlgJpCs_om-pVc7vhew3R58cfI5N0Stn4KKZNOVmx2tSN-2wHZTMqFqtL9ackOV',
-    hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
+    hash: 'v6V2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
     isMinersFee: false,
     notes: [
       {
@@ -305,7 +306,7 @@ class DemoTransactionsManager {
     return new Promise(resolve => {
       setTimeout(() => {
         const transaction: Transaction = {
-          amount: amount.toString(),
+          amount: formatOreToTronWithLanguage(amount),
           created: new Date(),
           creator: true,
           fee: fee.toString(),
@@ -323,7 +324,7 @@ class DemoTransactionsManager {
             },
           ],
           spends: [],
-          status: TransactionStatus.CONFIRMED,
+          status: TransactionStatus.PENDING,
           accountId: accountId,
           expiration: 0,
           notesCount: 0,
@@ -331,6 +332,12 @@ class DemoTransactionsManager {
         }
         DEMO_TRANSACTIONS.push(transaction)
         resolve(transaction)
+        setTimeout(() => {
+          transaction.status =
+            memo === 'Expired'
+              ? TransactionStatus.EXPIRED
+              : TransactionStatus.CONFIRMED
+        }, 30000)
       }, 500)
     })
   }

@@ -25,7 +25,7 @@ import useAccount from 'Hooks/accounts/useAccount'
 const AccountDetails: FC = () => {
   const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
   const location = useLocation()
-  const { accountId, order } = location.state as LocationStateProps
+  const { accountId } = location.state as LocationStateProps
   const [
     { data: account, loaded },
     updateAccount,
@@ -40,49 +40,58 @@ const AccountDetails: FC = () => {
           to={ROUTES.ACCOUNTS}
           label={'Back to all accounts'}
         />
-        <Flex alignItems="end" mb="0.5rem">
-          <chakra.h2 mr="1rem">{account?.name}</chakra.h2>
-          <CopyValueToClipboard
-            label={
-              <chakra.h5>{truncateHash(account?.publicAddress, 3)}</chakra.h5>
-            }
-            value={account?.publicAddress}
-            copyTooltipText="Copy to clipboard"
-            copiedTooltipText="Copied"
-            containerProps={{
-              pb: '0.45rem',
-              color: color,
-            }}
-          />
-        </Flex>
-        <Tabs>
-          <TabList>
-            <Tab>
-              <chakra.h6>Account Overview</chakra.h6>
-            </Tab>
-            <Tab>
-              <chakra.h6>Keys</chakra.h6>
-            </Tab>
-            <Tab>
-              <chakra.h6>Settings</chakra.h6>
-            </Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel p="0" pt="2rem">
-              <AccountOverview account={account} order={order} />
-            </TabPanel>
-            <TabPanel p="0" pt="2rem">
-              <AccountKeys account={account} exportAccount={exportAccount} />
-            </TabPanel>
-            <TabPanel p="0" pt="2rem">
-              <AccountSettings
-                account={account}
-                updateAccount={updateAccount}
-                deleteAccount={deleteAccount}
+        {loaded && (
+          <>
+            <Flex alignItems="end" mb="0.5rem">
+              <chakra.h2 mr="1rem">{account.name}</chakra.h2>
+              <CopyValueToClipboard
+                label={
+                  <chakra.h5>
+                    {truncateHash(account.publicAddress, 3)}
+                  </chakra.h5>
+                }
+                value={account.publicAddress}
+                copyTooltipText="Copy to clipboard"
+                copiedTooltipText="Copied"
+                containerProps={{
+                  pb: '0.45rem',
+                  color: color,
+                }}
               />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+            </Flex>
+            <Tabs>
+              <TabList>
+                <Tab>
+                  <chakra.h6>Account Overview</chakra.h6>
+                </Tab>
+                <Tab>
+                  <chakra.h6>Keys</chakra.h6>
+                </Tab>
+                <Tab>
+                  <chakra.h6>Settings</chakra.h6>
+                </Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel p="0" pt="2rem">
+                  <AccountOverview account={account} />
+                </TabPanel>
+                <TabPanel p="0" pt="2rem">
+                  <AccountKeys
+                    account={account}
+                    exportAccount={exportAccount}
+                  />
+                </TabPanel>
+                <TabPanel p="0" pt="2rem">
+                  <AccountSettings
+                    account={account}
+                    updateAccount={updateAccount}
+                    deleteAccount={deleteAccount}
+                  />
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </>
+        )}
       </Box>
     </Flex>
   )
