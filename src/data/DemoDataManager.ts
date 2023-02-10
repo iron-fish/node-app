@@ -1,7 +1,8 @@
-import { AccountValue, PeerResponse } from '@ironfish/sdk'
+import { AccountValue } from '@ironfish/sdk'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
+import Peer from 'Types/Peer'
 import SortType from 'Types/SortType'
 import DemoAccountsManager from './DemoAccountsManager'
 import DemoAddressBookManager from './DemoAddressBookManager'
@@ -193,7 +194,7 @@ class DemoDataManager {
     return this.node.status()
   }
 
-  getNodePeers(): Promise<PeerResponse[]> {
+  getNodePeers(): Promise<Peer[]> {
     return this.node.peers()
   }
 }
