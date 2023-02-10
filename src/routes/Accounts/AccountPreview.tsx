@@ -22,11 +22,7 @@ import { useDataSync } from 'Providers/DataSyncProvider'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 
-export interface AccountPreviewProps extends CutAccount {
-  order: number
-}
-
-const AccountPreview: FC<AccountPreviewProps> = ({
+const AccountPreview: FC<CutAccount> = ({
   order = 0,
   name,
   publicAddress,
@@ -56,9 +52,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       border="0.063rem solid"
       borderRadius="0.25rem"
       cursor="pointer"
-      onClick={() =>
-        navigate(ROUTES.ACCOUNT, { state: { accountId: id, order } })
-      }
+      onClick={() => navigate(ROUTES.ACCOUNT, { state: { accountId: id } })}
       sx={{
         transition: '0.3s',
         bg: $colors.bg,

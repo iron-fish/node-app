@@ -1,5 +1,13 @@
 import { FC, useEffect, useState } from 'react'
-import { Box, Button, chakra, Flex, Icon, NAMED_COLORS } from '@ironfish/ui-kit'
+import {
+  Box,
+  Button,
+  chakra,
+  Flex,
+  Icon,
+  NAMED_COLORS,
+  useIronToast,
+} from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
@@ -10,7 +18,7 @@ import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import Transaction from 'Types/Transaction'
+import Transaction, { TransactionStatus } from 'Types/Transaction'
 import TransactionStatusView from 'Components/TransactionStatusView'
 import Account from 'Types/Account'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
@@ -18,6 +26,8 @@ import { formatOreToTronWithLanguage } from 'Utils/number'
 import EmptyOverview from 'Components/EmptyOverview'
 import ContactsPreview from 'Components/ContactsPreview'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
+import differenceBy from 'lodash/differenceBy'
+import intersectionBy from 'lodash/intersectionBy'
 import useAccountBalance from 'Hooks/accounts/useAccountBalance'
 import WalletCommonTable from 'Components/WalletCommonTable'
 
@@ -34,6 +44,12 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
     loaded,
     actions: { reload },
   } = useTransactions(address, $searchTerm, $sortOrder)
+  const [, setTransactionsState] = useState([])
+  const toast = useIronToast({
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
 
   useEffect(() => {
     let interval: NodeJS.Timer
@@ -42,6 +58,57 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
     }
 
     return () => interval && clearInterval(interval)
+  }, [loaded])
+
+  useEffect(() => {
+    setTransactionsState(prevTransactions => {
+      if (!transactions) {
+        return []
+      }
+
+      const formattedTransactions = transactions.map(({ hash, status }) => ({
+        hash,
+        status,
+      }))
+
+      // check only fetched transactions
+      let nextTransactions = intersectionBy(
+        prevTransactions,
+        formattedTransactions,
+        'hash'
+      )
+
+      // if fetched more then was add missing
+      if (transactions.length > prevTransactions.length) {
+        nextTransactions = nextTransactions.concat(
+          differenceBy(formattedTransactions, prevTransactions, 'hash')
+        )
+      }
+
+      const pendingTransactions = formattedTransactions.filter(
+        t =>
+          t.status === TransactionStatus.PENDING ||
+          t.status === TransactionStatus.UNCONFIRMED ||
+          t.status === TransactionStatus.UNKNOWN
+      )
+
+      const prevPendingTransactions = nextTransactions.filter(
+        t =>
+          t.status === TransactionStatus.PENDING ||
+          t.status === TransactionStatus.UNCONFIRMED ||
+          t.status === TransactionStatus.UNKNOWN
+      )
+
+      const txnCount =
+        transactions.length > prevTransactions.length
+          ? differenceBy(pendingTransactions, prevPendingTransactions, 'hash')
+          : differenceBy(prevPendingTransactions, pendingTransactions, 'hash')
+
+      if (txnCount.length) {
+        toast({ title: 'Transaction Sent' })
+      }
+      return transactions.map(({ hash, status }) => ({ hash, status }))
+    })
   }, [loaded])
 
   return loaded && transactions?.length === 0 && !$searchTerm ? null : (
@@ -63,7 +130,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               value: SortType.DESC,
             },
             {
-              label: 'Oldest to oldest',
+              label: 'Oldest to newest',
               value: SortType.ASC,
             },
           ]}
@@ -154,10 +221,9 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
 
 interface AccountOverviewProps {
   account: Account
-  order: number
 }
 
-const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
+const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
   const { data: transactions = undefined, loaded } = useTransactions(
     account?.id
   )
@@ -181,7 +247,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
       <Flex w="100%" pb="2rem">
         <Box
           layerStyle="card"
-          bg={`${accountGradientByOrder(order)} !important`}
+          bg={`${accountGradientByOrder(account.order)} !important`}
           borderRadius="0.25rem"
           w="100%"
           minWidth="18rem"
@@ -212,7 +278,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
                   }
                   onClick={() =>
                     navigate(ROUTES.SEND, {
-                      state: { accountId: account?.id },
+                      state: { accountId: account.id },
                     })
                   }
                   isDisabled={!synced}
@@ -232,7 +298,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
                   }
                   onClick={() =>
                     navigate(ROUTES.RECEIVE, {
-                      state: { accountId: account?.id },
+                      state: { accountId: account.id },
                     })
                   }
                   isDisabled={!synced}
@@ -264,14 +330,14 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account, order = 0 }) => {
           </Box>
         </Box>
       </Flex>
-      <Box display={account?.id && loaded ? 'block' : 'none'}>
+      <Box display={account.id && loaded ? 'block' : 'none'}>
         {transactions?.length === 0 ? (
           <EmptyOverview
             header="You don’t have any transactions"
             description="When your account compiles transactions they will be listed here. To produce a transactions, eitherF send or receive $IRON."
           />
         ) : (
-          <SearchTransactions address={account?.id} />
+          <SearchTransactions address={account.id} />
         )}
       </Box>
     </>
