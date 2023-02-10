@@ -20,6 +20,7 @@ const ValidateStep: FC<StepProps> = ({
   desktopMode,
   phrase,
   handleCreateAccount,
+  onBack,
 }) => {
   const [inputtedPhrase, setInputtedPhrase] = useState<string[]>([])
   const [error, setError] = useState<MnemonicValidationError>({})
@@ -80,17 +81,25 @@ const ValidateStep: FC<StepProps> = ({
           <chakra.h6 color={NAMED_COLORS.BLACK}>{error.message}</chakra.h6>
         </Box>
       )}
-      <Box mt="2rem">
-        <Button
-          variant="primary"
-          isDisabled={checkChanges()}
-          size="large"
-          w={desktopMode ? undefined : '100%'}
-          onClick={handleCreateAccount}
-        >
-          Create Account
-        </Button>
-      </Box>
+      <Flex gap="1rem">
+        {!desktopMode && (
+          <Box mt="2rem">
+            <Button variant="primary" size="large" onClick={onBack}>
+              Back
+            </Button>
+          </Box>
+        )}
+        <Box mt="2rem">
+          <Button
+            variant="primary"
+            isDisabled={checkChanges()}
+            size="large"
+            onClick={handleCreateAccount}
+          >
+            Create Account
+          </Button>
+        </Box>
+      </Flex>
     </>
   )
 }

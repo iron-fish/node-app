@@ -69,6 +69,7 @@ const CreateAccount: FC<CreateAccountProps> = ({
         phraseLoaded={phraseLoaded}
         handleCreateAccount={handleCreateAccount}
         onNext={() => setCurrentStep(1)}
+        onBack={() => setCurrentStep(0)}
         desktopMode={desktopMode}
       />
     </Flex>

@@ -6,6 +6,7 @@ export default interface StepProps {
   phrase: string[]
   phraseLoaded: boolean
   onNext: () => void
+  onBack: () => void
   desktopMode: boolean
   handleCreateAccount: () => Promise<void>
 }
