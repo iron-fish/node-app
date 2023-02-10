@@ -30,6 +30,7 @@ import SyncWarningMessage from 'Components/SyncWarningMessage'
 import differenceBy from 'lodash/differenceBy'
 import intersectionBy from 'lodash/intersectionBy'
 import useAccountBalance from 'Hooks/accounts/useAccountBalance'
+import { formateData } from 'Utils/formatDate'
 
 interface SearchTransactionsProps {
   address: string
@@ -186,7 +187,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               key: 'transaction-date-column',
               label: <chakra.h6>Date</chakra.h6>,
               render: (transaction: Transaction) => (
-                <chakra.h5>{transaction.created.toISOString()}</chakra.h5>
+                <chakra.h5>{formateData(transaction.created)}</chakra.h5>
               ),
             },
             {

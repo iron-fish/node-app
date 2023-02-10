@@ -29,6 +29,7 @@ import LargeArrowRightUp from 'Svgx/LargeArrowRightUp'
 import SimpleTable from 'Components/SimpleTable'
 import ContactsPreview from 'Components/ContactsPreview'
 import InfoBadge from 'Components/InfoBadge'
+import { formateData } from 'Utils/formatDate'
 
 interface Card {
   render: (tx: Transaction) => ReactNode
@@ -106,7 +107,7 @@ const CARDS: Card[] = [
     icon: BlockInfoDifficultyIcon,
   },
   {
-    render: (tx: Transaction) => tx?.created.toLocaleString(),
+    render: (tx: Transaction) => formateData(tx?.created),
     label: 'Timestamp',
     icon: BlockInfoTimestampIcon,
   },

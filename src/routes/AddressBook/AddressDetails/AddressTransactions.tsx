@@ -18,6 +18,7 @@ import ROUTES from 'Routes/data'
 import ContactsPreview from 'Components/ContactsPreview'
 import Contact from 'Types/Contact'
 import TransactionStatusView from 'Components/TransactionStatusView'
+import { formateData } from 'Utils/formatDate'
 
 interface AddressTransactionsProps {
   address: string
@@ -119,7 +120,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               key: 'date',
               label: 'Date',
               render: (transaction: Transaction) => (
-                <h5>{transaction.created.toISOString()}</h5>
+                <h5>{formateData(transaction.created)}</h5>
               ),
             },
             {
