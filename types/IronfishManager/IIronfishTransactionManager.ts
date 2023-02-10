@@ -21,9 +21,9 @@ export interface TransactionFeeStatistic {
 }
 
 export interface TransactionFeeEstimate {
-  low?: bigint
-  medium?: bigint
-  high?: bigint
+  slow?: bigint
+  average?: bigint
+  fast?: bigint
 }
 
 export interface IIronfishTransactionManager {

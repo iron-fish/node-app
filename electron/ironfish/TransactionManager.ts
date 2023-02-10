@@ -131,9 +131,9 @@ class TransactionManager implements IIronfishTransactionManager {
     )
 
     return {
-      low: low.fee,
-      medium: medium.fee,
-      high: high.fee,
+      slow: low.fee,
+      average: medium.fee,
+      fast: high.fee,
     }
   }
 

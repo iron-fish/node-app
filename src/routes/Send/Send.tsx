@@ -77,23 +77,10 @@ const getPrecision = (val: string) => {
   return precision
 }
 
-const getPriorityLabel = (priority: string) => {
-  switch (priority) {
-    case 'low':
-      return 'Slow'
-    case 'medium':
-      return 'Average'
-    case 'high':
-      return 'Fast'
-    default:
-      return priority
-  }
-}
-
 const getEstimatedFeeOption = (priority: string, value: bigint) => ({
   value: value,
   label: `${formatOreToTronWithLanguage(value)}`,
-  helperText: getPriorityLabel(priority),
+  helperText: capitalize(priority),
 })
 
 interface SendButtonProps {
@@ -161,8 +148,8 @@ const Send: FC = () => {
 
   useEffect(() => {
     if (Number(amount) !== 0 && !selectedFee?.label) {
-      fees?.medium &&
-        setSelectedFee(getEstimatedFeeOption('medium', fees?.medium))
+      fees?.average &&
+        setSelectedFee(getEstimatedFeeOption('average', fees?.average))
     }
   }, [amount])
 
@@ -215,7 +202,12 @@ const Send: FC = () => {
               <NumberInput
                 value={amount}
                 onChange={valueString => {
-                  setAmount(valueString)
+                  try {
+                    decodeIron(valueString)
+                    setAmount(valueString)
+                  } catch (error) {
+                    return
+                  }
                 }}
                 precision={getPrecision(amount)}
                 display="flex"

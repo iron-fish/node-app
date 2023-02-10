@@ -288,9 +288,9 @@ class DemoTransactionsManager {
     receive: Payment
   ): Promise<TransactionFeeEstimate> {
     return Promise.resolve({
-      low: BigInt(1),
-      medium: BigInt(2),
-      high: BigInt(3),
+      slow: BigInt(1),
+      average: BigInt(2),
+      fast: BigInt(3),
     })
   }
 
