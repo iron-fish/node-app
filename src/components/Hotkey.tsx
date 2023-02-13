@@ -1,6 +1,11 @@
+import { FC, ReactNode } from 'react'
 import { useColorMode, Flex, NAMED_COLORS } from '@ironfish/ui-kit'
 
-export const Hotkey = ({ children }) => {
+interface HotkeyProps {
+  children: ReactNode
+}
+
+export const Hotkey: FC<HotkeyProps> = ({ children }) => {
   const { colorMode } = useColorMode()
   const isLightMode = colorMode === 'light'
   return (
@@ -10,7 +15,7 @@ export const Hotkey = ({ children }) => {
       textAlign="center"
       justifyContent="center"
       alignItems="center"
-      borderRadius="2px"
+      borderRadius="0.125rem"
       bg={isLightMode ? NAMED_COLORS.LIGHT_GREY : NAMED_COLORS.DARKER_GREY}
     >
       {children}

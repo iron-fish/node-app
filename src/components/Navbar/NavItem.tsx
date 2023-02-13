@@ -1,20 +1,46 @@
-import { FC, ReactType, useState } from 'react'
-import { Flex, useColorMode, NAMED_COLORS } from '@ironfish/ui-kit'
-import { SVGProps } from 'src/svgx/types'
-import Hotkey from 'src/components/Hotkey'
+import { FC } from 'react'
+import { Flex, NAMED_COLORS, useColorModeValue } from '@ironfish/ui-kit'
+import { SVGProps } from 'Svgx/types'
+import Hotkey from 'Components/Hotkey'
 
 export type NavItemProps = {
   active?: boolean
   to: string
   label: string
-  icon: ReactType
+  icon: FC<SVGProps>
   hotkey: string
+  aliases: string[]
 }
 
-export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
-  const { colorMode } = useColorMode()
+export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
+  active,
+  label,
+  icon,
+  hotkey,
+}) => {
   const Icon = icon as FC<SVGProps>
-  const isLightMode = colorMode === 'light'
+  const $colors = useColorModeValue(
+    {
+      bg: NAMED_COLORS.LIGHTER_GREY,
+      hover: NAMED_COLORS.DEEP_BLUE,
+      borderRightColor: NAMED_COLORS.BLACK,
+      afterColor: NAMED_COLORS.WHITE,
+      afterBg: NAMED_COLORS.BLACK,
+      iconColor: NAMED_COLORS.BLACK,
+      fontColor: NAMED_COLORS.GREY,
+      activeFontColor: NAMED_COLORS.BLACK,
+    },
+    {
+      bg: NAMED_COLORS.DARK_GREY,
+      hover: NAMED_COLORS.WHITE,
+      borderRightColor: NAMED_COLORS.WHITE,
+      afterColor: NAMED_COLORS.BLACK,
+      afterBg: NAMED_COLORS.WHITE,
+      iconColor: NAMED_COLORS.WHITE,
+      fontColor: NAMED_COLORS.PALE_GREY,
+      activeFontColor: NAMED_COLORS.WHITE,
+    }
+  )
   return (
     <>
       <Flex
@@ -23,39 +49,33 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
         alignItems="center"
         width={{ base: '3.5rem', sm: '14.5rem' }}
         h="2.5rem"
-        borderRadius="4px"
-        p="0.5rem"
-        bg={
-          active
-            ? isLightMode
-              ? NAMED_COLORS.LIGHTER_GREY
-              : NAMED_COLORS.DARK_GREY
-            : 'transparent'
-        }
+        borderRadius="0.25rem"
+        p={{ base: '0.5rem', sm: '0.5rem 0.5rem 0.5rem 1rem' }}
+        bg={active ? $colors.bg : 'transparent'}
         _hover={{
-          background: isLightMode
-            ? NAMED_COLORS.LIGHTER_GREY
-            : NAMED_COLORS.DARK_GREY,
+          '&>div': {
+            color: $colors.hover,
+          },
           '&::before': {
             position: 'absolute',
             left: '4.25rem',
             content: '""',
             width: 0,
             height: 0,
-            border: '10px solid transparent',
-            borderRightColor: isLightMode ? 'black' : 'white',
+            border: '0.625rem solid transparent',
+            borderRightColor: $colors.borderRightColor,
             display: { base: 'flex', sm: 'none' },
           },
           '&::after': {
             content: `"${label}"`,
-            borderRadius: '4px',
+            borderRadius: '0.25rem',
             position: 'absolute',
             justifyContent: 'center',
             alignItems: 'center',
             display: { base: 'flex', sm: 'none' },
             left: '5.5rem',
-            bg: isLightMode ? 'black' : 'white',
-            color: isLightMode ? 'white' : 'black',
+            bg: $colors.afterBg,
+            color: $colors.afterColor,
             height: '2.5rem',
             maxWidth: '8rem',
             whiteSpace: 'nowrap',
@@ -66,15 +86,12 @@ export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
         }}
         cursor="pointer"
       >
-        <Icon
-          fill={isLightMode ? NAMED_COLORS.BLACK : NAMED_COLORS.WHITE}
-          style={{ minWidth: '24px' }}
-        />
+        <Icon fill={$colors.iconColor} style={{ minWidth: '1.5rem' }} />
         <Flex
           flexDirection="row"
           paddingLeft="1rem"
           fontSize="0.875rem"
-          color={isLightMode ? NAMED_COLORS.GREY : NAMED_COLORS.PALE_GREY}
+          color={active ? $colors.activeFontColor : $colors.fontColor}
           display={{ base: 'none', sm: 'flex' }}
           whiteSpace="nowrap"
           w="100%"

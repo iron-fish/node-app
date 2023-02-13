@@ -1,6 +1,56 @@
+@font-face {
+  font-family: 'extended-regular';
+  src: url('../public/font/extendedregular/favoritextended-regular-webfont.eot');
+  src: url('../public/font/extendedregular/favoritextended-regular-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('../public/font/extendedregular/favoritextended-regular-webfont.woff2')
+      format('woff2'),
+    url('../public/font/extendedregular/favoritextended-regular-webfont.woff')
+      format('woff'),
+    url('../public/font/extendedregular/favoritextended-regular-webfont.ttf')
+      format('truetype'),
+    url('../public/font/extendedregular/favoritextended-regular-webfont.svg#_.book')
+      format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'mono-regular';
+  src: url('../public/font/monoregular/favoritmono-regular-webfont.eot');
+  src: url('../public/font/monoregular/favoritmono-regular-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('../public/font/monoregular/favoritmono-regular-webfont.woff2')
+      format('woff2'),
+    url('../public/font/monoregular/favoritmono-regular-webfont.woff')
+      format('woff'),
+    url('../public/font/monoregular/favoritmono-regular-webfont.ttf')
+      format('truetype'),
+    url('../public/font/monoregular/favoritmono-regular-webfont.svg#_.book')
+      format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'favorit-regular';
+  src: url('../public/font/regular/favorit-regular-webfont.eot');
+  src: url('../public/font/regular/favorit-regular-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('../public/font/regular/favorit-regular-webfont.woff2') format('woff2'),
+    url('../public/font/regular/favorit-regular-webfont.woff') format('woff'),
+    url('../public/font/regular/favorit-regular-webfont.ttf') format('truetype'),
+    url('../public/font/regular/favorit-regular-webfont.svg#_.book')
+      format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 html,
 body {
-  font-family: 'favorit-regular';
+  font-family: 'favorit-regular' !important;
 }
 h1,
 h2,

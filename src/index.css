@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: 'favorit-regular' !important, sans-serif;
+  font-family: 'favorit-regular' sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

@@ -1,57 +1,96 @@
-import { Flex, useColorMode, NAMED_COLORS as C } from '@ironfish/ui-kit'
+import { FC } from 'react'
+import { Flex, Box } from '@ironfish/ui-kit'
 
-import IconHome from 'src/svgx/home'
-import IconSend from 'src/svgx/send'
-import IconReceive from 'src/svgx/receive'
-import IconAddressBook from 'src/svgx/address-book'
-import IconResources from 'src/svgx/lightbulb'
-import IconNode from 'src/svgx/node'
-import IconMiner from 'src/svgx/hammer'
-import Toggle from 'src/components/ThemeToggle'
+import IconHome from 'Svgx/home'
+import IconSend from 'Svgx/send'
+import IconReceive from 'Svgx/receive'
+import IconAddressBook from 'Svgx/address-book'
+import IconNode from 'Svgx/node'
+import Toggle from 'Components/ThemeToggle'
+// import IconResources from 'Svgx/lightbulb'
+// import IconMiner from 'Svgx/hammer'
 
 import Nav from './Nav'
+import IronFishLogo from 'Svgx/IronFishLogo'
+import HexFishLogo from 'Svgx/hexfish'
 
-const primaryNavItems = [
-  { hotkey: 'A', to: '/accounts', label: 'Privacy Accounts', icon: IconHome },
-  { hotkey: 'S', to: '/send', label: 'Send $', icon: IconSend },
-  { hotkey: 'R', to: '/receive', label: 'Receive $', icon: IconReceive },
+import ActiveStatus from './ActiveStatus'
+import ROUTES from 'Routes/data'
+import { NavItemProps } from './NavItem'
+
+const primaryNavItems: NavItemProps[] = [
+  {
+    hotkey: 'A',
+    to: ROUTES.ACCOUNTS,
+    label: 'Privacy Accounts',
+    icon: IconHome,
+    aliases: [ROUTES.ACCOUNT, ROUTES.TRANSACTION],
+  },
+  {
+    hotkey: 'S',
+    to: ROUTES.SEND,
+    label: 'Send $IRON',
+    icon: IconSend,
+    aliases: [],
+  },
+  {
+    hotkey: 'R',
+    to: ROUTES.RECEIVE,
+    label: 'Receive $IRON',
+    icon: IconReceive,
+    aliases: [],
+  },
   {
     hotkey: 'B',
-    to: '/address-book',
+    to: ROUTES.ADDRESS_BOOK,
     label: 'Address Book',
     icon: IconAddressBook,
+    aliases: [ROUTES.ADDRESS_BOOK_DETAILS],
+  },
+  {
+    hotkey: 'N',
+    to: ROUTES.NODE,
+    label: 'Your Node',
+    icon: IconNode,
+    aliases: [],
   },
 ]
-const secondaryNavItems = [
-  { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
-  { hotkey: 'N', to: '/node', label: 'Your Node', icon: IconNode },
-  { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
-]
+// const secondaryNavItems = [
+//   { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
+//   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
+// ]
 
-const ActiveStats = () => <div />
-
-export const Navbar = () => {
-  const { colorMode } = useColorMode()
-  const isLightMode = colorMode === 'light'
+export const Navbar: FC = () => {
   return (
     <Flex
-      bg={isLightMode ? C.WHITE : C.BLACK}
+      bg="inherit"
       height="100%"
       maxHeight="100vh"
-      p="1rem"
-      w={{ base: '88px', sm: '263px' }}
-      transition="width 0.3s ease-out"
-      position="absolute"
+      p="3rem 1rem 1rem"
+      w={{ base: '5.5rem', sm: '16.4375rem' }}
+      transition="width 0.3s ease-in-out"
+      position="fixed"
       left="0"
       top="0"
       flexDirection="column"
-      alignItems="center"
-      justifyContent="space-between"
+      alignItems="start"
+      zIndex={100}
     >
-      <Nav list={primaryNavItems} />
-      <Nav list={secondaryNavItems} />
-      <ActiveStats />
-      <Toggle />
+      <IronFishLogo
+        m="0.5rem 1rem"
+        display={{ base: 'none', sm: 'inline-block' }}
+      />
+      <HexFishLogo
+        m="0.5rem 1rem"
+        display={{ base: 'inline-block', sm: 'none' }}
+      />
+      <Box mt="2rem">
+        <Nav list={primaryNavItems} />
+      </Box>
+      <Box marginTop="auto">
+        <ActiveStatus />
+        <Toggle />
+      </Box>
     </Flex>
   )
 }

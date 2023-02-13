@@ -1,82 +1,104 @@
 import {
-  Box,
   chakra,
   Flex,
   useColorMode,
   NAMED_COLORS as C,
+  useColorModeValue,
 } from '@ironfish/ui-kit'
-import IconDarkMode from 'src/svgx/icon-darkmode'
-import IconLightMode from 'src/svgx/icon-lightmode'
+import IconDarkMode from 'Svgx/icon-darkmode'
+import IconLightMode from 'Svgx/icon-lightmode'
 
 export const ThemeToggle = () => {
-  const { colorMode, toggleColorMode } = useColorMode()
-  const isLightMode = colorMode === 'light'
-  const Other = isLightMode ? IconLightMode : IconDarkMode
+  const { toggleColorMode } = useColorMode()
+  const values = useColorModeValue(
+    {
+      toggleBg: C.LIGHTER_GREY,
+      bg: C.WHITE,
+      top: '0.3125rem',
+      left: '0.3125rem',
+      message: 'Light',
+      Icon: IconLightMode,
+      iconColor: C.GREY,
+    },
+    {
+      toggleBg: C.DARKER_GREY,
+      bg: C.BLACK,
+      top: '2.6875rem',
+      left: '50%',
+      message: 'Dark',
+      Icon: IconDarkMode,
+      iconColor: C.LIGHT_GREY,
+    }
+  )
   return (
     <Flex
       overflow="hidden"
       position="relative"
-      bg={isLightMode ? C.LIGHTER_GREY : C.DARKER_GREY}
-      borderRadius="5px"
+      bg={values.toggleBg}
+      borderRadius="0.3125rem"
       justifyContent="center"
       alignItems="center"
-      w={{ base: '2.125rem', sm: '14.5rem' }}
-      h={{ base: '3.75rem', sm: '2.125rem' }}
+      w={{ base: '2.75rem', sm: '14.5rem' }}
+      h={{ base: '5.25rem', sm: '2.125rem' }}
+      m={{ base: '0.375rem', sm: 'auto' }}
       flexDirection={{ base: 'column', sm: 'row' }}
       onClick={toggleColorMode}
       cursor="pointer"
-      fontSize="14px"
+      fontSize="0.875rem"
     >
       <Flex
-        p="6px"
+        p="0.375rem"
         zIndex="100"
         position="absolute"
         transition="top 0.3s ease-out, left 0.2s ease-out, background 0.16s ease-out"
-        top={{ base: isLightMode ? '4px' : '30px', sm: '4px' }}
-        left={{ base: 'inherit', sm: isLightMode ? '4px' : '50%' }}
-        w={{ base: '26px', sm: 'calc(50% - 6px)' }}
-        h="26px"
-        bg={isLightMode ? C.WHITE : C.BLACK}
-        borderRadius="2px"
+        top={{ base: values.top, sm: '0.25rem' }}
+        left={{ base: 'inherit', sm: values.left }}
+        w={{ base: '2.125rem', sm: 'calc(50% - 0.375rem)' }}
+        h={{ base: '2.25rem', sm: '1.625rem' }}
+        bg={values.bg}
+        borderRadius="0.3125rem"
         justifyContent="center"
         alignItems="center"
       >
-        <Other
-          fill={isLightMode ? C.BLACK : C.WHITE}
-          style={{ width: '14px', height: '14px' }}
+        <values.Icon
+          fill={values.iconColor}
+          style={{ width: '1.125rem', height: '1.125rem' }}
         />
-        <chakra.span display={{ base: 'none', sm: 'inline-block' }}>
-          {isLightMode ? 'Light' : 'Dark'}
+        <chakra.span display={{ base: 'none', sm: 'inline-block' }} ml="0.4rem">
+          {values.message}
         </chakra.span>
       </Flex>
       <Flex
-        minHeight="26px"
-        m={{ base: '0', sm: '6px' }}
-        mr={{ base: '0', sm: '3px' }}
-        w={{ base: '26px', sm: '50%' }}
+        h={{ base: '2.25rem', sm: '1.625rem' }}
+        m={{ base: '0', sm: '0.375rem' }}
+        mr={{ base: '0', sm: '0.1875rem' }}
+        w={{ base: '2.25rem', sm: '50%' }}
         textAlign="center"
         justifyContent="center"
         alignItems="center"
       >
         <IconLightMode
           fill={C.GREY}
-          style={{ width: '14px', height: '14px' }}
+          style={{ width: '1.125rem', height: '1.125rem' }}
         />
-        <chakra.span display={{ base: 'none', sm: 'inline-block' }}>
+        <chakra.span display={{ base: 'none', sm: 'inline-block' }} ml="0.4rem">
           Light
         </chakra.span>
       </Flex>
       <Flex
-        minHeight="26px"
-        m={{ base: '0', sm: '6px' }}
-        ml={{ base: '0', sm: '3px' }}
-        w={{ base: '26px', sm: '50%' }}
+        h={{ base: '2.25rem', sm: '1.625rem' }}
+        m={{ base: '0', sm: '0.375rem' }}
+        ml={{ base: '0', sm: '0.1875rem' }}
+        w={{ base: '2.25rem', sm: '50%' }}
         textAlign="center"
         justifyContent="center"
         alignItems="center"
       >
-        <IconDarkMode fill={C.GREY} style={{ width: '14px', height: '14px' }} />
-        <chakra.span display={{ base: 'none', sm: 'inline-block' }}>
+        <IconDarkMode
+          fill={C.GREY}
+          style={{ width: '1.125rem', height: '1.125rem' }}
+        />
+        <chakra.span display={{ base: 'none', sm: 'inline-block' }} ml="0.4rem">
           Dark
         </chakra.span>
       </Flex>

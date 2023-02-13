@@ -1,0 +1,12 @@
+enum IronFishInitStatus {
+  NOT_STARTED,
+  INITIALIZING_SDK,
+  INITIALIZING_NODE,
+  CHECKING_FOR_MIGRATIONS,
+  INITIALIZED,
+  STARTING_NODE,
+  ERROR,
+  STARTED,
+}
+
+export default IronFishInitStatus
