@@ -50,13 +50,10 @@ const Information: FC = memo(() => {
 })
 
 const hasEnoughIron = (balance: bigint, amount: bigint, fee = BigInt(0)) => {
-  const zero = BigInt(0)
-  if (balance === zero) {
+  if (balance === BigInt(0)) {
     return false
   }
-  return balance && (amount || amount === zero) && (fee || fee === zero)
-    ? balance >= amount + fee
-    : true
+  return balance && amount && fee ? balance >= amount + fee : true
 }
 
 const getPrecision = (val: string) => {
