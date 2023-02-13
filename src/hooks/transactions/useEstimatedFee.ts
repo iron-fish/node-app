@@ -1,15 +1,17 @@
 import { useEffect } from 'react'
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
-import {
-  TransactionFeeEstimate,
-  TransactionReceiver,
-} from 'Types/IronfishManager/IIronfishTransactionManager'
+import { TransactionFeeEstimate } from 'Types/IronfishManager/IIronfishTransactionManager'
+import { Payment } from 'Types/Transaction'
 
-const useFee = (accountId: string, receiver: TransactionReceiver) => {
+const useEstimatedFee = (accountId: string, receiver: Payment) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<TransactionFeeEstimate>()
 
   const calculateFee = () => {
-    if (accountId && (receiver?.amount || receiver?.amount === BigInt(0))) {
+    if (
+      accountId &&
+      receiver.publicAddress &&
+      (receiver?.amount || receiver?.amount === BigInt(0))
+    ) {
       return promiseWrapper(
         window.IronfishManager.transactions.estimateFeeWithPriority(
           accountId,
@@ -31,4 +33,4 @@ const useFee = (accountId: string, receiver: TransactionReceiver) => {
   return result
 }
 
-export default useFee
+export default useEstimatedFee
