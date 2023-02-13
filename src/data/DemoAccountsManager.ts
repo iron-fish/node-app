@@ -199,7 +199,7 @@ class DemoAccountsManager {
     return new Promise(resolve =>
       setTimeout(() => {
         const search = searchTerm?.toLowerCase()
-        const accounts = DEMO_ACCOUNTS.map(account => ({
+        const accounts = DEMO_ACCOUNTS.map((account, index) => ({
           id: account.id,
           publicAddress: account.publicAddress,
           name: account.name,
@@ -207,6 +207,7 @@ class DemoAccountsManager {
             default: ACCOUNT_BALANCES[account.id][0],
             assets: ACCOUNT_BALANCES[account.id].slice(1),
           },
+          order: index,
         })).filter(
           account =>
             !search ||
@@ -232,17 +233,15 @@ class DemoAccountsManager {
   }
 
   findById(id: string): Promise<Account | null> {
-    let account: Account | null = null
-    const a: AccountValue = DEMO_ACCOUNTS.find(item => item.id === id)
+    const accountIndex = DEMO_ACCOUNTS.findIndex(a => a.id === id)
+    const account: Account = DEMO_ACCOUNTS[accountIndex]
 
-    if (a) {
-      account = {
-        ...a,
-        balances: {
-          default: ACCOUNT_BALANCES[a.id][0],
-          assets: ACCOUNT_BALANCES[a.id].slice(1),
-        },
+    if (account) {
+      account.balances = {
+        default: ACCOUNT_BALANCES[account.id][0],
+        assets: ACCOUNT_BALANCES[account.id].slice(1),
       }
+      account.order = accountIndex
     }
 
     return new Promise(resolve => setTimeout(() => resolve(account), 500))

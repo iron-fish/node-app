@@ -31,11 +31,12 @@ class AccountManager
     const accounts = this.node.wallet.listAccounts()
 
     const result: CutAccount[] = await Promise.all(
-      accounts.map(async account => ({
+      accounts.map(async (account, index) => ({
         id: account.id,
         name: account.name,
         publicAddress: account.publicAddress,
         balances: await this.balances(account.id),
+        order: index,
       }))
     )
 
@@ -60,12 +61,16 @@ class AccountManager
   }
 
   async get(id: string): Promise<WalletAccount | null> {
-    const account: WalletAccount = this.node.wallet.getAccount(id)?.serialize()
-    if (account) {
-      account.balances = await this.balances(account.id)
+    const accounts = this.node.wallet.listAccounts()
+    const accountIndex = accounts.findIndex(a => a.id === id)
+    if (accountIndex === -1) {
+      return null
     }
+    const account: WalletAccount = accounts[accountIndex].serialize()
+    account.balances = await this.balances(account.id)
+    account.order = accountIndex
 
-    return Promise.resolve(account || null)
+    return account
   }
 
   async delete(name: string): Promise<void> {

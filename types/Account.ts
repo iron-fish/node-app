@@ -6,6 +6,7 @@ interface Account extends AccountValue {
     default: AccountBalance
     assets: AccountBalance[]
   }
+  order?: number
 }
 
 export default Account

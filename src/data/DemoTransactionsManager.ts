@@ -436,7 +436,7 @@ class DemoTransactionsManager {
             },
           ],
           spends: [],
-          status: TransactionStatus.CONFIRMED,
+          status: TransactionStatus.PENDING,
           accountId: accountId,
           expiration: 0,
           notesCount: 0,
@@ -444,6 +444,12 @@ class DemoTransactionsManager {
         }
         DEMO_TRANSACTIONS.push(transaction)
         resolve(transaction)
+        setTimeout(() => {
+          transaction.status =
+            memo === 'Expired'
+              ? TransactionStatus.EXPIRED
+              : TransactionStatus.CONFIRMED
+        }, 30000)
       }, 500)
     })
   }

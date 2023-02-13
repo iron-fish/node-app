@@ -7,6 +7,7 @@ interface CutAccount
     default: AccountBalance
     assets: AccountBalance[]
   }
+  order?: number
 }
 
 export default CutAccount
