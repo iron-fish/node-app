@@ -3446,10 +3446,10 @@
     "@ironfish/rust-nodejs-linux-x64-musl" "0.1.26"
     "@ironfish/rust-nodejs-win32-x64-msvc" "0.1.26"
 
-"@ironfish/sdk@^0.0.43":
-  version "0.0.43"
-  resolved "https://registry.yarnpkg.com/@ironfish/sdk/-/sdk-0.0.43.tgz#3a977d1ba0a8abcca997157ba956437cf572de2d"
-  integrity sha512-8UICH0zGkQYLQ/ApY3I0r5vSI3dzSGU+0OLcR6WlJ8oETdigjwqrRMFwmO2W/IdOUbR3hXPwmq0lezRttmyHAA==
+"@ironfish/sdk@^0.0.44":
+  version "0.0.44"
+  resolved "https://registry.yarnpkg.com/@ironfish/sdk/-/sdk-0.0.44.tgz#49c90a23de204e67deea9d6b9be165198f485b2b"
+  integrity sha512-Kl04q1DtIaogqlE+dl7AvZ3vMfFBfiknusW6GV0CIB0qoMbKdbRMByVi+Q0RPPICUhFJC3c89FrvRg3TQZ4Sdw==
   dependencies:
     "@ethersproject/bignumber" "5.7.0"
     "@ironfish/rust-nodejs" "0.1.26"
