@@ -15,6 +15,7 @@ import { Contact } from './types/Contact'
 import Transaction from 'Types/Transaction'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
 import DemoAssetManager from './DemoAssetManager'
+import Account from 'Types/Account'
 
 class DemoDataManager {
   accounts: DemoAccountsManager
@@ -95,7 +96,7 @@ class DemoDataManager {
     return this.accounts.list(searchTerm || '', sort)
   }
 
-  getAccount(accountId: string): Promise<AccountValue> {
+  getAccount(accountId: string): Promise<Account> {
     return this.accounts.findById(accountId)
   }
 

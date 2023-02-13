@@ -32,8 +32,8 @@ class AssetManager extends AbstractManager implements IIronfishAssetManager {
     return assets.slice(offset, max)
   }
 
-  async get(id: string): Promise<Asset | null> {
-    const identity = Buffer.from(id, 'hex')
+  async get(id: string | Buffer): Promise<Asset | null> {
+    const identity: Buffer = Buffer.isBuffer(id) ? id : Buffer.from(id, 'hex')
 
     if (NativeAsset.nativeId() === identity) {
       return this.default()
@@ -59,8 +59,8 @@ class AssetManager extends AbstractManager implements IIronfishAssetManager {
     return {
       createdTransactionHash: asset.createdTransactionHash.toString('hex'),
       id: asset.id.toString('hex'),
-      name: asset.name.toString('utf8').split('\x00').join(),
-      metadata: asset.metadata.toString('utf8').split('\x00').join(),
+      name: asset.name.toString('utf8').split('\x00').join(''),
+      metadata: asset.metadata.toString('utf8').split('\x00').join(''),
       owner: asset.owner.toString('hex'),
       supply: asset.supply,
     }

@@ -8,7 +8,7 @@ export enum IronfishAssetManagerActions {
 
 interface IIronfishAssetManager {
   list: (search?: string, offset?: number, max?: number) => Promise<Asset[]>
-  get: (id: string) => Promise<Asset | null>
+  get: (id: string | Buffer) => Promise<Asset | null>
   default: () => Promise<Asset>
 }
 

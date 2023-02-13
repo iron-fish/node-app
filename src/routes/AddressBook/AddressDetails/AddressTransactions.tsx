@@ -7,6 +7,7 @@ import {
   Button,
   Box,
 } from '@ironfish/ui-kit'
+import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAddressTransactions'
@@ -100,9 +101,12 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
             },
             {
               key: 'iron',
-              label: '$IRON',
+              label: '$Iron',
               render: (transaction: Transaction) => (
-                <h5>{transaction.amount}</h5>
+                <h5>
+                  {(transaction.creator ? '' : '+') +
+                    FixedNumberUtils.render(transaction.amount.value, 8)}
+                </h5>
               ),
             },
             {
@@ -111,7 +115,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               render: (transaction: Transaction) => (
                 <ContactsPreview
                   addresses={transaction.to}
-                  notes={transaction.notes}
+                  notes={transaction.outputs}
                 />
               ),
             },
@@ -126,7 +130,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               key: 'memo',
               label: 'Memo',
               render: (transaction: Transaction) => (
-                <h5>{transaction.notes?.at(0)?.memo}</h5>
+                <h5>{transaction.outputs?.at(0)?.memo}</h5>
               ),
             },
             {

@@ -115,10 +115,17 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         IronfishAccountManagerAction.EXPORT,
         id
       ),
-    balance: (id: string) =>
+    balance: (id: string, assetId?: string) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.BALANCE,
+        id,
+        assetId
+      ),
+    balances: (id: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.BALANCES,
         id
       ),
   },

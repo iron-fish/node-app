@@ -91,9 +91,11 @@ const ContactsPreview: FC<{ addresses?: string[]; notes?: Note[] }> = ({
                 },
                 {
                   key: 'amount',
-                  label: '$IRON',
+                  label: 'Amount',
                   render: (note: Note) =>
-                    formatOreToTronWithLanguage(note.value),
+                    formatOreToTronWithLanguage(note.value) +
+                    ' ' +
+                    note.asset.name,
                 },
                 {
                   key: 'memo',

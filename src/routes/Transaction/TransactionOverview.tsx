@@ -27,6 +27,7 @@ import LargeArrowLeftDown from 'Svgx/LargeArrowLeftDown'
 import LargeArrowRightUp from 'Svgx/LargeArrowRightUp'
 import SimpleTable from 'Components/SimpleTable'
 import ContactsPreview from 'Components/ContactsPreview'
+import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
 
 interface Card {
   render: (tx: Transaction) => ReactNode
@@ -35,7 +36,8 @@ interface Card {
 }
 const CARDS: Card[] = [
   {
-    render: (tx: Transaction) => tx?.amount,
+    render: (tx: Transaction) =>
+      FixedNumberUtils.render(tx?.amount.value || BigInt(0), 8),
     label: '$IRON Sent',
     icon: DifficultyIcon,
   },
@@ -58,7 +60,7 @@ const CARDS: Card[] = [
     icon: DifficultyIcon,
   },
   {
-    render: (tx: Transaction) => tx?.notes?.at(0)?.memo || <>&nbsp;</>,
+    render: (tx: Transaction) => tx?.outputs?.at(0)?.memo || <>&nbsp;</>,
     label: 'Memo',
     icon: SizeIcon,
   },
@@ -212,44 +214,78 @@ const TransactionOverview: FC = () => {
       </Box>
       <Flex w="100%" justifyContent="space-between">
         <Box w="calc(50% - 1.5rem)" mr="1rem">
-          <SimpleTable
-            data={transaction?.spends || []}
-            w="100%"
-            columns={[
-              {
-                key: 'input-address',
-                label: 'INPUT ADDRESS',
-                render: (spend: Spend) => (
-                  <Flex alignItems="center">
-                    <Box mr="1rem">
-                      <LargeArrowLeftDown h="1.125rem" w="1.125rem" />
-                    </Box>
-                    <Box
-                      overflow="hidden"
-                      whiteSpace="nowrap"
-                      textOverflow="ellipsis"
-                    >
+          {transaction?.creator ? (
+            <SimpleTable
+              data={transaction?.inputs || []}
+              w="100%"
+              columns={[
+                {
+                  key: 'input-address',
+                  label: 'INPUT ADDRESS',
+                  render: (note: Note) => (
+                    <Flex alignItems="center">
+                      <Box mr="1rem">
+                        <LargeArrowRightUp h="1.125rem" w="1.125rem" />
+                      </Box>
                       <chakra.h5>
-                        <CopyValueToClipboard
-                          copiedTooltipText="Input address copied"
-                          copyTooltipText="Copy Input address"
-                          label={truncateHash(spend.nullifier, 2, 4)}
-                          value={spend.nullifier}
-                          iconButtonProps={{
-                            color: NAMED_COLORS.GREY,
-                          }}
-                        />
+                        <ContactsPreview addresses={[transaction?.from]} />
                       </chakra.h5>
-                    </Box>
-                  </Flex>
-                ),
-              },
-            ]}
-          />
+                    </Flex>
+                  ),
+                },
+                {
+                  key: 'note-amount',
+                  label: 'Amount',
+                  render: (note: Note) => (
+                    <chakra.h5>
+                      {formatOreToTronWithLanguage(note?.value || BigInt(0)) +
+                        ' ' +
+                        note?.asset.name}
+                    </chakra.h5>
+                  ),
+                },
+              ]}
+            />
+          ) : (
+            <SimpleTable
+              data={transaction?.spends || []}
+              w="100%"
+              columns={[
+                {
+                  key: 'input-address',
+                  label: 'INPUT ADDRESS',
+                  render: (spend: Spend) => (
+                    <Flex alignItems="center">
+                      <Box mr="1rem">
+                        <LargeArrowLeftDown h="1.125rem" w="1.125rem" />
+                      </Box>
+                      <Box
+                        overflow="hidden"
+                        whiteSpace="nowrap"
+                        textOverflow="ellipsis"
+                      >
+                        <chakra.h5>
+                          <CopyValueToClipboard
+                            copiedTooltipText="Input address copied"
+                            copyTooltipText="Copy Input address"
+                            label={truncateHash(spend.nullifier, 2, 4)}
+                            value={spend.nullifier}
+                            iconButtonProps={{
+                              color: NAMED_COLORS.GREY,
+                            }}
+                          />
+                        </chakra.h5>
+                      </Box>
+                    </Flex>
+                  ),
+                },
+              ]}
+            />
+          )}
         </Box>
         <Box w="calc(50% - 1.5rem)">
           <SimpleTable
-            data={transaction?.notes || []}
+            data={transaction?.outputs || []}
             w="100%"
             columns={[
               {
@@ -268,10 +304,12 @@ const TransactionOverview: FC = () => {
               },
               {
                 key: 'note-amount',
-                label: '$IRON',
+                label: 'Amount',
                 render: (note: Note) => (
                   <chakra.h5>
-                    {formatOreToTronWithLanguage(note?.value || BigInt(0))}
+                    {formatOreToTronWithLanguage(note?.value || BigInt(0)) +
+                      ' ' +
+                      note?.asset.name}
                   </chakra.h5>
                 ),
               },

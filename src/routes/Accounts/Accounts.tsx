@@ -119,7 +119,7 @@ const Accounts = () => {
                 <b>
                   {formatOreToTronWithLanguage(
                     accounts
-                      ?.map(a => a.balance.confirmed || BigInt(0))
+                      ?.map(a => a.balances?.default?.confirmed || BigInt(0))
                       ?.reduce((a, b) => a + b, BigInt(0)) || BigInt(0)
                   )}
                   &nbsp;$IRON

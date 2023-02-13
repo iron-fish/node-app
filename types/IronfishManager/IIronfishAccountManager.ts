@@ -10,6 +10,7 @@ export enum IronfishAccountManagerAction {
   GET = 'get',
   DELETE = 'delete',
   BALANCE = 'balance',
+  BALANCES = 'balances',
   IMPORT = 'import',
   EXPORT = 'export',
 }
@@ -21,5 +22,9 @@ export interface IIronfishAccountManager {
   delete: (name: string) => Promise<void>
   import: (account: Omit<AccountValue, 'id'>) => Promise<AccountValue>
   export: (id: string) => Promise<Omit<AccountValue, 'id'>>
-  balance: (id: string) => Promise<AccountBalance>
+  balance: (id: string, assetId?: string) => Promise<AccountBalance>
+  balances: (id: string) => Promise<{
+    default: AccountBalance
+    assets: AccountBalance[]
+  }>
 }

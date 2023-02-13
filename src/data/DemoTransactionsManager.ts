@@ -6,10 +6,13 @@ import {
 import SortType from 'Types/SortType'
 
 import Transaction, { TransactionStatus } from 'Types/Transaction'
+import { ACCOUNT_BALANCES } from './DemoAccountsManager'
+import { DEFAULT_ASSET, DEMO_ASSETS } from './DemoAssetManager'
 
 const DEMO_TRANSACTIONS: Transaction[] = [
   {
-    amount: '-12',
+    amount: { asset: DEFAULT_ASSET, value: BigInt(-1200000000) },
+    assetAmounts: [],
     created: new Date('2022-08-26T08:43:00.770Z'),
     creator: true,
     fee: '12000',
@@ -19,26 +22,38 @@ const DEMO_TRANSACTIONS: Transaction[] = [
       'sbVxDJmJHGSKCfom0i33HRPFQvRY4t55ZVSSUwPuhRZcbIvJ0ou4hPHKv3HtGmOi',
       'sbVxDJmJHGSKCfom0i33HRPFQvRY4t55ZVSSUwPuhRZcbIvJ0ou4hPHKv3HtGmOs',
     ],
-    hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
+    hash: 'WnSnNB4EIRm2IzcnISNpN-BhZNGWBoyRS7qEQfUNZcYuFx35nW0nx5z4eN9TsH46',
     isMinersFee: false,
-    notes: [
+    inputs: [
+      {
+        value: BigInt(10000000000),
+        memo: 'For my friend',
+        sender:
+          'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+        asset: DEFAULT_ASSET,
+      },
+    ],
+    outputs: [
       {
         value: BigInt(100000),
         memo: 'dziakyi',
         sender:
           'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+        asset: DEFAULT_ASSET,
       },
       {
         value: BigInt(10000),
         memo: 'to you',
         sender:
           'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+        asset: DEFAULT_ASSET,
       },
       {
         value: BigInt(10000),
         memo: 'to you',
         sender:
           'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+        asset: DEFAULT_ASSET,
       },
     ],
     spends: [
@@ -58,18 +73,33 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     spendsCount: 0,
   },
   {
-    amount: '10',
+    amount: { asset: DEFAULT_ASSET, value: BigInt(1000000000) },
+    assetAmounts: [
+      {
+        asset: DEMO_ASSETS[1],
+        value: BigInt(1000000),
+      },
+    ],
     creator: false,
     created: new Date('2022-08-25T08:43:00.770Z'),
     fee: '10000',
     to: ['pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D'],
     from: 'OOlgJpCs_om-pVc7vhew3R58cfI5N0Stn4KKZNOVmx2tSN-2wHZTMqFqtL9ackOV',
-    hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
+    hash: 'b8pZEfz6gV0sSp-DzjxrFz5UVFnOPPevrXTEe1UG7qDX8uu69KHazPGJlkoxkMEt',
     isMinersFee: false,
-    notes: [
+    inputs: [],
+    outputs: [
       {
         value: BigInt(100000),
         memo: 'thanks',
+        sender:
+          'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
+        asset: DEFAULT_ASSET,
+      },
+      {
+        asset: DEMO_ASSETS[1],
+        value: BigInt(1000000),
+        memo: 'asset to you',
         sender:
           'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
       },
@@ -85,20 +115,23 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     spendsCount: 0,
   },
   {
-    amount: '100',
+    amount: { value: BigInt(10000000000), asset: DEFAULT_ASSET },
+    assetAmounts: [],
     creator: false,
     created: new Date('2022-08-24T08:43:00.770Z'),
     fee: '10000',
     to: ['pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D'],
     from: 'OSAblUtjE_cda1CD_baWcpiEWBM3qp0SnZXANluiM7G4psf7Z6ojb3nXFIFaQdBx',
-    hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
+    hash: '8FFiVh1P0vS0fpETvqqM8hRvu06Fm0WG-6QsWezlk_CiP2haxYuqEUixM5vZw7K6',
     isMinersFee: false,
-    notes: [
+    inputs: [],
+    outputs: [
       {
         value: BigInt(100000),
         memo: 'welcome message',
         sender:
           'sbVxDJmJHGSKCfom0i33HRPFQvRY4t55ZVSSUwPuhRZcbIvJ0ou4hPHKv3HtGmOi',
+        asset: DEFAULT_ASSET,
       },
     ],
     spends: [],
@@ -112,20 +145,68 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     spendsCount: 0,
   },
   {
-    amount: '-1235',
+    amount: { asset: DEFAULT_ASSET, value: BigInt(-123500000000) },
+    assetAmounts: [
+      {
+        asset: DEMO_ASSETS[1],
+        value: BigInt(1900000000),
+      },
+      {
+        asset: DEMO_ASSETS[2],
+        value: BigInt(70000000),
+      },
+    ],
     created: new Date('2022-08-23T08:43:00.770Z'),
     creator: true,
     fee: '12350',
     from: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
     to: ['R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6'],
-    hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
+    hash: 's3d8DXMnbjdNT3bn8mPRnjAcOMm4PWJ81wg0P-7wYLK665mp_CyImNBOZGVDtqtK',
     isMinersFee: false,
-    notes: [
+    inputs: [
+      {
+        value: BigInt(1380000000000),
+        asset: DEFAULT_ASSET,
+        memo: 'Experimental',
+        sender:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+      },
+      {
+        value: BigInt(8256000000),
+        asset: DEMO_ASSETS[1],
+        memo: 'My demo asset',
+        sender:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+      },
+      {
+        value: BigInt(9673000000),
+        asset: DEMO_ASSETS[2],
+        memo: 'My test asset',
+        sender:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+      },
+    ],
+    outputs: [
       {
         value: BigInt(100000),
         memo: 'aloha',
         sender:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        asset: DEFAULT_ASSET,
+      },
+      {
+        value: BigInt(154000000),
+        memo: 'demo asset for you',
+        sender:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        asset: DEMO_ASSETS[1],
+      },
+      {
+        value: BigInt(297000000),
+        memo: 'test asset for you',
+        sender:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        asset: DEMO_ASSETS[2],
       },
     ],
     spends: [
@@ -145,20 +226,31 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     spendsCount: 0,
   },
   {
-    amount: '-121',
+    amount: { asset: DEFAULT_ASSET, value: BigInt(-1210000000) },
+    assetAmounts: [],
     created: new Date('2022-08-21T08:43:00.770Z'),
     creator: true,
     fee: '12100',
     from: 'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
     to: ['7C5NxoCyjt86wtEEHEF1d60omCsaH9tFO6Tf6Rn0jqowxowgbBtCoapcSxn0jrXN'],
-    hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
+    hash: '582-3vDkse_9I8tA4izQ5SMxUAsWtrlXrSdwuzYe7bkvOsJYf6lTNxW3CpK3l3id',
     isMinersFee: false,
-    notes: [
+    inputs: [
+      {
+        value: BigInt(12865000000),
+        memo: 'Have A GOOD DAY',
+        sender:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        asset: DEFAULT_ASSET,
+      },
+    ],
+    outputs: [
       {
         value: BigInt(100000),
         memo: 'Have A GOOD DAY',
         sender:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        asset: DEFAULT_ASSET,
       },
     ],
     spends: [
@@ -178,20 +270,23 @@ const DEMO_TRANSACTIONS: Transaction[] = [
     spendsCount: 0,
   },
   {
-    amount: '12',
+    amount: { asset: DEFAULT_ASSET, value: BigInt(1200000000) },
+    assetAmounts: [],
     creator: false,
     created: new Date('2022-08-22T08:43:00.770Z'),
     fee: '12000',
     to: ['pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D'],
     from: 'OOlgJpCs_om-pVc7vhew3R58cfI5N0Stn4KKZNOVmx2tSN-2wHZTMqFqtL9ackOV',
-    hash: 'vYV2LiD2Lh_KnPGjk2k31k1J_1XqvxUW57G1bEfMKPN4WKAwayEvd3zKPSjx92BX',
+    hash: 'u7J3we-F22uRiKBohiiYDWYZTAO2FfhDhEs-RcJfY2InSm22KEgBIUGFvJK0DEHN',
     isMinersFee: false,
-    notes: [
+    inputs: [],
+    outputs: [
       {
         value: BigInt(100000),
         memo: 'TASTY',
         sender:
           'OOlgJpCs_om-pVc7vhew3R58cfI5N0Stn4KKZNOVmx2tSN-2wHZTMqFqtL9ackOV',
+        asset: DEFAULT_ASSET,
       },
     ],
     spends: [],
@@ -234,7 +329,10 @@ class DemoTransactionsManager {
               transaction.hash.toLowerCase().includes(search) ||
               transaction.from.toLowerCase().includes(search) ||
               transaction.to.find(a => a.toLowerCase().includes(search)) ||
-              transaction.notes.find(note =>
+              transaction.outputs.find(note =>
+                note.memo?.toLowerCase().includes(search)
+              ) ||
+              transaction.inputs.find(note =>
                 note.memo?.toLowerCase().includes(search)
               ) ||
               transaction.amount.toString().includes(search))
@@ -264,7 +362,10 @@ class DemoTransactionsManager {
               transaction.hash.toLowerCase().includes(search) ||
               transaction.from.toLowerCase().includes(search) ||
               transaction.to.find(a => a.toLowerCase().includes(search)) ||
-              transaction.notes.find(note =>
+              transaction.outputs.find(note =>
+                note.memo?.toLowerCase().includes(search)
+              ) ||
+              transaction.inputs.find(note =>
                 note.memo?.toLowerCase().includes(search)
               ) ||
               transaction.amount.toString().includes(search))
@@ -307,7 +408,8 @@ class DemoTransactionsManager {
     return new Promise(resolve => {
       setTimeout(() => {
         const transaction: Transaction = {
-          amount: amount.toString(),
+          amount: { value: amount, asset: DEFAULT_ASSET },
+          assetAmounts: [],
           created: new Date(),
           creator: true,
           fee: fee.toString(),
@@ -317,11 +419,20 @@ class DemoTransactionsManager {
           size: Math.round(Math.random() * 100000),
           blockHash: nanoid(64),
           isMinersFee: false,
-          notes: [
+          inputs: [
+            {
+              value: ACCOUNT_BALANCES[accountId][0]?.confirmed || BigInt(0),
+              memo: memo,
+              sender: to,
+              asset: DEFAULT_ASSET,
+            },
+          ],
+          outputs: [
             {
               value: amount,
               memo: memo,
               sender: from,
+              asset: DEFAULT_ASSET,
             },
           ],
           spends: [],
