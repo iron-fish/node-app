@@ -5,6 +5,11 @@ import {
   TableComponentProps,
 } from '@ironfish/ui-kit/dist/components/Table/types'
 
+const borderStyle = {
+  base: 'none !important',
+  md: 'inherit !important',
+}
+
 const DEFAULT_TABLE_PROPS: TableComponentProps = {
   tableHeadProps: {
     display: { base: 'none', md: 'table-header-group' },
@@ -28,6 +33,16 @@ const DEFAULT_TABLE_PROPS: TableComponentProps = {
     py: {
       base: '1rem',
       md: '1.625rem',
+    },
+    borderTop: borderStyle,
+    borderBottom: borderStyle,
+    _first: {
+      pl: '2rem',
+      borderLeft: borderStyle,
+    },
+    _last: {
+      pr: '2rem',
+      borderRight: borderStyle,
     },
   },
 }
