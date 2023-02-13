@@ -28,11 +28,8 @@ import LargeArrowLeftDown from 'Svgx/LargeArrowLeftDown'
 import LargeArrowRightUp from 'Svgx/LargeArrowRightUp'
 import SimpleTable from 'Components/SimpleTable'
 import ContactsPreview from 'Components/ContactsPreview'
-<<<<<<< HEAD
 import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
-=======
 import InfoBadge from 'Components/InfoBadge'
->>>>>>> origin/staging
 
 interface Card {
   render: (tx: Transaction) => ReactNode
