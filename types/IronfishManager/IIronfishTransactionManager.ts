@@ -21,15 +21,9 @@ export interface TransactionFeeStatistic {
 }
 
 export interface TransactionFeeEstimate {
-  low: bigint
-  medium: bigint
-  high: bigint
-}
-
-export interface TransactionReceiver {
-  publicAddress: string
-  amount: bigint
-  memo: string
+  slow?: bigint
+  average?: bigint
+  fast?: bigint
 }
 
 export interface IIronfishTransactionManager {
@@ -43,7 +37,7 @@ export interface IIronfishTransactionManager {
   averageFee: (numOfBlocks?: number) => Promise<bigint>
   estimateFeeWithPriority: (
     accountId: string,
-    receive: TransactionReceiver
+    receive: Payment
   ) => Promise<TransactionFeeEstimate>
   findByAccountId: (
     accountId: string,

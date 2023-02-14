@@ -1,9 +1,7 @@
 import { nanoid } from 'nanoid'
-import {
-  TransactionFeeEstimate,
-  TransactionReceiver,
-} from 'Types/IronfishManager/IIronfishTransactionManager'
+import { TransactionFeeEstimate } from 'Types/IronfishManager/IIronfishTransactionManager'
 import SortType from 'Types/SortType'
+import { Payment } from 'Types/Transaction'
 
 import Transaction, { TransactionStatus } from 'Types/Transaction'
 import { ACCOUNT_BALANCES } from './DemoAccountsManager'
@@ -388,12 +386,12 @@ class DemoTransactionsManager {
 
   estimateFeeWithPriority(
     accountId: string,
-    receive: TransactionReceiver
+    receive: Payment
   ): Promise<TransactionFeeEstimate> {
     return Promise.resolve({
-      low: BigInt(100),
-      medium: BigInt(200),
-      high: BigInt(300),
+      slow: BigInt(1),
+      average: BigInt(2),
+      fast: BigInt(3),
     })
   }
 

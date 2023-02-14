@@ -74,7 +74,7 @@ class AccountManager
   }
 
   async delete(name: string): Promise<void> {
-    await this.node.wallet.removeAccount(name)
+    await this.node.wallet.removeAccountByName(name)
   }
 
   async import(
