@@ -1,13 +1,17 @@
 import { Asset } from '@ironfish/rust-nodejs'
-import { Account, CurrencyUtils, IronfishNode } from '@ironfish/sdk'
-import { PRIORITY_LEVELS } from '@ironfish/sdk/build/src/memPool/feeEstimator'
+import {
+  Account,
+  CurrencyUtils,
+  IronfishNode,
+  RawTransaction,
+  RawTransactionSerde,
+} from '@ironfish/sdk'
 import { TransactionValue } from '@ironfish/sdk/build/src/wallet/walletdb/transactionValue'
 import { sizeVarBytes } from 'bufio'
 import {
   IIronfishTransactionManager,
   TransactionFeeStatistic,
   TransactionFeeEstimate,
-  TransactionReceiver,
 } from 'Types/IronfishManager/IIronfishTransactionManager'
 import SortType from 'Types/SortType'
 import Transaction, { Payment, TransactionStatus } from 'Types/Transaction'
@@ -26,12 +30,11 @@ class TransactionManager implements IIronfishTransactionManager {
   ): Promise<Transaction> {
     const account = this.node.wallet.getAccount(accountId)
     const head = await account.getHead()
-    const fee = transactionFee || (await this.averageFee())
     const transaction = await this.node.wallet.send(
       this.node.memPool,
       account,
       [{ ...payment, assetId: Asset.nativeId() }],
-      fee,
+      transactionFee,
       this.node.config.get('transactionExpirationDelta'),
       0
     )
@@ -88,20 +91,50 @@ class TransactionManager implements IIronfishTransactionManager {
 
   async estimateFeeWithPriority(
     accountId: string,
-    receive: TransactionReceiver
+    receive: Payment
   ): Promise<TransactionFeeEstimate> {
+    const estimatedFeeRates = this.node.memPool.feeEstimator.estimateFeeRates()
+    const feeRates = [
+      estimatedFeeRates.low || BigInt(1),
+      estimatedFeeRates.medium || BigInt(1),
+      estimatedFeeRates.high || BigInt(1),
+    ]
+
     const account = this.node.wallet.getAccount(accountId)
-    return Promise.all([
-      this.node.memPool.feeEstimator.estimateFee(PRIORITY_LEVELS[0], account, [
-        receive,
-      ]),
-      this.node.memPool.feeEstimator.estimateFee(PRIORITY_LEVELS[1], account, [
-        receive,
-      ]),
-      this.node.memPool.feeEstimator.estimateFee(PRIORITY_LEVELS[2], account, [
-        receive,
-      ]),
-    ]).then(([low, medium, high]) => ({ low, medium, high }))
+
+    const allPromises: Promise<RawTransaction>[] = []
+
+    feeRates.forEach(feeRate => {
+      allPromises.push(
+        this.node.wallet.createTransaction(
+          account,
+          [
+            {
+              publicAddress: receive.publicAddress,
+              amount: receive.amount,
+              memo: receive.memo,
+              assetId: Asset.nativeId(),
+            },
+          ],
+          [],
+          [],
+          {
+            feeRate,
+            expirationDelta: this.node.config.get('transactionExpirationDelta'),
+          }
+        )
+      )
+    })
+
+    const [low, medium, high]: Array<RawTransaction> = await Promise.all(
+      allPromises
+    )
+
+    return {
+      slow: low.fee,
+      average: medium.fee,
+      fast: high.fee,
+    }
   }
 
   async averageFee(numOfBlocks = 100): Promise<bigint> {
