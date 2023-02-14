@@ -121,21 +121,25 @@ class AccountManager
       throw new Error(`Account with id=${id} was not found.`)
     }
 
-    const balances: AccountBalance[] = []
+    const assetBalances: AccountBalance[] = []
+    let defaultBalance: AccountBalance
     for await (const balance of this.node.wallet.getBalances(account)) {
       const asset: Asset = await this.assetManager.get(balance.assetId)
-
-      balances.push({
+      const accountBalance: AccountBalance = {
         ...balance,
         asset: asset,
-      })
+      }
+
+      if (balance.assetId === NativeAsset.nativeId()) {
+        defaultBalance = accountBalance
+      } else {
+        assetBalances.push(accountBalance)
+      }
     }
 
-    const defaultAssetID = NativeAsset.nativeId().toString('hex')
-
     return {
-      default: balances.find(b => b.asset.id === defaultAssetID),
-      assets: balances.filter(b => b.asset.id !== defaultAssetID),
+      default: defaultBalance,
+      assets: assetBalances,
     }
   }
 }
