@@ -164,7 +164,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
             },
             {
               key: 'transaction-amount-column',
-              label: <chakra.h6>$Iron</chakra.h6>,
+              label: <chakra.h6>$IRON</chakra.h6>,
               render: (transaction: Transaction) => (
                 <chakra.h5>
                   {(transaction.creator ? '' : '+') +

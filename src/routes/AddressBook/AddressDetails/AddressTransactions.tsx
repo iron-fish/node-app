@@ -101,7 +101,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
             },
             {
               key: 'iron',
-              label: '$Iron',
+              label: '$IRON',
               render: (transaction: Transaction) => (
                 <h5>
                   {(transaction.creator ? '' : '+') +
