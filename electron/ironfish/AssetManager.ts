@@ -6,30 +6,35 @@ import IIronfishAssetManager from 'Types/IronfishManager/IIronfishAssetManager'
 import AbstractManager from './AbstractManager'
 
 class AssetManager extends AbstractManager implements IIronfishAssetManager {
+  private DEFAULT_ASSET: AssetValue = {
+    createdTransactionHash: GENESIS_BLOCK_PREVIOUS,
+    id: NativeAsset.nativeId(),
+    metadata: Buffer.from('Native asset of Iron Fish blockchain', 'utf8'),
+    name: Buffer.from('$IRON', 'utf8'),
+    owner: Buffer.from('Iron Fish', 'utf8'),
+    supply: BigInt(0),
+  }
+
   async list(search?: string, offset = 0, max = 100): Promise<Asset[]> {
-    const nativeAsset = await this.default()
     const assets: Asset[] = []
-    const isMatched = (asset: Asset) =>
-      !search ||
-      asset.id.includes(search) ||
-      asset.name.includes(search) ||
-      asset.owner.includes(search) ||
-      asset.metadata.includes(search)
-
-    if (isMatched(nativeAsset)) {
-      assets.push(nativeAsset)
-    }
-
-    const bufferedAssets = await this.node.chain.assets.getAllValues()
+    const bufferedAssets = [this.DEFAULT_ASSET].concat(
+      await this.node.chain.assets.getAllValues()
+    )
     bufferedAssets.forEach((bufferedAsset: AssetValue) => {
       const asset = this.resolveAsset(bufferedAsset)
 
-      if (isMatched(asset)) {
+      if (
+        !search ||
+        asset.id.includes(search) ||
+        asset.name.includes(search) ||
+        asset.owner.includes(search) ||
+        asset.metadata.includes(search)
+      ) {
         assets.push(asset)
       }
     })
 
-    return assets.slice(offset, max)
+    return assets.slice(offset, offset + max)
   }
 
   async get(id: string | Buffer): Promise<Asset | null> {
@@ -45,14 +50,7 @@ class AssetManager extends AbstractManager implements IIronfishAssetManager {
   }
 
   default(): Promise<Asset> {
-    return Promise.resolve({
-      createdTransactionHash: GENESIS_BLOCK_PREVIOUS.toString('hex'),
-      id: NativeAsset.nativeId().toString('hex'),
-      metadata: 'Native asset of Iron Fish blockchain',
-      name: '$IRON',
-      owner: 'Iron Fish',
-      supply: BigInt(0),
-    })
+    return Promise.resolve(this.resolveAsset(this.DEFAULT_ASSET))
   }
 
   private resolveAsset(asset: AssetValue): Asset {
