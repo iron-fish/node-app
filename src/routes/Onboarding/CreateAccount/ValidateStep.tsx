@@ -34,14 +34,9 @@ const ValidateStep: FC<StepProps> = ({
     const filledCells = inputtedPhrase.filter(i => !!i)
     const inputError: MnemonicValidationError = {
       isInvalid: false,
-      isInvalidInputs: inputtedPhrase.map(i => !i),
+      isInvalidInputs: [],
     }
-    if (filledCells.length > 0 && filledCells.length < phrase.length) {
-      inputError.isInvalid = true
-      inputError.header = 'Please fill out your entire phrase'
-      inputError.message =
-        'You’re missing one or more words in your seed phrase. Fill out the words in highlighted in red.'
-    } else if (filledCells.length > 0 && checkChanges()) {
+    if (filledCells.length === 12 && checkChanges()) {
       inputError.isInvalid = true
       inputError.header = 'Incorrect recovery phrase'
       inputError.message =
@@ -72,6 +67,24 @@ const ValidateStep: FC<StepProps> = ({
         isReadOnly={false}
         isInvalid={error.isInvalid}
         isInvalidInputs={error.isInvalidInputs}
+        onBlur={event => {
+          if (event.currentTarget.contains(event.relatedTarget)) {
+            return
+          }
+          const filledCells = inputtedPhrase.filter(i => !!i)
+          const inputError: MnemonicValidationError = {
+            isInvalid: false,
+            isInvalidInputs: [],
+          }
+          if (filledCells.length > 0 && filledCells.length < phrase.length) {
+            inputError.isInvalid = true
+            inputError.header = 'Please fill out your entire phrase'
+            inputError.message =
+              'You’re missing one or more words in your seed phrase. Fill out the words in highlighted in red.'
+            inputError.isInvalidInputs = inputtedPhrase.map(i => !i)
+          }
+          setError(inputError)
+        }}
       />
       {error?.header && error?.message && (
         <Box mt="0.75rem">
