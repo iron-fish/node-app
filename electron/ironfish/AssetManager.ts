@@ -9,14 +9,14 @@ class AssetManager extends AbstractManager implements IIronfishAssetManager {
   async list(search?: string, offset = 0, max = 100): Promise<Asset[]> {
     const nativeAsset = await this.default()
     const assets: Asset[] = []
-    const isApproach = (asset: Asset) =>
+    const isMatched = (asset: Asset) =>
       !search ||
       asset.id.includes(search) ||
       asset.name.includes(search) ||
       asset.owner.includes(search) ||
       asset.metadata.includes(search)
 
-    if (isApproach(nativeAsset)) {
+    if (isMatched(nativeAsset)) {
       assets.push(nativeAsset)
     }
 
@@ -24,7 +24,7 @@ class AssetManager extends AbstractManager implements IIronfishAssetManager {
     bufferedAssets.forEach((bufferedAsset: AssetValue) => {
       const asset = this.resolveAsset(bufferedAsset)
 
-      if (isApproach(asset)) {
+      if (isMatched(asset)) {
         assets.push(asset)
       }
     })

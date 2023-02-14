@@ -19,8 +19,8 @@ const getAccountOptions = (accounts: CutAccount[] = []): OptionType[] => {
       formatOreToTronWithLanguage(
         account?.balances?.default?.confirmed || BigInt(0)
       ) +
-      ' ' +
-      account?.balances?.default?.asset?.name,
+        ' ' +
+        account?.balances?.default?.asset?.name || '',
   }))
 }
 
