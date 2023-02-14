@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   chakra,
-  CommonTable,
   Flex,
   Icon,
   NAMED_COLORS,
@@ -30,6 +29,7 @@ import SyncWarningMessage from 'Components/SyncWarningMessage'
 import differenceBy from 'lodash/differenceBy'
 import intersectionBy from 'lodash/intersectionBy'
 import useAccountBalance from 'Hooks/accounts/useAccountBalance'
+import WalletCommonTable from 'Components/WalletCommonTable'
 
 interface SearchTransactionsProps {
   address: string
@@ -142,8 +142,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
           description="There aren’t any transactions with details that match your search input. "
         />
       ) : (
-        <CommonTable
-          textTransform="capitalize"
+        <WalletCommonTable
           data={!!transactions ? transactions : new Array(10).fill(null)}
           onRowClick={(data: Transaction) =>
             navigate(ROUTES.TRANSACTION, {

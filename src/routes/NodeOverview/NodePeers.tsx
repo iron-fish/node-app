@@ -1,6 +1,5 @@
 import {
   Box,
-  CommonTable,
   CopyValueToClipboard,
   Flex,
   useBreakpointValue,
@@ -9,6 +8,7 @@ import { FC } from 'react'
 import { FlagIcon } from 'react-flag-kit'
 import useNodePeers from 'Hooks/node/useNodePeers'
 import { truncateHash } from 'Utils/hash'
+import WalletCommonTable from 'Components/WalletCommonTable'
 
 const NodePeers: FC = () => {
   const { loaded, data, error } = useNodePeers()
@@ -27,7 +27,7 @@ const NodePeers: FC = () => {
     },
   })
   return (
-    <CommonTable
+    <WalletCommonTable
       data={data || []}
       columns={[
         {
