@@ -37,7 +37,7 @@ class AssetManager extends AbstractManager implements IIronfishAssetManager {
     return assets.slice(offset, offset + max)
   }
 
-  async get(id: string | Buffer): Promise<Asset | null> {
+  async get(id: string | Buffer): Promise<Asset> {
     const identity: Buffer = Buffer.isBuffer(id) ? id : Buffer.from(id, 'hex')
 
     if (NativeAsset.nativeId() === identity) {
@@ -46,7 +46,13 @@ class AssetManager extends AbstractManager implements IIronfishAssetManager {
 
     const asset = await this.node.chain.getAssetById(identity)
 
-    return asset ? this.resolveAsset(asset) : null
+    if (!asset) {
+      throw new Error(
+        `Asset with id=${identity.toString('hex')} was not found.`
+      )
+    }
+
+    return this.resolveAsset(asset)
   }
 
   default(): Promise<Asset> {

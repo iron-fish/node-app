@@ -128,18 +128,25 @@ class TransactionManager
 
   async get(hash: string, accountId: string): Promise<Transaction> {
     const account = this.node.wallet.getAccount(accountId)
+
+    if (!account) {
+      throw new Error(`Account with id=${accountId} was not found.`)
+    }
+
     const head = await account.getHead()
     const transaction = await account.getTransaction(Buffer.from(hash, 'hex'))
 
-    if (transaction) {
-      return await this.resolveTransactionFields(
-        account,
-        head.sequence,
-        transaction
+    if (!transaction) {
+      throw new Error(
+        `Transaction with hash=${hash} was not found in account with id=${accountId}`
       )
     }
 
-    return null
+    return await this.resolveTransactionFields(
+      account,
+      head.sequence,
+      transaction
+    )
   }
 
   private async status(
@@ -262,6 +269,11 @@ class TransactionManager
     sort?: SortType
   ): Promise<Transaction[]> {
     const account = this.node.wallet.getAccount(accountId)
+
+    if (!account) {
+      throw new Error(`Account with id=${accountId} was not found.`)
+    }
+
     const head = await account.getHead()
     const transactions = []
     for await (const transaction of account.getTransactions()) {

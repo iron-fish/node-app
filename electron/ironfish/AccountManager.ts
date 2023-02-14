@@ -96,19 +96,19 @@ class AccountManager
     assetId: string = NativeAsset.nativeId().toString('hex')
   ): Promise<AccountBalance> {
     const account = this.node.wallet.getAccount(id)
-    if (account) {
-      const balance = await this.node.wallet.getBalance(
-        account,
-        Buffer.from(assetId, 'hex')
-      )
-      const asset = await this.assetManager.get(assetId)
-      return {
-        ...balance,
-        asset: asset,
-      }
+    if (!account) {
+      throw new Error(`Account with id=${id} was not found.`)
     }
 
-    return Promise.reject(new Error(`Account with id=${id} was not found.`))
+    const balance = await this.node.wallet.getBalance(
+      account,
+      Buffer.from(assetId, 'hex')
+    )
+    const asset = await this.assetManager.get(assetId)
+    return {
+      ...balance,
+      asset: asset,
+    }
   }
 
   async balances(id: string): Promise<{
@@ -116,26 +116,27 @@ class AccountManager
     assets: AccountBalance[]
   }> {
     const account = this.node.wallet.getAccount(id)
-    if (account) {
-      const balances: AccountBalance[] = []
-      for await (const balance of this.node.wallet.getBalances(account)) {
-        const asset: Asset = await this.assetManager.get(balance.assetId)
 
-        balances.push({
-          ...balance,
-          asset: asset,
-        })
-      }
-
-      const defaultAssetID = NativeAsset.nativeId().toString('hex')
-
-      return {
-        default: balances.find(b => b.asset.id === defaultAssetID),
-        assets: balances.filter(b => b.asset.id !== defaultAssetID),
-      }
+    if (!account) {
+      throw new Error(`Account with id=${id} was not found.`)
     }
 
-    return Promise.reject(new Error(`Account with id=${id} was not found.`))
+    const balances: AccountBalance[] = []
+    for await (const balance of this.node.wallet.getBalances(account)) {
+      const asset: Asset = await this.assetManager.get(balance.assetId)
+
+      balances.push({
+        ...balance,
+        asset: asset,
+      })
+    }
+
+    const defaultAssetID = NativeAsset.nativeId().toString('hex')
+
+    return {
+      default: balances.find(b => b.asset.id === defaultAssetID),
+      assets: balances.filter(b => b.asset.id !== defaultAssetID),
+    }
   }
 }
 
