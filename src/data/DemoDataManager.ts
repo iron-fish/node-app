@@ -80,10 +80,6 @@ class DemoDataManager {
     return this.accounts.create(name)
   }
 
-  generateMnemonic(): Promise<string[]> {
-    return this.accounts.generateMnemonicPhrase()
-  }
-
   importAccount(account: Omit<AccountValue, 'id'>): Promise<AccountValue> {
     return this.accounts.import(account)
   }

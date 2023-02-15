@@ -59,6 +59,17 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         IronfishAccountManagerAction.CREATE,
         name
       ),
+    prepareAccount: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.PREPARE_ACCOUNT
+      ),
+    submitAccount: (createParams: AccountCreateParams) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.SUBMIT_ACCOUNT,
+        createParams
+      ),
     list: (search?: string, sort?: SortType) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',

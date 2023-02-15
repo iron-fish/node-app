@@ -27,7 +27,11 @@ const CreateAccount: FC<CreateAccountProps> = ({
 }) => {
   const [saved, setSaved] = useState<boolean>(false)
   const [accountName, setAccountName] = useState<string>('')
-  const [{ data: phrase, loaded }, createAccount] = useCreateAccount()
+  const {
+    data: account,
+    loaded,
+    actions: { confirmAccountCreation },
+  } = useCreateAccount()
   const toast = useIronToast({
     title: 'Account Created',
     containerStyle: {
@@ -83,18 +87,19 @@ const CreateAccount: FC<CreateAccountProps> = ({
           <Flex gap="0.4375rem" mb="-0.4375rem">
             <h6>Mnemonic phrase</h6>
             <CopyToClipboardButton
-              value={phrase?.join(', ')}
+              value={account?.mnemonicPhrase?.join(', ')}
               copyTooltipText="CopyToClipBoard"
               copiedTooltipText="Copied"
             />
           </Flex>
         }
-        value={phrase || []}
+        value={account?.mnemonicPhrase || []}
         placeholder={''}
         onChange={() => null}
         isReadOnly={true}
         visible={true}
         mb="1rem"
+        wordsAmount={24}
       />
       <Box>
         <Checkbox
@@ -114,7 +119,7 @@ const CreateAccount: FC<CreateAccountProps> = ({
           size="large"
           w={desktopMode ? undefined : '100%'}
           onClick={() => {
-            createAccount(accountName).then(() => {
+            confirmAccountCreation(accountName).then(() => {
               onCreate()
               toast()
             })

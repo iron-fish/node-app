@@ -10,6 +10,7 @@ import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import CurrencyAsset from 'Types/CurrencyAsset'
 import { formatOreToTronWithLanguage } from 'Utils/number'
+import AccountCreateParams from 'Types/AccountCreateParams'
 
 const DEMO_ACCOUNTS: AccountValue[] = [
   {
@@ -150,12 +151,17 @@ class DemoAccountsManager {
     })
   }
 
-  generateMnemonicPhrase(): Promise<string[]> {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(randomWords({ exactly: 12, maxLength: 8 }))
-      }, 500)
-    })
+  async prepareAccount(): Promise<AccountCreateParams> {
+    return {
+      spendingKey: nanoid(64),
+      mnemonicPhrase: randomWords({ exactly: 24, maxLength: 8 }),
+    }
+  }
+
+  async submitAccount(
+    createParams: AccountCreateParams
+  ): Promise<WalletAccount> {
+    return this.create(createParams.name)
   }
 
   import(account: Omit<AccountValue, 'id'>): Promise<AccountValue> {
@@ -239,6 +245,7 @@ class DemoAccountsManager {
     if (account) {
       account.balance = ACCOUNT_BALANCES[account.id]
       account.order = accountIndex
+      account.mnemonicPhrase = randomWords({ exactly: 24, maxLength: 8 })
     }
 
     return new Promise(resolve => setTimeout(() => resolve(account), 500))

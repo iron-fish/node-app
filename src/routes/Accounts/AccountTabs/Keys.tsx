@@ -6,6 +6,7 @@ import {
   NAMED_COLORS,
   Spinner,
   useColorModeValue,
+  MnemonicView,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState } from 'react'
@@ -76,32 +77,14 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
   return (
     <Flex mb="4rem">
       <Box w="37.25rem">
-        <PasswordField
-          label="Spending Key"
-          placeholder="Enter key"
-          value={account?.spendingKey}
+        <MnemonicView
+          header={'Mnemonic phrase'}
+          value={account.mnemonicPhrase || []}
+          placeholder={''}
+          onChange={() => null}
+          isReadOnly={true}
           mb="2rem"
-          InputProps={{
-            isReadOnly: true,
-          }}
-        />
-        <PasswordField
-          label="Incoming View Key"
-          placeholder="Enter key"
-          value={account?.incomingViewKey}
-          mb="2rem"
-          InputProps={{
-            isReadOnly: true,
-          }}
-        />
-        <PasswordField
-          label="Outgoing View Key"
-          placeholder="Enter key"
-          value={account?.outgoingViewKey}
-          mb="2rem"
-          InputProps={{
-            isReadOnly: true,
-          }}
+          wordsAmount={24}
         />
         <Flex>
           <Button
