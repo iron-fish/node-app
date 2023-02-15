@@ -12,6 +12,7 @@ import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfis
 import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
 import { Payment } from 'Types/Transaction'
 import '../common/preload'
+import AccountCreateParams from 'Types/AccountCreateParams'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
   storageName: string

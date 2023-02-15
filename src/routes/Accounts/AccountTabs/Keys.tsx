@@ -7,6 +7,7 @@ import {
   Spinner,
   useColorModeValue,
   MnemonicView,
+  CopyToClipboardButton,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState } from 'react'
@@ -14,7 +15,6 @@ import AccountKeysImage from 'Svgx/AccountKeysImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import DownloadIcon from '@ironfish/ui-kit/dist/svgx/download-icon'
 import { AccountValue } from '@ironfish/sdk'
-import PasswordField from 'Components/PasswordField'
 import Account from 'Types/Account'
 
 interface AccountKeysProps {
@@ -78,7 +78,16 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
     <Flex mb="4rem">
       <Box w="37.25rem">
         <MnemonicView
-          header={'Mnemonic phrase'}
+          header={
+            <Flex gap="0.4375rem" mb="-0.4375rem">
+              <h6>Mnemonic phrase</h6>
+              <CopyToClipboardButton
+                value={account.mnemonicPhrase?.join(', ')}
+                copyTooltipText="CopyToClipBoard"
+                copiedTooltipText="Copied"
+              />
+            </Flex>
+          }
           value={account.mnemonicPhrase || []}
           placeholder={''}
           onChange={() => null}
