@@ -1,8 +1,8 @@
+import DemoDataManager from 'Data/DemoDataManager'
 import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
 import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
 import IStorage from 'Types/IStorage'
-import DemoDataManager from './data/DemoDataManager'
 
 declare global {
   interface Window {

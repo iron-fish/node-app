@@ -6,9 +6,9 @@ import { IronfishManagerAction } from 'Types/IronfishManager/IIronfishManager'
 import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
 import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfishTransactionManager'
-import '../common/index'
 import initStorageCallbacks from '../common/initStorage'
 import { IronFishManager } from '../ironfish/IronFishManager'
+import '../common/index'
 
 const ironfishManager = new IronFishManager()
 
@@ -50,7 +50,7 @@ ipcMain.handle(
 
 ipcMain.handle(
   'ironfish-manager-transactions',
-  (e, action: IronfishTransactionManagerAction, ...args): Promise<any> =>{
+  (e, action: IronfishTransactionManagerAction, ...args): Promise<any> => {
     let result
     try {
       result = ironfishManager.transactions[action](...args)

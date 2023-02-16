@@ -30,7 +30,13 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
       <Thead>
         <Tr>
           {columns.map(column => (
-            <Th textTransform={textTransform} pl="2rem" key={column.key}>
+            <Th
+              textTransform={textTransform}
+              px="1rem !important"
+              _first={{ pl: '2rem !important' }}
+              _last={{ pr: '2rem !important' }}
+              key={column.key}
+            >
               {column.label}
             </Th>
           ))}
@@ -55,7 +61,7 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
                 key={column.key}
                 {...column.WrapperProps}
                 px={{
-                  base: '2rem',
+                  base: '1rem !important',
                   lg: 'inherit',
                 }}
                 py={{
@@ -65,12 +71,12 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
                 borderTop="inherit !important"
                 borderBottom="inherit !important"
                 _first={{
-                  pl: '2rem',
+                  pl: '2rem !important',
                   pr: { base: '0.5rem', md: '2rem' },
                   borderLeft: 'inherit !important',
                 }}
                 _last={{
-                  pr: '2rem',
+                  pr: '2rem !important',
                   pl: { base: '0.75rem', md: '2rem' },
                   borderRight: 'inherit !important',
                 }}

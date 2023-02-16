@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { resolve } = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
 
@@ -18,6 +19,10 @@ module.exports = {
   // Put your normal webpack config below here
   module: {
     rules: require('./rules'),
+  },
+  externals: {
+    '@ironfish/sdk': '@ironfish/sdk',
+    'geoip-lite': 'geoip-lite',
   },
   plugins: [
     new CopyPlugin({

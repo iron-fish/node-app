@@ -11,7 +11,7 @@ import {
   CopyValueToClipboard,
   useColorModeValue,
 } from '@ironfish/ui-kit'
-import Send from 'Svgx/send'
+import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
 import Caret from 'Svgx/caret-icon'
 import { useNavigate } from 'react-router-dom'
@@ -22,11 +22,7 @@ import { useDataSync } from 'Providers/DataSyncProvider'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 
-export interface AccountPreviewProps extends CutAccount {
-  order: number
-}
-
-const AccountPreview: FC<AccountPreviewProps> = ({
+const AccountPreview: FC<CutAccount> = ({
   order = 0,
   name,
   publicAddress,
@@ -34,7 +30,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
   balance,
 }) => {
   const navigate = useNavigate()
-  const { loaded } = useDataSync()
+  const { loaded: synced } = useDataSync()
   const $colors = useColorModeValue(
     {
       bg: NAMED_COLORS.WHITE,
@@ -56,9 +52,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
       border="0.063rem solid"
       borderRadius="0.25rem"
       cursor="pointer"
-      onClick={() =>
-        navigate(ROUTES.ACCOUNT, { state: { accountId: id, order } })
-      }
+      onClick={() => navigate(ROUTES.ACCOUNT, { state: { accountId: id } })}
       sx={{
         transition: '0.3s',
         bg: $colors.bg,
@@ -140,7 +134,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              loaded && navigate(ROUTES.SEND, { state: { accountId: id } })
+              synced && navigate(ROUTES.SEND, { state: { accountId: id } })
             }}
           >
             <Button
@@ -150,10 +144,10 @@ const AccountPreview: FC<AccountPreviewProps> = ({
               mr="1rem"
               leftIcon={
                 <Icon height={8}>
-                  <Send fill="currentColor" />
+                  <SendIcon />
                 </Icon>
               }
-              isDisabled={!loaded}
+              isDisabled={!synced}
             >
               <h5>Send</h5>
             </Button>
@@ -162,7 +156,7 @@ const AccountPreview: FC<AccountPreviewProps> = ({
             onClick={e => {
               // required to prevent triggering card click event
               e.stopPropagation()
-              loaded && navigate(ROUTES.RECEIVE, { state: { accountId: id } })
+              synced && navigate(ROUTES.RECEIVE, { state: { accountId: id } })
             }}
           >
             <Button
@@ -172,10 +166,10 @@ const AccountPreview: FC<AccountPreviewProps> = ({
               mr="1rem"
               leftIcon={
                 <Icon height={8}>
-                  <Receive fill="currentColor" />
+                  <Receive />
                 </Icon>
               }
-              isDisabled={!loaded}
+              isDisabled={!synced}
             >
               <h5>Receive</h5>
             </Button>

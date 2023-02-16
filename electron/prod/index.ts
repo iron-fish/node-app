@@ -4,9 +4,8 @@
 import { ipcMain } from 'electron'
 import { IronfishManagerAction } from 'Types/IronfishManager/IIronfishManager'
 import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
-import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfishTransactionManager'
-import '../common/index'
+import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import initStorageCallbacks from '../common/initStorage'
 import { IronFishManager } from '../ironfish/IronFishManager'
 

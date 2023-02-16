@@ -8,6 +8,7 @@ import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
+import CurrencyAsset from 'Types/CurrencyAsset'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 
 const DEMO_ACCOUNTS: AccountValue[] = [
@@ -75,6 +76,7 @@ const ACCOUNT_BALANCES: Record<
     pending: bigint
     unconfirmed: bigint
     confirmed: bigint
+    asset: CurrencyAsset
   }
 > = {
   jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8: {
@@ -83,6 +85,10 @@ const ACCOUNT_BALANCES: Record<
     pending: BigInt(1234),
     pendingCount: 12,
     unconfirmedCount: 3,
+    asset: {
+      id: '$IRON',
+      name: '$IRON',
+    },
   },
   H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6: {
     confirmed: BigInt(8481),
@@ -90,6 +96,10 @@ const ACCOUNT_BALANCES: Record<
     pending: BigInt(874),
     pendingCount: 8,
     unconfirmedCount: 1,
+    asset: {
+      id: '$IRON',
+      name: '$IRON',
+    },
   },
   q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7: {
     confirmed: BigInt(1222255000002254),
@@ -97,6 +107,10 @@ const ACCOUNT_BALANCES: Record<
     pending: BigInt(2200000022310),
     pendingCount: 8,
     unconfirmedCount: 1,
+    asset: {
+      id: '$IRON',
+      name: '$IRON',
+    },
   },
 }
 
@@ -126,6 +140,10 @@ class DemoAccountsManager {
           pending: BigInt(0),
           pendingCount: 0,
           unconfirmedCount: 0,
+          asset: {
+            id: '$IRON',
+            name: '$IRON',
+          },
         }
         resolve(account)
       }, 500)
@@ -171,23 +189,26 @@ class DemoAccountsManager {
           pending: BigInt(0),
           pendingCount: Math.ceil(Math.random() * 10),
           unconfirmedCount: Math.ceil(Math.random() * 10),
+          asset: {
+            id: '$IRON',
+            name: '$IRON',
+          },
         }
         resolve(newAccount)
       }, 500)
     })
   }
 
-  // export() {}
-
   list(searchTerm?: string, sort?: SortType): Promise<CutAccount[]> {
     return new Promise(resolve =>
       setTimeout(() => {
         const search = searchTerm?.toLowerCase()
-        const accounts = DEMO_ACCOUNTS.map(account => ({
+        const accounts = DEMO_ACCOUNTS.map((account, index) => ({
           id: account.id,
           publicAddress: account.publicAddress,
           name: account.name,
           balance: ACCOUNT_BALANCES[account.id],
+          order: index,
         })).filter(
           account =>
             !search ||
@@ -212,10 +233,12 @@ class DemoAccountsManager {
   }
 
   findById(id: string): Promise<WalletAccount | null> {
-    const account: WalletAccount = DEMO_ACCOUNTS.find(a => a.id === id)
+    const accountIndex = DEMO_ACCOUNTS.findIndex(a => a.id === id)
+    const account: WalletAccount = DEMO_ACCOUNTS[accountIndex]
 
     if (account) {
       account.balance = ACCOUNT_BALANCES[account.id]
+      account.order = accountIndex
     }
 
     return new Promise(resolve => setTimeout(() => resolve(account), 500))

@@ -1,10 +1,10 @@
-import { PeerResponse } from '@ironfish/sdk'
-import NodeStatusResponse from 'Types/NodeStatusResponse'
 import IronFishInitStatus from '../IronfishInitStatus'
+import NodeStatusResponse from 'Types/NodeStatusResponse'
 
 import { IIronfishAccountManager } from './IIronfishAccountManager'
-import { IIronfishSnapshotManager } from './IIronfishSnapshotManager'
 import { IIronfishTransactionManager } from './IIronfishTransactionManager'
+import Peer from 'Types/Peer'
+import { IIronfishSnapshotManager } from './IIronfishSnapshotManager'
 
 export enum IronfishManagerAction {
   INITIALIZE = 'initialize',
@@ -30,9 +30,9 @@ export interface IIronfishManager {
   status: () => Promise<IronFishInitStatus>
   sync: () => Promise<void>
   chainProgress: () => Promise<number>
-  nodeStatus: () => Promise<NodeStatusResponse>
   downloadChainSnapshot: (path: string) => Promise<void>
-  peers: () => Promise<PeerResponse[]>
+  nodeStatus: () => Promise<NodeStatusResponse>
+  peers: () => Promise<Peer[]>
 }
 
 export default IIronfishManager

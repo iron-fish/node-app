@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useEffect } from 'react'
 import useAccountBalance from 'Hooks/accounts/useAccountBalance'
 import { Skeleton, SkeletonProps } from '@ironfish/ui-kit'
 import Balance from 'Types/AccountBalance'
@@ -12,15 +12,25 @@ const AccountBalance: FC<{
   accountId,
   skeletonProps,
   renderBalance = balance =>
-    formatOreToTronWithLanguage(balance?.confirmed || '0'),
+    formatOreToTronWithLanguage(balance?.confirmed || BigInt(0)),
 }) => {
-  const { loaded, data: balance } = useAccountBalance(accountId)
+  const [{ data: balance, loaded }, reload] = useAccountBalance(accountId)
+
+  useEffect(() => {
+    let interval: NodeJS.Timer
+    if (loaded) {
+      interval = setInterval(reload, 5000)
+    }
+
+    return () => interval && clearInterval(interval)
+  }, [loaded])
+
   return (
     <Skeleton
       variant="ironFish"
       minW="4rem"
       {...skeletonProps}
-      isLoaded={loaded}
+      isLoaded={!!balance}
     >
       {renderBalance(balance)}&nbsp;$IRON
     </Skeleton>

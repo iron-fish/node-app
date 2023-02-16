@@ -15,37 +15,60 @@ import IronFishLogo from 'Svgx/IronFishLogo'
 import HexFishLogo from 'Svgx/hexfish'
 
 import ActiveStatus from './ActiveStatus'
+import ROUTES from 'Routes/data'
+import { NavItemProps } from './NavItem'
 
-const primaryNavItems = [
-  { hotkey: 'A', to: '/accounts', label: 'Privacy Accounts', icon: IconHome },
-  { hotkey: 'S', to: '/send', label: 'Send $IRON', icon: IconSend },
-  { hotkey: 'R', to: '/receive', label: 'Receive $IRON', icon: IconReceive },
+const primaryNavItems: NavItemProps[] = [
+  {
+    hotkey: 'A',
+    to: ROUTES.ACCOUNTS,
+    label: 'Privacy Accounts',
+    icon: IconHome,
+    aliases: [ROUTES.ACCOUNT, ROUTES.TRANSACTION],
+  },
+  {
+    hotkey: 'S',
+    to: ROUTES.SEND,
+    label: 'Send $IRON',
+    icon: IconSend,
+    aliases: [],
+  },
+  {
+    hotkey: 'R',
+    to: ROUTES.RECEIVE,
+    label: 'Receive $IRON',
+    icon: IconReceive,
+    aliases: [],
+  },
   {
     hotkey: 'B',
-    to: '/address-book',
+    to: ROUTES.ADDRESS_BOOK,
     label: 'Address Book',
     icon: IconAddressBook,
+    aliases: [ROUTES.ADDRESS_BOOK_DETAILS],
   },
-  { hotkey: 'N', to: '/node', label: 'Your Node', icon: IconNode },
+  {
+    hotkey: 'N',
+    to: ROUTES.NODE,
+    label: 'Your Node',
+    icon: IconNode,
+    aliases: [],
+  },
 ]
 // const secondaryNavItems = [
 //   { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
 //   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
 // ]
-interface NavbarProps {
-  offsetTop?: number
-}
 
-export const Navbar: FC<NavbarProps> = ({ offsetTop = 0 }) => {
+export const Navbar: FC = () => {
   return (
     <Flex
       bg="inherit"
       height="100%"
       maxHeight="100vh"
       p="3rem 1rem 1rem"
-      pt={`${3 + offsetTop}rem`}
       w={{ base: '5.5rem', sm: '16.4375rem' }}
-      transition="width 0.3s ease-in-out, padding 0.3s ease-in-out"
+      transition="width 0.3s ease-in-out"
       position="fixed"
       left="0"
       top="0"

@@ -4,6 +4,7 @@ import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
 import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
 import { ProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import { Payment } from 'Types/Transaction'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
 
@@ -30,16 +31,21 @@ export const IronFishManager: IIronfishManager = {
   },
   transactions: {
     averageFee: (numOfBlocks?) => {
-      return Promise.resolve(Math.random() * 10)
+      return Promise.resolve(BigInt(Math.round(Math.random() * 1000)))
     },
+    estimateFeeWithPriority: (accountId: string, receive: Payment) =>
+      window.DemoDataManager.transactions.estimateFeeWithPriority(
+        accountId,
+        receive
+      ),
     fees: (numOfBlocks?) => {
       return Promise.resolve({
         startBlock: 0,
         endBlock: 100,
-        p25: 0.25,
-        p50: 0.5,
-        p75: 0.75,
-        p100: 1,
+        p25: BigInt(250),
+        p50: BigInt(500),
+        p75: BigInt(750),
+        p100: BigInt(1000),
       })
     },
     findByAccountId: (accountId, searchTerm?, sort?) => {
@@ -58,14 +64,14 @@ export const IronFishManager: IIronfishManager = {
     },
     get: (hash, accountId) =>
       window.DemoDataManager.transactions.get(hash, accountId),
-    pay: (accountId, payment, transactionFee?) =>
+    send: (accountId, payment, transactionFee?) =>
       window.DemoDataManager.transactions.send(
         accountId,
         accountId,
         payment.publicAddress,
-        Number(payment.amount),
+        payment.amount,
         payment.memo,
-        transactionFee || 0.5
+        transactionFee || BigInt(100)
       ),
   },
   snapshot: {
@@ -98,12 +104,14 @@ export const AddressBookStorage: IStorage<Contact> = {
   delete: (identity: string) =>
     window.DemoDataManager.deleteContact(identity).then(noop),
   find: (entity: Partial<Omit<Contact, '_id'>>) =>
-    window.DemoDataManager.getAddressBook(entity.name)
-      .then(data => (data.length > 0 ? data[0] : null))
-      .then(contact => ({
-        _id: contact.identity,
-        ...contact,
-      })),
+    window.DemoDataManager.addressBook.find(entity).then(data =>
+      data
+        ? {
+            _id: data.identity,
+            ...data,
+          }
+        : null
+    ),
   get: (identity: string) =>
     window.DemoDataManager.getContact(identity).then(contact => ({
       _id: contact.identity,

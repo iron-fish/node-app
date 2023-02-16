@@ -1,10 +1,10 @@
 import { AccountValue, CurrencyUtils, IronfishNode } from '@ironfish/sdk'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
+import { Asset } from '@ironfish/rust-nodejs'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import CutAccount from 'Types/CutAccount'
 import AccountBalance from 'Types/AccountBalance'
-import { Asset } from '@ironfish/rust-nodejs'
 
 class AccountManager implements IIronfishAccountManager {
   private node: IronfishNode
@@ -24,11 +24,12 @@ class AccountManager implements IIronfishAccountManager {
     const accounts = this.node.wallet.listAccounts()
 
     const result: CutAccount[] = await Promise.all(
-      accounts.map(async account => ({
+      accounts.map(async (account, index) => ({
         id: account.id,
         name: account.name,
         publicAddress: account.publicAddress,
-        balance: await this.node.wallet.getBalance(account, Asset.nativeId()),
+        balance: await this.balance(account.id),
+        order: index,
       }))
     )
 
@@ -50,16 +51,20 @@ class AccountManager implements IIronfishAccountManager {
   }
 
   async get(id: string): Promise<WalletAccount | null> {
-    const account: WalletAccount = this.node.wallet.getAccount(id)?.serialize()
-    if (account) {
-      account.balance = await this.balance(account.id)
+    const accounts = this.node.wallet.listAccounts()
+    const accountIndex = accounts.findIndex(a => a.id === id)
+    if (accountIndex === -1) {
+      return null
     }
+    const account: WalletAccount = accounts[accountIndex].serialize()
+    account.balance = await this.balance(account.id)
+    account.order = accountIndex
 
-    return Promise.resolve(account || null)
+    return account
   }
 
   async delete(name: string): Promise<void> {
-    await this.node.wallet.removeAccount(name)
+    await this.node.wallet.removeAccountByName(name)
   }
 
   async import(
@@ -76,10 +81,21 @@ class AccountManager implements IIronfishAccountManager {
     return Promise.resolve(account)
   }
 
-  balance(id: string): Promise<AccountBalance> {
+  async balance(
+    id: string,
+    assetId: Buffer = Asset.nativeId()
+  ): Promise<AccountBalance> {
     const account = this.node.wallet.getAccount(id)
     if (account) {
-      return this.node.wallet.getBalance(account, Asset.nativeId())
+      const balance = await this.node.wallet.getBalance(account, assetId)
+      const asset = await this.node.chain.getAssetById(assetId)
+      return {
+        ...balance,
+        asset: {
+          id: asset.id.toString('hex'),
+          name: asset?.name.toString('utf8') || '',
+        },
+      }
     }
 
     return Promise.reject(new Error(`Account with id=${id} was not found.`))

@@ -1,4 +1,4 @@
-import { FC, useState, useMemo } from 'react'
+import { FC, useState, useMemo, useEffect } from 'react'
 import {
   Box,
   Button,
@@ -20,6 +20,7 @@ import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import SortType from 'Types/SortType'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import EmptyOverview from 'Components/EmptyOverview'
+import SyncWarningMessage from 'Components/SyncWarningMessage'
 
 interface ActionButtonsProps {
   showCreate: (show: boolean) => void
@@ -84,6 +85,18 @@ const Accounts = () => {
     { subHeader: NAMED_COLORS.GREY },
     { subHeader: NAMED_COLORS.PALE_GREY }
   )
+
+  useEffect(() => {
+    let timeout: NodeJS.Timer
+    if (loaded) {
+      timeout = setInterval(reloadAccounts, 5000)
+    }
+
+    return () => timeout && clearInterval(timeout)
+  }, [loaded])
+
+  const isAccountsLoaded = accounts && accounts.length > 0
+
   return (
     <>
       <Flex
@@ -101,7 +114,7 @@ const Accounts = () => {
               Total accounts balance:
             </chakra.h5>
             &nbsp;
-            <Skeleton minW="4rem" isLoaded={loaded}>
+            <Skeleton minW="4rem" isLoaded={isAccountsLoaded}>
               <h5>
                 <b>
                   {formatOreToTronWithLanguage(
@@ -132,15 +145,12 @@ const Accounts = () => {
           onSelectOption: ({ value }) => $setSortOrder(value),
         }}
       />
+      <SyncWarningMessage mt="2rem" />
       <Flex mt="0.5rem" direction="column" width="100%">
-        {loaded ? (
+        {isAccountsLoaded ? (
           accounts.length > 0 ? (
             accounts.map((account, index) => (
-              <AccountPreview
-                key={`${account.name}-${index}`}
-                {...account}
-                order={index}
-              />
+              <AccountPreview key={`${account.name}-${index}`} {...account} />
             ))
           ) : (
             <EmptyOverview

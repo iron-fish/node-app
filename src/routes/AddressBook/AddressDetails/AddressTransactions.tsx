@@ -1,36 +1,44 @@
-import { FC, useState } from 'react'
-import {
-  Flex,
-  chakra,
-  CommonTable,
-  NAMED_COLORS,
-  Icon,
-  Button,
-  Box,
-} from '@ironfish/ui-kit'
+import { FC, useEffect, useState } from 'react'
+import { Flex, chakra, NAMED_COLORS, Button, Box } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import Send from 'Svgx/send'
-import Receive from 'Svgx/receive'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAddressTransactions'
 import SortType from 'Types/SortType'
 import Transaction from 'Types/Transaction'
 import EmptyOverview from 'Components/EmptyOverview'
+import { useNavigate } from 'react-router-dom'
+import ROUTES from 'Routes/data'
+import ContactsPreview from 'Components/ContactsPreview'
+import Contact from 'Types/Contact'
+import TransactionStatusView from 'Components/TransactionStatusView'
+import WalletCommonTable from 'Components/WalletCommonTable'
 
 interface AddressTransactionsProps {
   address: string
+  contact: Contact
 }
 
 const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
   address,
+  contact,
 }) => {
+  const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
-  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
-  const [{ data: transactions, loaded }] = useTransactions(
-    address,
-    $searchTerm,
-    $sortOrder
-  )
+  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
+  const {
+    data: transactions,
+    loaded,
+    actions: { reload },
+  } = useTransactions(address, $searchTerm, $sortOrder)
+
+  useEffect(() => {
+    let interval: NodeJS.Timer
+    if (loaded) {
+      interval = setInterval(reload, 5000)
+    }
+
+    return () => interval && clearInterval(interval)
+  }, [loaded])
 
   return (
     <Flex direction="column" mt="1rem">
@@ -43,13 +51,14 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
         SortSelectProps={{
           onSelectOption: ({ value }) => $setSortOrder(value),
         }}
+        sortValue={$sortOrder}
         options={[
           {
             label: 'Newest to oldest',
             value: SortType.DESC,
           },
           {
-            label: 'Oldest to oldest',
+            label: 'Oldest to newest',
             value: SortType.ASC,
           },
         ]}
@@ -61,29 +70,26 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
           description="There aren’t any transactions with details that match your search input."
         />
       ) : (
-        <CommonTable
-          data={loaded ? transactions : new Array(10).fill(null)}
+        <WalletCommonTable
+          data={!!transactions ? transactions : new Array(10).fill(null)}
+          onRowClick={(txn: Transaction) => {
+            navigate(ROUTES.TRANSACTION, {
+              state: {
+                accountId: txn.accountId,
+                hash: txn.hash,
+                contactId: contact._id,
+              },
+            })
+          }}
           columns={[
             {
               key: 'action',
               label: 'Action',
               render: (transaction: Transaction) => (
-                <Flex align="center" position="relative">
-                  <Flex
-                    w="1.625rem"
-                    h="1.625rem"
-                    position="absolute"
-                    borderRadius="50%"
-                    align="center"
-                    justify="center"
-                    background={NAMED_COLORS.LIGHT_GREY}
-                  >
-                    <Icon h={8}>
-                      {transaction.creator ? <Send /> : <Receive />}
-                    </Icon>
-                  </Flex>
-                  <chakra.h5 ml="2.375rem">{transaction.status}</chakra.h5>
-                </Flex>
+                <TransactionStatusView
+                  status={transaction.status}
+                  isSent={transaction.creator}
+                />
               ),
             },
             {
@@ -96,7 +102,12 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
             {
               key: 'to',
               label: 'To',
-              render: (transaction: Transaction) => <h5>{transaction.to}</h5>,
+              render: (transaction: Transaction) => (
+                <ContactsPreview
+                  addresses={transaction.to}
+                  notes={transaction.notes}
+                />
+              ),
             },
             {
               key: 'date',
@@ -136,8 +147,11 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
   )
 }
 
-const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
-  const [{ data: transactions = undefined, loaded }] = useTransactions(address)
+const AddressTransactions: FC<AddressTransactionsProps> = ({
+  address,
+  contact,
+}) => {
+  const { data: transactions = undefined, loaded } = useTransactions(address)
 
   return (
     <Box display={address && loaded ? 'block' : 'none'}>
@@ -147,7 +161,7 @@ const AddressTransactions: FC<AddressTransactionsProps> = ({ address }) => {
           description="You don’t have any transaction with this contact yet. To produce a transactions, either send or receive $IRON. "
         />
       ) : (
-        <SearchAddressTransactions address={address} />
+        <SearchAddressTransactions address={address} contact={contact} />
       )}
     </Box>
   )

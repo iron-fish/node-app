@@ -1,9 +1,7 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
 import {
-  Box,
   Button,
   chakra,
-  FieldGroup,
   Flex,
   HStack,
   Modal,
@@ -14,34 +12,36 @@ import {
   ModalOverlay,
   ModalProps,
   NAMED_COLORS,
-  Progress,
   StyleProps,
   TextField,
   VStack,
   Icon,
-  Image,
   Link,
   LightMode,
 } from '@ironfish/ui-kit'
-import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import Contact from 'Types/Contact'
 import SendIcon from 'Svgx/send'
 import CutAccount from 'Types/CutAccount'
 import { truncateHash } from 'Utils/hash'
-import useSendFlow from 'Hooks/transactions/useSendFlow'
-import Transaction, { TransactionStatus } from 'Types/Transaction'
-import { ORE_TO_IRON } from 'Utils/number'
+import Transaction from 'Types/Transaction'
+import { formatOreToTronWithLanguage } from 'Utils/number'
 import useAddressBook from 'Hooks/addressBook/useAddressBook'
+import ArrowRight from 'Svgx/ArrowRight'
+import { useNavigate } from 'react-router-dom'
+import { ROUTES } from 'Routes/data'
 
-interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {}
+interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {
+  cleanUp: () => void
+}
 
 interface SendProps {
   from: CutAccount
   to: Contact
-  amount: number
+  amount: bigint
   memo: string
-  fee: number
+  fee: bigint
   transaction: Transaction | null
+  onCreateAccount: (contact: Contact) => void
 }
 
 interface DataPreviewLineProps extends StyleProps {
@@ -73,7 +73,6 @@ const DataPreviewLine: FC<DataPreviewLineProps> = ({
 interface StepProps extends SendProps {
   onConfirm: () => void
   onCancel: () => void
-  onSend: (transaction: Transaction) => void
 }
 
 const ConfirmStep: FC<StepProps> = ({
@@ -84,6 +83,7 @@ const ConfirmStep: FC<StepProps> = ({
   amount,
   memo,
   fee,
+  onCreateAccount,
 }) => {
   const [contactName, setContactName] = useState('')
   const [showAddName, setShowAddName] = useState(false)
@@ -159,9 +159,10 @@ const ConfirmStep: FC<StepProps> = ({
                         mr="1.5rem"
                         isDisabled={!contactName.trim()}
                         onClick={() => {
-                          addContact(contactName, to.address).then(() => {
+                          addContact(contactName, to.address).then(contact => {
                             setShowAddName(false)
                             setContactName('')
+                            onCreateAccount(contact)
                           })
                         }}
                       >
@@ -191,7 +192,9 @@ const ConfirmStep: FC<StepProps> = ({
             title="Amount:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{amount} $IRON</chakra.h4>
+                <chakra.h4>
+                  {formatOreToTronWithLanguage(amount)} $IRON
+                </chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -201,7 +204,7 @@ const ConfirmStep: FC<StepProps> = ({
             title="Fee:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{fee.toFixed(8)} $IRON</chakra.h4>
+                <chakra.h4>{formatOreToTronWithLanguage(fee)} $IRON</chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -212,7 +215,7 @@ const ConfirmStep: FC<StepProps> = ({
             value={
               <HStack w="100%" justifyContent="space-between">
                 <chakra.h4>
-                  {(amount * ORE_TO_IRON + fee * ORE_TO_IRON) / ORE_TO_IRON}
+                  {formatOreToTronWithLanguage(amount + fee)}
                   &nbsp;$IRON
                 </chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
@@ -244,148 +247,62 @@ const ConfirmStep: FC<StepProps> = ({
   )
 }
 
-const getProgress = (transaction: Transaction): number => {
-  switch (transaction?.status) {
-    case TransactionStatus.UNKNOWN:
-      return 10
-    case TransactionStatus.PENDING:
-      return 25
-    case TransactionStatus.UNCONFIRMED:
-      return 50
-    case TransactionStatus.CONFIRMED:
-    case TransactionStatus.EXPIRED:
-      return 100
-    default:
-      return 0
-  }
-}
-
-const getStatusAction = (transaction: Transaction): string => {
-  switch (transaction?.status) {
-    case TransactionStatus.UNKNOWN:
-      return 'Sending...'
-    case TransactionStatus.PENDING:
-      return 'Pending...'
-    case TransactionStatus.UNCONFIRMED:
-      return 'Waiting confirmations...'
-    case TransactionStatus.CONFIRMED:
-    case TransactionStatus.EXPIRED:
-      return 'Completed'
-    default:
-      return 'Preparing...'
-  }
-}
-
-const SendStep: FC<StepProps> = ({ amount, fee, from, to, memo, onSend }) => {
-  const transaction = useSendFlow(from.id, amount, memo, to.address, fee)
-
-  useEffect(() => {
-    if (
-      transaction?.status === TransactionStatus.CONFIRMED ||
-      transaction?.status === TransactionStatus.EXPIRED
-    ) {
-      onSend(transaction)
-    }
-  }, [transaction?.status])
-
-  const progress = getProgress(transaction)
-
+const ResultStep: FC<StepProps> = ({ from, amount, transaction }) => {
+  const navigate = useNavigate()
   return (
-    <ModalBody p={0}>
-      <chakra.h2 mb="1rem">Transaction Processing</chakra.h2>
-      <chakra.h4 mb="2rem">
-        We are processing your transaction of {amount} $IRON. This may take a
-        few minutes. Once the transaction is processed there will be a link
-        below with your details.
-      </chakra.h4>
-      <Box
+    <>
+      <ModalCloseButton
         border="0.0625rem solid"
+        borderRadius="50%"
+        color={NAMED_COLORS.GREY}
         borderColor={NAMED_COLORS.LIGHT_GREY}
-        boxShadow="0 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)"
-        borderRadius="0.25rem"
-        p="2rem"
-      >
-        <Flex w="100%" justifyContent="space-between" mb="0.5rem">
-          <Box>
-            <chakra.h4>{progress}% Complete</chakra.h4>
-          </Box>
-          <Box>
-            <chakra.h5 color={NAMED_COLORS.GREY}>
-              {getStatusAction(transaction)}
-            </chakra.h5>
-          </Box>
+        top="1.5rem"
+        right="1.5rem"
+        _focus={{
+          boxShadow: 'none',
+        }}
+      />
+      <ModalBody p={0}>
+        <chakra.h2 mb="1rem">Transaction Processing</chakra.h2>
+        <chakra.h4 mb="2rem">
+          We are processing your transaction of{' '}
+          {formatOreToTronWithLanguage(amount)} $IRON. This may take a few
+          minutes. This transaction will appear in your activity as pending
+          until it’s been processed.
+        </chakra.h4>
+        <Flex gap="1rem">
+          <Button
+            variant="primary"
+            size="small"
+            rightIcon={<ArrowRight mr="-0.5rem" />}
+            onClick={() =>
+              navigate(ROUTES.ACCOUNT, { state: { accountId: from.id } })
+            }
+          >
+            View Account Activity
+          </Button>
+          <Button
+            variant="primary"
+            size="small"
+            rightIcon={<ArrowRight mr="-0.5rem" />}
+            onClick={() =>
+              navigate(ROUTES.TRANSACTION, {
+                state: {
+                  accountId: from.id,
+                  hash: transaction.hash,
+                },
+              })
+            }
+          >
+            View Transaction
+          </Button>
         </Flex>
-        <Progress
-          borderRadius="2rem"
-          isIndeterminate
-          bg={NAMED_COLORS.LIGHT_GREY}
-          variant="ironLightBlue"
-        />
-        <HStack justifyContent="center">
-          <Image
-            height="12.875rem"
-            width="8.5rem"
-            mt="2rem"
-            src={'/gif/walking.gif'}
-          />
-        </HStack>
-      </Box>
-    </ModalBody>
+      </ModalBody>
+    </>
   )
 }
 
-const ResultStep: FC<StepProps> = ({ transaction }) => (
-  <>
-    <ModalCloseButton
-      border="0.0625rem solid"
-      borderRadius="50%"
-      color={NAMED_COLORS.GREY}
-      borderColor={NAMED_COLORS.LIGHT_GREY}
-      top="1.5rem"
-      right="1.5rem"
-      _focus={{
-        boxShadow: 'none',
-      }}
-    />
-    <ModalBody p={0}>
-      <chakra.h2 mb="1rem">Transaction Sent!</chakra.h2>
-      <chakra.h4 mb="2rem">
-        To view the details of this transaction, please use the link below to
-        visit our block explorer. You can also send the link below to your
-        transaction receipient.
-      </chakra.h4>
-      <FieldGroup w="100%">
-        <TextField
-          label="Transaction Link"
-          value={`https://explorer.ironfish.network/transaction/${transaction.hash}`}
-          InputProps={{
-            textColor: NAMED_COLORS.LIGHT_BLUE,
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            isReadOnly: true,
-            cursor: 'pointer',
-            onClick: () =>
-              window.open(
-                `https://explorer.ironfish.network/transaction/${transaction.hash}`,
-                '_blank'
-              ),
-          }}
-          width="100%"
-        />
-        <Button
-          px="1.5rem"
-          textColor={NAMED_COLORS.LIGHT_BLUE}
-          rightIcon={<IconCopy w="1rem" h="1rem" />}
-        >
-          Copy
-        </Button>
-      </FieldGroup>
-    </ModalBody>
-  </>
-)
-
-const STEPS: FC<StepProps>[] = [ConfirmStep, SendStep, ResultStep]
+const STEPS: FC<StepProps>[] = [ConfirmStep, ResultStep]
 
 const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
   from,
@@ -393,6 +310,7 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
   amount,
   memo,
   fee,
+  onCreateAccount,
   ...props
 }) => {
   const [currStep, setCurrentStep] = useState<number>(0)
@@ -402,11 +320,32 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
   const handleClose = () => {
     setCurrentStep(0)
     props.onClose && props.onClose()
+    if (props.cleanUp && currStep > 0) {
+      props.cleanUp()
+    }
   }
+
+  const send = () =>
+    window.IronfishManager.transactions
+      .send(
+        from.id,
+        {
+          amount,
+          memo,
+          publicAddress: to.address,
+        },
+        fee
+      )
+      .then(setTransaction)
 
   return (
     <LightMode>
-      <Modal {...props} onClose={handleClose}>
+      <Modal
+        {...props}
+        closeOnOverlayClick={false}
+        closeOnEsc={false}
+        onClose={handleClose}
+      >
         <ModalOverlay />
         <ModalContent
           w="37.5rem"
@@ -422,13 +361,11 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
             fee={fee}
             onConfirm={() => {
               setCurrentStep(1)
+              send()
             }}
             transaction={transaction}
-            onSend={t => {
-              setTransaction(t)
-              setCurrentStep(2)
-            }}
             onCancel={handleClose}
+            onCreateAccount={onCreateAccount}
           />
         </ModalContent>
       </Modal>

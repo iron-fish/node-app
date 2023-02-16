@@ -13,7 +13,7 @@ import {
   useIronToast,
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
-import Send from 'Svgx/send'
+import SendIcon from 'Svgx/send'
 import Caret from 'Svgx/caret-icon'
 import HexFishCircle from 'Components/HexFishCircle'
 import { truncateHash } from 'Utils/hash'
@@ -30,7 +30,7 @@ import { stringToColor } from 'Utils/stringToColor'
 import EmptyOverview from 'Components/EmptyOverview'
 
 const AddContactButton: FC<{
-  onAdd: (name: string, address: string) => Promise<void>
+  onAdd: (name: string, address: string) => Promise<Contact>
 }> = ({ onAdd }) => {
   const [openAddContactModal, setOpenAddContactModal] = useState<boolean>(false)
   const toast = useIronToast({
@@ -109,7 +109,7 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
             value: SortType.DESC,
           },
           {
-            label: 'Oldest to oldest',
+            label: 'Oldest to newest',
             value: SortType.ASC,
           },
         ]}
@@ -182,7 +182,7 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
                       <Button
                         leftIcon={
                           <Icon height={8}>
-                            <Send fill="currentColor" />
+                            <SendIcon />
                           </Icon>
                         }
                         variant="primary"

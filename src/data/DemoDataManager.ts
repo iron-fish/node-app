@@ -1,7 +1,8 @@
-import { AccountValue, PeerResponse } from '@ironfish/sdk'
+import { AccountValue } from '@ironfish/sdk'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
+import Peer from 'Types/Peer'
 import SortType from 'Types/SortType'
 import DemoAccountsManager from './DemoAccountsManager'
 import DemoAddressBookManager from './DemoAddressBookManager'
@@ -150,9 +151,9 @@ class DemoDataManager {
     accountId: string,
     from: string,
     to: string,
-    amount: number,
+    amount: bigint,
     memo: string,
-    fee: number
+    fee: bigint
   ): Promise<Transaction> {
     return this.transactions.send(accountId, from, to, amount, memo, fee)
   }
@@ -209,7 +210,7 @@ class DemoDataManager {
     return this.node.status()
   }
 
-  getNodePeers(): Promise<PeerResponse[]> {
+  getNodePeers(): Promise<Peer[]> {
     return this.node.peers()
   }
 }

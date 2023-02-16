@@ -1,22 +1,29 @@
 import { BoxKeyPair } from '@ironfish/rust-nodejs'
+import { v4 as uuid } from 'uuid'
 import {
-  Connection,
   IronfishNode,
   IronfishSdk,
-  MathUtils,
   NodeUtils,
-  PeerResponse,
   PrivateIdentity,
+  MathUtils,
+  Connection,
+  getPackageFrom,
+  VERSION_DATABASE_CHAIN,
+  VERSION_DATABASE_ACCOUNTS,
 } from '@ironfish/sdk'
-import IronFishInitStatus from 'Types/IronfishInitStatus'
+import geoip from 'geoip-lite'
+import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
-import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
-import { IIronfishSnapshotManager } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTransactionManager'
+import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
+// eslint-disable-next-line no-restricted-imports
+import pkg from '../../package.json'
 import AccountManager from './AccountManager'
-import SnapshotManager from './SnapshotManager'
 import TransactionManager from './TransactionManager'
+import Peer from 'Types/Peer'
+import { IIronfishSnapshotManager } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import SnapshotManager from './SnapshotManager'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -37,17 +44,56 @@ export class IronFishManager implements IIronfishManager {
     }
   }
 
+  async checkForMigrations(): Promise<void> {
+    this.initStatus = IronFishInitStatus.CHECKING_FOR_MIGRATIONS
+    if (!this.node.chain.db.isOpen) {
+      await this.node.chain.db.open()
+    }
+    if (!this.node.wallet.walletDb.db.isOpen) {
+      await this.node.wallet.walletDb.db.open()
+    }
+    const chainDbVersion = await this.node.chain.db.getVersion()
+    const walletDbVersion = await this.node.wallet.walletDb.db.getVersion()
+    if (
+      chainDbVersion !== VERSION_DATABASE_CHAIN ||
+      walletDbVersion !== VERSION_DATABASE_ACCOUNTS
+    ) {
+      this.sdk.config.setOverride('databaseMigrate', true)
+    }
+    await this.node.chain.db.close()
+    await this.node.wallet.walletDb.db.close()
+  }
+
   async initialize(): Promise<void> {
     try {
       //Initializing Iron Fish SDK
       this.initStatus = IronFishInitStatus.INITIALIZING_SDK
-      this.sdk = await IronfishSdk.init()
+      this.sdk = await IronfishSdk.init({
+        pkg: getPackageFrom(pkg),
+      })
+
+      if (!this.sdk.internal.get('telemetryNodeId')) {
+        this.sdk.internal.set('telemetryNodeId', uuid())
+        await this.sdk.internal.save()
+      }
 
       //Initializing Iron Fish node
       this.initStatus = IronFishInitStatus.INITIALIZING_NODE
       const privateIdentity = this.getPrivateIdentity()
-      this.node = await this.sdk.node({ privateIdentity: privateIdentity })
+      this.node = await this.sdk.node({
+        privateIdentity: privateIdentity,
+        autoSeed: true,
+      })
+
+      await this.checkForMigrations()
+
       await NodeUtils.waitForOpen(this.node)
+
+      const newSecretKey = Buffer.from(
+        this.node.peerNetwork.localPeer.privateIdentity.secretKey
+      ).toString('hex')
+      this.node.internal.set('networkIdentity', newSecretKey)
+      await this.node.internal.save()
 
       this.accounts = new AccountManager(this.node)
       this.transactions = new TransactionManager(this.node)
@@ -168,8 +214,8 @@ export class IronFishManager implements IIronfishManager {
     await this.node.syncer.findPeer()
   }
 
-  peers(): Promise<PeerResponse[]> {
-    const result: PeerResponse[] = []
+  peers(): Promise<Peer[]> {
+    const result: Peer[] = []
 
     for (const peer of this.node.peerNetwork.peerManager.peers) {
       if (peer.state.type !== 'CONNECTED') {
@@ -212,6 +258,7 @@ export class IronFishManager implements IIronfishManager {
         agent: peer.agent,
         name: peer.name,
         address: peer.address,
+        country: geoip.lookup(peer.address)?.country,
         port: peer.port,
         error: peer.error !== null ? String(peer.error) : null,
         connections: connections,

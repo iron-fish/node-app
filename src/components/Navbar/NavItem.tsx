@@ -9,9 +9,15 @@ export type NavItemProps = {
   label: string
   icon: FC<SVGProps>
   hotkey: string
+  aliases: string[]
 }
 
-export const NavItem: FC<NavItemProps> = ({ active, label, icon, hotkey }) => {
+export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
+  active,
+  label,
+  icon,
+  hotkey,
+}) => {
   const Icon = icon as FC<SVGProps>
   const $colors = useColorModeValue(
     {

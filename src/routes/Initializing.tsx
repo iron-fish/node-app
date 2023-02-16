@@ -194,7 +194,7 @@ const Initializing: FC = () => {
     if (
       initStatus === IronFishInitStatus.INITIALIZED &&
       hasAnyAccount &&
-      (cancelLoad || chainProgress > 0.5)
+      (cancelLoad || chainProgress > 1)
     ) {
       interval = setInterval(() => {
         loadInitStatus()
@@ -285,17 +285,20 @@ const Initializing: FC = () => {
           </Box>
         </Flex>
       )}
-      {!cancelLoad && !download && (
-        <SnapshotModal
-          open={chainProgress !== null && chainProgress < 0.5}
-          progress={chainProgress}
-          onCancel={() => setCancelLoad(true)}
-          onConfirm={path => {
-            setDownload(true)
-            window.IronfishManager.downloadChainSnapshot(path)
-          }}
-        />
-      )}
+      {!cancelLoad &&
+        !download &&
+        chainProgress !== null &&
+        chainProgress <= 1 && (
+          <SnapshotModal
+            open={chainProgress !== null && chainProgress <= 1}
+            progress={chainProgress}
+            onCancel={() => setCancelLoad(true)}
+            onConfirm={path => {
+              setDownload(true)
+              window.IronfishManager.downloadChainSnapshot(path)
+            }}
+          />
+        )}
     </>
   )
 }

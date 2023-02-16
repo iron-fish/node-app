@@ -2,16 +2,17 @@ import { AccountValue } from '@ironfish/sdk'
 import { contextBridge, ipcRenderer } from 'electron'
 
 import Entity from 'Types/Entity'
-import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
-import IIronfishManager, {
+import {
+  IIronfishManager,
   IronfishManagerAction,
 } from 'Types/IronfishManager/IIronfishManager'
-import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfishTransactionManager'
-import IStorage from 'Types/IStorage'
-import SortType from 'Types/SortType'
+import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
 import { Payment } from 'Types/Transaction'
 import '../common/preload'
+import IStorage from 'Types/IStorage'
+import SortType from 'Types/SortType'
+import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSnapshotManager'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
   storageName: string
@@ -139,10 +140,10 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         hash,
         accountId
       ),
-    pay: (accountId: string, payment: Payment, transactionFee?: number) =>
+    send: (accountId: string, payment: Payment, transactionFee?: bigint) =>
       ipcRenderer.invoke(
         'ironfish-manager-transactions',
-        IronfishTransactionManagerAction.PAY,
+        IronfishTransactionManagerAction.SEND,
         accountId,
         payment,
         transactionFee
@@ -158,6 +159,13 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         'ironfish-manager-transactions',
         IronfishTransactionManagerAction.AVERAGE_FEE,
         numOfBlocks
+      ),
+    estimateFeeWithPriority: (accountId: string, receive: Payment) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-transactions',
+        IronfishTransactionManagerAction.ESTIMATE_FEE,
+        accountId,
+        receive
       ),
     findByAccountId: (
       accountId: string,
