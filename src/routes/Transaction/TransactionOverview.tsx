@@ -52,7 +52,7 @@ const CARDS: Card[] = [
               iconButtonProps={{
                 color: NAMED_COLORS.GREY,
               }}
-              copyTooltipText={'Copy address to'}
+              copyTooltipText={'Copy address'}
               copiedTooltipText={'Address copied'}
             />
           ),
@@ -186,12 +186,13 @@ const TransactionOverview: FC = () => {
           </Skeleton>
           <Skeleton isLoaded={accountLoaded} minW="8rem" h="0.875rem">
             <CopyValueToClipboard
-              label={
-                <chakra.h5>{truncateHash(account?.publicAddress, 3)}</chakra.h5>
-              }
+              label={truncateHash(account?.publicAddress, 3)}
               value={account?.publicAddress}
               copyTooltipText="Copy to clipboard"
               copiedTooltipText="Copied"
+              labelProps={{
+                as: 'h5',
+              }}
               containerProps={{
                 pb: '0.45rem',
                 color: color,
@@ -277,17 +278,18 @@ const TransactionOverview: FC = () => {
                       whiteSpace="nowrap"
                       textOverflow="ellipsis"
                     >
-                      <chakra.h5>
-                        <CopyValueToClipboard
-                          copiedTooltipText="Input address copied"
-                          copyTooltipText="Copy Input address"
-                          label={truncateHash(spend.nullifier, 2, 4)}
-                          value={spend.nullifier}
-                          iconButtonProps={{
-                            color: NAMED_COLORS.GREY,
-                          }}
-                        />
-                      </chakra.h5>
+                      <CopyValueToClipboard
+                        copiedTooltipText="Input address copied"
+                        copyTooltipText="Copy Input address"
+                        label={truncateHash(spend.nullifier, 2, 4)}
+                        value={spend.nullifier}
+                        iconButtonProps={{
+                          color: NAMED_COLORS.GREY,
+                        }}
+                        labelProps={{
+                          as: 'h5',
+                        }}
+                      />
                     </Box>
                   </Flex>
                 ),

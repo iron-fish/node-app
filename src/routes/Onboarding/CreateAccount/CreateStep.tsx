@@ -8,53 +8,26 @@ import {
   MnemonicView,
   Checkbox,
   CopyToClipboardButton,
-  useIronToast,
 } from '@ironfish/ui-kit'
-import { FC, useState } from 'react'
-import { ROUTES } from '..'
-import BackButtonLink from 'Components/BackButtonLink'
-import useCreateAccount from 'Hooks/accounts/useCreateAccount'
-import MnemonicPhraseType from 'Types/MnemonicPhraseType'
+import { FC } from 'react'
+import StepProps from './StepProps'
 
-interface CreateAccountProps {
-  desktopMode?: boolean
-  onCreate?: VoidFunction
-}
-
-const CreateAccount: FC<CreateAccountProps> = ({
-  desktopMode = true,
-  onCreate = () => undefined,
+const CreateStep: FC<StepProps> = ({
+  saved,
+  setSaved,
+  accountName,
+  setAccountName,
+  phrase,
+  phraseLoaded,
+  onNext,
+  desktopMode,
 }) => {
-  const [saved, setSaved] = useState<boolean>(false)
-  const [accountName, setAccountName] = useState<string>('')
-  const [{ data: phrase, loaded }, createAccount] = useCreateAccount()
-  const toast = useIronToast({
-    title: 'Account Created',
-    containerStyle: {
-      mb: '1rem',
-    },
-  })
-
   const checkChanges: () => boolean = () => {
     return !saved || !accountName
   }
 
   return (
-    <Flex
-      flexDirection="column"
-      p={desktopMode ? '4rem' : 0}
-      pb="0"
-      bg="transparent"
-      w="100%"
-    >
-      {desktopMode && (
-        <>
-          <BackButtonLink mb="2rem" to={ROUTES.ONBOARDING} label={'Go Back'} />
-          <chakra.h1 mb="1.5rem" color={NAMED_COLORS.BLACK}>
-            Create Account
-          </chakra.h1>
-        </>
-      )}
+    <>
       <chakra.h3 color={NAMED_COLORS.BLACK} pb="0.25rem">
         Internal Account Name
       </chakra.h3>
@@ -78,13 +51,13 @@ const CreateAccount: FC<CreateAccountProps> = ({
         re-enter this.
       </chakra.h5>
       <MnemonicView
-        loaded={loaded}
+        loaded={phraseLoaded}
         header={
           <Flex gap="0.4375rem" mb="-0.4375rem">
             <h6>Mnemonic phrase</h6>
             <CopyToClipboardButton
               value={phrase?.join(', ')}
-              copyTooltipText="CopyToClipBoard"
+              copyTooltipText="Copy to clipboard"
               copiedTooltipText="Copied"
             />
           </Flex>
@@ -99,7 +72,7 @@ const CreateAccount: FC<CreateAccountProps> = ({
       <Box>
         <Checkbox
           mb="2rem"
-          checked={saved}
+          isChecked={saved}
           onChange={e => setSaved(e.target.checked)}
         >
           <chakra.h5 color={NAMED_COLORS.BLACK}>
@@ -113,18 +86,13 @@ const CreateAccount: FC<CreateAccountProps> = ({
           isDisabled={checkChanges()}
           size="large"
           w={desktopMode ? undefined : '100%'}
-          onClick={() => {
-            createAccount(accountName).then(() => {
-              onCreate()
-              toast()
-            })
-          }}
+          onClick={onNext}
         >
-          Create Account
+          Next
         </Button>
       </Box>
-    </Flex>
+    </>
   )
 }
 
-export default CreateAccount
+export default CreateStep
