@@ -1,12 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import {
-  Flex,
-  chakra,
-  CommonTable,
-  NAMED_COLORS,
-  Button,
-  Box,
-} from '@ironfish/ui-kit'
+import { Flex, chakra, NAMED_COLORS, Button, Box } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAddressTransactions'
@@ -18,6 +11,7 @@ import ROUTES from 'Routes/data'
 import ContactsPreview from 'Components/ContactsPreview'
 import Contact from 'Types/Contact'
 import TransactionStatusView from 'Components/TransactionStatusView'
+import WalletCommonTable from 'Components/WalletCommonTable'
 
 interface AddressTransactionsProps {
   address: string
@@ -64,7 +58,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
             value: SortType.DESC,
           },
           {
-            label: 'Oldest to oldest',
+            label: 'Oldest to newest',
             value: SortType.ASC,
           },
         ]}
@@ -76,7 +70,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
           description="There aren’t any transactions with details that match your search input."
         />
       ) : (
-        <CommonTable
+        <WalletCommonTable
           data={!!transactions ? transactions : new Array(10).fill(null)}
           onRowClick={(txn: Transaction) => {
             navigate(ROUTES.TRANSACTION, {

@@ -1,6 +1,7 @@
-import { PeerResponse } from '@ironfish/sdk'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
+import Peer from 'Types/Peer'
 import { BlockSyncerStatusType } from 'Types/BlockSyncerStatusType'
+import { nanoid } from 'nanoid'
 
 const BLOCK_SPEED = 60000
 
@@ -32,20 +33,26 @@ export const STATUS: NodeStatusResponse = {
   },
 }
 
-const PEERS: PeerResponse[] = Array(23)
+const PEERS: Peer[] = Array(23)
   .fill(null)
   .map(() => {
     const type = Math.random()
     return {
       state: 'active',
-      identity: (Math.random() * 1000000).toFixed(3),
+      identity: nanoid(64),
       version: 1024,
       head: 'ksajdlkasjdlsakjdaksdj',
       sequence: 2048,
       work: 'active',
       agent: 'test',
       name: 'Websocket',
-      address: 'jalkaslkdjsaldjsalkdjlsakdjlksad',
+      address: Array(4)
+        .fill(null)
+        .map(() => Math.floor((Math.random() * 1000) % 255))
+        .join('.'),
+      country: ['US', 'CA', 'AR', 'BY', 'RU', 'AU', 'BE', 'GB', 'FR', 'ES'][
+        Math.floor(Math.random() * 10)
+      ],
       port: 8080,
       error: '',
       connections: 12,
@@ -103,7 +110,7 @@ class DemoNodeManager {
     })
   }
 
-  peers(): Promise<PeerResponse[]> {
+  peers(): Promise<Peer[]> {
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(PEERS)

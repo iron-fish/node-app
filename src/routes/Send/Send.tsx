@@ -17,7 +17,7 @@ import {
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
 import DetailsPanel from 'Components/DetailsPanel'
-import useFee from 'Hooks/transactions/useFee'
+import useEstimatedFee from 'Hooks/transactions/useEstimatedFee'
 import FeesImage from 'Svgx/FeesImage'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow'
@@ -27,8 +27,9 @@ import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
-import { decodeIron } from 'Utils/number'
+import { decodeIron, formatOreToTronWithLanguage } from 'Utils/number'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
+import capitalize from 'lodash/capitalize'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -48,13 +49,11 @@ const Information: FC = memo(() => {
   )
 })
 
-const hasEnoughIron = (balance: bigint, amount: bigint, fee: bigint) => {
-  const zero = BigInt(0)
-  return (balance || balance === zero) &&
-    (amount || amount === zero) &&
-    (fee || fee === zero)
-    ? balance >= amount + fee
-    : true
+const hasEnoughIron = (balance: bigint, amount: bigint, fee = BigInt(0)) => {
+  if (balance === BigInt(0)) {
+    return false
+  }
+  return balance && amount && fee ? balance >= amount + fee : true
 }
 
 const getPrecision = (val: string) => {
@@ -77,8 +76,8 @@ const getPrecision = (val: string) => {
 
 const getEstimatedFeeOption = (priority: string, value: bigint) => ({
   value: value,
-  label: `${value} Ore`,
-  helperText: `Transfer speed: ${priority}`,
+  label: `${formatOreToTronWithLanguage(value)}`,
+  helperText: capitalize(priority),
 })
 
 interface SendButtonProps {
@@ -119,13 +118,13 @@ const Send: FC = () => {
   const [amount, setAmount] = useState('0.00')
   const [account, setAccount] = useState<CutAccount>(null)
   const [contact, setContact] = useState<Contact>(null)
-  const [notes, setNotes] = useState('')
+  const [txnMemo, setTxnMemo] = useState('')
   const [startSendFlow, setStart] = useState(false)
   const [selectedFee, setSelectedFee] = useState<OptionType>()
-  const { data: fee, loaded: feeCalculated } = useFee(account?.id, {
+  const { data: fees, loaded: feeCalculated } = useEstimatedFee(account?.id, {
     publicAddress: contact?.address || '',
     amount: decodeIron(amount || 0),
-    memo: notes,
+    memo: txnMemo,
   })
   const $colors = useColorModeValue(
     {
@@ -140,12 +139,27 @@ const Send: FC = () => {
     }
   )
 
+  const feeOptions = Object.entries(fees || {}).map(([key, value]) =>
+    getEstimatedFeeOption(key, value)
+  )
+
   useEffect(() => {
     if (Number(amount) !== 0 && !selectedFee?.label) {
-      fee?.medium &&
-        setSelectedFee(getEstimatedFeeOption('medium', fee?.medium))
+      fees?.average &&
+        setSelectedFee(getEstimatedFeeOption('average', fees?.average))
     }
   }, [amount])
+
+  useEffect(() => {
+    if (selectedFee) {
+      const selectedOption = feeOptions.find(
+        ({ helperText }) => selectedFee.helperText === helperText
+      )
+      if (selectedOption) {
+        setSelectedFee(selectedOption)
+      }
+    }
+  }, [feeCalculated])
 
   const checkChanges = (): boolean =>
     !(selectedFee?.value && account && contact && Number(amount)) ||
@@ -185,7 +199,12 @@ const Send: FC = () => {
               <NumberInput
                 value={amount}
                 onChange={valueString => {
-                  setAmount(valueString)
+                  try {
+                    decodeIron(valueString)
+                    setAmount(valueString)
+                  } catch (error) {
+                    return
+                  }
                 }}
                 precision={getPrecision(amount)}
                 display="flex"
@@ -254,19 +273,17 @@ const Send: FC = () => {
               <SelectField
                 width="calc(50% - 1rem)"
                 mr="2rem"
-                label="Estimated Fee"
+                label="Estimated Fee $IRON"
                 value={selectedFee}
-                options={Object.entries(fee || {}).map(([key, value]) =>
-                  getEstimatedFeeOption(key, value)
-                )}
+                options={feeOptions}
                 onSelectOption={selected => setSelectedFee(selected)}
               />
               <TextField
                 w="calc(50% - 1rem)"
-                label={`Memo (${32 - notes.length} characters)`}
-                value={notes}
+                label={`Memo (${32 - txnMemo.length} characters)`}
+                value={txnMemo}
                 InputProps={{
-                  onChange: e => setNotes(e.target.value.substring(0, 32)),
+                  onChange: e => setTxnMemo(e.target.value.substring(0, 32)),
                   maxLength: 32,
                 }}
               />
@@ -282,11 +299,17 @@ const Send: FC = () => {
       </Flex>
       <SendFlow
         isOpen={startSendFlow}
+        cleanUp={() => {
+          setContact(null)
+          setTxnMemo('')
+          setSelectedFee(null)
+          setAmount('0.00')
+        }}
         onClose={() => setStart(false)}
         amount={decodeIron(amount || 0)}
         from={account}
         to={contact}
-        memo={notes}
+        memo={txnMemo}
         onCreateAccount={setContact}
         fee={selectedFee?.value}
       />
