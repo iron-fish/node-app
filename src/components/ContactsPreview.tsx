@@ -69,7 +69,9 @@ const ContactsPreview: FC<{ addresses?: string[]; notes?: Note[] }> = ({
       <Modal isOpen={open} onClose={() => setOpen(false)}>
         <ModalOverlay background="rgba(0,0,0,0.75)" />
         <ModalContent p="4rem" minW="40rem">
-          <ModalHeader>Transaction Addresses</ModalHeader>
+          <ModalHeader>
+            <h2>Transaction Addresses</h2>
+          </ModalHeader>
           <ModalCloseButton
             color={NAMED_COLORS.GREY}
             borderRadius="50%"
