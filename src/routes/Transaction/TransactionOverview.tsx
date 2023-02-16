@@ -52,7 +52,7 @@ const CARDS: Card[] = [
               iconButtonProps={{
                 color: NAMED_COLORS.GREY,
               }}
-              copyTooltipText={'Copy address to'}
+              copyTooltipText={'Copy address'}
               copiedTooltipText={'Address copied'}
             />
           ),

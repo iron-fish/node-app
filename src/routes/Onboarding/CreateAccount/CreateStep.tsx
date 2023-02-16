@@ -57,7 +57,7 @@ const CreateStep: FC<StepProps> = ({
             <h6>Mnemonic phrase</h6>
             <CopyToClipboardButton
               value={phrase?.join(', ')}
-              copyTooltipText="CopyToClipBoard"
+              copyTooltipText="Copy to clipboard"
               copiedTooltipText="Copied"
             />
           </Flex>

@@ -29,7 +29,7 @@ const ContactPreview: FC<{ address: string }> = ({ address }) => {
       }}
       value={address}
       copyTooltipText={'Copy address'}
-      copiedTooltipText={'Address successfuly copied'}
+      copiedTooltipText={'Address successfully copied'}
       iconButtonProps={{
         color: NAMED_COLORS.GREY,
       }}
