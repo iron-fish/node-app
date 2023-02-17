@@ -3473,10 +3473,10 @@
     ws "7.5.1"
     yup "0.29.3"
 
-"@ironfish/ui-kit@^1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-1.1.4.tgz#4a43f1a97e6918c46e6e39eb49b1ad14e42daf35"
-  integrity sha512-k+Fa15MliZBsMyAfLq3GYyr4qg+ClM+daLMuz59B/jsT5rIb94qloZxN8J3PenQq703D3kbb9reZTEMh6OEihA==
+"@ironfish/ui-kit@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-1.1.5.tgz#3613b0a0bb608472ff77b609860b500d40649396"
+  integrity sha512-Fzi+Y5yDQoqxQNFMt1CfEvz2cu1+Xqg160QgDDF28ACPfgw2BPVN0XbtQl8Srx+8j5NaBjiI9wO16sB+OGSAJw==
   dependencies:
     "@chakra-ui/icons" "2.0.12"
     "@chakra-ui/react" "2.4.2"

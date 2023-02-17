@@ -36,13 +36,15 @@ const ValidateStep: FC<StepProps> = ({
       isInvalid: false,
       isInvalidInputs: [],
     }
-    if (filledCells.length === 12 && checkChanges()) {
+    if (filledCells.length === phrase.length && checkChanges()) {
       inputError.isInvalid = true
       inputError.header = 'Incorrect recovery phrase'
       inputError.message =
         'The phrase you entered is incorrect. Either the phrase is invalid or your words are out of order.'
+      setError(inputError)
+    } else if (filledCells.length > 0 && filledCells.length === phrase.length) {
+      setError(inputError)
     }
-    setError(inputError)
   }, [inputtedPhrase])
 
   return (
@@ -82,9 +84,10 @@ const ValidateStep: FC<StepProps> = ({
             inputError.message =
               'You’re missing one or more words in your seed phrase. Fill out the words in highlighted in red.'
             inputError.isInvalidInputs = inputtedPhrase.map(i => !i)
+            setError(inputError)
           }
-          setError(inputError)
         }}
+        wordsAmount={phrase.length}
       />
       {error?.header && error?.message && (
         <Box mt="0.75rem">

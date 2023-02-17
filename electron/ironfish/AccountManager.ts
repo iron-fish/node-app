@@ -1,10 +1,16 @@
 import { AccountValue, CurrencyUtils, IronfishNode } from '@ironfish/sdk'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
-import { Asset } from '@ironfish/rust-nodejs'
+import {
+  Asset,
+  LanguageCode,
+  spendingKeyToWords,
+  generateKey,
+} from '@ironfish/rust-nodejs'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import CutAccount from 'Types/CutAccount'
 import AccountBalance from 'Types/AccountBalance'
+import AccountCreateParams from 'Types/AccountCreateParams'
 
 class AccountManager implements IIronfishAccountManager {
   private node: IronfishNode
@@ -17,6 +23,29 @@ class AccountManager implements IIronfishAccountManager {
     return this.node.wallet
       .createAccount(name)
       .then(account => account.serialize())
+  }
+
+  async prepareAccount(): Promise<AccountCreateParams> {
+    const key = generateKey()
+
+    return {
+      spendingKey: key.spending_key,
+      mnemonicPhrase: spendingKeyToWords(
+        key.spending_key,
+        LanguageCode.English
+      ).split(' '),
+    }
+  }
+
+  async submitAccount(
+    createParams: AccountCreateParams
+  ): Promise<WalletAccount> {
+    const newAccount = await this.node.wallet.importAccount({
+      name: createParams.name,
+      spendingKey: createParams.spendingKey,
+    })
+
+    return newAccount.serialize()
   }
 
   async list(searchTerm?: string, sort?: SortType): Promise<CutAccount[]> {
@@ -59,6 +88,10 @@ class AccountManager implements IIronfishAccountManager {
     const account: WalletAccount = accounts[accountIndex].serialize()
     account.balance = await this.balance(account.id)
     account.order = accountIndex
+    account.mnemonicPhrase = spendingKeyToWords(
+      account.spendingKey,
+      LanguageCode.English
+    ).split(' ')
 
     return account
   }
