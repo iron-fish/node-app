@@ -83,7 +83,7 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
               <h6>Mnemonic phrase</h6>
               <CopyToClipboardButton
                 value={account.mnemonicPhrase?.join(', ')}
-                copyTooltipText="CopyToClipBoard"
+                copyTooltipText="Copy to clipboard"
                 copiedTooltipText="Copied"
               />
             </Flex>
