@@ -62,7 +62,7 @@ const CreateStep: FC<StepProps> = ({
             />
           </Flex>
         }
-        value={account?.mnemonicPhrase || []}
+        value={phrase || []}
         placeholder={''}
         onChange={() => null}
         isReadOnly={true}

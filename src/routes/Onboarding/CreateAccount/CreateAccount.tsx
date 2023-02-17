@@ -22,8 +22,11 @@ const CreateAccount: FC<CreateAccountProps> = ({
   const Step = STEPS[currStep]
   const [saved, setSaved] = useState<boolean>(false)
   const [accountName, setAccountName] = useState<string>('')
-  const [{ data: phrase, loaded: phraseLoaded }, createAccount] =
-    useCreateAccount()
+  const {
+    data: account,
+    loaded,
+    actions: { confirmAccountCreation },
+  } = useCreateAccount()
   const toast = useIronToast({
     title: 'Account Created',
     containerStyle: {
@@ -32,7 +35,7 @@ const CreateAccount: FC<CreateAccountProps> = ({
   })
 
   const handleCreateAccount = () =>
-    createAccount(accountName).then(() => {
+    confirmAccountCreation(accountName).then(() => {
       onCreate()
       toast()
     })
@@ -65,8 +68,8 @@ const CreateAccount: FC<CreateAccountProps> = ({
         setSaved={setSaved}
         accountName={accountName}
         setAccountName={setAccountName}
-        phrase={phrase}
-        phraseLoaded={phraseLoaded}
+        phrase={account?.mnemonicPhrase}
+        phraseLoaded={loaded}
         handleCreateAccount={handleCreateAccount}
         onNext={() => setCurrentStep(1)}
         onBack={() => setCurrentStep(0)}
