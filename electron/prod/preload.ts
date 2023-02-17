@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { AccountValue } from '@ironfish/sdk'
+import { AccountValue, ConfigOptions } from '@ironfish/sdk'
 
 import SortType from 'Types/SortType'
 import IStorage from 'Types/IStorage'
@@ -53,6 +53,17 @@ contextBridge.exposeInMainWorld('IronfishManager', {
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.SYNC),
   peers: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.PEERS),
+  getNodeConfig: () =>
+    ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.GET_NODE_CONFIG
+    ),
+  saveNodeConfig: (values: Partial<ConfigOptions>) =>
+    ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.SAVE_NODE_CONFIG,
+      values
+    ),
   accounts: {
     create: (name: string) =>
       ipcRenderer.invoke(

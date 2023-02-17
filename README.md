@@ -40,11 +40,8 @@ Releases are based on tags. In order to do a release:
 
 Update package.json version, submit a PR and merge it to the master.
 
-Run git tag -a "vX.Y.Z" -m "vX.Y.Z" where X.Y.Z is the major.minor.patch version.
+Run `git tag -a "vX.Y.Z" -m "vX.Y.Z"` where `X.Y.Z` is the major.minor.patch version.
 (for demo version release use `demo-v` prefix instead of `v`)
 
-Run git push --tags
+Run `git push --tags`
 
-# Test change
-
-This is a test change for PR flow
