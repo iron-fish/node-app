@@ -31,6 +31,8 @@ export const IronFishManager: IIronfishManager = {
     list: (search: string, sort: SortType) =>
       window.DemoDataManager.getAccounts(search, sort),
     balance: (id: string) => window.DemoDataManager.getBalance(id),
+    getMnemonicPhrase: (id: string) =>
+      window.DemoDataManager.accounts.getMnemonicPhrase(id),
   },
   transactions: {
     averageFee: (numOfBlocks?) => {

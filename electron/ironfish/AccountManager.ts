@@ -88,10 +88,6 @@ class AccountManager implements IIronfishAccountManager {
     const account: WalletAccount = accounts[accountIndex].serialize()
     account.balance = await this.balance(account.id)
     account.order = accountIndex
-    account.mnemonicPhrase = spendingKeyToWords(
-      account.spendingKey,
-      LanguageCode.English
-    ).split(' ')
 
     return account
   }
@@ -132,6 +128,13 @@ class AccountManager implements IIronfishAccountManager {
     }
 
     return Promise.reject(new Error(`Account with id=${id} was not found.`))
+  }
+
+  async getMnemonicPhrase(id: string): Promise<string[]> {
+    const account = this.node.wallet.getAccount(id)
+    return spendingKeyToWords(account.spendingKey, LanguageCode.English).split(
+      ' '
+    )
   }
 }
 

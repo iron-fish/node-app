@@ -119,6 +119,12 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         IronfishAccountManagerAction.BALANCE,
         id
       ),
+    getMnemonicPhrase: (id: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.GET_MNEMONIC_PHRASE,
+        id
+      ),
   },
   transactions: {
     get: (hash: string, accountId: string) =>

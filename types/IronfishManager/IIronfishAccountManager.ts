@@ -15,6 +15,7 @@ export enum IronfishAccountManagerAction {
   BALANCE = 'balance',
   IMPORT = 'import',
   EXPORT = 'export',
+  GET_MNEMONIC_PHRASE = 'getMnemonicPhrase',
 }
 
 export interface IIronfishAccountManager {
@@ -27,4 +28,5 @@ export interface IIronfishAccountManager {
   import: (account: Omit<AccountValue, 'id'>) => Promise<AccountValue>
   export: (id: string) => Promise<Omit<AccountValue, 'id'>>
   balance: (id: string) => Promise<AccountBalance>
+  getMnemonicPhrase: (id: string) => Promise<string[]>
 }

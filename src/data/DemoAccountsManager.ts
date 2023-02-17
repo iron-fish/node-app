@@ -245,7 +245,6 @@ class DemoAccountsManager {
     if (account) {
       account.balance = ACCOUNT_BALANCES[account.id]
       account.order = accountIndex
-      account.mnemonicPhrase = randomWords({ exactly: 24, maxLength: 8 })
     }
 
     return new Promise(resolve => setTimeout(() => resolve(account), 500))
@@ -302,6 +301,14 @@ class DemoAccountsManager {
       setTimeout(() => {
         const balance = ACCOUNT_BALANCES[id]
         resolve(balance)
+      }, 500)
+    })
+  }
+
+  getMnemonicPhrase(id: string): Promise<string[]> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(randomWords({ exactly: 24, maxLength: 8 }))
       }, 500)
     })
   }

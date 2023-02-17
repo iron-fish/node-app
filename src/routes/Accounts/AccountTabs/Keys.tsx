@@ -16,6 +16,7 @@ import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import DownloadIcon from '@ironfish/ui-kit/dist/svgx/download-icon'
 import { AccountValue } from '@ironfish/sdk'
 import Account from 'Types/Account'
+import useMnemonicPhrase from 'Hooks/accounts/useMnemonicPhrase'
 
 interface AccountKeysProps {
   account: Account
@@ -54,6 +55,11 @@ const Information: FC = memo(() => {
 
 const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
   const [exporting, setExporting] = useState<boolean>(false)
+  const {
+    data: phrase,
+    showPhrase,
+    actions: { setShowPhrase },
+  } = useMnemonicPhrase(account.id, false)
 
   const handleExport = () => {
     setExporting(true)
@@ -81,19 +87,22 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
           header={
             <Flex gap="0.4375rem" mb="-0.4375rem">
               <h6>Mnemonic phrase</h6>
-              <CopyToClipboardButton
-                value={account.mnemonicPhrase?.join(', ')}
-                copyTooltipText="CopyToClipBoard"
-                copiedTooltipText="Copied"
-              />
+              {showPhrase && (
+                <CopyToClipboardButton
+                  value={phrase?.join(', ')}
+                  copyTooltipText="CopyToClipBoard"
+                  copiedTooltipText="Copied"
+                />
+              )}
             </Flex>
           }
-          value={account.mnemonicPhrase || []}
+          value={phrase || []}
           placeholder={''}
           onChange={() => null}
           isReadOnly={true}
           mb="2rem"
           wordsAmount={24}
+          onBlinkingEyeClick={setShowPhrase}
         />
         <Flex>
           <Button
