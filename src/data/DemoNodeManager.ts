@@ -10,6 +10,19 @@ export const STATUS: NodeStatusResponse = {
     status: NodeStatusType.STARTED,
     nodeName: 'My Node Name Example',
   },
+  cpu: {
+    cores: 4,
+    percentRollingAvg: Math.random() * 100,
+    percentCurrent: Math.random() * 100,
+  },
+  memory: {
+    heapMax: Math.random() * 100,
+    heapTotal: Math.random() * 100,
+    heapUsed: Math.random() * 100,
+    rss: Math.random() * 100,
+    memFree: Math.random() * 100,
+    memTotal: Math.random() * 100,
+  },
   blockchain: {
     synced: false,
     head: '0',
@@ -95,6 +108,19 @@ class DemoNodeManager {
         }
         resolve({
           ...STATUS,
+          cpu: {
+            cores: 4,
+            percentRollingAvg: Math.random() * 100,
+            percentCurrent: Math.random() * 100,
+          },
+          memory: {
+            heapMax: Math.random() * 1000,
+            heapTotal: Math.random() * 1000,
+            heapUsed: Math.random() * 1000,
+            rss: Math.random() * 1000,
+            memFree: Math.random() * 1000,
+            memTotal: Math.random() * 10000,
+          },
           peerNetwork: {
             ...STATUS.peerNetwork,
             inboundTraffic: Math.abs(

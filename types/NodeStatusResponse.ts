@@ -9,6 +9,19 @@ export interface NodeStatusResponse {
     status: NodeStatusType
     nodeName: string
   }
+  cpu: {
+    cores: number
+    percentRollingAvg: number
+    percentCurrent: number
+  }
+  memory: {
+    heapMax: number
+    heapTotal: number
+    heapUsed: number
+    rss: number
+    memFree: number
+    memTotal: number
+  }
   peerNetwork: {
     peers: number
     isReady: boolean
