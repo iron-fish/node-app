@@ -3428,7 +3428,7 @@
   resolved "https://registry.yarnpkg.com/@ironfish/rust-nodejs-win32-x64-msvc/-/rust-nodejs-win32-x64-msvc-0.1.26.tgz#e663ec92699bc6ec356df6976af94672c2e7c681"
   integrity sha512-utZZWRKTaP6xMPjRIiTg2Yh38GDQkXJG4owWp0+4+qT0JyadFQesaGviUs8JGoTvXNeYCnGkzghJgH+72cbZ9A==
 
-"@ironfish/rust-nodejs@0.1.26", "@ironfish/rust-nodejs@^0.1.26":
+"@ironfish/rust-nodejs@0.1.26":
   version "0.1.26"
   resolved "https://registry.yarnpkg.com/@ironfish/rust-nodejs/-/rust-nodejs-0.1.26.tgz#0982cecc526b2026b6566127805bba35c704ccc7"
   integrity sha512-TdWJ8MiGDlM72q1lQ70fy4BFiq1k5q7fNvvUloliAnmMoAZtVhegVJPBLPLp/ONQgz7IgA7gWEjJ1B5ce7Ps2w==
@@ -3441,7 +3441,7 @@
     "@ironfish/rust-nodejs-linux-x64-musl" "0.1.26"
     "@ironfish/rust-nodejs-win32-x64-msvc" "0.1.26"
 
-"@ironfish/sdk@^0.0.44":
+"@ironfish/sdk@0.0.44":
   version "0.0.44"
   resolved "https://registry.yarnpkg.com/@ironfish/sdk/-/sdk-0.0.44.tgz#49c90a23de204e67deea9d6b9be165198f485b2b"
   integrity sha512-Kl04q1DtIaogqlE+dl7AvZ3vMfFBfiknusW6GV0CIB0qoMbKdbRMByVi+Q0RPPICUhFJC3c89FrvRg3TQZ4Sdw==
@@ -3473,10 +3473,10 @@
     ws "7.5.1"
     yup "0.29.3"
 
-"@ironfish/ui-kit@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-1.1.5.tgz#3613b0a0bb608472ff77b609860b500d40649396"
-  integrity sha512-Fzi+Y5yDQoqxQNFMt1CfEvz2cu1+Xqg160QgDDF28ACPfgw2BPVN0XbtQl8Srx+8j5NaBjiI9wO16sB+OGSAJw==
+"@ironfish/ui-kit@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-1.1.6.tgz#28b7d789e40863acaa4dcac70abf89b91b92ee23"
+  integrity sha512-iM0i8iHOdzhjHvEXFcdePUp9t1ez2f/4Oo8QfN/ICNCywyswnt/9nilDA08AW4o4gZM+1bn+WPm4GQuTOTwE3g==
   dependencies:
     "@chakra-ui/icons" "2.0.12"
     "@chakra-ui/react" "2.4.2"

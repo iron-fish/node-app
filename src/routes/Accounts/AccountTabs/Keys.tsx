@@ -57,6 +57,7 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
   const [exporting, setExporting] = useState<boolean>(false)
   const {
     data: phrase,
+    loaded,
     showPhrase,
     actions: { setShowPhrase },
   } = useMnemonicPhrase(account.id, false)
@@ -96,6 +97,7 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
               )}
             </Flex>
           }
+          loaded={!showPhrase || loaded}
           value={phrase || []}
           placeholder={''}
           onChange={() => null}
