@@ -155,9 +155,7 @@ class DemoAccountsManager {
     }
   }
 
-  async submitAccount(
-    createParams: AccountCreateParams
-  ): Promise<WalletAccount> {
+  async submitAccount(createParams: AccountCreateParams): Promise<Account> {
     return this.create(createParams.name)
   }
 
