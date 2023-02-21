@@ -91,7 +91,7 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
               {showPhrase && (
                 <CopyToClipboardButton
                   value={phrase?.join(', ')}
-                  copyTooltipText="CopyToClipBoard"
+                  copyTooltipText="Copy to clipboard"
                   copiedTooltipText="Copied"
                 />
               )}

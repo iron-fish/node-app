@@ -88,6 +88,10 @@ class AccountManager implements IIronfishAccountManager {
     const account: WalletAccount = accounts[accountIndex].serialize()
     account.balance = await this.balance(account.id)
     account.order = accountIndex
+    account.mnemonicPhrase = spendingKeyToWords(
+      account.spendingKey,
+      LanguageCode.English
+    ).split(' ')
 
     return account
   }
