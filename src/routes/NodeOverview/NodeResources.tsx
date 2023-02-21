@@ -36,16 +36,19 @@ const NodeResources: FC<NodeResourcesProps> = ({ data, loaded }) => {
         <chakra.h3>Memory</chakra.h3>
         <FieldGroup mb="1rem">
           <TextField
+            width="33.4%"
             label="Heap used"
             value={`${heapUsed}`}
             InputProps={{ isReadOnly: true }}
           />
           <TextField
+            width="33.4%"
             label="Heap total"
             value={`${heapTotal}`}
             InputProps={{ isReadOnly: true }}
           />
           <TextField
+            width="33.4%"
             label="Heap maximum"
             value={`${heapMax} (${(
               (data.memory.heapUsed / data.memory.heapMax) *
