@@ -69,13 +69,12 @@ class SnapshotManager implements IIronfishSnapshotManager {
       return
     }
 
-    this.download(manifest, pathToSave)
-      .then(this.clearDatabase)
-      .then(this.unarchive)
-      .then(this.clearTemporaryFiles)
-      .then(() => {
-        this.progress.status = ProgressStatus.COMPLETED
-      })
+    await this.download(manifest, pathToSave)
+    await this.clearDatabase()
+    await this.unarchive()
+    await this.clearTemporaryFiles()
+
+    this.progress.status = ProgressStatus.COMPLETED
   }
 
   private async download(
