@@ -163,7 +163,7 @@ class AccountManager
         asset: asset,
       }
 
-      if (balance.assetId === NativeAsset.nativeId()) {
+      if (balance.assetId.equals(NativeAsset.nativeId())) {
         defaultBalance = accountBalance
       } else {
         assetBalances.push(accountBalance)
