@@ -7,6 +7,7 @@ interface Account extends AccountValue {
     assets: AccountBalance[]
   }
   order?: number
+  mnemonicPhrase?: string[]
 }
 
 export default Account

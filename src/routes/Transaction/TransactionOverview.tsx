@@ -26,9 +26,9 @@ import BlockInfoTimestampIcon from 'Svgx/BlockInfoTimestampIcon'
 import InOutPutsIcon from 'Svgx/InOutPutsIcon'
 import LargeArrowLeftDown from 'Svgx/LargeArrowLeftDown'
 import LargeArrowRightUp from 'Svgx/LargeArrowRightUp'
-import SimpleTable from 'Components/SimpleTable'
 import ContactsPreview from 'Components/ContactsPreview'
 import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
+import WalletCommonTable from 'Components/WalletCommonTable'
 import InfoBadge from 'Components/InfoBadge'
 
 interface Card {
@@ -54,7 +54,7 @@ const CARDS: Card[] = [
               iconButtonProps={{
                 color: NAMED_COLORS.GREY,
               }}
-              copyTooltipText={'Copy address to'}
+              copyTooltipText={'Copy address'}
               copiedTooltipText={'Address copied'}
             />
           ),
@@ -188,12 +188,13 @@ const TransactionOverview: FC = () => {
           </Skeleton>
           <Skeleton isLoaded={accountLoaded} minW="8rem" h="0.875rem">
             <CopyValueToClipboard
-              label={
-                <chakra.h5>{truncateHash(account?.publicAddress, 3)}</chakra.h5>
-              }
+              label={truncateHash(account?.publicAddress, 3)}
               value={account?.publicAddress}
               copyTooltipText="Copy to clipboard"
               copiedTooltipText="Copied"
+              labelProps={{
+                as: 'h5',
+              }}
               containerProps={{
                 pb: '0.45rem',
                 color: color,
@@ -252,10 +253,27 @@ const TransactionOverview: FC = () => {
       <Box>
         <chakra.h3 mb="1rem">Inputs / Outputs</chakra.h3>
       </Box>
-      <Flex w="100%" justifyContent="space-between">
-        <Box w="calc(50% - 1.5rem)" mr="1rem">
+      <Flex
+        w="100%"
+        justifyContent="space-between"
+        flexDirection={{ base: 'column', md: 'row' }}
+        gap={{ base: 0, md: '1rem' }}
+      >
+        <Box
+          w={{ base: '100%', md: '50%' }}
+          mb={{
+            base: transaction?.creator
+              ? transaction?.inputs?.length
+                ? '-2rem'
+                : 0
+              : transaction?.spends?.length
+              ? '-2rem'
+              : 0,
+            md: 0,
+          }}
+        >
           {transaction?.creator ? (
-            <SimpleTable
+            <WalletCommonTable
               data={transaction?.inputs || []}
               w="100%"
               columns={[
@@ -287,7 +305,7 @@ const TransactionOverview: FC = () => {
               ]}
             />
           ) : (
-            <SimpleTable
+            <WalletCommonTable
               data={transaction?.spends || []}
               w="100%"
               columns={[
@@ -304,17 +322,18 @@ const TransactionOverview: FC = () => {
                         whiteSpace="nowrap"
                         textOverflow="ellipsis"
                       >
-                        <chakra.h5>
-                          <CopyValueToClipboard
-                            copiedTooltipText="Input address copied"
-                            copyTooltipText="Copy Input address"
-                            label={truncateHash(spend.nullifier, 2, 4)}
-                            value={spend.nullifier}
-                            iconButtonProps={{
-                              color: NAMED_COLORS.GREY,
-                            }}
-                          />
-                        </chakra.h5>
+                        <CopyValueToClipboard
+                          copiedTooltipText="Input address copied"
+                          copyTooltipText="Copy Input address"
+                          label={truncateHash(spend.nullifier, 2, 4)}
+                          value={spend.nullifier}
+                          iconButtonProps={{
+                            color: NAMED_COLORS.GREY,
+                          }}
+                          labelProps={{
+                            as: 'h5',
+                          }}
+                        />
                       </Box>
                     </Flex>
                   ),
@@ -323,8 +342,8 @@ const TransactionOverview: FC = () => {
             />
           )}
         </Box>
-        <Box w="calc(50% - 1.5rem)">
-          <SimpleTable
+        <Box w={{ base: '100%', md: '50%' }}>
+          <WalletCommonTable
             data={transaction?.outputs || []}
             w="100%"
             columns={[

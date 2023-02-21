@@ -7,12 +7,14 @@ import {
   PrivateIdentity,
   MathUtils,
   Connection,
+  ConfigOptions,
   getPackageFrom,
   VERSION_DATABASE_CHAIN,
   VERSION_DATABASE_ACCOUNTS,
 } from '@ironfish/sdk'
 import geoip from 'geoip-lite'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
+import { INodeSettingsManager } from 'Types/IronfishManager/INodeSettingsManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 // eslint-disable-next-line no-restricted-imports
@@ -20,6 +22,7 @@ import pkg from '../../package.json'
 import AccountManager from './AccountManager'
 import TransactionManager from './TransactionManager'
 import AssetManager from './AssetManager'
+import NodeSettingsManager from './NodeSettingsManager'
 import Peer from 'Types/Peer'
 
 export class IronFishManager implements IIronfishManager {
@@ -29,6 +32,7 @@ export class IronFishManager implements IIronfishManager {
   accounts: AccountManager
   transactions: TransactionManager
   assets: AssetManager
+  nodeSettings: INodeSettingsManager
 
   private getPrivateIdentity(): PrivateIdentity | undefined {
     const networkIdentity = this.sdk.internal.get('networkIdentity')
@@ -61,42 +65,50 @@ export class IronFishManager implements IIronfishManager {
     await this.node.wallet.walletDb.db.close()
   }
 
+  private async initializeSdk(): Promise<void> {
+    //Initializing Iron Fish SDK
+    this.initStatus = IronFishInitStatus.INITIALIZING_SDK
+    this.sdk = await IronfishSdk.init({
+      pkg: getPackageFrom(pkg),
+    })
+
+    if (!this.sdk.internal.get('telemetryNodeId')) {
+      this.sdk.internal.set('telemetryNodeId', uuid())
+      await this.sdk.internal.save()
+    }
+  }
+
+  private async initializeNode(): Promise<void> {
+    //Initializing Iron Fish node
+    this.initStatus = IronFishInitStatus.INITIALIZING_NODE
+    const privateIdentity = this.getPrivateIdentity()
+    this.node = await this.sdk.node({
+      privateIdentity: privateIdentity,
+      autoSeed: true,
+    })
+
+    await this.checkForMigrations()
+
+    await NodeUtils.waitForOpen(this.node)
+
+    const newSecretKey = Buffer.from(
+      this.node.peerNetwork.localPeer.privateIdentity.secretKey
+    ).toString('hex')
+    this.node.internal.set('networkIdentity', newSecretKey)
+    await this.node.internal.save()
+
+    this.assets = new AssetManager(this.node)
+    this.accounts = new AccountManager(this.node, this.assets)
+    this.transactions = new TransactionManager(this.node, this.assets)
+    this.nodeSettings = new NodeSettingsManager(this.node)
+
+    this.initStatus = IronFishInitStatus.INITIALIZED
+  }
+
   async initialize(): Promise<void> {
     try {
-      //Initializing Iron Fish SDK
-      this.initStatus = IronFishInitStatus.INITIALIZING_SDK
-      this.sdk = await IronfishSdk.init({
-        pkg: getPackageFrom(pkg),
-      })
-
-      if (!this.sdk.internal.get('telemetryNodeId')) {
-        this.sdk.internal.set('telemetryNodeId', uuid())
-        await this.sdk.internal.save()
-      }
-
-      //Initializing Iron Fish node
-      this.initStatus = IronFishInitStatus.INITIALIZING_NODE
-      const privateIdentity = this.getPrivateIdentity()
-      this.node = await this.sdk.node({
-        privateIdentity: privateIdentity,
-        autoSeed: true,
-      })
-
-      await this.checkForMigrations()
-
-      await NodeUtils.waitForOpen(this.node)
-
-      const newSecretKey = Buffer.from(
-        this.node.peerNetwork.localPeer.privateIdentity.secretKey
-      ).toString('hex')
-      this.node.internal.set('networkIdentity', newSecretKey)
-      await this.node.internal.save()
-
-      this.assets = new AssetManager(this.node)
-      this.accounts = new AccountManager(this.node, this.assets)
-      this.transactions = new TransactionManager(this.node, this.assets)
-
-      this.initStatus = IronFishInitStatus.INITIALIZED
+      await this.initializeSdk()
+      await this.initializeNode()
     } catch (e) {
       this.initStatus = IronFishInitStatus.ERROR
       // eslint-disable-next-line no-console
@@ -262,5 +274,17 @@ export class IronFishManager implements IIronfishManager {
     }
 
     return Promise.resolve(result)
+  }
+
+  getNodeConfig(): Promise<Partial<ConfigOptions>> {
+    return Promise.resolve(this.nodeSettings.getConfig())
+  }
+
+  async saveNodeConfig(values: Partial<ConfigOptions>): Promise<void> {
+    this.nodeSettings.setValues(values)
+    await this.nodeSettings.save()
+    await this.stop()
+    await this.initializeNode()
+    return this.start()
   }
 }

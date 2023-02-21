@@ -11,6 +11,7 @@ import { formatOreToTronWithLanguage } from 'Utils/number'
 import Asset from 'Types/Asset'
 import { DEFAULT_ASSET } from './DemoAssetManager'
 import Account from 'Types/Account'
+import AccountCreateParams from 'Types/AccountCreateParams'
 
 export const DEMO_ACCOUNTS: AccountValue[] = [
   {
@@ -147,12 +148,17 @@ class DemoAccountsManager {
     })
   }
 
-  generateMnemonicPhrase(): Promise<string[]> {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(randomWords({ exactly: 12, maxLength: 8 }))
-      }, 500)
-    })
+  async prepareAccount(): Promise<AccountCreateParams> {
+    return {
+      spendingKey: nanoid(64),
+      mnemonicPhrase: randomWords({ exactly: 24, maxLength: 8 }),
+    }
+  }
+
+  async submitAccount(
+    createParams: AccountCreateParams
+  ): Promise<WalletAccount> {
+    return this.create(createParams.name)
   }
 
   import(account: Omit<AccountValue, 'id'>): Promise<AccountValue> {
@@ -242,6 +248,7 @@ class DemoAccountsManager {
         assets: ACCOUNT_BALANCES[account.id].slice(1),
       }
       account.order = accountIndex
+      account.mnemonicPhrase = randomWords({ exactly: 24, maxLength: 8 })
     }
 
     return new Promise(resolve => setTimeout(() => resolve(account), 500))

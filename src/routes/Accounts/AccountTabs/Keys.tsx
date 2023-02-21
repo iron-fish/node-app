@@ -6,6 +6,8 @@ import {
   NAMED_COLORS,
   Spinner,
   useColorModeValue,
+  MnemonicView,
+  CopyToClipboardButton,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState } from 'react'
@@ -13,7 +15,6 @@ import AccountKeysImage from 'Svgx/AccountKeysImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import DownloadIcon from '@ironfish/ui-kit/dist/svgx/download-icon'
 import { AccountValue } from '@ironfish/sdk'
-import PasswordField from 'Components/PasswordField'
 import Account from 'Types/Account'
 
 interface AccountKeysProps {
@@ -76,32 +77,23 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
   return (
     <Flex mb="4rem">
       <Box w="37.25rem">
-        <PasswordField
-          label="Spending Key"
-          placeholder="Enter key"
-          value={account?.spendingKey}
+        <MnemonicView
+          header={
+            <Flex gap="0.4375rem" mb="-0.4375rem">
+              <h6>Mnemonic phrase</h6>
+              <CopyToClipboardButton
+                value={account.mnemonicPhrase?.join(', ')}
+                copyTooltipText="Copy to clipboard"
+                copiedTooltipText="Copied"
+              />
+            </Flex>
+          }
+          value={account.mnemonicPhrase || []}
+          placeholder={''}
+          onChange={() => null}
+          isReadOnly={true}
           mb="2rem"
-          InputProps={{
-            isReadOnly: true,
-          }}
-        />
-        <PasswordField
-          label="Incoming View Key"
-          placeholder="Enter key"
-          value={account?.incomingViewKey}
-          mb="2rem"
-          InputProps={{
-            isReadOnly: true,
-          }}
-        />
-        <PasswordField
-          label="Outgoing View Key"
-          placeholder="Enter key"
-          value={account?.outgoingViewKey}
-          mb="2rem"
-          InputProps={{
-            isReadOnly: true,
-          }}
+          wordsAmount={24}
         />
         <Flex>
           <Button
