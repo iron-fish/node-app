@@ -1,10 +1,10 @@
 import { Asset } from '@ironfish/rust-nodejs'
+import { DecryptedNoteValue } from '@ironfish/sdk/build/src/wallet/walletdb/decryptedNoteValue'
 import {
   Account,
   CurrencyUtils,
   IronfishNode,
   RawTransaction,
-  RawTransactionSerde,
 } from '@ironfish/sdk'
 import { TransactionValue } from '@ironfish/sdk/build/src/wallet/walletdb/transactionValue'
 import { sizeVarBytes } from 'bufio'
@@ -14,13 +14,23 @@ import {
   TransactionFeeEstimate,
 } from 'Types/IronfishManager/IIronfishTransactionManager'
 import SortType from 'Types/SortType'
-import Transaction, { Payment, TransactionStatus } from 'Types/Transaction'
+import Transaction, {
+  Amount,
+  Payment,
+  TransactionStatus,
+} from 'Types/Transaction'
+import AbstractManager from './AbstractManager'
+import AssetManager from './AssetManager'
 
-class TransactionManager implements IIronfishTransactionManager {
-  private node: IronfishNode
+class TransactionManager
+  extends AbstractManager
+  implements IIronfishTransactionManager
+{
+  private assetManager: AssetManager
 
-  constructor(node: IronfishNode) {
-    this.node = node
+  constructor(node: IronfishNode, assetManager: AssetManager) {
+    super(node)
+    this.assetManager = assetManager
   }
 
   async send(
@@ -150,18 +160,25 @@ class TransactionManager implements IIronfishTransactionManager {
 
   async get(hash: string, accountId: string): Promise<Transaction> {
     const account = this.node.wallet.getAccount(accountId)
+
+    if (!account) {
+      throw new Error(`Account with id=${accountId} was not found.`)
+    }
+
     const head = await account.getHead()
     const transaction = await account.getTransaction(Buffer.from(hash, 'hex'))
 
-    if (transaction) {
-      return await this.resolveTransactionFields(
-        account,
-        head.sequence,
-        transaction
+    if (!transaction) {
+      throw new Error(
+        `Transaction with hash=${hash} was not found in account with id=${accountId}`
       )
     }
 
-    return null
+    return await this.resolveTransactionFields(
+      account,
+      head.sequence,
+      transaction
+    )
   }
 
   private async status(
@@ -193,20 +210,43 @@ class TransactionManager implements IIronfishTransactionManager {
       ? await this.node.chain.getBlock(transaction.blockHash)
       : null
     const spends = []
-    let creator
+    const creatorNotes: DecryptedNoteValue[] = []
     for await (const spend of transaction?.transaction?.spends) {
       const noteHash = await account.getNoteHash(spend.nullifier)
 
       if (noteHash) {
         const decryptedNote = await account.getDecryptedNote(noteHash)
-        creator = decryptedNote
+        creatorNotes.push(decryptedNote)
       }
 
       spends.push(spend)
     }
-    const notes = transaction
-      ? await account.getTransactionNotes(transaction.transaction)
-      : []
+    const notes = await Promise.all(
+      (transaction
+        ? await account.getTransactionNotes(transaction.transaction)
+        : []
+      ).map(async n => ({
+        ...n,
+        asset: await this.assetManager.get(n.note.assetId()),
+      }))
+    )
+
+    const amount: Record<string, Amount> = notes.reduce((result, note) => {
+      result[note.asset.id] = {
+        asset: note.asset,
+        value: note.note.value() + (result[note.asset.id]?.value || BigInt(0)),
+      }
+      return result
+    }, {} as Record<string, Amount>)
+
+    creatorNotes.forEach(note => {
+      amount[note.note.assetId().toString('hex')].value -= note.note.value()
+    })
+
+    if (creatorNotes.length > 0) {
+      amount[Asset.nativeId().toString('hex')].value +=
+        transaction.transaction.fee()
+    }
 
     return {
       accountId: account.id,
@@ -217,29 +257,40 @@ class TransactionManager implements IIronfishTransactionManager {
       spendsCount: transaction.transaction.spends.length,
       expiration: transaction.transaction.expiration(),
       status,
-      notes: notes.map(n => ({
+      inputs: await Promise.all(
+        creatorNotes.map(async n => ({
+          value: n.note.value(),
+          memo: n.note.memo(),
+          sender: n.note.sender(),
+          asset: await this.assetManager.get(n.note.assetId()),
+        }))
+      ),
+      outputs: notes.map(n => ({
         value: n.note.value(),
         memo: n.note.memo(),
         sender: n.note.sender(),
+        asset: n.asset,
       })),
       spends: spends.map(spend => ({
         commitment: spend.commitment.toString('hex'),
         nullifier: spend.nullifier.toString('hex'),
         size: spend.size,
       })),
-      creator: !!creator,
+      creator: creatorNotes.length > 0,
       blockHash: transaction.blockHash?.toString('hex'),
       size: sizeVarBytes(transaction.transaction.serialize()),
-      from: creator ? account.publicAddress : notes.at(0)?.note?.sender(),
-      to: creator ? notes.map(n => n.note.sender()) : [account.publicAddress],
+      from:
+        creatorNotes.length > 0
+          ? account.publicAddress
+          : notes.at(0)?.note?.sender(),
+      to:
+        creatorNotes.length > 0
+          ? notes.map(n => n.note.sender())
+          : [account.publicAddress],
       created: created?.header?.timestamp || new Date(),
-      amount: CurrencyUtils.renderIron(
-        notes
-          .map(note => note.note.value())
-          .reduce((prev, curr) => prev + curr, BigInt(0)) -
-          (creator?.note?.value()
-            ? creator?.note?.value() - transaction.transaction.fee()
-            : BigInt(0))
+      amount: amount[Asset.nativeId().toString('hex')],
+      assetAmounts: Object.values(amount).filter(
+        a => a.asset.id !== Asset.nativeId().toString('hex')
       ),
     }
   }
@@ -250,6 +301,11 @@ class TransactionManager implements IIronfishTransactionManager {
     sort?: SortType
   ): Promise<Transaction[]> {
     const account = this.node.wallet.getAccount(accountId)
+
+    if (!account) {
+      throw new Error(`Account with id=${accountId} was not found.`)
+    }
+
     const head = await account.getHead()
     const transactions = []
     for await (const transaction of account.getTransactions()) {
@@ -265,7 +321,10 @@ class TransactionManager implements IIronfishTransactionManager {
           !search ||
           transaction.from.toLowerCase().includes(search) ||
           transaction.to.find(a => a.toLowerCase().includes(search)) ||
-          transaction.notes.find(note =>
+          transaction.outputs.find(note =>
+            note.memo?.toLowerCase().includes(search)
+          ) ||
+          transaction.inputs.find(note =>
             note.memo?.toLowerCase().includes(search)
           ) ||
           transaction.amount.toString().includes(search)
@@ -319,7 +378,10 @@ class TransactionManager implements IIronfishTransactionManager {
           !searchTerm ||
           transaction.from.toLowerCase().includes(searchTerm) ||
           transaction.to.find(a => a.toLowerCase().includes(searchTerm)) ||
-          transaction.notes.find(note =>
+          transaction.inputs.find(note =>
+            note.memo?.toLowerCase().includes(searchTerm)
+          ) ||
+          transaction.outputs.find(note =>
             note.memo?.toLowerCase().includes(searchTerm)
           ) ||
           transaction.amount.toString().includes(searchTerm)

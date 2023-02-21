@@ -14,10 +14,13 @@ import { AccountMinerStatistic, MinerProps } from './types/AccountMiner'
 import { Contact } from './types/Contact'
 import Transaction from 'Types/Transaction'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
+import DemoAssetManager from './DemoAssetManager'
+import Account from 'Types/Account'
 import DemoNodeSettingsManager from './DemoNodeSettingsManager'
 
 class DemoDataManager {
   accounts: DemoAccountsManager
+  assets: DemoAssetManager
   transactions: DemoTransactionsManager
   nodeSettings: DemoNodeSettingsManager
   addressBook: DemoAddressBookManager
@@ -27,6 +30,7 @@ class DemoDataManager {
 
   constructor() {
     this.accounts = new DemoAccountsManager()
+    this.assets = new DemoAssetManager()
     this.transactions = new DemoTransactionsManager()
     this.addressBook = new DemoAddressBookManager()
     this.miner = new DemoMinerManager()
@@ -91,7 +95,7 @@ class DemoDataManager {
     return this.accounts.list(searchTerm || '', sort)
   }
 
-  getAccount(accountId: string): Promise<AccountValue> {
+  getAccount(accountId: string): Promise<Account> {
     return this.accounts.findById(accountId)
   }
 

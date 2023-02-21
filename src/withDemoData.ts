@@ -9,6 +9,12 @@ import SortType from 'Types/SortType'
 import AccountCreateParams from 'Types/AccountCreateParams'
 
 export const IronFishManager: IIronfishManager = {
+  assets: {
+    list: (s?: string, offset?: number, max?: number) =>
+      window.DemoDataManager.assets.list(s, offset, max),
+    get: (id: string) => window.DemoDataManager.assets.get(id),
+    default: () => window.DemoDataManager.assets.default(),
+  },
   accounts: {
     create: (name: string) => window.DemoDataManager.createAccount(name),
     prepareAccount: () => window.DemoDataManager.accounts.prepareAccount(),
@@ -21,7 +27,7 @@ export const IronFishManager: IIronfishManager = {
         await window.DemoDataManager.accounts.findById(id)
       )
       delete account.id
-      delete account.balance
+      delete account.balances
 
       return account
     },
@@ -30,7 +36,9 @@ export const IronFishManager: IIronfishManager = {
       window.DemoDataManager.importAccount(account),
     list: (search: string, sort: SortType) =>
       window.DemoDataManager.getAccounts(search, sort),
-    balance: (id: string) => window.DemoDataManager.getBalance(id),
+    balance: (id: string, assetId?: string) =>
+      window.DemoDataManager.getBalance(id),
+    balances: (id: string) => window.DemoDataManager.accounts.balances(id),
   },
   transactions: {
     averageFee: (numOfBlocks?) => {

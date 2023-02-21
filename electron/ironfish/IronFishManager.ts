@@ -14,8 +14,6 @@ import {
 } from '@ironfish/sdk'
 import geoip from 'geoip-lite'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
-import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
-import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTransactionManager'
 import { INodeSettingsManager } from 'Types/IronfishManager/INodeSettingsManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
@@ -23,6 +21,7 @@ import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 import pkg from '../../package.json'
 import AccountManager from './AccountManager'
 import TransactionManager from './TransactionManager'
+import AssetManager from './AssetManager'
 import NodeSettingsManager from './NodeSettingsManager'
 import Peer from 'Types/Peer'
 
@@ -30,8 +29,9 @@ export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   protected sdk: IronfishSdk
   protected node: IronfishNode
-  accounts: IIronfishAccountManager
-  transactions: IIronfishTransactionManager
+  accounts: AccountManager
+  transactions: TransactionManager
+  assets: AssetManager
   nodeSettings: INodeSettingsManager
 
   private getPrivateIdentity(): PrivateIdentity | undefined {
@@ -97,8 +97,9 @@ export class IronFishManager implements IIronfishManager {
     this.node.internal.set('networkIdentity', newSecretKey)
     await this.node.internal.save()
 
-    this.accounts = new AccountManager(this.node)
-    this.transactions = new TransactionManager(this.node)
+    this.assets = new AssetManager(this.node)
+    this.accounts = new AccountManager(this.node, this.assets)
+    this.transactions = new TransactionManager(this.node, this.assets)
     this.nodeSettings = new NodeSettingsManager(this.node)
 
     this.initStatus = IronFishInitStatus.INITIALIZED

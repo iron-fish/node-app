@@ -164,7 +164,7 @@ const Send: FC = () => {
   const checkChanges = (): boolean =>
     !(selectedFee?.value && account && contact && Number(amount)) ||
     !hasEnoughIron(
-      account?.balance.confirmed,
+      account?.balances?.default?.confirmed,
       decodeIron(amount || 0),
       selectedFee.value
     )
@@ -236,7 +236,7 @@ const Send: FC = () => {
           </Flex>
           <Box mr="-0.25rem">
             {!hasEnoughIron(
-              account?.balance.confirmed,
+              account?.balances?.default?.confirmed,
               decodeIron(amount || 0),
               selectedFee?.value
             ) && (
