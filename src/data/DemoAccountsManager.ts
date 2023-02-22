@@ -327,6 +327,14 @@ class DemoAccountsManager {
       }, 500)
     })
   }
+
+  getMnemonicPhrase(id: string): Promise<string[]> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(randomWords({ exactly: 24, maxLength: 8 }))
+      }, 500)
+    })
+  }
 }
 
 export default DemoAccountsManager
