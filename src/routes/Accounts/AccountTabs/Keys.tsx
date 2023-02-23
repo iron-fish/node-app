@@ -6,6 +6,8 @@ import {
   NAMED_COLORS,
   Spinner,
   useColorModeValue,
+  MnemonicView,
+  CopyToClipboardButton,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState } from 'react'
@@ -13,8 +15,8 @@ import AccountKeysImage from 'Svgx/AccountKeysImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import DownloadIcon from '@ironfish/ui-kit/dist/svgx/download-icon'
 import { AccountValue } from '@ironfish/sdk'
-import PasswordField from 'Components/PasswordField'
 import Account from 'Types/Account'
+import useMnemonicPhrase from 'Hooks/accounts/useMnemonicPhrase'
 
 interface AccountKeysProps {
   account: Account
@@ -53,6 +55,12 @@ const Information: FC = memo(() => {
 
 const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
   const [exporting, setExporting] = useState<boolean>(false)
+  const {
+    data: phrase,
+    loaded,
+    showPhrase,
+    actions: { setShowPhrase },
+  } = useMnemonicPhrase(account.id, false)
 
   const handleExport = () => {
     setExporting(true)
@@ -76,32 +84,27 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
   return (
     <Flex mb="4rem">
       <Box w="37.25rem">
-        <PasswordField
-          label="Spending Key"
-          placeholder="Enter key"
-          value={account?.spendingKey}
+        <MnemonicView
+          header={
+            <Flex gap="0.4375rem" mb="-0.4375rem">
+              <h6>Mnemonic phrase</h6>
+              {showPhrase && (
+                <CopyToClipboardButton
+                  value={phrase?.join(', ')}
+                  copyTooltipText="Copy to clipboard"
+                  copiedTooltipText="Copied"
+                />
+              )}
+            </Flex>
+          }
+          loaded={!showPhrase || loaded}
+          value={phrase || []}
+          placeholder={''}
+          onChange={() => null}
+          isReadOnly={true}
           mb="2rem"
-          InputProps={{
-            isReadOnly: true,
-          }}
-        />
-        <PasswordField
-          label="Incoming View Key"
-          placeholder="Enter key"
-          value={account?.incomingViewKey}
-          mb="2rem"
-          InputProps={{
-            isReadOnly: true,
-          }}
-        />
-        <PasswordField
-          label="Outgoing View Key"
-          placeholder="Enter key"
-          value={account?.outgoingViewKey}
-          mb="2rem"
-          InputProps={{
-            isReadOnly: true,
-          }}
+          wordsAmount={24}
+          onBlinkingEyeClick={setShowPhrase}
         />
         <Flex>
           <Button

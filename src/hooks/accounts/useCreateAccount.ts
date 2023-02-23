@@ -1,22 +1,29 @@
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
-import { useCallback, useEffect } from 'react'
-import MnemonicPhraseType from 'Types/MnemonicPhraseType'
+import { useEffect } from 'react'
+import AccountCreateParams from 'Types/AccountCreateParams'
 
 const useCreateAccount = () => {
-  const [result, promiseWrapper] = useAsyncDataWrapper<string[]>()
-  const createAccount = useCallback(
-    (name: string) => window.IronfishManager.accounts.create(name),
-    []
-  )
+  const [result, promiseWrapper] = useAsyncDataWrapper<AccountCreateParams>()
 
-  const generateMnemonic = () =>
-    promiseWrapper(window.DemoDataManager.generateMnemonic())
+  const createAccount = () =>
+    promiseWrapper(window.IronfishManager.accounts.prepareAccount())
+
+  const confirmAccountCreation = (name: string) =>
+    window.IronfishManager.accounts.submitAccount({
+      ...result.data,
+      name,
+    })
 
   useEffect(() => {
-    generateMnemonic()
+    createAccount()
   }, [])
 
-  return [result, createAccount, generateMnemonic] as const
+  return {
+    ...result,
+    actions: {
+      confirmAccountCreation,
+    },
+  }
 }
 
 export default useCreateAccount

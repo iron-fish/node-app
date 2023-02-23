@@ -82,7 +82,7 @@ const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
       }}
     >
       <chakra.h2 mb="16px">Remove Account</chakra.h2>
-      {account?.balance?.confirmed === BigInt(0) ? (
+      {account?.balances?.default?.confirmed === BigInt(0) ? (
         <>
           <chakra.h4 mb="32px">
             You’re about to remove “{account?.name}”. Please be sure to have
@@ -123,7 +123,7 @@ const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
         <>
           <chakra.h4 mb="32px">
             {`This account currently holds ${formatOreToTronWithLanguage(
-              account?.balance?.confirmed || BigInt(0)
+              account?.balances?.default?.confirmed || BigInt(0)
             )} $IRON. Please send this $IRON to another account before removing.`}
           </chakra.h4>
           <Flex>

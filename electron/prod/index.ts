@@ -24,6 +24,12 @@ ipcMain.handle(
 )
 
 ipcMain.handle(
+  'ironfish-manager-assets',
+  (e, action: IronfishAssetManagerActions, ...args): Promise<any> =>
+    ironfishManager.assets[action](...args)
+)
+
+ipcMain.handle(
   'ironfish-manager-accounts',
   (e, action: IronfishAccountManagerAction, ...args): Promise<any> =>
     ironfishManager.accounts[action](...args)

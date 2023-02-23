@@ -9,6 +9,7 @@ import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfis
 import initStorageCallbacks from '../common/initStorage'
 import { IronFishManager } from '../ironfish/IronFishManager'
 import '../common/index'
+import { IronfishAssetManagerActions } from 'Types/IronfishManager/IIronfishAssetManager'
 
 const ironfishManager = new IronFishManager()
 
@@ -24,6 +25,21 @@ ipcMain.handle(
     let result
     try {
       result = ironfishManager[action](...args)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error)
+    }
+
+    return result
+  }
+)
+
+ipcMain.handle(
+  'ironfish-manager-assets',
+  (e, action: IronfishAssetManagerActions, ...args): Promise<any> => {
+    let result
+    try {
+      result = ironfishManager.assets[action](...args)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)

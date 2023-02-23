@@ -1,4 +1,4 @@
-import { AccountValue } from '@ironfish/sdk'
+import { AccountValue, ConfigOptions } from '@ironfish/sdk'
 import noop from 'lodash/noop'
 import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
@@ -7,10 +7,20 @@ import { ProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { Payment } from 'Types/Transaction'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
+import AccountCreateParams from 'Types/AccountCreateParams'
 
 export const IronFishManager: IIronfishManager = {
+  assets: {
+    list: (s?: string, offset?: number, max?: number) =>
+      window.DemoDataManager.assets.list(s, offset, max),
+    get: (id: string) => window.DemoDataManager.assets.get(id),
+    default: () => window.DemoDataManager.assets.default(),
+  },
   accounts: {
     create: (name: string) => window.DemoDataManager.createAccount(name),
+    prepareAccount: () => window.DemoDataManager.accounts.prepareAccount(),
+    submitAccount: (createParams: AccountCreateParams) =>
+      window.DemoDataManager.accounts.submitAccount(createParams),
     delete: (name: string) => window.DemoDataManager.deleteAccount(name),
     export: async (id: string) => {
       const account = Object.assign(
@@ -18,7 +28,7 @@ export const IronFishManager: IIronfishManager = {
         await window.DemoDataManager.accounts.findById(id)
       )
       delete account.id
-      delete account.balance
+      delete account.balances
 
       return account
     },
@@ -27,7 +37,11 @@ export const IronFishManager: IIronfishManager = {
       window.DemoDataManager.importAccount(account),
     list: (search: string, sort: SortType) =>
       window.DemoDataManager.getAccounts(search, sort),
-    balance: (id: string) => window.DemoDataManager.getBalance(id),
+    balance: (id: string, assetId?: string) =>
+      window.DemoDataManager.getBalance(id),
+    balances: (id: string) => window.DemoDataManager.accounts.balances(id),
+    getMnemonicPhrase: (id: string) =>
+      window.DemoDataManager.accounts.getMnemonicPhrase(id),
   },
   transactions: {
     averageFee: (numOfBlocks?) => {
@@ -80,6 +94,13 @@ export const IronFishManager: IIronfishManager = {
     status: () => window.DemoDataManager.snapshot.status(),
     reset: () => window.DemoDataManager.snapshot.reset(),
   },
+  nodeSettings: {
+    getConfig: () => window.DemoDataManager.nodeSettings.getConfig(),
+    setValues: (values: Partial<ConfigOptions>) =>
+      window.DemoDataManager.nodeSettings.setValues(values),
+    save: () => window.DemoDataManager.nodeSettings.save(),
+    clearConfig: () => window.DemoDataManager.nodeSettings.clearConfig(),
+  },
   nodeStatus: () => window.DemoDataManager.getNodeStatus(),
   peers: () => window.DemoDataManager.getNodePeers(),
   hasAnyAccount: () => window.DemoDataManager.hasAnyAccount(),
@@ -91,6 +112,9 @@ export const IronFishManager: IIronfishManager = {
   start: () => window.DemoDataManager.start(),
   stop: () => window.DemoDataManager.stop(),
   status: () => window.DemoDataManager.initStatus(),
+  getNodeConfig: () => window.DemoDataManager.getNodeConfig(),
+  saveNodeConfig: (values: Partial<ConfigOptions>) =>
+    window.DemoDataManager.saveNodeConfig(values),
 }
 
 export const AddressBookStorage: IStorage<Contact> = {

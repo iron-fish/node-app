@@ -27,7 +27,7 @@ const AccountPreview: FC<CutAccount> = ({
   name,
   publicAddress,
   id,
-  balance,
+  balances,
 }) => {
   const navigate = useNavigate()
   const { loaded: synced } = useDataSync()
@@ -107,8 +107,10 @@ const AccountPreview: FC<CutAccount> = ({
       <Box>
         <chakra.h5 pt="0.25rem">{name}</chakra.h5>
         <chakra.h3 p="0.25rem 0">
-          {formatOreToTronWithLanguage(balance.confirmed || BigInt(0))}
-          &nbsp;$IRON
+          {formatOreToTronWithLanguage(
+            balances?.default?.confirmed || BigInt(0)
+          )}
+          &nbsp;{balances?.default?.asset?.name}
         </chakra.h3>
         <CopyValueToClipboard
           containerProps={{

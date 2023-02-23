@@ -27,6 +27,7 @@ import InOutPutsIcon from 'Svgx/InOutPutsIcon'
 import LargeArrowLeftDown from 'Svgx/LargeArrowLeftDown'
 import LargeArrowRightUp from 'Svgx/LargeArrowRightUp'
 import ContactsPreview from 'Components/ContactsPreview'
+import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
 import WalletCommonTable from 'Components/WalletCommonTable'
 import InfoBadge from 'Components/InfoBadge'
 
@@ -37,7 +38,8 @@ interface Card {
 }
 const CARDS: Card[] = [
   {
-    render: (tx: Transaction) => tx?.amount,
+    render: (tx: Transaction) =>
+      FixedNumberUtils.render(tx?.amount.value || BigInt(0), 8),
     label: '$IRON Sent',
     icon: DifficultyIcon,
   },
@@ -52,7 +54,7 @@ const CARDS: Card[] = [
               iconButtonProps={{
                 color: NAMED_COLORS.GREY,
               }}
-              copyTooltipText={'Copy address to'}
+              copyTooltipText={'Copy address'}
               copiedTooltipText={'Address copied'}
             />
           ),
@@ -60,7 +62,7 @@ const CARDS: Card[] = [
     icon: DifficultyIcon,
   },
   {
-    render: (tx: Transaction) => tx?.notes?.at(0)?.memo || <>&nbsp;</>,
+    render: (tx: Transaction) => tx?.outputs?.at(0)?.memo || <>&nbsp;</>,
     label: 'Memo',
     icon: SizeIcon,
   },
@@ -186,12 +188,13 @@ const TransactionOverview: FC = () => {
           </Skeleton>
           <Skeleton isLoaded={accountLoaded} minW="8rem" h="0.875rem">
             <CopyValueToClipboard
-              label={
-                <chakra.h5>{truncateHash(account?.publicAddress, 3)}</chakra.h5>
-              }
+              label={truncateHash(account?.publicAddress, 3)}
               value={account?.publicAddress}
               copyTooltipText="Copy to clipboard"
               copiedTooltipText="Copied"
+              labelProps={{
+                as: 'h5',
+              }}
               containerProps={{
                 pb: '0.45rem',
                 color: color,
@@ -258,26 +261,67 @@ const TransactionOverview: FC = () => {
       >
         <Box
           w={{ base: '100%', md: '50%' }}
-          mb={{ base: transaction?.spends?.length ? '-2rem' : 0, md: 0 }}
+          mb={{
+            base: transaction?.creator
+              ? transaction?.inputs?.length
+                ? '-2rem'
+                : 0
+              : transaction?.spends?.length
+              ? '-2rem'
+              : 0,
+            md: 0,
+          }}
         >
-          <WalletCommonTable
-            data={transaction?.spends || []}
-            w="100%"
-            columns={[
-              {
-                key: 'input-address',
-                label: 'INPUT ADDRESS',
-                render: (spend: Spend) => (
-                  <Flex alignItems="center">
-                    <Box mr="1rem">
-                      <LargeArrowLeftDown h="1.125rem" w="1.125rem" />
-                    </Box>
-                    <Box
-                      overflow="hidden"
-                      whiteSpace="nowrap"
-                      textOverflow="ellipsis"
-                    >
+          {transaction?.creator ? (
+            <WalletCommonTable
+              data={transaction?.inputs || []}
+              w="100%"
+              columns={[
+                {
+                  key: 'input-address',
+                  label: 'INPUT ADDRESS',
+                  render: (note: Note) => (
+                    <Flex alignItems="center">
+                      <Box mr="1rem">
+                        <LargeArrowRightUp h="1.125rem" w="1.125rem" />
+                      </Box>
                       <chakra.h5>
+                        <ContactsPreview addresses={[transaction?.from]} />
+                      </chakra.h5>
+                    </Flex>
+                  ),
+                },
+                {
+                  key: 'note-amount',
+                  label: 'Amount',
+                  render: (note: Note) => (
+                    <chakra.h5>
+                      {formatOreToTronWithLanguage(note?.value || BigInt(0)) +
+                        ' ' +
+                        note?.asset.name}
+                    </chakra.h5>
+                  ),
+                },
+              ]}
+            />
+          ) : (
+            <WalletCommonTable
+              data={transaction?.spends || []}
+              w="100%"
+              columns={[
+                {
+                  key: 'input-address',
+                  label: 'INPUT ADDRESS',
+                  render: (spend: Spend) => (
+                    <Flex alignItems="center">
+                      <Box mr="1rem">
+                        <LargeArrowLeftDown h="1.125rem" w="1.125rem" />
+                      </Box>
+                      <Box
+                        overflow="hidden"
+                        whiteSpace="nowrap"
+                        textOverflow="ellipsis"
+                      >
                         <CopyValueToClipboard
                           copiedTooltipText="Input address copied"
                           copyTooltipText="Copy Input address"
@@ -286,18 +330,21 @@ const TransactionOverview: FC = () => {
                           iconButtonProps={{
                             color: NAMED_COLORS.GREY,
                           }}
+                          labelProps={{
+                            as: 'h5',
+                          }}
                         />
-                      </chakra.h5>
-                    </Box>
-                  </Flex>
-                ),
-              },
-            ]}
-          />
+                      </Box>
+                    </Flex>
+                  ),
+                },
+              ]}
+            />
+          )}
         </Box>
         <Box w={{ base: '100%', md: '50%' }}>
           <WalletCommonTable
-            data={transaction?.notes || []}
+            data={transaction?.outputs || []}
             w="100%"
             columns={[
               {
@@ -316,10 +363,12 @@ const TransactionOverview: FC = () => {
               },
               {
                 key: 'note-amount',
-                label: '$IRON',
+                label: 'Amount',
                 render: (note: Note) => (
                   <chakra.h5>
-                    {formatOreToTronWithLanguage(note?.value || BigInt(0))}
+                    {formatOreToTronWithLanguage(note?.value || BigInt(0)) +
+                      ' ' +
+                      note?.asset.name}
                   </chakra.h5>
                 ),
               },

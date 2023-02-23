@@ -1,5 +1,5 @@
-import { AccountValue } from '@ironfish/sdk'
 import { contextBridge, ipcRenderer } from 'electron'
+import { AccountValue, ConfigOptions } from '@ironfish/sdk'
 
 import Entity from 'Types/Entity'
 import {
@@ -13,6 +13,8 @@ import '../common/preload'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
 import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import { IronfishAssetManagerActions } from 'Types/IronfishManager/IIronfishAssetManager'
+import AccountCreateParams from 'Types/AccountCreateParams'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
   storageName: string
@@ -64,12 +66,55 @@ contextBridge.exposeInMainWorld('IronfishManager', {
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.SYNC),
   peers: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.PEERS),
+  getNodeConfig: () =>
+    ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.GET_NODE_CONFIG
+    ),
+  saveNodeConfig: (values: Partial<ConfigOptions>) =>
+    ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.SAVE_NODE_CONFIG,
+      values
+    ),
+  assets: {
+    list: (search?: string, offset?: number, max?: number) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-assets',
+        IronfishAssetManagerActions.LIST,
+        search,
+        offset,
+        max
+      ),
+    get: (id: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-assets',
+        IronfishAssetManagerActions.GET,
+        id
+      ),
+    default: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-assets',
+        IronfishAssetManagerActions.DEFAULT
+      ),
+  },
   accounts: {
     create: (name: string) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.CREATE,
         name
+      ),
+    prepareAccount: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.PREPARE_ACCOUNT
+      ),
+    submitAccount: (createParams: AccountCreateParams) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.SUBMIT_ACCOUNT,
+        createParams
       ),
     list: (search?: string, sort?: SortType) =>
       ipcRenderer.invoke(
@@ -102,10 +147,23 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         IronfishAccountManagerAction.EXPORT,
         id
       ),
-    balance: (id: string) =>
+    balance: (id: string, assetId?: string) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.BALANCE,
+        id,
+        assetId
+      ),
+    balances: (id: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.BALANCES,
+        id
+      ),
+    getMnemonicPhrase: (id: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.GET_MNEMONIC_PHRASE,
         id
       ),
   },
