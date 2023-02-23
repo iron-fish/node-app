@@ -1,4 +1,4 @@
-import { FC, memo, useState, useEffect } from 'react'
+import { FC, memo, useState, useEffect, useMemo } from 'react'
 import {
   Box,
   Flex,
@@ -13,6 +13,7 @@ import {
   SelectField,
   NumberInput,
   NumberInputField,
+  useIronToast,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
@@ -30,6 +31,8 @@ import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import { decodeIron, formatOreToTronWithLanguage } from 'Utils/number'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
 import capitalize from 'lodash/capitalize'
+import AccountAssetsSelect from 'Components/AccountAssetsSelect'
+import AccountBalance from 'Types/AccountBalance'
 
 const Information: FC = memo(() => {
   const textColor = useColorModeValue(
@@ -48,13 +51,6 @@ const Information: FC = memo(() => {
     </Box>
   )
 })
-
-const hasEnoughIron = (balance: bigint, amount: bigint, fee = BigInt(0)) => {
-  if (balance === BigInt(0)) {
-    return false
-  }
-  return balance && amount && fee ? balance >= amount + fee : true
-}
 
 const getPrecision = (val: string) => {
   let precision = 2
@@ -82,10 +78,10 @@ const getEstimatedFeeOption = (priority: string, value: bigint) => ({
 
 interface SendButtonProps {
   setStart: (start: boolean) => void
-  checkChanges: () => boolean
+  hasValidData: boolean
 }
 
-const SendButton: FC<SendButtonProps> = ({ setStart, checkChanges }) => {
+const SendButton: FC<SendButtonProps> = ({ setStart, hasValidData }) => {
   const { loaded: synced } = useDataSync()
   return (
     <Box>
@@ -98,7 +94,7 @@ const SendButton: FC<SendButtonProps> = ({ setStart, checkChanges }) => {
         borderRadius="4rem"
         mb="2rem"
         p="2rem"
-        isDisabled={!synced || checkChanges()}
+        isDisabled={!synced || hasValidData}
         leftIcon={
           <Icon height={26} width={26}>
             <SendIcon fill="currentColor" />
@@ -112,20 +108,32 @@ const SendButton: FC<SendButtonProps> = ({ setStart, checkChanges }) => {
   )
 }
 
+const parseErrorMessage = (errorMessage: string) =>
+  errorMessage.substring(errorMessage.indexOf('Error:') + 6)
+
 const Send: FC = () => {
   const location = useLocation()
   const state = location.state as LocationStateProps
   const [amount, setAmount] = useState('0.00')
   const [account, setAccount] = useState<CutAccount>(null)
   const [contact, setContact] = useState<Contact>(null)
+  const [balance, setBalance] = useState<AccountBalance>(null)
   const [txnMemo, setTxnMemo] = useState('')
   const [startSendFlow, setStart] = useState(false)
   const [selectedFee, setSelectedFee] = useState<OptionType>()
-  const { data: fees, loaded: feeCalculated } = useEstimatedFee(account?.id, {
-    publicAddress: contact?.address || '',
-    amount: decodeIron(amount || 0),
-    memo: txnMemo,
-  })
+  const {
+    data: fees,
+    loaded: feeCalculated,
+    error: feeError,
+  } = useEstimatedFee(
+    account?.id,
+    {
+      publicAddress: contact?.address || '',
+      amount: decodeIron(amount || 0),
+      memo: txnMemo,
+    },
+    balance?.asset.id
+  )
   const $colors = useColorModeValue(
     {
       bg: NAMED_COLORS.DEEP_BLUE,
@@ -138,6 +146,17 @@ const Send: FC = () => {
       warningBg: '#3E251B',
     }
   )
+  const toast = useIronToast({
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
+
+  useEffect(() => {
+    if (feeError?.message) {
+      toast({ title: parseErrorMessage(feeError.message), status: 'error' })
+    }
+  }, [feeError])
 
   const feeOptions = Object.entries(fees || {}).map(([key, value]) =>
     getEstimatedFeeOption(key, value)
@@ -161,13 +180,24 @@ const Send: FC = () => {
     }
   }, [feeCalculated])
 
-  const checkChanges = (): boolean =>
-    !(selectedFee?.value && account && contact && Number(amount)) ||
-    !hasEnoughIron(
-      account?.balances?.default?.confirmed,
-      decodeIron(amount || 0),
-      selectedFee.value
+  const hasEnoughIron = useMemo(() => {
+    if (balance?.confirmed === BigInt(0)) {
+      return false
+    }
+    const fee = selectedFee?.value || BigInt(0)
+    const ironAmount = decodeIron(amount || 0)
+    return balance?.confirmed >= ironAmount + fee
+  }, [balance?.confirmed, amount, selectedFee?.value])
+
+  const hasInvalidData = useMemo(() => {
+    return !(
+      selectedFee?.value &&
+      account &&
+      contact &&
+      Number(amount) &&
+      hasEnoughIron
     )
+  }, [selectedFee?.value, account, contact, hasEnoughIron, amount])
 
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
@@ -195,9 +225,12 @@ const Send: FC = () => {
               fontSize="3rem"
               alignItems="baseline"
               my="1rem"
+              flexWrap="wrap"
+              justifyContent="center"
             >
               <NumberInput
                 value={amount}
+                step={0.00000001}
                 onChange={valueString => {
                   try {
                     decodeIron(valueString)
@@ -211,7 +244,7 @@ const Send: FC = () => {
               >
                 <NumberInputField
                   fontSize="3rem"
-                  width={amount.length * 1.8 + 'rem'}
+                  width={amount.length * 1.9 + 'rem'}
                   minW="3rem"
                   h="100%"
                   p="0rem"
@@ -229,17 +262,13 @@ const Send: FC = () => {
                 fontSize="3rem"
                 px="1rem"
               >
-                $IRON
+                {balance?.asset.name || '$IRON'}
               </InputRightAddon>
             </InputGroup>
             <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5>
           </Flex>
           <Box mr="-0.25rem">
-            {!hasEnoughIron(
-              account?.balances?.default?.confirmed,
-              decodeIron(amount || 0),
-              selectedFee?.value
-            ) && (
+            {!hasEnoughIron && (
               <Flex
                 w="100%"
                 borderRadius="0.3125rem"
@@ -255,12 +284,27 @@ const Send: FC = () => {
                 </chakra.h4>
               </Flex>
             )}
-            <AccountsSelect
-              label="From Account"
-              mb="2rem"
-              accountId={account?.id || state?.accountId}
-              onSelectOption={setAccount}
-            />
+            <Flex gap="1rem">
+              <AccountsSelect
+                w="50%"
+                label="From Account"
+                mb="2rem"
+                accountId={account?.id || state?.accountId}
+                onSelectOption={setAccount}
+                showBalance={false}
+              />
+              <AccountAssetsSelect
+                w="50%"
+                label="Asset"
+                assets={
+                  account
+                    ? [account.balances.default, ...account.balances.assets]
+                    : []
+                }
+                selected={balance || account?.balances.default}
+                onSelectOption={setBalance}
+              />
+            </Flex>
             <ContactsAutocomplete
               label={'To'}
               contactId={contact?._id}
@@ -289,7 +333,7 @@ const Send: FC = () => {
               />
             </Flex>
           </Box>
-          <SendButton checkChanges={checkChanges} setStart={setStart} />
+          <SendButton hasValidData={hasInvalidData} setStart={setStart} />
         </Box>
         <Box>
           <DetailsPanel>
@@ -307,6 +351,7 @@ const Send: FC = () => {
         }}
         onClose={() => setStart(false)}
         amount={decodeIron(amount || 0)}
+        asset={balance?.asset}
         from={account}
         to={contact}
         memo={txnMemo}

@@ -157,13 +157,19 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         hash,
         accountId
       ),
-    send: (accountId: string, payment: Payment, transactionFee?: bigint) =>
+    send: (
+      accountId: string,
+      payment: Payment,
+      transactionFee?: bigint,
+      assetId?: string
+    ) =>
       ipcRenderer.invoke(
         'ironfish-manager-transactions',
         IronfishTransactionManagerAction.SEND,
         accountId,
         payment,
-        transactionFee
+        transactionFee,
+        assetId
       ),
     fees: (numOfBlocks = 100) =>
       ipcRenderer.invoke(
@@ -177,12 +183,17 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         IronfishTransactionManagerAction.AVERAGE_FEE,
         numOfBlocks
       ),
-    estimateFeeWithPriority: (accountId: string, receive: Payment) =>
+    estimateFeeWithPriority: (
+      accountId: string,
+      receive: Payment,
+      assetId?: string
+    ) =>
       ipcRenderer.invoke(
         'ironfish-manager-transactions',
         IronfishTransactionManagerAction.ESTIMATE_FEE,
         accountId,
-        receive
+        receive,
+        assetId
       ),
     findByAccountId: (
       accountId: string,

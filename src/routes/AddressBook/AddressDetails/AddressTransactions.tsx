@@ -13,6 +13,7 @@ import ContactsPreview from 'Components/ContactsPreview'
 import Contact from 'Types/Contact'
 import TransactionStatusView from 'Components/TransactionStatusView'
 import WalletCommonTable from 'Components/WalletCommonTable'
+import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 
 interface AddressTransactionsProps {
   address: string
@@ -97,10 +98,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               key: 'iron',
               label: '$IRON',
               render: (transaction: Transaction) => (
-                <h5>
-                  {(transaction.creator ? '' : '+') +
-                    FixedNumberUtils.render(transaction.amount.value, 8)}
-                </h5>
+                <AssetsAmountPreview assetAmounts={transaction?.assetAmounts} />
               ),
             },
             {
@@ -117,7 +115,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               key: 'date',
               label: 'Date',
               render: (transaction: Transaction) => (
-                <h5>{transaction.created.toISOString()}</h5>
+                <h5>{transaction.created.toLocaleString()}</h5>
               ),
             },
             {

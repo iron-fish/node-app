@@ -18,6 +18,7 @@ import {
   Icon,
   Link,
   LightMode,
+  Progress,
 } from '@ironfish/ui-kit'
 import Contact from 'Types/Contact'
 import SendIcon from 'Svgx/send'
@@ -29,6 +30,7 @@ import useAddressBook from 'Hooks/addressBook/useAddressBook'
 import ArrowRight from 'Svgx/ArrowRight'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from 'Routes/data'
+import Asset from 'Types/Asset'
 
 interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {
   cleanUp: () => void
@@ -37,6 +39,7 @@ interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {
 interface SendProps {
   from: CutAccount
   to: Contact
+  asset: Asset
   amount: bigint
   memo: string
   fee: bigint
@@ -80,6 +83,7 @@ const ConfirmStep: FC<StepProps> = ({
   onCancel,
   from,
   to,
+  asset,
   amount,
   memo,
   fee,
@@ -193,7 +197,7 @@ const ConfirmStep: FC<StepProps> = ({
             value={
               <HStack w="100%" justifyContent="space-between">
                 <chakra.h4>
-                  {formatOreToTronWithLanguage(amount)} $IRON
+                  {formatOreToTronWithLanguage(amount)} {asset.name}
                 </chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
@@ -204,7 +208,9 @@ const ConfirmStep: FC<StepProps> = ({
             title="Fee:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{formatOreToTronWithLanguage(fee)} $IRON</chakra.h4>
+                <chakra.h4>
+                  {formatOreToTronWithLanguage(fee)} {asset.name}
+                </chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -216,7 +222,7 @@ const ConfirmStep: FC<StepProps> = ({
               <HStack w="100%" justifyContent="space-between">
                 <chakra.h4>
                   {formatOreToTronWithLanguage(amount + fee)}
-                  &nbsp;$IRON
+                  &nbsp;{asset.name}
                 </chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
@@ -247,7 +253,7 @@ const ConfirmStep: FC<StepProps> = ({
   )
 }
 
-const ResultStep: FC<StepProps> = ({ from, amount, transaction }) => {
+const ResultStep: FC<StepProps> = ({ from, amount, asset, transaction }) => {
   const navigate = useNavigate()
   return (
     <>
@@ -266,37 +272,46 @@ const ResultStep: FC<StepProps> = ({ from, amount, transaction }) => {
         <chakra.h2 mb="1rem">Transaction Processing</chakra.h2>
         <chakra.h4 mb="2rem">
           We are processing your transaction of{' '}
-          {formatOreToTronWithLanguage(amount)} $IRON. This may take a few
-          minutes. This transaction will appear in your activity as pending
+          {formatOreToTronWithLanguage(amount)} {asset.name}. This may take a
+          few minutes. This transaction will appear in your activity as pending
           until it’s been processed.
         </chakra.h4>
-        <Flex gap="1rem">
-          <Button
-            variant="primary"
-            size="small"
-            rightIcon={<ArrowRight mr="-0.5rem" />}
-            onClick={() =>
-              navigate(ROUTES.ACCOUNT, { state: { accountId: from.id } })
-            }
-          >
-            View Account Activity
-          </Button>
-          <Button
-            variant="primary"
-            size="small"
-            rightIcon={<ArrowRight mr="-0.5rem" />}
-            onClick={() =>
-              navigate(ROUTES.TRANSACTION, {
-                state: {
-                  accountId: from.id,
-                  hash: transaction.hash,
-                },
-              })
-            }
-          >
-            View Transaction
-          </Button>
-        </Flex>
+        {transaction ? (
+          <Flex gap="1rem">
+            <Button
+              variant="primary"
+              size="small"
+              rightIcon={<ArrowRight mr="-0.5rem" />}
+              onClick={() =>
+                navigate(ROUTES.ACCOUNT, { state: { accountId: from.id } })
+              }
+            >
+              View Account Activity
+            </Button>
+            <Button
+              variant="primary"
+              size="small"
+              rightIcon={<ArrowRight mr="-0.5rem" />}
+              onClick={() =>
+                navigate(ROUTES.TRANSACTION, {
+                  state: {
+                    accountId: from.id,
+                    hash: transaction.hash,
+                  },
+                })
+              }
+            >
+              View Transaction
+            </Button>
+          </Flex>
+        ) : (
+          <Progress
+            borderRadius="2rem"
+            isIndeterminate
+            bg={NAMED_COLORS.LIGHT_GREY}
+            variant="ironLightBlue"
+          />
+        )}
       </ModalBody>
     </>
   )
@@ -310,6 +325,7 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
   amount,
   memo,
   fee,
+  asset,
   onCreateAccount,
   ...props
 }) => {
@@ -334,7 +350,8 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
           memo,
           publicAddress: to.address,
         },
-        fee
+        fee,
+        asset.id
       )
       .then(setTransaction)
 
@@ -359,6 +376,7 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
             amount={amount}
             memo={memo}
             fee={fee}
+            asset={asset}
             onConfirm={() => {
               setCurrentStep(1)
               send()

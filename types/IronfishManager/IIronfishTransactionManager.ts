@@ -31,13 +31,15 @@ export interface IIronfishTransactionManager {
   send: (
     accountId: string,
     payment: Payment,
-    transactionFee?: bigint
+    transactionFee?: bigint,
+    assetId?: string
   ) => Promise<Transaction>
   fees: (numOfBlocks?: number) => Promise<TransactionFeeStatistic>
   averageFee: (numOfBlocks?: number) => Promise<bigint>
   estimateFeeWithPriority: (
     accountId: string,
-    receive: Payment
+    receive: Payment,
+    assetId: string
   ) => Promise<TransactionFeeEstimate>
   findByAccountId: (
     accountId: string,

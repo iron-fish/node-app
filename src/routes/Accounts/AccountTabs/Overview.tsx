@@ -31,6 +31,7 @@ import differenceBy from 'lodash/differenceBy'
 import intersectionBy from 'lodash/intersectionBy'
 import useAccountBalance from 'Hooks/accounts/useAccountBalance'
 import WalletCommonTable from 'Components/WalletCommonTable'
+import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 
 interface SearchTransactionsProps {
   address: string
@@ -163,12 +164,9 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
             },
             {
               key: 'transaction-amount-column',
-              label: <chakra.h6>$IRON</chakra.h6>,
+              label: <chakra.h6>Sent</chakra.h6>,
               render: (transaction: Transaction) => (
-                <chakra.h5>
-                  {(transaction.creator ? '' : '+') +
-                    FixedNumberUtils.render(transaction.amount.value, 8)}
-                </chakra.h5>
+                <AssetsAmountPreview assetAmounts={transaction?.assetAmounts} />
               ),
             },
             {
@@ -177,7 +175,11 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               render: (transaction: Transaction) => (
                 <ContactsPreview
                   addresses={
-                    transaction.creator ? transaction.to : [transaction.from]
+                    transaction.creator
+                      ? transaction.to
+                      : transaction.from
+                      ? [transaction.from]
+                      : []
                   }
                   notes={transaction.outputs}
                 />
@@ -187,7 +189,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               key: 'transaction-date-column',
               label: <chakra.h6>Date</chakra.h6>,
               render: (transaction: Transaction) => (
-                <chakra.h5>{transaction.created.toISOString()}</chakra.h5>
+                <chakra.h5>{transaction.created.toLocaleString()}</chakra.h5>
               ),
             },
             {

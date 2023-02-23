@@ -12,6 +12,8 @@ const useImportAccount = () => {
         name: 'Imported Account',
         publicAddress: nanoid(64),
         spendingKey: spendingKey,
+        viewKey: nanoid(64),
+        version: 1,
       }),
     []
   )
@@ -24,6 +26,8 @@ const useImportAccount = () => {
         name: 'Imported Account',
         publicAddress: nanoid(64),
         spendingKey: nanoid(64),
+        viewKey: nanoid(64),
+        version: 1,
       }),
     []
   )

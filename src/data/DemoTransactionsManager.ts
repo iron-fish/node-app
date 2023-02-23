@@ -386,7 +386,8 @@ class DemoTransactionsManager {
 
   estimateFeeWithPriority(
     accountId: string,
-    receive: Payment
+    receive: Payment,
+    assetId: string
   ): Promise<TransactionFeeEstimate> {
     return Promise.resolve({
       slow: BigInt(1),

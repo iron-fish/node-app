@@ -12,6 +12,8 @@
     "jsx": "react-jsx",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "downlevelIteration": true,
+    "importHelpers": true,
     "paths": {
       "*": ["node_modules/*"],
       "Components/*": ["src/components/*"],

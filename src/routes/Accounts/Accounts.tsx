@@ -89,7 +89,7 @@ const Accounts = () => {
   useEffect(() => {
     let timeout: NodeJS.Timer
     if (loaded) {
-      timeout = setInterval(reloadAccounts, 5000)
+      // timeout = setInterval(reloadAccounts, 5000)
     }
 
     return () => timeout && clearInterval(timeout)

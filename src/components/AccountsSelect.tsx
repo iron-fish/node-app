@@ -9,30 +9,36 @@ interface AccountsSelectProps extends FlexProps {
   accountId: string
   label: string
   onSelectOption?: (account: CutAccount) => void
+  showBalance?: boolean
 }
 
-const getAccountOptions = (accounts: CutAccount[] = []): OptionType[] => {
+const getAccountOptions = (
+  accounts: CutAccount[] = [],
+  showBalance: boolean
+): OptionType[] => {
   return accounts.map(account => ({
     label: account.name,
     value: account,
-    helperText:
-      formatOreToTronWithLanguage(
-        account?.balances?.default?.confirmed || BigInt(0)
-      ) +
-        ' ' +
-        account?.balances?.default?.asset?.name || '',
+    helperText: showBalance
+      ? formatOreToTronWithLanguage(
+          account?.balances?.default?.confirmed || BigInt(0)
+        ) +
+          ' ' +
+          account?.balances?.default?.asset?.name || ''
+      : '',
   }))
 }
 
 const AccountsSelect: FC<AccountsSelectProps> = ({
   accountId,
   onSelectOption,
+  showBalance = true,
   ...props
 }) => {
   const [{ data }] = useAccounts()
 
   const options = useMemo(
-    () => getAccountOptions(data),
+    () => getAccountOptions(data, showBalance),
     [
       JSON.stringify(data, (key, value) =>
         typeof value === 'bigint' ? value.toString() : value
@@ -43,7 +49,7 @@ const AccountsSelect: FC<AccountsSelectProps> = ({
   useEffect(() => {
     const selectedOption =
       options.find(({ value }) => value.id === accountId) || options[0]
-    onSelectOption(selectedOption?.value || options[0]?.value)
+    onSelectOption(selectedOption?.value)
   }, [options])
 
   return (

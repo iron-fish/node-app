@@ -1,5 +1,11 @@
-import { AccountValue, CurrencyUtils, IronfishNode } from '@ironfish/sdk'
+import {
+  AccountValue,
+  ACCOUNT_SCHEMA_VERSION,
+  CurrencyUtils,
+  IronfishNode,
+} from '@ironfish/sdk'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
+import { v4 as uuid } from 'uuid'
 import {
   Asset as NativeAsset,
   LanguageCode,
@@ -36,21 +42,23 @@ class AccountManager
     const key = generateKey()
 
     return {
-      spendingKey: key.spending_key,
+      name: uuid(),
+      spendingKey: key.spendingKey,
+      version: ACCOUNT_SCHEMA_VERSION,
+      id: uuid(),
+      viewKey: key.viewKey,
+      incomingViewKey: key.incomingViewKey,
+      outgoingViewKey: key.outgoingViewKey,
+      publicAddress: key.publicAddress,
       mnemonicPhrase: spendingKeyToWords(
-        key.spending_key,
+        key.spendingKey,
         LanguageCode.English
       ).split(' '),
     }
   }
 
-  async submitAccount(
-    createParams: AccountCreateParams
-  ): Promise<WalletAccount> {
-    const newAccount = await this.node.wallet.importAccount({
-      name: createParams.name,
-      spendingKey: createParams.spendingKey,
-    })
+  async submitAccount(createParams: AccountValue): Promise<WalletAccount> {
+    const newAccount = await this.node.wallet.importAccount(createParams)
 
     return newAccount.serialize()
   }
@@ -110,9 +118,7 @@ class AccountManager
     await this.node.wallet.removeAccountByName(name)
   }
 
-  async import(
-    account: Omit<AccountValue, 'id' | 'rescan'>
-  ): Promise<AccountValue> {
+  async import(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
     return this.node.wallet
       .importAccount(account)
       .then(data => data.serialize())
