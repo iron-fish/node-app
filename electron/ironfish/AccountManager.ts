@@ -181,6 +181,13 @@ class AccountManager
       assets: assetBalances,
     }
   }
+
+  async getMnemonicPhrase(id: string): Promise<string[]> {
+    const account = this.node.wallet.getAccount(id)
+    return spendingKeyToWords(account.spendingKey, LanguageCode.English).split(
+      ' '
+    )
+  }
 }
 
 export default AccountManager
