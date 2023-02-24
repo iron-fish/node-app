@@ -1,4 +1,5 @@
 import { formatFixed, parseFixed } from '@ethersproject/bignumber'
+import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
 
 const IRON_PRECISION = 8
 
@@ -7,15 +8,10 @@ export const formatOreToTronWithLanguage = (
   fullPrecision = false,
   language?: string
 ): string => {
-  const formattedIron = formatFixed(ore, IRON_PRECISION)
-  const splitted = formattedIron.split('.')
-  const significant = splitted[0]
-  let fractional = splitted[1]
-  if (fullPrecision && fractional.length < IRON_PRECISION) {
-    fractional = fractional.concat(
-      ...new Array(IRON_PRECISION - fractional.length).fill('0')
-    )
-  }
+  const formattedIron = fullPrecision
+    ? FixedNumberUtils.render(ore, IRON_PRECISION)
+    : formatFixed(ore, IRON_PRECISION)
+  const [significant, fractional] = formattedIron.split('.')
   return `${Number(significant).toLocaleString(
     language || navigator.language
   )}${fractional ? '.' + fractional : '.0'}`

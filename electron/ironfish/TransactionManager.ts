@@ -231,11 +231,14 @@ class TransactionManager
 
     const assetAmounts: Amount[] = []
     const feePaid = transaction.transaction.fee()
-    const type = await this.node.wallet.getTransactionType(account, transaction)
+    const transactionType = await this.node.wallet.getTransactionType(
+      account,
+      transaction
+    )
 
     for (const [assetId, delta] of transaction.assetBalanceDeltas.entries()) {
       if (assetId.equals(Asset.nativeId())) {
-        if (type === TransactionType.SEND) {
+        if (transactionType === TransactionType.SEND) {
           if (delta + BigInt(feePaid) === BigInt(0)) {
             continue
           }

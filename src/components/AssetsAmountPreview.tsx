@@ -20,7 +20,7 @@ import SimpleTable from './SimpleTable'
 const AmountPreview: FC<{ assetAmount: Amount }> = ({ assetAmount }) => {
   return (
     <Flex direction="column">
-      <h5>{formatOreToTronWithLanguage(assetAmount.value)}</h5>
+      <h5>{formatOreToTronWithLanguage(assetAmount.value, true)}</h5>
       <h5>{assetAmount.asset.name}</h5>
     </Flex>
   )
