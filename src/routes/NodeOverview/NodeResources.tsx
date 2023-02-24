@@ -1,7 +1,23 @@
-import { FC } from 'react'
-import { Flex, FieldGroup, TextField, chakra } from '@ironfish/ui-kit'
+import { FC, ReactNode } from 'react'
+import { Flex, chakra, StatLabel, StatNumber, Stat } from '@ironfish/ui-kit'
 import { FileUtils } from '@ironfish/sdk/build/src/utils/file'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
+
+interface NodeResourceProps {
+  label: ReactNode
+  value: ReactNode
+}
+
+const NodeResource: FC<NodeResourceProps> = ({ label, value }) => (
+  <Stat>
+    <StatLabel>
+      <chakra.h6>{label}</chakra.h6>
+    </StatLabel>
+    <StatNumber>
+      <chakra.h3 textTransform="capitalize">{value}</chakra.h3>
+    </StatNumber>
+  </Stat>
+)
 
 interface NodeResourcesProps {
   data: NodeStatusResponse
@@ -18,65 +34,53 @@ const NodeResources: FC<NodeResourcesProps> = ({ data, loaded }) => {
   return (
     loaded && (
       <Flex direction="column">
-        <chakra.h3>CPU</chakra.h3>
-        <FieldGroup mb="1rem">
-          <TextField
-            label="Cores"
-            value={`${data.cpu.cores}`}
-            width="50%"
-            InputProps={{ isReadOnly: true }}
-          />
-          <TextField
-            label="Current"
-            value={`${data.cpu.percentCurrent.toFixed(1)}%`}
-            width="50%"
-            InputProps={{ isReadOnly: true }}
-          />
-        </FieldGroup>
-        <chakra.h3>Memory</chakra.h3>
-        <FieldGroup mb="1rem">
-          <TextField
-            width="33.4%"
-            label="Heap used"
-            value={`${heapUsed}`}
-            InputProps={{ isReadOnly: true }}
-          />
-          <TextField
-            width="33.4%"
-            label="Heap total"
-            value={`${heapTotal}`}
-            InputProps={{ isReadOnly: true }}
-          />
-          <TextField
-            width="33.4%"
-            label="Heap maximum"
-            value={`${heapMax} (${(
-              (data.memory.heapUsed / data.memory.heapMax) *
-              100
-            ).toFixed(1)}%)`}
-            InputProps={{ isReadOnly: true }}
-          />
-        </FieldGroup>
-        <FieldGroup mb="1rem">
-          <TextField
-            label="RSS"
-            value={`${rss} (${(
-              (data.memory.rss / data.memory.memTotal) *
-              100
-            ).toFixed(1)}%)`}
-            width="50%"
-            InputProps={{ isReadOnly: true }}
-          />
-          <TextField
-            label="Free"
-            value={`${memFree} (${(
-              (1 - data.memory.memFree / data.memory.memTotal) *
-              100
-            ).toFixed(1)}%)`}
-            width="50%"
-            InputProps={{ isReadOnly: true }}
-          />
-        </FieldGroup>
+        <Flex
+          p="4rem"
+          ml="0 !important"
+          layerStyle="card"
+          h="18.75rem"
+          overflow="hidden"
+          whiteSpace="nowrap"
+          borderRadius="0.25rem"
+          direction="column"
+          gap="1rem"
+        >
+          <Flex>
+            <NodeResource label="Cores" value={data.cpu.cores} />
+            <NodeResource
+              label="Current"
+              value={`${data.cpu.percentCurrent.toFixed(1)}%`}
+            />
+          </Flex>
+          <Flex>
+            <NodeResource
+              label="RSS"
+              value={`${rss} (${(
+                (data.memory.rss / data.memory.memTotal) *
+                100
+              ).toFixed(1)}%)`}
+            />
+            <NodeResource
+              label="Free"
+              value={`${memFree} (${(
+                (1 - data.memory.memFree / data.memory.memTotal) *
+                100
+              ).toFixed(1)}
+              %)`}
+            />
+          </Flex>
+          <Flex>
+            <NodeResource label="Heap used" value={heapUsed} />
+            <NodeResource label="Heap total" value={heapTotal} />
+            <NodeResource
+              label="Heap maximum"
+              value={`${heapMax} (${(
+                (data.memory.heapUsed / data.memory.heapMax) *
+                100
+              ).toFixed(1)}%)`}
+            />
+          </Flex>
+        </Flex>
       </Flex>
     )
   )
