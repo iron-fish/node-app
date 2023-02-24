@@ -27,7 +27,6 @@ import InOutPutsIcon from 'Svgx/InOutPutsIcon'
 import LargeArrowLeftDown from 'Svgx/LargeArrowLeftDown'
 import LargeArrowRightUp from 'Svgx/LargeArrowRightUp'
 import ContactsPreview from 'Components/ContactsPreview'
-import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
 import WalletCommonTable from 'Components/WalletCommonTable'
 import InfoBadge from 'Components/InfoBadge'
 import AssetsAmountPreview from 'Components/AssetsAmountPreview'
@@ -40,7 +39,15 @@ interface Card {
 const CARDS: Card[] = [
   {
     render: (tx: Transaction) => (
-      <AssetsAmountPreview assetAmounts={tx?.assetAmounts} />
+      <AssetsAmountPreview
+        assetAmounts={
+          tx?.assetAmounts.length
+            ? tx?.assetAmounts
+            : tx?.amount
+            ? [tx?.amount]
+            : []
+        }
+      />
     ),
     label: 'Sent',
     icon: DifficultyIcon,
@@ -146,7 +153,7 @@ const TransactionOverview: FC = () => {
         transaction.status === TransactionStatus.UNCONFIRMED ||
         transaction.status === TransactionStatus.UNKNOWN)
     ) {
-      // interval = setInterval(reload, 5000)
+      interval = setInterval(reload, 5000)
     }
 
     return () => interval && clearInterval(interval)

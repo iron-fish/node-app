@@ -6,6 +6,7 @@ const useSendFlow = (
   amount: bigint,
   memo: string,
   to: string,
+  assetId: string,
   fee?: bigint
 ) => {
   const [transaction, setTransaction] = useState<Transaction | null>(null)
@@ -17,6 +18,7 @@ const useSendFlow = (
           amount,
           memo,
           publicAddress: to,
+          assetId,
         },
         fee
       )

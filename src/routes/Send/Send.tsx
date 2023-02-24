@@ -125,15 +125,12 @@ const Send: FC = () => {
     data: fees,
     loaded: feeCalculated,
     error: feeError,
-  } = useEstimatedFee(
-    account?.id,
-    {
-      publicAddress: contact?.address || '',
-      amount: decodeIron(amount || 0),
-      memo: txnMemo,
-    },
-    balance?.asset.id
-  )
+  } = useEstimatedFee(account?.id, {
+    publicAddress: contact?.address || '',
+    amount: decodeIron(amount || 0),
+    memo: txnMemo,
+    assetId: balance?.asset.id,
+  })
   const $colors = useColorModeValue(
     {
       bg: NAMED_COLORS.DEEP_BLUE,

@@ -386,8 +386,7 @@ class DemoTransactionsManager {
 
   estimateFeeWithPriority(
     accountId: string,
-    receive: Payment,
-    assetId: string
+    receive: Payment
   ): Promise<TransactionFeeEstimate> {
     return Promise.resolve({
       slow: BigInt(1),
@@ -402,13 +401,19 @@ class DemoTransactionsManager {
     to: string,
     amount: bigint,
     memo: string,
-    fee: bigint
+    fee: bigint,
+    assetId: string
   ): Promise<Transaction> {
     return new Promise(resolve => {
       setTimeout(() => {
         const transaction: Transaction = {
           amount: { value: amount, asset: DEFAULT_ASSET },
-          assetAmounts: [],
+          assetAmounts: [
+            {
+              value: amount,
+              asset: DEMO_ASSETS.find(({ id }) => id === assetId),
+            },
+          ],
           created: new Date(),
           creator: true,
           fee: fee.toString(),

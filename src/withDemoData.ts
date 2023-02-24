@@ -46,15 +46,10 @@ export const IronFishManager: IIronfishManager = {
     averageFee: (numOfBlocks?) => {
       return Promise.resolve(BigInt(Math.round(Math.random() * 1000)))
     },
-    estimateFeeWithPriority: (
-      accountId: string,
-      receive: Payment,
-      assetId: string
-    ) =>
+    estimateFeeWithPriority: (accountId: string, receive: Payment) =>
       window.DemoDataManager.transactions.estimateFeeWithPriority(
         accountId,
-        receive,
-        assetId
+        receive
       ),
     fees: (numOfBlocks?) => {
       return Promise.resolve({
@@ -89,7 +84,8 @@ export const IronFishManager: IIronfishManager = {
         payment.publicAddress,
         payment.amount,
         payment.memo,
-        transactionFee || BigInt(100)
+        transactionFee || BigInt(100),
+        payment.assetId
       ),
   },
   nodeSettings: {

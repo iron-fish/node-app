@@ -9,7 +9,7 @@ import CutAccount from 'Types/CutAccount'
 import SortType from 'Types/SortType'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import Asset from 'Types/Asset'
-import { DEFAULT_ASSET } from './DemoAssetManager'
+import { DEFAULT_ASSET, DEMO_ASSETS } from './DemoAssetManager'
 import Account from 'Types/Account'
 import AccountCreateParams from 'Types/AccountCreateParams'
 
@@ -95,6 +95,22 @@ export const ACCOUNT_BALANCES: Record<
       pendingCount: 12,
       unconfirmedCount: 3,
       asset: DEFAULT_ASSET,
+    },
+    {
+      confirmed: BigInt(12366),
+      unconfirmed: BigInt(327),
+      pending: BigInt(1234),
+      pendingCount: 12,
+      unconfirmedCount: 3,
+      asset: DEMO_ASSETS[1],
+    },
+    {
+      confirmed: BigInt(12367),
+      unconfirmed: BigInt(327),
+      pending: BigInt(1234),
+      pendingCount: 12,
+      unconfirmedCount: 3,
+      asset: DEMO_ASSETS[2],
     },
   ],
   H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6: [
@@ -261,7 +277,6 @@ class DemoAccountsManager {
         assets: ACCOUNT_BALANCES[account.id].slice(1),
       }
       account.order = accountIndex
-      account.mnemonicPhrase = randomWords({ exactly: 24, maxLength: 8 })
     }
 
     return new Promise(resolve => setTimeout(() => resolve(account), 500))

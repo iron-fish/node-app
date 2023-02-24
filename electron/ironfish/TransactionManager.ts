@@ -38,18 +38,14 @@ class TransactionManager
   async send(
     accountId: string,
     payment: Payment,
-    transactionFee?: bigint,
-    assetId?: string
+    transactionFee?: bigint
   ): Promise<Transaction> {
     const account = this.node.wallet.getAccount(accountId)
     const head = await account.getHead()
-    const assetIdentifier: Buffer = assetId
-      ? Buffer.from(assetId, 'hex')
-      : Asset.nativeId()
 
     const transaction = await this.node.wallet.send(
       account,
-      [{ ...payment, assetId: assetIdentifier }],
+      [{ ...payment, assetId: Buffer.from(payment.assetId, 'hex') }],
       transactionFee,
       this.node.config.get('transactionExpirationDelta')
     )
@@ -106,8 +102,7 @@ class TransactionManager
 
   async estimateFeeWithPriority(
     accountId: string,
-    receive: Payment,
-    assetId: string
+    receive: Payment
   ): Promise<TransactionFeeEstimate> {
     const estimatedFeeRates = this.node.memPool.feeEstimator.estimateFeeRates()
     const feeRates = [
@@ -117,8 +112,6 @@ class TransactionManager
     ]
 
     const account = this.node.wallet.getAccount(accountId)
-
-    const identity: Buffer = Buffer.from(assetId, 'hex')
 
     const allPromises: Promise<RawTransaction>[] = []
 
@@ -131,7 +124,7 @@ class TransactionManager
               publicAddress: receive.publicAddress,
               amount: receive.amount,
               memo: receive.memo,
-              assetId: identity,
+              assetId: Buffer.from(receive.assetId, 'hex'),
             },
           ],
           feeRate,

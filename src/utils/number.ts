@@ -4,13 +4,14 @@ const IRON_PRECISION = 8
 
 export const formatOreToTronWithLanguage = (
   ore: bigint,
+  fullPrecision: false,
   language?: string
 ): string => {
   const formattedIron = formatFixed(ore, IRON_PRECISION)
   const splitted = formattedIron.split('.')
   const significant = splitted[0]
   let fractional = splitted[1]
-  if (fractional.length < IRON_PRECISION) {
+  if (fullPrecision && fractional.length < IRON_PRECISION) {
     fractional = fractional.concat(
       ...new Array(IRON_PRECISION - fractional.length).fill('0')
     )

@@ -166,7 +166,15 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               key: 'transaction-amount-column',
               label: <chakra.h6>Sent</chakra.h6>,
               render: (transaction: Transaction) => (
-                <AssetsAmountPreview assetAmounts={transaction?.assetAmounts} />
+                <AssetsAmountPreview
+                  assetAmounts={
+                    transaction?.assetAmounts.length
+                      ? transaction?.assetAmounts
+                      : transaction?.amount
+                      ? [transaction?.amount]
+                      : []
+                  }
+                />
               ),
             },
             {

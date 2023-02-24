@@ -349,9 +349,9 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
           amount,
           memo,
           publicAddress: to.address,
+          assetId: asset.id,
         },
-        fee,
-        asset.id
+        fee
       )
       .then(setTransaction)
 

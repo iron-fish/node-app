@@ -1,4 +1,5 @@
 import {
+  Account,
   AccountValue,
   ACCOUNT_SCHEMA_VERSION,
   CurrencyUtils,
@@ -42,14 +43,14 @@ class AccountManager
     const key = generateKey()
 
     return {
-      name: uuid(),
-      spendingKey: key.spendingKey,
       version: ACCOUNT_SCHEMA_VERSION,
       id: uuid(),
-      viewKey: key.viewKey,
+      name: uuid(),
       incomingViewKey: key.incomingViewKey,
       outgoingViewKey: key.outgoingViewKey,
       publicAddress: key.publicAddress,
+      spendingKey: key.spendingKey,
+      viewKey: key.viewKey,
       mnemonicPhrase: spendingKeyToWords(
         key.spendingKey,
         LanguageCode.English
@@ -158,6 +159,19 @@ class AccountManager
 
     if (!account) {
       throw new Error(`Account with id=${id} was not found.`)
+    }
+
+    const head = await account.getHead()
+    if (!head) {
+      return {
+        default: {
+          unconfirmed: BigInt(0),
+          confirmed: BigInt(0),
+          unconfirmedCount: 0,
+          asset: await this.assetManager.get(NativeAsset.nativeId()),
+        },
+        assets: [],
+      }
     }
 
     const assetBalances: AccountBalance[] = []

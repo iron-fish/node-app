@@ -43,7 +43,6 @@
     "@visx/xychart": "2.12.2",
     "aws-sdk": "^2.1233.0",
     "bip39": "^3.0.4",
-    "buffer-map": "^0.0.7",
     "bufio": "^1.2.0",
     "byte-size": "^8.1.0",
     "copy-webpack-plugin": "^11.0.0",

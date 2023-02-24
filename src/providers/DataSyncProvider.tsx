@@ -40,14 +40,14 @@ const DataSyncProvider: FC<DataSyncProviderProps> = ({ children }) => {
 
   useEffect(() => {
     setLoaded(status?.blockchain.synced)
-    // const interval = setInterval(
-    //   () => {
-    //     loadStatus()
-    //     status?.blockchain.synced && window.IronfishManager.sync()
-    //   },
-    //   status?.blockchain.synced ? 10000 : 5000
-    // )
-    // return () => clearInterval(interval)
+    const interval = setInterval(
+      () => {
+        loadStatus()
+        status?.blockchain.synced && window.IronfishManager.sync()
+      },
+      status?.blockchain.synced ? 10000 : 5000
+    )
+    return () => clearInterval(interval)
   }, [status?.blockchain.synced])
 
   const value = { loaded, data: status, error }
