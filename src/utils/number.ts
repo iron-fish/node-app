@@ -4,7 +4,7 @@ const IRON_PRECISION = 8
 
 export const formatOreToTronWithLanguage = (
   ore: bigint,
-  fullPrecision: false,
+  fullPrecision = false,
   language?: string
 ): string => {
   const formattedIron = formatFixed(ore, IRON_PRECISION)
