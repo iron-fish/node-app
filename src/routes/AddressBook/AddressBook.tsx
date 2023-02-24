@@ -151,12 +151,11 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
                       color: NAMED_COLORS.GREY,
                     }}
                     labelProps={{
+                      as: 'h5',
                       mr: '0.5rem',
                     }}
                     value={contact.address}
-                    label={
-                      <chakra.h5>{$getAddressLabel(contact.address)}</chakra.h5>
-                    }
+                    label={$getAddressLabel(contact.address)}
                     copyTooltipText="Copy to clipboard"
                     copiedTooltipText="Copied"
                   />

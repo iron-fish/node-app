@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid'
 
 const BLOCK_SPEED = 60000
 
-const STATUS: NodeStatusResponse = {
+export const STATUS: NodeStatusResponse = {
   node: {
     status: NodeStatusType.STARTED,
     nodeName: 'My Node Name Example',

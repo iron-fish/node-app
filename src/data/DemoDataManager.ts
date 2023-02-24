@@ -1,4 +1,4 @@
-import { AccountValue } from '@ironfish/sdk'
+import { AccountValue, ConfigOptions } from '@ironfish/sdk'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
@@ -14,10 +14,15 @@ import { AccountMinerStatistic, MinerProps } from './types/AccountMiner'
 import { Contact } from './types/Contact'
 import Transaction from 'Types/Transaction'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
+import DemoAssetManager from './DemoAssetManager'
+import Account from 'Types/Account'
+import DemoNodeSettingsManager from './DemoNodeSettingsManager'
 
 class DemoDataManager {
   accounts: DemoAccountsManager
+  assets: DemoAssetManager
   transactions: DemoTransactionsManager
+  nodeSettings: DemoNodeSettingsManager
   addressBook: DemoAddressBookManager
   miner: DemoMinerManager
   node: DemoNodeManager
@@ -25,10 +30,12 @@ class DemoDataManager {
 
   constructor() {
     this.accounts = new DemoAccountsManager()
+    this.assets = new DemoAssetManager()
     this.transactions = new DemoTransactionsManager()
     this.addressBook = new DemoAddressBookManager()
     this.miner = new DemoMinerManager()
     this.node = new DemoNodeManager()
+    this.nodeSettings = new DemoNodeSettingsManager()
     this.status = IronFishInitStatus.NOT_STARTED
   }
 
@@ -80,10 +87,6 @@ class DemoDataManager {
     return this.accounts.create(name)
   }
 
-  generateMnemonic(): Promise<string[]> {
-    return this.accounts.generateMnemonicPhrase()
-  }
-
   importAccount(account: Omit<AccountValue, 'id'>): Promise<AccountValue> {
     return this.accounts.import(account)
   }
@@ -92,7 +95,7 @@ class DemoDataManager {
     return this.accounts.list(searchTerm || '', sort)
   }
 
-  getAccount(accountId: string): Promise<AccountValue> {
+  getAccount(accountId: string): Promise<Account> {
     return this.accounts.findById(accountId)
   }
 
@@ -196,6 +199,18 @@ class DemoDataManager {
 
   getNodePeers(): Promise<Peer[]> {
     return this.node.peers()
+  }
+
+  async getNodeConfig(): Promise<Partial<ConfigOptions>> {
+    return this.nodeSettings.getConfig()
+  }
+
+  async saveNodeConfig(values: Partial<ConfigOptions>): Promise<void> {
+    this.nodeSettings.setValues(values)
+    await this.nodeSettings.save()
+    await this.stop()
+    await this.initialize()
+    return this.start()
   }
 }
 

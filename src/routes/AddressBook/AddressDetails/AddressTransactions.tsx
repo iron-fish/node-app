@@ -1,12 +1,6 @@
 import { FC, useEffect, useState } from 'react'
-import {
-  Flex,
-  chakra,
-  CommonTable,
-  NAMED_COLORS,
-  Button,
-  Box,
-} from '@ironfish/ui-kit'
+import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
+import { Flex, chakra, NAMED_COLORS, Button, Box } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAddressTransactions'
@@ -18,6 +12,7 @@ import ROUTES from 'Routes/data'
 import ContactsPreview from 'Components/ContactsPreview'
 import Contact from 'Types/Contact'
 import TransactionStatusView from 'Components/TransactionStatusView'
+import WalletCommonTable from 'Components/WalletCommonTable'
 import { formateData } from 'Utils/formatDate'
 
 interface AddressTransactionsProps {
@@ -77,7 +72,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
           description="There aren’t any transactions with details that match your search input."
         />
       ) : (
-        <CommonTable
+        <WalletCommonTable
           data={!!transactions ? transactions : new Array(10).fill(null)}
           onRowClick={(txn: Transaction) => {
             navigate(ROUTES.TRANSACTION, {
@@ -103,7 +98,10 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               key: 'iron',
               label: '$IRON',
               render: (transaction: Transaction) => (
-                <h5>{transaction.amount}</h5>
+                <h5>
+                  {(transaction.creator ? '' : '+') +
+                    FixedNumberUtils.render(transaction.amount.value, 8)}
+                </h5>
               ),
             },
             {
@@ -112,7 +110,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               render: (transaction: Transaction) => (
                 <ContactsPreview
                   addresses={transaction.to}
-                  notes={transaction.notes}
+                  notes={transaction.outputs}
                 />
               ),
             },
@@ -127,7 +125,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               key: 'memo',
               label: 'Memo',
               render: (transaction: Transaction) => (
-                <h5>{transaction.notes?.at(0)?.memo}</h5>
+                <h5>{transaction.outputs?.at(0)?.memo}</h5>
               ),
             },
             {

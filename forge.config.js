@@ -10,6 +10,9 @@ const COMMON_CONFIG = {
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
+      config: {
+        setupIcon: resolve('./electron/app.ico'),
+      },
     },
     {
       name: '@electron-forge/maker-zip',

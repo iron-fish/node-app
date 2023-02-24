@@ -3,12 +3,12 @@ import {
   Box,
   Button,
   chakra,
-  CommonTable,
   Flex,
   Icon,
   NAMED_COLORS,
   useIronToast,
 } from '@ironfish/ui-kit'
+import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
@@ -30,6 +30,7 @@ import SyncWarningMessage from 'Components/SyncWarningMessage'
 import differenceBy from 'lodash/differenceBy'
 import intersectionBy from 'lodash/intersectionBy'
 import useAccountBalance from 'Hooks/accounts/useAccountBalance'
+import WalletCommonTable from 'Components/WalletCommonTable'
 import { formateData } from 'Utils/formatDate'
 
 interface SearchTransactionsProps {
@@ -143,8 +144,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
           description="There aren’t any transactions with details that match your search input. "
         />
       ) : (
-        <CommonTable
-          textTransform="capitalize"
+        <WalletCommonTable
           data={!!transactions ? transactions : new Array(10).fill(null)}
           onRowClick={(data: Transaction) =>
             navigate(ROUTES.TRANSACTION, {
@@ -165,9 +165,10 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
             {
               key: 'transaction-amount-column',
               label: <chakra.h6>$IRON</chakra.h6>,
-              render: transaction => (
+              render: (transaction: Transaction) => (
                 <chakra.h5>
-                  {(transaction.creator ? '' : '+') + transaction.amount}
+                  {(transaction.creator ? '' : '+') +
+                    FixedNumberUtils.render(transaction.amount.value, 8)}
                 </chakra.h5>
               ),
             },
@@ -179,7 +180,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
                   addresses={
                     transaction.creator ? transaction.to : [transaction.from]
                   }
-                  notes={transaction.notes}
+                  notes={transaction.outputs}
                 />
               ),
             },
@@ -194,7 +195,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               key: 'transaction-memo-column',
               label: <chakra.h6>Memo</chakra.h6>,
               render: (transaction: Transaction) => (
-                <chakra.h5>"{transaction.notes?.at(0)?.memo}"</chakra.h5>
+                <chakra.h5>"{transaction.outputs?.at(0)?.memo}"</chakra.h5>
               ),
             },
             {

@@ -1,10 +1,10 @@
-import CurrencyAsset from './CurrencyAsset'
+import Asset from './Asset'
 
 interface AccountBalance {
   unconfirmedCount: number
   unconfirmed: bigint
   confirmed: bigint
-  asset: CurrencyAsset
+  asset: Asset
 }
 
 export default AccountBalance
