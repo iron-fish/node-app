@@ -4,6 +4,7 @@ import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 import useAccounts from 'Hooks/accounts/useAccounts'
 import CutAccount from 'Types/CutAccount'
 import { formatOreToTronWithLanguage } from 'Utils/number'
+import { truncateHash } from 'Utils/hash'
 
 interface AccountsSelectProps extends FlexProps {
   accountId: string
@@ -25,7 +26,7 @@ const getAccountOptions = (
         ) +
           ' ' +
           account?.balances?.default?.asset?.name || ''
-      : '',
+      : truncateHash(account.publicAddress, 2, 4),
   }))
 }
 
