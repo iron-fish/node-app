@@ -154,6 +154,19 @@ class AccountManager
       throw new Error(`Account with id=${id} was not found.`)
     }
 
+    const head = await account.getHead()
+    if (!head) {
+      return {
+        default: {
+          unconfirmed: BigInt(0),
+          confirmed: BigInt(0),
+          unconfirmedCount: 0,
+          asset: await this.assetManager.get(NativeAsset.nativeId()),
+        },
+        assets: [],
+      }
+    }
+
     const assetBalances: AccountBalance[] = []
     let defaultBalance: AccountBalance
     for await (const balance of this.node.wallet.getBalances(account)) {
