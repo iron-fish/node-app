@@ -88,7 +88,7 @@ const CARDS: Card[] = [
           copiedTooltipText={'Block hash copied'}
         />
       ) : (
-        ''
+        'n/a'
       ),
     label: 'Block Hash',
     icon: DifficultyIcon,
