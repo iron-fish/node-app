@@ -1,4 +1,9 @@
-import { AccountValue, CurrencyUtils, IronfishNode } from '@ironfish/sdk'
+import {
+  AccountValue,
+  CurrencyUtils,
+  IronfishNode,
+  ACCOUNT_SCHEMA_VERSION,
+} from '@ironfish/sdk'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import {
   Asset as NativeAsset,
@@ -14,6 +19,7 @@ import AbstractManager from './AbstractManager'
 import AssetManager from './AssetManager'
 import Asset from 'Types/Asset'
 import AccountCreateParams from 'Types/AccountCreateParams'
+import { v4 as uuid } from 'uuid'
 
 class AccountManager
   extends AbstractManager
@@ -36,9 +42,16 @@ class AccountManager
     const key = generateKey()
 
     return {
-      spendingKey: key.spending_key,
+      version: ACCOUNT_SCHEMA_VERSION,
+      id: uuid(),
+      name: uuid(),
+      incomingViewKey: key.incomingViewKey,
+      outgoingViewKey: key.outgoingViewKey,
+      publicAddress: key.publicAddress,
+      spendingKey: key.spendingKey,
+      viewKey: key.viewKey,
       mnemonicPhrase: spendingKeyToWords(
-        key.spending_key,
+        key.spendingKey,
         LanguageCode.English
       ).split(' '),
     }
@@ -47,11 +60,7 @@ class AccountManager
   async submitAccount(
     createParams: AccountCreateParams
   ): Promise<WalletAccount> {
-    const newAccount = await this.node.wallet.importAccount({
-      name: createParams.name,
-      spendingKey: createParams.spendingKey,
-    })
-
+    const newAccount = await this.node.wallet.importAccount(createParams)
     return newAccount.serialize()
   }
 
@@ -110,18 +119,14 @@ class AccountManager
     await this.node.wallet.removeAccountByName(name)
   }
 
-  async import(
-    account: Omit<AccountValue, 'id' | 'rescan'>
-  ): Promise<AccountValue> {
+  async import(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
     return this.node.wallet
       .importAccount(account)
       .then(data => data.serialize())
   }
 
-  export(id: string): Promise<Omit<AccountValue, 'id'>> {
-    const account = this.node.wallet.getAccount(id)?.serialize()
-    delete account.id
-    return Promise.resolve(account)
+  async export(id: string): Promise<AccountValue> {
+    return this.node.wallet.getAccount(id)?.serialize()
   }
 
   async balance(

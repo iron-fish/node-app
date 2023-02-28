@@ -30,6 +30,7 @@ import ContactsPreview from 'Components/ContactsPreview'
 import WalletCommonTable from 'Components/WalletCommonTable'
 import InfoBadge from 'Components/InfoBadge'
 import AssetsAmountPreview from 'Components/AssetsAmountPreview'
+import { formatDate } from 'Utils/formatDate'
 
 interface Card {
   render: (tx: Transaction) => ReactNode
@@ -120,7 +121,7 @@ const CARDS: Card[] = [
     icon: BlockInfoDifficultyIcon,
   },
   {
-    render: (tx: Transaction) => tx?.created.toLocaleString(),
+    render: (tx: Transaction) => formatDate(tx?.created),
     label: 'Timestamp',
     icon: BlockInfoTimestampIcon,
   },
