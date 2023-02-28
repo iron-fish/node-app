@@ -48,6 +48,9 @@ const CARDS: Card[] = [
             ? [tx?.amount]
             : []
         }
+        amountPreviewTextProps={{
+          as: 'h4',
+        }}
       />
     ),
     label: 'Asset',
