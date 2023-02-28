@@ -25,6 +25,8 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
       'xTbDAiLTrg7hcQg2B5YKFIwJ-u5_IWGs0gudoUInCv30oQSKBmL3ne9hQnn2_6fY',
     spendingKey:
       'JPq_yX-p2PdFev7gGdlCLF9GQw25JHWIb0rNvq-Dnlomj49GNTbOgyn79fHFIQrt',
+    version: 1,
+    viewKey: nanoid(64),
   },
   {
     id: 'H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6',
@@ -37,6 +39,8 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
       'BcZvMesaZ8Jh_66kBgRhg-0wWls1RS5tWhy2iE96d2t4zpkrnliiEG-zF4oLt0jx',
     spendingKey:
       'E-cVvstCOWfvkiqeR3-Qc4Vm65EqX_I12Ouvavtk75j-z0Vii0I2L9_1JCtz8rlq',
+    version: 1,
+    viewKey: nanoid(64),
   },
   {
     id: 'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
@@ -49,6 +53,8 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
       'xG17AxJB4XrEoGricts13ZfIMLVx4ays4Heh1oA444BID90CzLqhzRin9wEZM225',
     spendingKey:
       'RXFS7bN5gSsnKqSZv208s8EtRwwsHNji3CQuCUlD3jDwlzQ7gfFpsrtf14klpuYF',
+    version: 1,
+    viewKey: nanoid(64),
   },
 ]
 
@@ -127,6 +133,8 @@ class DemoAccountsManager {
           incomingViewKey: nanoid(64),
           outgoingViewKey: nanoid(64),
           spendingKey: nanoid(64),
+          viewKey: nanoid(64),
+          version: 1,
         }
         DEMO_ACCOUNTS.push(account)
         ACCOUNT_SETTINGS.push({
@@ -150,7 +158,14 @@ class DemoAccountsManager {
 
   async prepareAccount(): Promise<AccountCreateParams> {
     return {
+      id: nanoid(64),
+      publicAddress: nanoid(64),
+      name: 'name',
+      incomingViewKey: nanoid(64),
+      outgoingViewKey: nanoid(64),
       spendingKey: nanoid(64),
+      viewKey: nanoid(64),
+      version: 1,
       mnemonicPhrase: randomWords({ exactly: 24, maxLength: 8 }),
     }
   }

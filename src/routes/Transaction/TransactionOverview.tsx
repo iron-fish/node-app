@@ -40,7 +40,7 @@ interface Card {
 const CARDS: Card[] = [
   {
     render: (tx: Transaction) =>
-      FixedNumberUtils.render(tx?.amount.value || BigInt(0), 8),
+      FixedNumberUtils.render(tx?.amount?.value || BigInt(0), 8),
     label: '$IRON Sent',
     icon: DifficultyIcon,
   },
@@ -68,17 +68,20 @@ const CARDS: Card[] = [
     icon: SizeIcon,
   },
   {
-    render: (tx: Transaction) => (
-      <CopyValueToClipboard
-        label={truncateHash(tx?.blockHash || '', 2, 4)}
-        value={tx?.blockHash || ''}
-        iconButtonProps={{
-          color: NAMED_COLORS.GREY,
-        }}
-        copyTooltipText={'Copy block hash'}
-        copiedTooltipText={'Block hash copied'}
-      />
-    ),
+    render: (tx: Transaction) =>
+      tx?.blockHash ? (
+        <CopyValueToClipboard
+          label={truncateHash(tx?.blockHash || '', 2, 4)}
+          value={tx?.blockHash || ''}
+          iconButtonProps={{
+            color: NAMED_COLORS.GREY,
+          }}
+          copyTooltipText={'Copy block hash'}
+          copiedTooltipText={'Block hash copied'}
+        />
+      ) : (
+        'n/a'
+      ),
     label: 'Block Hash',
     icon: DifficultyIcon,
   },

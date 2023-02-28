@@ -168,7 +168,10 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               render: (transaction: Transaction) => (
                 <chakra.h5>
                   {(transaction.creator ? '' : '+') +
-                    FixedNumberUtils.render(transaction.amount.value, 8)}
+                    FixedNumberUtils.render(
+                      transaction.amount?.value || BigInt(0),
+                      8
+                    )}
                 </chakra.h5>
               ),
             },

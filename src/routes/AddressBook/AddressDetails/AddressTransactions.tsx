@@ -100,7 +100,10 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               render: (transaction: Transaction) => (
                 <h5>
                   {(transaction.creator ? '' : '+') +
-                    FixedNumberUtils.render(transaction.amount.value, 8)}
+                    FixedNumberUtils.render(
+                      transaction.amount?.value || BigInt(0),
+                      8
+                    )}
                 </h5>
               ),
             },

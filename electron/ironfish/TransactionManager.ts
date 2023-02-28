@@ -41,12 +41,10 @@ class TransactionManager
     const account = this.node.wallet.getAccount(accountId)
     const head = await account.getHead()
     const transaction = await this.node.wallet.send(
-      this.node.memPool,
       account,
       [{ ...payment, assetId: Asset.nativeId() }],
       transactionFee,
-      this.node.config.get('transactionExpirationDelta'),
-      0
+      this.node.config.get('transactionExpirationDelta')
     )
 
     const result = await this.resolveTransactionFields(
@@ -105,9 +103,9 @@ class TransactionManager
   ): Promise<TransactionFeeEstimate> {
     const estimatedFeeRates = this.node.memPool.feeEstimator.estimateFeeRates()
     const feeRates = [
-      estimatedFeeRates.low || BigInt(1),
-      estimatedFeeRates.medium || BigInt(1),
-      estimatedFeeRates.high || BigInt(1),
+      estimatedFeeRates.slow || BigInt(1),
+      estimatedFeeRates.average || BigInt(1),
+      estimatedFeeRates.fast || BigInt(1),
     ]
 
     const account = this.node.wallet.getAccount(accountId)
@@ -116,9 +114,9 @@ class TransactionManager
 
     feeRates.forEach(feeRate => {
       allPromises.push(
-        this.node.wallet.createTransaction(
+        this.node.wallet.createTransaction({
           account,
-          [
+          outputs: [
             {
               publicAddress: receive.publicAddress,
               amount: receive.amount,
@@ -126,24 +124,19 @@ class TransactionManager
               assetId: Asset.nativeId(),
             },
           ],
-          [],
-          [],
-          {
-            feeRate,
-            expirationDelta: this.node.config.get('transactionExpirationDelta'),
-          }
-        )
+          feeRate,
+        })
       )
     })
 
-    const [low, medium, high]: Array<RawTransaction> = await Promise.all(
+    const [slow, average, fast]: Array<RawTransaction> = await Promise.all(
       allPromises
     )
 
     return {
-      slow: low.fee,
-      average: medium.fee,
-      fast: high.fee,
+      slow: slow.fee,
+      average: average.fee,
+      fast: fast.fee,
     }
   }
 
@@ -240,10 +233,12 @@ class TransactionManager
     }, {} as Record<string, Amount>)
 
     creatorNotes.forEach(note => {
-      amount[note.note.assetId().toString('hex')].value -= note.note.value()
+      if (amount[note.note.assetId().toString('hex')]) {
+        amount[note.note.assetId().toString('hex')].value -= note.note.value()
+      }
     })
 
-    if (creatorNotes.length > 0) {
+    if (creatorNotes.length > 0 && amount[Asset.nativeId().toString('hex')]) {
       amount[Asset.nativeId().toString('hex')].value +=
         transaction.transaction.fee()
     }
@@ -290,7 +285,7 @@ class TransactionManager
       created: created?.header?.timestamp || new Date(),
       amount: amount[Asset.nativeId().toString('hex')],
       assetAmounts: Object.values(amount).filter(
-        a => a.asset.id !== Asset.nativeId().toString('hex')
+        a => a.asset?.id !== Asset.nativeId().toString('hex')
       ),
     }
   }
