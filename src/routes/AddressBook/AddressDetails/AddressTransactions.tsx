@@ -13,7 +13,7 @@ import ContactsPreview from 'Components/ContactsPreview'
 import Contact from 'Types/Contact'
 import TransactionStatusView from 'Components/TransactionStatusView'
 import WalletCommonTable from 'Components/WalletCommonTable'
-import { formateData } from 'Utils/formatDate'
+import { formatDate } from 'Utils/formatDate'
 
 interface AddressTransactionsProps {
   address: string
@@ -118,7 +118,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               key: 'date',
               label: 'Date',
               render: (transaction: Transaction) => (
-                <h5>{formateData(transaction.created)}</h5>
+                <h5>{formatDate(transaction.created)}</h5>
               ),
             },
             {

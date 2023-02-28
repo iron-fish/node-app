@@ -1,7 +1,7 @@
 import { parseISO } from 'date-fns'
 import { formatInTimeZone } from 'date-fns-tz'
 
-export const formateData = (date: Date) => {
+export const formatDate = (date: Date) => {
   if (!date) {
     return ''
   }

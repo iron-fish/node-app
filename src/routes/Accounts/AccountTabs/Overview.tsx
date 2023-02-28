@@ -31,7 +31,7 @@ import differenceBy from 'lodash/differenceBy'
 import intersectionBy from 'lodash/intersectionBy'
 import useAccountBalance from 'Hooks/accounts/useAccountBalance'
 import WalletCommonTable from 'Components/WalletCommonTable'
-import { formateData } from 'Utils/formatDate'
+import { formatDate } from 'Utils/formatDate'
 
 interface SearchTransactionsProps {
   address: string
@@ -188,7 +188,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               key: 'transaction-date-column',
               label: <chakra.h6>Date</chakra.h6>,
               render: (transaction: Transaction) => (
-                <chakra.h5>{formateData(transaction.created)}</chakra.h5>
+                <chakra.h5>{formatDate(transaction.created)}</chakra.h5>
               ),
             },
             {
