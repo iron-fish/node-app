@@ -7,6 +7,7 @@ const useImportAccount = () => {
   const importAccountBySpendingKey = useCallback(
     (spendingKey: string) =>
       window.IronfishManager.accounts.import({
+        id: nanoid(64),
         incomingViewKey: nanoid(64),
         outgoingViewKey: nanoid(64),
         name: 'Imported Account',
@@ -19,6 +20,7 @@ const useImportAccount = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (mnemonicPhrase: MnemonicPhraseType) =>
       window.IronfishManager.accounts.import({
+        id: nanoid(64),
         incomingViewKey: nanoid(64),
         outgoingViewKey: nanoid(64),
         name: 'Imported Account',

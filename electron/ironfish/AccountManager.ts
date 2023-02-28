@@ -118,10 +118,8 @@ class AccountManager
       .then(data => data.serialize())
   }
 
-  export(id: string): Promise<Omit<AccountValue, 'id'>> {
-    const account = this.node.wallet.getAccount(id)?.serialize()
-    delete account.id
-    return Promise.resolve(account)
+  async export(id: string): Promise<AccountValue> {
+    return this.node.wallet.getAccount(id)?.serialize()
   }
 
   async balance(
