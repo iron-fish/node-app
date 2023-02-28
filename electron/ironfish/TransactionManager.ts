@@ -5,6 +5,7 @@ import {
   CurrencyUtils,
   IronfishNode,
   RawTransaction,
+  TransactionType,
 } from '@ironfish/sdk'
 import { TransactionValue } from '@ironfish/sdk/build/src/wallet/walletdb/transactionValue'
 import { sizeVarBytes } from 'bufio'
@@ -21,6 +22,7 @@ import Transaction, {
 } from 'Types/Transaction'
 import AbstractManager from './AbstractManager'
 import AssetManager from './AssetManager'
+import { abs } from 'Utils/number'
 
 class TransactionManager
   extends AbstractManager
@@ -224,30 +226,34 @@ class TransactionManager
       }))
     )
 
-    const amount: Record<string, Amount> = notes.reduce((result, note) => {
-      result[note.asset.id] = {
-        asset: note.asset,
-        value: note.note.value() + (result[note.asset.id]?.value || BigInt(0)),
-      }
-      return result
-    }, {} as Record<string, Amount>)
+    const assetAmounts: Amount[] = []
+    const feePaid = transaction.transaction.fee()
+    const transactionType = await this.node.wallet.getTransactionType(
+      account,
+      transaction
+    )
 
-    creatorNotes.forEach(note => {
-      if (amount[note.note.assetId().toString('hex')]) {
-        amount[note.note.assetId().toString('hex')].value -= note.note.value()
+    for (const [assetId, delta] of transaction.assetBalanceDeltas.entries()) {
+      let amount = delta
+      if (assetId.equals(Asset.nativeId())) {
+        if (transactionType === TransactionType.SEND) {
+          amount += feePaid
+          if (amount === BigInt(0)) {
+            continue
+          }
+        }
       }
-    })
-
-    if (creatorNotes.length > 0 && amount[Asset.nativeId().toString('hex')]) {
-      amount[Asset.nativeId().toString('hex')].value +=
-        transaction.transaction.fee()
+      assetAmounts.push({
+        asset: await this.assetManager.get(assetId),
+        value: abs(amount),
+      })
     }
 
     return {
       accountId: account.id,
       hash: transaction.transaction.hash().toString('hex'),
       isMinersFee: transaction.transaction.isMinersFee(),
-      fee: transaction.transaction.fee().toString(),
+      fee: feePaid.toString(),
       notesCount: transaction.transaction.notes.length,
       spendsCount: transaction.transaction.spends.length,
       expiration: transaction.transaction.expiration(),
@@ -282,11 +288,11 @@ class TransactionManager
         creatorNotes.length > 0
           ? notes.map(n => n.note.sender())
           : [account.publicAddress],
-      created: created?.header?.timestamp || new Date(),
-      amount: amount[Asset.nativeId().toString('hex')],
-      assetAmounts: Object.values(amount).filter(
-        a => a.asset?.id !== Asset.nativeId().toString('hex')
+      created: created?.header?.timestamp || transaction.timestamp,
+      amount: assetAmounts.find(
+        ({ asset }) => asset.id === Asset.nativeId().toString('hex')
       ),
+      assetAmounts: assetAmounts,
     }
   }
 

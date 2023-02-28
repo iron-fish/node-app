@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react'
-import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
 import { Flex, chakra, NAMED_COLORS, Button, Box } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import SearchSortField from 'Components/Search&Sort'
@@ -13,6 +12,7 @@ import ContactsPreview from 'Components/ContactsPreview'
 import Contact from 'Types/Contact'
 import TransactionStatusView from 'Components/TransactionStatusView'
 import WalletCommonTable from 'Components/WalletCommonTable'
+import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 import { formatDate } from 'Utils/formatDate'
 
 interface AddressTransactionsProps {
@@ -96,15 +96,17 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
             },
             {
               key: 'iron',
-              label: '$IRON',
+              label: 'Asset',
               render: (transaction: Transaction) => (
-                <h5>
-                  {(transaction.creator ? '' : '+') +
-                    FixedNumberUtils.render(
-                      transaction.amount?.value || BigInt(0),
-                      8
-                    )}
-                </h5>
+                <AssetsAmountPreview
+                  assetAmounts={
+                    transaction?.assetAmounts.length
+                      ? transaction?.assetAmounts
+                      : transaction?.amount
+                      ? [transaction?.amount]
+                      : []
+                  }
+                />
               ),
             },
             {
