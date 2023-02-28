@@ -106,9 +106,9 @@ class TransactionManager
   ): Promise<TransactionFeeEstimate> {
     const estimatedFeeRates = this.node.memPool.feeEstimator.estimateFeeRates()
     const feeRates = [
-      estimatedFeeRates.low || BigInt(1),
-      estimatedFeeRates.medium || BigInt(1),
-      estimatedFeeRates.high || BigInt(1),
+      estimatedFeeRates.slow || BigInt(1),
+      estimatedFeeRates.average || BigInt(1),
+      estimatedFeeRates.fast || BigInt(1),
     ]
 
     const account = this.node.wallet.getAccount(accountId)
@@ -133,14 +133,14 @@ class TransactionManager
       )
     })
 
-    const [low, medium, high]: Array<RawTransaction> = await Promise.all(
+    const [slow, average, fast]: Array<RawTransaction> = await Promise.all(
       allPromises
     )
 
     return {
-      slow: low.fee,
-      average: medium.fee,
-      fast: high.fee,
+      slow: slow.fee,
+      average: average.fee,
+      fast: fast.fee,
     }
   }
 

@@ -3446,10 +3446,10 @@
     "@ironfish/rust-nodejs-linux-x64-musl" "0.1.27"
     "@ironfish/rust-nodejs-win32-x64-msvc" "0.1.27"
 
-"@ironfish/sdk@^0.0.45":
-  version "0.0.45"
-  resolved "https://registry.yarnpkg.com/@ironfish/sdk/-/sdk-0.0.45.tgz#f977df72a79226356dd2dd24aec47572c99c0f8d"
-  integrity sha512-L6q6vH1dHqr0gdSJIVGrz2FOPFlEYqg1xDisJEHiju04OaI+1gC7FU4tssJ04cARcb3GwnJYjFDaN0V/zwJq/g==
+"@ironfish/sdk@^0.0.47":
+  version "0.0.47"
+  resolved "https://registry.yarnpkg.com/@ironfish/sdk/-/sdk-0.0.47.tgz#07a33bbada625f1413e6662ab935bab1f35ff920"
+  integrity sha512-DBkohYzFeC74LzKb+Nuuyq68jXOfTithqWzThu5At1zMBZryZdco56x4zf0qo4hoks2Mkv5G6tc7vwINezn3FA==
   dependencies:
     "@ethersproject/bignumber" "5.7.0"
     "@ironfish/rust-nodejs" "0.1.27"
@@ -3478,7 +3478,7 @@
     ws "7.5.1"
     yup "0.29.3"
 
-"@ironfish/ui-kit@^1.1.5":
+"@ironfish/ui-kit@^1.1.6":
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-1.1.6.tgz#28b7d789e40863acaa4dcac70abf89b91b92ee23"
   integrity sha512-iM0i8iHOdzhjHvEXFcdePUp9t1ez2f/4Oo8QfN/ICNCywyswnt/9nilDA08AW4o4gZM+1bn+WPm4GQuTOTwE3g==
@@ -6239,7 +6239,7 @@ buffer-json@2.0.0:
   resolved "https://registry.yarnpkg.com/buffer-json/-/buffer-json-2.0.0.tgz#f73e13b1e42f196fe2fd67d001c7d7107edd7c23"
   integrity sha512-+jjPFVqyfF1esi9fvfUs3NqM0pH1ziZ36VP4hmA/y/Ssfo/5w5xHKfTw9BwQjoJ1w/oVtpLomqwUHKdefGyuHw==
 
-buffer-map@0.0.7, buffer-map@^0.0.7:
+buffer-map@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/buffer-map/-/buffer-map-0.0.7.tgz#5c2db65f7b3a723a2d9dff8e896fada3d2dc1c5d"
   integrity sha512-95try3p/vMRkIAAnJDaGkFhGpT/65NoeW6XelEPjAomWYR58RQtW4khn0SwKj34kZoE7uxL7w2koZSwbnszvQQ==
