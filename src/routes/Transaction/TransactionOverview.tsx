@@ -30,6 +30,7 @@ import ContactsPreview from 'Components/ContactsPreview'
 import WalletCommonTable from 'Components/WalletCommonTable'
 import InfoBadge from 'Components/InfoBadge'
 import AssetsAmountPreview from 'Components/AssetsAmountPreview'
+import { formatDate } from 'Utils/formatDate'
 
 interface Card {
   render: (tx: Transaction) => ReactNode
@@ -47,9 +48,12 @@ const CARDS: Card[] = [
             ? [tx?.amount]
             : []
         }
+        amountPreviewTextProps={{
+          as: 'h4',
+        }}
       />
     ),
-    label: 'Sent',
+    label: 'Asset',
     icon: DifficultyIcon,
   },
   {
@@ -77,7 +81,7 @@ const CARDS: Card[] = [
   },
   {
     render: (tx: Transaction) =>
-      tx?.blockHash && (
+      tx?.blockHash ? (
         <CopyValueToClipboard
           label={truncateHash(tx?.blockHash || '', 2, 4)}
           value={tx?.blockHash || ''}
@@ -87,6 +91,8 @@ const CARDS: Card[] = [
           copyTooltipText={'Copy block hash'}
           copiedTooltipText={'Block hash copied'}
         />
+      ) : (
+        'n/a'
       ),
     label: 'Block Hash',
     icon: DifficultyIcon,
@@ -118,7 +124,7 @@ const CARDS: Card[] = [
     icon: BlockInfoDifficultyIcon,
   },
   {
-    render: (tx: Transaction) => tx?.created.toLocaleString(),
+    render: (tx: Transaction) => formatDate(tx?.created),
     label: 'Timestamp',
     icon: BlockInfoTimestampIcon,
   },

@@ -128,7 +128,6 @@ class TransactionManager
             },
           ],
           feeRate,
-          expirationDelta: this.node.config.get('transactionExpirationDelta'),
         })
       )
     })
@@ -237,16 +236,18 @@ class TransactionManager
     )
 
     for (const [assetId, delta] of transaction.assetBalanceDeltas.entries()) {
+      let amount = delta
       if (assetId.equals(Asset.nativeId())) {
         if (transactionType === TransactionType.SEND) {
-          if (delta + BigInt(feePaid) === BigInt(0)) {
+          amount += feePaid
+          if (amount === BigInt(0)) {
             continue
           }
         }
       }
       assetAmounts.push({
         asset: await this.assetManager.get(assetId),
-        value: abs(delta),
+        value: abs(amount),
       })
     }
 

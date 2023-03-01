@@ -11,23 +11,47 @@ import {
   ModalCloseButton,
   ModalBody,
   LightMode,
+  TextProps,
+  Text,
+  FlexProps,
 } from '@ironfish/ui-kit'
 import { FC, useState } from 'react'
 import { Amount } from 'Types/Transaction'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import SimpleTable from './SimpleTable'
 
-const AmountPreview: FC<{ assetAmount: Amount }> = ({ assetAmount }) => {
+interface AmountPreviewProps {
+  assetAmount: Amount
+  containerProps: FlexProps
+  textProps: TextProps
+}
+
+const AmountPreview: FC<AmountPreviewProps> = ({
+  assetAmount,
+  containerProps,
+  textProps,
+}) => {
   return (
-    <Flex direction="column">
-      <h5>{formatOreToTronWithLanguage(assetAmount.value, true)}</h5>
-      <h5>{assetAmount.asset.name}</h5>
+    <Flex flexWrap="wrap" {...containerProps}>
+      <Text {...textProps}>
+        {formatOreToTronWithLanguage(assetAmount.value)}
+      </Text>
+      &nbsp;
+      <Text {...textProps}>{assetAmount.asset.name}</Text>
     </Flex>
   )
 }
 
-const AssetsAmountPreview: FC<{ assetAmounts: Amount[] }> = ({
+interface AssetsAmountPreview {
+  assetAmounts: Amount[]
+  amountPreviewContainerProps?: FlexProps
+  amountPreviewTextProps?: TextProps
+}
+
+const AssetsAmountPreview: FC<AssetsAmountPreview> = ({
   assetAmounts = [],
+  amountPreviewContainerProps,
+  amountPreviewTextProps = { as: 'h5' },
 }) => {
   const [open, setOpen] = useState<boolean>(false)
   if (assetAmounts.length === 0) {
@@ -35,7 +59,13 @@ const AssetsAmountPreview: FC<{ assetAmounts: Amount[] }> = ({
   }
 
   if (assetAmounts.length === 1) {
-    return <AmountPreview assetAmount={assetAmounts[0]} />
+    return (
+      <AmountPreview
+        assetAmount={assetAmounts[0]}
+        containerProps={amountPreviewContainerProps}
+        textProps={amountPreviewTextProps}
+      />
+    )
   }
 
   return (

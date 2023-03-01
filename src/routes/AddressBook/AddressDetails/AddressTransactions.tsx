@@ -13,6 +13,7 @@ import Contact from 'Types/Contact'
 import TransactionStatusView from 'Components/TransactionStatusView'
 import WalletCommonTable from 'Components/WalletCommonTable'
 import AssetsAmountPreview from 'Components/AssetsAmountPreview'
+import { formatDate } from 'Utils/formatDate'
 
 interface AddressTransactionsProps {
   address: string
@@ -95,7 +96,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
             },
             {
               key: 'iron',
-              label: '$IRON',
+              label: 'Asset',
               render: (transaction: Transaction) => (
                 <AssetsAmountPreview
                   assetAmounts={
@@ -122,7 +123,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               key: 'date',
               label: 'Date',
               render: (transaction: Transaction) => (
-                <h5>{transaction.created.toLocaleString()}</h5>
+                <h5>{formatDate(transaction.created)}</h5>
               ),
             },
             {

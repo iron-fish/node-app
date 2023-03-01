@@ -1,5 +1,4 @@
 import {
-  Account,
   AccountValue,
   ACCOUNT_SCHEMA_VERSION,
   CurrencyUtils,
@@ -21,6 +20,7 @@ import AbstractManager from './AbstractManager'
 import AssetManager from './AssetManager'
 import Asset from 'Types/Asset'
 import AccountCreateParams from 'Types/AccountCreateParams'
+import { v4 as uuid } from 'uuid'
 
 class AccountManager
   extends AbstractManager
