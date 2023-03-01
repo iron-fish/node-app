@@ -89,7 +89,7 @@
     "@aws-sdk/client-s3": "3.127.0",
     "@ironfish/rust-nodejs": "^0.1.26",
     "@ironfish/sdk": "^0.0.44",
-    "@ironfish/ui-kit": "^1.1.5",
+    "@ironfish/ui-kit": "^1.1.7",
     "@types/nedb": "^1.8.12",
     "date-fns": "^2.28.0",
     "electron-squirrel-startup": "^1.0.0",
