@@ -186,7 +186,7 @@ class DemoAccountsManager {
     }
   }
 
-  async submitAccount(createParams: AccountCreateParams): Promise<Account> {
+  async submitAccount(createParams: AccountValue): Promise<Account> {
     return this.create(createParams.name)
   }
 

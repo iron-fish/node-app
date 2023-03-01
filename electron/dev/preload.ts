@@ -13,7 +13,6 @@ import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAcc
 import { Payment } from 'Types/Transaction'
 import '../common/preload'
 import { IronfishAssetManagerActions } from 'Types/IronfishManager/IIronfishAssetManager'
-import AccountCreateParams from 'Types/AccountCreateParams'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
   storageName: string
@@ -98,7 +97,7 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.PREPARE_ACCOUNT
       ),
-    submitAccount: (createParams: AccountCreateParams) =>
+    submitAccount: (createParams: AccountValue) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.SUBMIT_ACCOUNT,

@@ -4,7 +4,6 @@ import {
   CurrencyUtils,
   IronfishNode,
 } from '@ironfish/sdk'
-import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import { v4 as uuid } from 'uuid'
 import {
   Asset as NativeAsset,
@@ -12,6 +11,7 @@ import {
   spendingKeyToWords,
   generateKey,
 } from '@ironfish/rust-nodejs'
+import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import CutAccount from 'Types/CutAccount'
@@ -20,7 +20,6 @@ import AbstractManager from './AbstractManager'
 import AssetManager from './AssetManager'
 import Asset from 'Types/Asset'
 import AccountCreateParams from 'Types/AccountCreateParams'
-import { v4 as uuid } from 'uuid'
 
 class AccountManager
   extends AbstractManager
