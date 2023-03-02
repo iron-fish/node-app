@@ -30,7 +30,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
   useEffect(() => {
     let interval: NodeJS.Timer
     if (balanceLoaded) {
-      interval = setInterval(reloadBalance, 5000)``
+      interval = setInterval(reloadBalance, 5000)
     }
 
     return () => interval && clearInterval(interval)
