@@ -9,7 +9,13 @@ import CutAccount from 'Types/CutAccount'
 import SortType from 'Types/SortType'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import Asset from 'Types/Asset'
-import { DEFAULT_ASSET, DEMO_ASSETS } from './DemoAssetManager'
+import {
+  DEFAULT_ASSET,
+  DEMO_ASSET,
+  IRON_BTC_ASSET,
+  IRON_ETH_ASSET,
+  TEST_ASSET,
+} from './DemoAssetManager'
 import Account from 'Types/Account'
 import AccountCreateParams from 'Types/AccountCreateParams'
 
@@ -102,7 +108,7 @@ export const ACCOUNT_BALANCES: Record<
       pending: BigInt(1234),
       pendingCount: 12,
       unconfirmedCount: 3,
-      asset: DEMO_ASSETS[1],
+      asset: TEST_ASSET,
     },
     {
       confirmed: BigInt(12367),
@@ -110,7 +116,7 @@ export const ACCOUNT_BALANCES: Record<
       pending: BigInt(1234),
       pendingCount: 12,
       unconfirmedCount: 3,
-      asset: DEMO_ASSETS[2],
+      asset: DEMO_ASSET,
     },
   ],
   H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6: [
@@ -125,12 +131,44 @@ export const ACCOUNT_BALANCES: Record<
   ],
   q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7: [
     {
-      confirmed: BigInt(1222255000002254),
+      confirmed: BigInt(122520002254),
       unconfirmed: BigInt(164),
       pending: BigInt(2200000022310),
       pendingCount: 8,
       unconfirmedCount: 1,
       asset: DEFAULT_ASSET,
+    },
+    {
+      confirmed: BigInt(12254),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: DEMO_ASSET,
+    },
+    {
+      confirmed: BigInt(122224),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: TEST_ASSET,
+    },
+    {
+      confirmed: BigInt(1222254),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: IRON_BTC_ASSET,
+    },
+    {
+      confirmed: BigInt(125000254),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: IRON_ETH_ASSET,
     },
   ],
 }
