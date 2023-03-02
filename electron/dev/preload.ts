@@ -15,6 +15,7 @@ import SortType from 'Types/SortType'
 import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { IronfishAssetManagerActions } from 'Types/IronfishManager/IIronfishAssetManager'
 import AccountCreateParams from 'Types/AccountCreateParams'
+import SnapshotManager from 'electron/ironfish/SnapshotManager'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
   storageName: string
@@ -50,7 +51,7 @@ contextBridge.exposeInMainWorld('IronfishManager', {
       'ironfish-manager',
       IronfishManagerAction.CHAIN_PROGRESS
     ),
-  downloadChainSnapshot: (path: string) =>
+  downloadChainSnapshot: (path?: string) =>
     ipcRenderer.invoke(
       'ironfish-manager',
       IronfishManagerAction.DOWNLOAD_SNAPSHOT,
@@ -58,12 +59,18 @@ contextBridge.exposeInMainWorld('IronfishManager', {
     ),
   start: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.START),
-  stop: () =>
-    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.STOP),
+  stop: (changeStatus?: boolean) =>
+    ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.STOP,
+      changeStatus
+    ),
   nodeStatus: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.NODE_STATUS),
   sync: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.SYNC),
+  stopSyncing: () =>
+    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.STOP_SYNCING),
   peers: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.PEERS),
   getNodeConfig: () =>
@@ -224,11 +231,23 @@ contextBridge.exposeInMainWorld('IronfishManager', {
       ),
   },
   snapshot: {
-    start: (path: string) =>
+    checkPath: (manifest: SnapshotManager, path?: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.CHECK_PATH,
+        manifest,
+        path
+      ),
+    start: (path?: string) =>
       ipcRenderer.invoke(
         'ironfish-manager-snapshot',
         IronfishSnaphotManagerAction.START,
         path
+      ),
+    apply: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.APPLY
       ),
     reset: () =>
       ipcRenderer.invoke(

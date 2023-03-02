@@ -47,8 +47,12 @@ contextBridge.exposeInMainWorld('IronfishManager', {
     ),
   start: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.START),
-  stop: () =>
-    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.STOP),
+  stop: (changeStatus?: boolean) =>
+    ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.STOP,
+      changeStatus
+    ),
   nodeStatus: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.NODE_STATUS),
   chainProgress: () =>
@@ -64,6 +68,8 @@ contextBridge.exposeInMainWorld('IronfishManager', {
     ),
   sync: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.SYNC),
+  stopSyncing: () =>
+    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.STOP_SYNCING),
   peers: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.PEERS),
   snapshot: {

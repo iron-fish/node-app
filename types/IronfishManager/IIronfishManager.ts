@@ -20,6 +20,7 @@ export enum IronfishManagerAction {
   CHAIN_PROGRESS = 'chainProgress',
   DOWNLOAD_SNAPSHOT = 'downloadChainSnapshot',
   SYNC = 'sync',
+  STOP_SYNCING = 'stopSyncing',
   GET_NODE_CONFIG = 'getNodeConfig',
   SAVE_NODE_CONFIG = 'saveNodeConfig',
 }
@@ -33,11 +34,12 @@ export interface IIronfishManager {
   initialize: () => Promise<void>
   hasAnyAccount: () => Promise<boolean>
   start: () => Promise<void>
-  stop: () => Promise<void>
+  stop: (changeStatus?: boolean) => Promise<void>
   status: () => Promise<IronFishInitStatus>
   sync: () => Promise<void>
+  stopSyncing: () => Promise<void>
   chainProgress: () => Promise<number>
-  downloadChainSnapshot: (path: string) => Promise<void>
+  downloadChainSnapshot: (path?: string) => Promise<void>
   nodeStatus: () => Promise<NodeStatusResponse>
   peers: () => Promise<Peer[]>
   getNodeConfig: () => Promise<Partial<ConfigOptions>>

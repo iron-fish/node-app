@@ -10,7 +10,7 @@ import {
   ConfigOptions,
   getPackageFrom,
   VERSION_DATABASE_CHAIN,
-  VERSION_DATABASE_ACCOUNTS,
+  // VERSION_DATABASE_ACCOUNTS, export is not available in newest versions
 } from '@ironfish/sdk'
 import geoip from 'geoip-lite'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
@@ -57,10 +57,10 @@ export class IronFishManager implements IIronfishManager {
       await this.node.wallet.walletDb.db.open()
     }
     const chainDbVersion = await this.node.chain.db.getVersion()
-    const walletDbVersion = await this.node.wallet.walletDb.db.getVersion()
+    // const walletDbVersion = await this.node.wallet.walletDb.db.getVersion()
     if (
-      chainDbVersion !== VERSION_DATABASE_CHAIN ||
-      walletDbVersion !== VERSION_DATABASE_ACCOUNTS
+      chainDbVersion !== VERSION_DATABASE_CHAIN
+      // || walletDbVersion !== VERSION_DATABASE_ACCOUNTS
     ) {
       this.sdk.config.setOverride('databaseMigrate', true)
     }
@@ -147,10 +147,13 @@ export class IronFishManager implements IIronfishManager {
     this.initStatus = IronFishInitStatus.STARTED
   }
 
-  async stop(): Promise<void> {
+  async stop(changeStatus = true): Promise<void> {
     await this.node?.shutdown()
     await this.node?.closeDB()
-    this.initStatus = IronFishInitStatus.NOT_STARTED
+
+    if (changeStatus) {
+      this.initStatus = IronFishInitStatus.NOT_STARTED
+    }
   }
 
   async hasAnyAccount(): Promise<boolean> {
@@ -224,7 +227,11 @@ export class IronFishManager implements IIronfishManager {
   }
 
   async sync(): Promise<void> {
-    await this.node.syncer.findPeer()
+    await this.node.syncer.start()
+  }
+
+  async stopSyncing(): Promise<void> {
+    await this.node.syncer.stop()
   }
 
   peers(): Promise<Peer[]> {
@@ -287,15 +294,13 @@ export class IronFishManager implements IIronfishManager {
     return Promise.resolve(result)
   }
 
-  async downloadChainSnapshot(path: string): Promise<void> {
+  async downloadChainSnapshot(path?: string): Promise<void> {
     if (
       this.initStatus < IronFishInitStatus.INITIALIZED ||
       this.initStatus === IronFishInitStatus.ERROR
     ) {
       return Promise.reject(new Error('Node is not initialized.'))
     }
-    await this.node.shutdown()
-    await this.node.closeDB()
     this.initStatus = IronFishInitStatus.DOWNLOAD_SNAPSHOT
     return this.snapshot.start(path)
   }

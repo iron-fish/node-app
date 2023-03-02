@@ -16,7 +16,7 @@ import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressBook/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
-import { DataSyncProvider } from './providers/DataSyncProvider'
+import Providers from './providers'
 import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
 import Initializing from 'Routes/Initializing'
 import TransactionOverview from 'Routes/Transaction/TransactionOverview'
@@ -40,7 +40,7 @@ function App() {
       <HashRouter>
         <Routes>
           <Route element={<Initializing />}>
-            <Route element={<DataSyncProvider />}>
+            <Route element={<Providers />}>
               <Route element={<CreateLayout />}>
                 <Route path={ROUTES.ONBOARDING} element={<Action />} />
                 <Route path={ROUTES.CREATE} element={<CreateAccount />} />

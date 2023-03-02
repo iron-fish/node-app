@@ -2,7 +2,9 @@ import { Meter } from '@ironfish/sdk'
 
 export enum IronfishSnaphotManagerAction {
   MANIFEST = 'manifest',
+  CHECK_PATH = 'checkPath',
   START = 'start',
+  APPLY = 'apply',
   STATUS = 'status',
   RESET = 'reset',
 }
@@ -10,6 +12,7 @@ export enum IronfishSnaphotManagerAction {
 export enum ProgressStatus {
   NOT_STARTED,
   DOWLOADING,
+  DOWNLOADED,
   CLEARING_CHAIN_DB,
   UNARHIVING,
   CLEARING_TEMP_DATA,
@@ -36,7 +39,12 @@ export type SnapshotManifest = {
 }
 
 export interface IIronfishSnapshotManager {
-  start: (pathToSave: string) => Promise<void>
+  checkPath: (
+    manifest: SnapshotManifest,
+    pathToSave?: string
+  ) => Promise<{ hasError: boolean; error: string }>
+  start: (pathToSave?: string) => Promise<void>
+  apply: () => Promise<void>
   manifest: () => Promise<SnapshotManifest>
   reset: () => Promise<void>
   status: () => Promise<Omit<ProgressType, 'statistic'>>

@@ -3,7 +3,10 @@ import noop from 'lodash/noop'
 import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
 import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
-import { ProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import {
+  ProgressStatus,
+  SnapshotManifest,
+} from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { Payment } from 'Types/Transaction'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
@@ -89,7 +92,10 @@ export const IronFishManager: IIronfishManager = {
       ),
   },
   snapshot: {
-    start: (path: string) => window.DemoDataManager.snapshot.start(path),
+    checkPath: (manifest: SnapshotManifest, path?: string) =>
+      Promise.resolve({ hasError: false, error: undefined }),
+    start: (path?: string) => window.DemoDataManager.snapshot.start(path),
+    apply: () => Promise.resolve(),
     manifest: () => window.DemoDataManager.snapshot.manifest(),
     status: () => window.DemoDataManager.snapshot.status(),
     reset: () => window.DemoDataManager.snapshot.reset(),
@@ -105,6 +111,7 @@ export const IronFishManager: IIronfishManager = {
   peers: () => window.DemoDataManager.getNodePeers(),
   hasAnyAccount: () => window.DemoDataManager.hasAnyAccount(),
   sync: () => Promise.resolve(),
+  stopSyncing: () => Promise.resolve(),
   initialize: () => window.DemoDataManager.initialize(),
   chainProgress: () => window.DemoDataManager.node.chainProgress(),
   downloadChainSnapshot: (path: string) =>

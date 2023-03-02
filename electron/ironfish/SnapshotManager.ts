@@ -37,44 +37,81 @@ class SnapshotManager implements IIronfishSnapshotManager {
     return (await axios.get<SnapshotManifest>(MANIFEST_URL)).data
   }
 
-  async start(pathToSave: string): Promise<void> {
+  async checkPath(
+    manifest: SnapshotManifest,
+    pathToSave?: string
+  ): Promise<{
+    hasError: boolean
+    error: string
+  }> {
+    const savePath =
+      pathToSave || path.resolve(this.node.config.dataDir, 'temp')
+    if (manifest.database_version > VERSION_DATABASE_CHAIN) {
+      return {
+        hasError: true,
+        error:
+          'Snapshot is used more actual database version. Please try to update application.',
+      }
+    }
+
+    try {
+      await fs.promises.mkdir(savePath, { recursive: true })
+    } catch (e) {
+      return {
+        hasError: true,
+        error:
+          'Cannot get access to selected folder. Please check the path and permissions.',
+      }
+    }
+
+    const diskSpace = await checkDiskSpace(savePath)
+
+    if (diskSpace.free < manifest.file_size * 2) {
+      return {
+        hasError: true,
+        error: "You don't have enougth free space in selected folder.",
+      }
+    }
+
+    return {
+      hasError: false,
+      error: undefined,
+    }
+  }
+
+  async start(pathToSave?: string): Promise<void> {
     if (!this.node) {
       this.progress.hasError = true
       this.progress.error = 'Node is not initialized'
       return
     }
+
+    const savePath =
+      pathToSave || path.resolve(this.node.config.dataDir, 'temp')
+
     const manifest = await this.manifest()
-    if (manifest.database_version > VERSION_DATABASE_CHAIN) {
+
+    const result = await this.checkPath(manifest, savePath)
+
+    if (result.hasError) {
       this.progress.hasError = true
-      this.progress.error =
-        'Snapshot is used more actual database version. Please try to update application.'
+      this.progress.error = result.error
       return
     }
 
-    try {
-      await fs.promises.mkdir(pathToSave, { recursive: true })
-    } catch (e) {
-      this.progress.hasError = true
-      this.progress.error =
-        'Cannot get access to selected folder. Please check the path and permissions.'
-      return
-    }
+    this.download(manifest, savePath)
+  }
 
-    const diskSpace = await checkDiskSpace(pathToSave)
+  async apply() {
+    await this.node.shutdown()
+    await this.node.closeDB()
 
-    if (diskSpace.free < manifest.file_size * 2) {
-      this.progress.hasError = true
-      this.progress.error =
-        "You don't have enougth free space in selected folder."
-      return
-    }
-
-    await this.download(manifest, pathToSave)
-    await this.clearDatabase()
-    await this.unarchive()
-    await this.clearTemporaryFiles()
-
-    this.progress.status = ProgressStatus.COMPLETED
+    this.clearDatabase()
+      .then(this.unarchive)
+      .then(this.clearTemporaryFiles)
+      .then(() => {
+        this.progress.status = ProgressStatus.COMPLETED
+      })
   }
 
   private async download(
@@ -171,6 +208,8 @@ class SnapshotManager implements IIronfishSnapshotManager {
       this.progress.error = "Snapshot checksum doesn't match."
       return Promise.reject()
     }
+
+    this.progress.status = ProgressStatus.DOWNLOADED
   }
 
   private async unarchive(): Promise<void> {
