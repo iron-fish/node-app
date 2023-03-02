@@ -8,7 +8,6 @@ import {
   NAMED_COLORS,
   useIronToast,
 } from '@ironfish/ui-kit'
-import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
@@ -31,6 +30,8 @@ import differenceBy from 'lodash/differenceBy'
 import intersectionBy from 'lodash/intersectionBy'
 import useAccountBalance from 'Hooks/accounts/useAccountBalance'
 import WalletCommonTable from 'Components/WalletCommonTable'
+import AssetsAmountPreview from 'Components/AssetsAmountPreview'
+import { formatDate } from 'Utils/formatDate'
 
 interface SearchTransactionsProps {
   address: string
@@ -163,12 +164,17 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
             },
             {
               key: 'transaction-amount-column',
-              label: <chakra.h6>$IRON</chakra.h6>,
+              label: <chakra.h6>Sent</chakra.h6>,
               render: (transaction: Transaction) => (
-                <chakra.h5>
-                  {(transaction.creator ? '' : '+') +
-                    FixedNumberUtils.render(transaction.amount.value, 8)}
-                </chakra.h5>
+                <AssetsAmountPreview
+                  assetAmounts={
+                    transaction?.assetAmounts.length
+                      ? transaction?.assetAmounts
+                      : transaction?.amount
+                      ? [transaction?.amount]
+                      : []
+                  }
+                />
               ),
             },
             {
@@ -187,7 +193,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               key: 'transaction-date-column',
               label: <chakra.h6>Date</chakra.h6>,
               render: (transaction: Transaction) => (
-                <chakra.h5>{transaction.created.toISOString()}</chakra.h5>
+                <chakra.h5>{formatDate(transaction.created)}</chakra.h5>
               ),
             },
             {

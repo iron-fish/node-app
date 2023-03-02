@@ -8,11 +8,11 @@ const useCreateAccount = () => {
   const createAccount = () =>
     promiseWrapper(window.IronfishManager.accounts.prepareAccount())
 
-  const confirmAccountCreation = (name: string) =>
-    window.IronfishManager.accounts.submitAccount({
-      ...result.data,
-      name,
-    })
+  const confirmAccountCreation = (name: string) => {
+    const newAccount = { ...result.data, name }
+    delete newAccount.mnemonicPhrase
+    return window.IronfishManager.accounts.submitAccount(newAccount)
+  }
 
   useEffect(() => {
     createAccount()

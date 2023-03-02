@@ -5,6 +5,7 @@ import {
   CurrencyUtils,
   IronfishNode,
   RawTransaction,
+  TransactionType,
 } from '@ironfish/sdk'
 import { TransactionValue } from '@ironfish/sdk/build/src/wallet/walletdb/transactionValue'
 import { sizeVarBytes } from 'bufio'
@@ -21,6 +22,7 @@ import Transaction, {
 } from 'Types/Transaction'
 import AbstractManager from './AbstractManager'
 import AssetManager from './AssetManager'
+import { abs } from 'Utils/number'
 
 class TransactionManager
   extends AbstractManager
@@ -41,12 +43,10 @@ class TransactionManager
     const account = this.node.wallet.getAccount(accountId)
     const head = await account.getHead()
     const transaction = await this.node.wallet.send(
-      this.node.memPool,
       account,
       [{ ...payment, assetId: Asset.nativeId() }],
       transactionFee,
-      this.node.config.get('transactionExpirationDelta'),
-      0
+      this.node.config.get('transactionExpirationDelta')
     )
 
     const result = await this.resolveTransactionFields(
@@ -105,9 +105,9 @@ class TransactionManager
   ): Promise<TransactionFeeEstimate> {
     const estimatedFeeRates = this.node.memPool.feeEstimator.estimateFeeRates()
     const feeRates = [
-      estimatedFeeRates.low || BigInt(1),
-      estimatedFeeRates.medium || BigInt(1),
-      estimatedFeeRates.high || BigInt(1),
+      estimatedFeeRates.slow || BigInt(1),
+      estimatedFeeRates.average || BigInt(1),
+      estimatedFeeRates.fast || BigInt(1),
     ]
 
     const account = this.node.wallet.getAccount(accountId)
@@ -116,9 +116,9 @@ class TransactionManager
 
     feeRates.forEach(feeRate => {
       allPromises.push(
-        this.node.wallet.createTransaction(
+        this.node.wallet.createTransaction({
           account,
-          [
+          outputs: [
             {
               publicAddress: receive.publicAddress,
               amount: receive.amount,
@@ -126,24 +126,19 @@ class TransactionManager
               assetId: Asset.nativeId(),
             },
           ],
-          [],
-          [],
-          {
-            feeRate,
-            expirationDelta: this.node.config.get('transactionExpirationDelta'),
-          }
-        )
+          feeRate,
+        })
       )
     })
 
-    const [low, medium, high]: Array<RawTransaction> = await Promise.all(
+    const [slow, average, fast]: Array<RawTransaction> = await Promise.all(
       allPromises
     )
 
     return {
-      slow: low.fee,
-      average: medium.fee,
-      fast: high.fee,
+      slow: slow.fee,
+      average: average.fee,
+      fast: fast.fee,
     }
   }
 
@@ -231,28 +226,34 @@ class TransactionManager
       }))
     )
 
-    const amount: Record<string, Amount> = notes.reduce((result, note) => {
-      result[note.asset.id] = {
-        asset: note.asset,
-        value: note.note.value() + (result[note.asset.id]?.value || BigInt(0)),
+    const assetAmounts: Amount[] = []
+    const feePaid = transaction.transaction.fee()
+    const transactionType = await this.node.wallet.getTransactionType(
+      account,
+      transaction
+    )
+
+    for (const [assetId, delta] of transaction.assetBalanceDeltas.entries()) {
+      let amount = delta
+      if (assetId.equals(Asset.nativeId())) {
+        if (transactionType === TransactionType.SEND) {
+          amount += feePaid
+          if (amount === BigInt(0)) {
+            continue
+          }
+        }
       }
-      return result
-    }, {} as Record<string, Amount>)
-
-    creatorNotes.forEach(note => {
-      amount[note.note.assetId().toString('hex')].value -= note.note.value()
-    })
-
-    if (creatorNotes.length > 0) {
-      amount[Asset.nativeId().toString('hex')].value +=
-        transaction.transaction.fee()
+      assetAmounts.push({
+        asset: await this.assetManager.get(assetId),
+        value: abs(amount),
+      })
     }
 
     return {
       accountId: account.id,
       hash: transaction.transaction.hash().toString('hex'),
       isMinersFee: transaction.transaction.isMinersFee(),
-      fee: transaction.transaction.fee().toString(),
+      fee: feePaid.toString(),
       notesCount: transaction.transaction.notes.length,
       spendsCount: transaction.transaction.spends.length,
       expiration: transaction.transaction.expiration(),
@@ -287,11 +288,11 @@ class TransactionManager
         creatorNotes.length > 0
           ? notes.map(n => n.note.sender())
           : [account.publicAddress],
-      created: created?.header?.timestamp || new Date(),
-      amount: amount[Asset.nativeId().toString('hex')],
-      assetAmounts: Object.values(amount).filter(
-        a => a.asset.id !== Asset.nativeId().toString('hex')
+      created: created?.header?.timestamp || transaction.timestamp,
+      amount: assetAmounts.find(
+        ({ asset }) => asset.id === Asset.nativeId().toString('hex')
       ),
+      assetAmounts: assetAmounts,
     }
   }
 

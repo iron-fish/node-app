@@ -27,9 +27,10 @@ import InOutPutsIcon from 'Svgx/InOutPutsIcon'
 import LargeArrowLeftDown from 'Svgx/LargeArrowLeftDown'
 import LargeArrowRightUp from 'Svgx/LargeArrowRightUp'
 import ContactsPreview from 'Components/ContactsPreview'
-import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
 import WalletCommonTable from 'Components/WalletCommonTable'
 import InfoBadge from 'Components/InfoBadge'
+import AssetsAmountPreview from 'Components/AssetsAmountPreview'
+import { formatDate } from 'Utils/formatDate'
 
 interface Card {
   render: (tx: Transaction) => ReactNode
@@ -38,9 +39,21 @@ interface Card {
 }
 const CARDS: Card[] = [
   {
-    render: (tx: Transaction) =>
-      FixedNumberUtils.render(tx?.amount.value || BigInt(0), 8),
-    label: '$IRON Sent',
+    render: (tx: Transaction) => (
+      <AssetsAmountPreview
+        assetAmounts={
+          tx?.assetAmounts.length
+            ? tx?.assetAmounts
+            : tx?.amount
+            ? [tx?.amount]
+            : []
+        }
+        amountPreviewTextProps={{
+          as: 'h4',
+        }}
+      />
+    ),
+    label: 'Asset',
     icon: DifficultyIcon,
   },
   {
@@ -67,17 +80,20 @@ const CARDS: Card[] = [
     icon: SizeIcon,
   },
   {
-    render: (tx: Transaction) => (
-      <CopyValueToClipboard
-        label={truncateHash(tx?.blockHash || '', 2, 4)}
-        value={tx?.blockHash || ''}
-        iconButtonProps={{
-          color: NAMED_COLORS.GREY,
-        }}
-        copyTooltipText={'Copy block hash'}
-        copiedTooltipText={'Block hash copied'}
-      />
-    ),
+    render: (tx: Transaction) =>
+      tx?.blockHash ? (
+        <CopyValueToClipboard
+          label={truncateHash(tx?.blockHash || '', 2, 4)}
+          value={tx?.blockHash || ''}
+          iconButtonProps={{
+            color: NAMED_COLORS.GREY,
+          }}
+          copyTooltipText={'Copy block hash'}
+          copiedTooltipText={'Block hash copied'}
+        />
+      ) : (
+        'n/a'
+      ),
     label: 'Block Hash',
     icon: DifficultyIcon,
   },
@@ -108,7 +124,7 @@ const CARDS: Card[] = [
     icon: BlockInfoDifficultyIcon,
   },
   {
-    render: (tx: Transaction) => tx?.created.toLocaleString(),
+    render: (tx: Transaction) => formatDate(tx?.created),
     label: 'Timestamp',
     icon: BlockInfoTimestampIcon,
   },
