@@ -32,25 +32,29 @@ const AccountAssetsView: FC<AccountAssetsViewProps> = ({ assets }) => {
             </h3>
           </AccordionButton>
           <AccordionPanel px="0rem" pb="0rem" mb="0.0625rem">
-            <Wrap overflow="visible" spacing="1rem">
+            <Flex wrap={'wrap'} gap="1.25rem" mb="0.25rem">
               {assets.map(({ confirmed, asset }) => (
-                <WrapItem key={asset.id}>
-                  <Flex
-                    width="auto"
-                    layerStyle="card"
-                    p="2rem 2rem 1.5rem 2rem"
-                    borderRadius="0.25rem"
-                    alignItems="center"
-                  >
-                    <Flex direction="column" mr="2rem">
-                      <h4>{asset.name}</h4>
-                      <h2>{formatOreToTronWithLanguage(confirmed)}</h2>
-                    </Flex>
-                    <ChevronRightIcon ml="auto" color={NAMED_COLORS.GREY} />
+                <Flex
+                  width="auto"
+                  layerStyle="card"
+                  p="2rem 2rem 1.5rem 2rem"
+                  borderRadius="0.25rem"
+                  alignItems="center"
+                  m="0"
+                  minW="16.875rem"
+                  width={{
+                    base: 'calc(50% - 0.75rem)',
+                    md1: 'calc(33.333333% - 0.9375rem)',
+                  }}
+                >
+                  <Flex direction="column">
+                    <h4>{asset.name}</h4>
+                    <h2>{formatOreToTronWithLanguage(confirmed)}</h2>
                   </Flex>
-                </WrapItem>
+                  <ChevronRightIcon ml="auto" color={NAMED_COLORS.GREY} />
+                </Flex>
               ))}
-            </Wrap>
+            </Flex>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
