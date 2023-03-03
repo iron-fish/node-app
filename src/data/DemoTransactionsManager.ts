@@ -333,7 +333,7 @@ class DemoTransactionsManager {
               transaction.inputs.find(note =>
                 note.memo?.toLowerCase().includes(search)
               ) ||
-              transaction.amount.toString().includes(search))
+              transaction.amount?.value.toString().includes(search))
         )
         transactions.sort(
           (a, b) =>
@@ -366,7 +366,7 @@ class DemoTransactionsManager {
               transaction.inputs.find(note =>
                 note.memo?.toLowerCase().includes(search)
               ) ||
-              transaction.amount.toString().includes(search))
+              transaction.amount?.value.toString().includes(search))
         )
         transactions.sort(
           (a, b) =>
