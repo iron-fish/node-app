@@ -7,8 +7,6 @@ import {
   AccordionPanel,
   Flex,
   NAMED_COLORS,
-  Wrap,
-  WrapItem,
 } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { formatOreToTronWithLanguage } from 'Utils/number'
