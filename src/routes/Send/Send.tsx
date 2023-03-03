@@ -281,7 +281,7 @@ const Send: FC = () => {
                 </chakra.h4>
               </Flex>
             )}
-            <Flex gap="1rem">
+            <Flex gap="2rem">
               <AccountsSelect
                 w="50%"
                 label="From Account"
@@ -310,17 +310,16 @@ const Send: FC = () => {
               freeInput
               containerProps={{ mb: '2rem' }}
             />
-            <Flex mb="2rem">
+            <Flex mb="2rem" gap="2rem">
               <SelectField
-                width="calc(50% - 1rem)"
-                mr="2rem"
+                width="50%"
                 label="Estimated Fee $IRON"
                 value={selectedFee}
                 options={feeOptions}
                 onSelectOption={selected => setSelectedFee(selected)}
               />
               <TextField
-                w="calc(50% - 1rem)"
+                w="50%"
                 label={`Memo (${32 - txnMemo.length} characters)`}
                 value={txnMemo}
                 InputProps={{
