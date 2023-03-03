@@ -33,7 +33,6 @@ const AccountAssetsView: FC<AccountAssetsViewProps> = ({ assets }) => {
             <Flex wrap={'wrap'} gap="1.25rem" mb="0.25rem">
               {assets.map(({ confirmed, asset }) => (
                 <Flex
-                  width="auto"
                   layerStyle="card"
                   p="2rem 2rem 1.5rem 2rem"
                   borderRadius="0.25rem"
