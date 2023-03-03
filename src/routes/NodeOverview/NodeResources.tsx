@@ -5,8 +5,7 @@ import {
   StatLabel,
   StatNumber,
   Stat,
-  Wrap,
-  WrapItem,
+  NAMED_COLORS,
 } from '@ironfish/ui-kit'
 import { FileUtils } from '@ironfish/sdk/build/src/utils/file'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
@@ -46,61 +45,52 @@ const NodeResources: FC<NodeResourcesProps> = ({ data, loaded }) => {
           p="4rem"
           ml="0 !important"
           layerStyle="card"
+          bg={`${NAMED_COLORS.LIGHT_YELLOW} !important`}
+          color={NAMED_COLORS.DEEP_BLUE}
           overflow="hidden"
           whiteSpace="nowrap"
           borderRadius="0.25rem"
           direction="column"
           gap="1rem"
         >
-          <Wrap spacing="2rem" width="100%">
-            <WrapItem>
-              <NodeResource label="Cores" value={data.cpu.cores} />
-            </WrapItem>
-            <WrapItem>
-              <NodeResource
-                label="Current"
-                value={`${data.cpu.percentCurrent.toFixed(1)}%`}
-              />
-            </WrapItem>
-          </Wrap>
-          <Wrap spacing="2rem" width="100%">
-            <WrapItem>
-              <NodeResource
-                label="RSS"
-                value={`${rss} (${(
-                  (data.memory.rss / data.memory.memTotal) *
-                  100
-                ).toFixed(1)}%)`}
-              />
-            </WrapItem>
-            <WrapItem>
-              <NodeResource
-                label="Free"
-                value={`${memFree} (${(
-                  (1 - data.memory.memFree / data.memory.memTotal) *
-                  100
-                ).toFixed(1)}
+          <h3>Node Resources</h3>
+          <Flex
+            w="100%"
+            wrap="wrap"
+            mb="2.25rem"
+            alignItems="space-between"
+            justifyContent="space-between"
+          >
+            <NodeResource label="Cores" value={data.cpu.cores} />
+            <NodeResource
+              label="Current"
+              value={`${data.cpu.percentCurrent.toFixed(1)}%`}
+            />
+            <NodeResource
+              label="RSS"
+              value={`${rss} (${(
+                (data.memory.rss / data.memory.memTotal) *
+                100
+              ).toFixed(1)}%)`}
+            />
+            <NodeResource
+              label="Free"
+              value={`${memFree} (${(
+                (1 - data.memory.memFree / data.memory.memTotal) *
+                100
+              ).toFixed(1)}
               %)`}
-              />
-            </WrapItem>
-          </Wrap>
-          <Wrap spacing="2rem" width="100%">
-            <WrapItem>
-              <NodeResource label="Heap used" value={heapUsed} />
-            </WrapItem>
-            <WrapItem>
-              <NodeResource label="Heap total" value={heapTotal} />
-            </WrapItem>
-            <WrapItem>
-              <NodeResource
-                label="Heap maximum"
-                value={`${heapMax} (${(
-                  (data.memory.heapUsed / data.memory.heapMax) *
-                  100
-                ).toFixed(1)}%)`}
-              />
-            </WrapItem>
-          </Wrap>
+            />
+            <NodeResource label="Heap used" value={heapUsed} />
+            <NodeResource label="Heap total" value={heapTotal} />
+            <NodeResource
+              label="Heap maximum"
+              value={`${heapMax} (${(
+                (data.memory.heapUsed / data.memory.heapMax) *
+                100
+              ).toFixed(1)}%)`}
+            />
+          </Flex>
         </Flex>
       </Flex>
     )

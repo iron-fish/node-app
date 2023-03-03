@@ -20,9 +20,15 @@ const NodeOverview: FC = () => {
       <chakra.h2 mb="1rem">Your Node</chakra.h2>
       <Tabs>
         <TabList>
-          <Tab>Node Overview</Tab>
-          <Tab>Node Settings</Tab>
-          <Tab>Node Resources</Tab>
+          <Tab>
+            <h6>Node Overview</h6>
+          </Tab>
+          <Tab>
+            <h6>Node Settings</h6>
+          </Tab>
+          <Tab>
+            <h6>Node Resources</h6>
+          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel p="0" pt="2rem">
