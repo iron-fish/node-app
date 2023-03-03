@@ -16,7 +16,7 @@ interface NodeResourceProps {
 }
 
 const NodeResource: FC<NodeResourceProps> = ({ label, value }) => (
-  <Stat>
+  <Stat minW="14.375rem">
     <StatLabel>
       <chakra.h6>{label}</chakra.h6>
     </StatLabel>
