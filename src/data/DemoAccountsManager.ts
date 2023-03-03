@@ -120,6 +120,22 @@ export const ACCOUNT_BALANCES: Record<
       unconfirmedCount: 1,
       asset: DEFAULT_ASSET,
     },
+    {
+      confirmed: BigInt(8481),
+      unconfirmed: BigInt(164),
+      pending: BigInt(874),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: DEMO_ASSET,
+    },
+    {
+      confirmed: BigInt(8481),
+      unconfirmed: BigInt(164),
+      pending: BigInt(874),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: TEST_ASSET,
+    },
   ],
   q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7: [
     {
