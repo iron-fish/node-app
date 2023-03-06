@@ -102,7 +102,7 @@ const SendButton: FC<SendButtonProps> = ({ setStart, hasValidData }) => {
         }
         onClick={() => setStart(true)}
       >
-        <chakra.h4>Send $IRON</chakra.h4>
+        <chakra.h4>Send</chakra.h4>
       </Button>
     </Box>
   )
@@ -199,7 +199,7 @@ const Send: FC = () => {
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
-        <chakra.h2 mb="1rem">Send $IRON</chakra.h2>
+        <chakra.h2 mb="1rem">Send</chakra.h2>
       </Box>
       <Flex>
         <Box w="37.25rem">
