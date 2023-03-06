@@ -6,7 +6,7 @@ import {
   NAMED_COLORS,
   MnemonicView,
 } from '@ironfish/ui-kit'
-import { FC, useState, useEffect } from 'react'
+import { FC, useState, useEffect, ClipboardEvent } from 'react'
 import StepProps from './StepProps'
 
 interface MnemonicValidationError {
@@ -57,6 +57,15 @@ const ValidateStep: FC<StepProps> = ({
         re-enter this.
       </chakra.h5>
       <MnemonicView
+        onPaste={(event: ClipboardEvent<HTMLInputElement>) => {
+          const copiedText = event.clipboardData.getData('text')
+          const copiedPhrase = copiedText.split(' ')
+          if (copiedPhrase.length > 1) {
+            event.preventDefault()
+            setInputtedPhrase(copiedPhrase)
+            navigator.clipboard.writeText('')
+          }
+        }}
         header={
           <Flex gap="0.4375rem" mb="-0.4375rem">
             <h6>Mnemonic phrase</h6>
