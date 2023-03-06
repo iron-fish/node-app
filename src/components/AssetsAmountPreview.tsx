@@ -51,7 +51,7 @@ interface AssetsAmountPreview {
 const AssetsAmountPreview: FC<AssetsAmountPreview> = ({
   assetAmounts = [],
   amountPreviewContainerProps,
-  amountPreviewTextProps = { as: 'h5' } as TextProps,
+  amountPreviewTextProps = { as: 'h5' },
 }) => {
   const [open, setOpen] = useState<boolean>(false)
   if (assetAmounts.length === 0) {
