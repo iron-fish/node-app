@@ -21,6 +21,7 @@ import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 import { formatOreToTronWithLanguage } from 'Utils/number'
+import AssetsBadge from 'Components/AssetsBadge'
 
 const AccountPreview: FC<CutAccount> = ({
   order = 0,
@@ -112,23 +113,26 @@ const AccountPreview: FC<CutAccount> = ({
           )}
           &nbsp;{balances?.default?.asset?.name}
         </chakra.h3>
-        <CopyValueToClipboard
-          containerProps={{
-            color: NAMED_COLORS.GREY,
-          }}
-          iconButtonProps={{
-            justifyContent: 'none',
-            minW: '0.75rem',
-          }}
-          labelProps={{
-            as: 'h5',
-            mr: '0.5rem',
-          }}
-          value={publicAddress}
-          label={truncateHash(publicAddress, 3)}
-          copyTooltipText="Copy to clipboard"
-          copiedTooltipText="Copied"
-        />
+        <Flex gap="0.75rem">
+          <AssetsBadge assets={balances?.assets} />
+          <CopyValueToClipboard
+            containerProps={{
+              color: NAMED_COLORS.GREY,
+            }}
+            iconButtonProps={{
+              justifyContent: 'none',
+              minW: '0.75rem',
+            }}
+            labelProps={{
+              as: 'h5',
+              mr: '0.5rem',
+            }}
+            value={publicAddress}
+            label={truncateHash(publicAddress, 3)}
+            copyTooltipText="Copy to clipboard"
+            copiedTooltipText="Copied"
+          />
+        </Flex>
       </Box>
       <Flex ml="auto" alignSelf="center" mr="-1rem">
         <Flex direction="column" gap="0.75rem">
