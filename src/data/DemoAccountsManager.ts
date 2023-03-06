@@ -1,8 +1,6 @@
 import { AccountSettings } from './types/Account'
 import { AccountValue } from '@ironfish/sdk'
 import { nanoid } from 'nanoid'
-// seems that it can be used thought preload script
-// import { generateMnemonic } from 'bip39'
 import randomWords from 'random-words'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
