@@ -218,11 +218,11 @@ export class IronFishManager implements IIronfishManager {
   }
 
   async sync(): Promise<void> {
-    await this.node.syncer.start()
+    await this.node.syncer.peerNetwork.start()
   }
 
   async stopSyncing(): Promise<void> {
-    await this.node.syncer.stop()
+    await this.node.syncer.peerNetwork.stop()
   }
 
   peers(): Promise<Peer[]> {

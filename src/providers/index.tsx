@@ -4,11 +4,11 @@ import { DataSyncProvider } from './DataSyncProvider'
 import SnapshotProvider from './SnapshotProvider'
 
 const Providers: FC = () => (
-  <DataSyncProvider>
-    <SnapshotProvider>
+  <SnapshotProvider>
+    <DataSyncProvider>
       <Outlet />
-    </SnapshotProvider>
-  </DataSyncProvider>
+    </DataSyncProvider>
+  </SnapshotProvider>
 )
 
 export default Providers

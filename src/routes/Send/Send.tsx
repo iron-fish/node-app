@@ -87,7 +87,7 @@ interface SendButtonProps {
 }
 
 const SendButton: FC<SendButtonProps> = ({ setStart, checkChanges }) => {
-  const { loaded: synced } = useDataSync()
+  const { synced } = useDataSync()
   return (
     <Box>
       <SyncWarningMessage

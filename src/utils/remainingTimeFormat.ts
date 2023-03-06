@@ -1,16 +1,19 @@
-export const formatRemainingTime = (time: number): string => {
+export const formatRemainingTime = (time: number, parts = 2): string => {
   const updateResult = (value: number, unit: Intl.RelativeTimeFormatUnit) => {
     if (!value) {
       return
     }
 
-    const parts = new Intl.RelativeTimeFormat('en').formatToParts(value, unit)
+    const formatParts = new Intl.RelativeTimeFormat('en').formatToParts(
+      value,
+      unit
+    )
 
-    if (result.length === 2) {
+    if (result.length === parts) {
       result.shift()
     }
 
-    result.push(value ? parts[1].value + parts[2].value : '')
+    result.push(value ? formatParts[1].value + formatParts[2].value : '')
   }
 
   if (time <= 1000) {
@@ -21,12 +24,12 @@ export const formatRemainingTime = (time: number): string => {
   const zeroDate = new Date(0)
   const result: [string?, string?] = []
 
-  updateResult(date.getSeconds() - zeroDate.getSeconds(), 'seconds')
-  updateResult(date.getMinutes() - zeroDate.getMinutes(), 'minutes')
-  updateResult(date.getHours() - zeroDate.getHours(), 'hours')
-  updateResult(date.getDate() - zeroDate.getDate(), 'days')
-  updateResult(date.getMonth() - zeroDate.getMonth(), 'months')
-  updateResult(date.getFullYear() - zeroDate.getFullYear(), 'years')
+  updateResult(date.getUTCSeconds() - zeroDate.getUTCSeconds(), 'seconds')
+  updateResult(date.getUTCMinutes() - zeroDate.getUTCMinutes(), 'minutes')
+  updateResult(date.getUTCHours() - zeroDate.getUTCHours(), 'hours')
+  updateResult(date.getUTCDate() - zeroDate.getUTCDate(), 'days')
+  updateResult(date.getUTCMonth() - zeroDate.getUTCMonth(), 'months')
+  updateResult(date.getUTCFullYear() - zeroDate.getUTCFullYear(), 'years')
 
   return (
     result

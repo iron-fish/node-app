@@ -248,7 +248,7 @@ const AccountOverview: FC<AccountOverviewProps> = ({ account }) => {
   }, [balanceLoaded])
 
   const navigate = useNavigate()
-  const { loaded: synced } = useDataSync()
+  const { synced } = useDataSync()
   return (
     <>
       <SyncWarningMessage mb="2rem" />

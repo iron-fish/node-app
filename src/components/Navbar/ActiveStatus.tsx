@@ -1,4 +1,4 @@
-import { FC, ReactNode, forwardRef, useState } from 'react'
+import { FC, ReactNode, forwardRef, useState, useMemo } from 'react'
 import {
   chakra,
   Flex,
@@ -7,15 +7,7 @@ import {
   Tooltip,
   useBreakpointValue,
   Button,
-  Modal,
-  ModalProps,
-  ModalOverlay,
-  ModalHeader,
-  ModalContent,
   NAMED_COLORS,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
 } from '@ironfish/ui-kit'
 import { WarningIcon } from '@chakra-ui/icons'
 import sizeFormat from 'byte-size'
@@ -26,15 +18,17 @@ import { formatRemainingTime } from 'Utils/remainingTimeFormat'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
 import {
   ProgressStatus,
-  SnapshotManifest,
+  ProgressType,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { useSnapshotStatus } from 'Providers/SnapshotProvider'
+import SnapshotDownloadModal from 'Components/Snapshot/SnapshotDownloadModal'
+import SnapshotStatusModal from 'Components/Snapshot/SnapshotStatusModal'
 
 const LIGHT_COLORS = {
   text: {
     default: '#335A48',
     warning: '#7E7400',
-    danger: '#F15929',
+    danger: NAMED_COLORS.RED,
   },
   bg: {
     default: '#EBFBF4',
@@ -47,7 +41,7 @@ const DARK_COLORS = {
   text: {
     default: '#5FC89A',
     warning: '#FFF9BC',
-    danger: '#F15929',
+    danger: NAMED_COLORS.RED,
   },
   bg: {
     default: '#192D23',
@@ -130,71 +124,13 @@ const renderTime = (time: number) => {
   return result.reverse().join(' ')
 }
 
-const DownloadModal: FC<
-  Omit<ModalProps, 'children'> & {
-    manifest: SnapshotManifest
-    size: string
-    estimateTime: string
-    onConfirm: () => void
-  }
-> = ({ size, estimateTime, onConfirm, manifest, ...props }) => {
-  const { status, checkPath, start } = useSnapshotStatus()
-  const [error, setError] = useState(null)
-  const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
-  return (
-    <Modal {...props}>
-      <ModalOverlay background="rgba(0,0,0,0.75)" />
-      <ModalContent p="4rem" minW="40rem">
-        <ModalHeader>
-          <chakra.h2>Download Snapshot</chakra.h2>
-        </ModalHeader>
-        <ModalCloseButton
-          color={NAMED_COLORS.GREY}
-          borderRadius="50%"
-          borderColor={NAMED_COLORS.LIGHT_GREY}
-          border="0.0125rem solid"
-          mt="1.5rem"
-          mr="1.5rem"
-        />
-        <ModalBody>
-          <chakra.h4>
-            You need to download our chain snapshot as the normal download time
-            could take up to {estimateTime}. The snapshot will be 2 times faster
-            and only {size}. If you need help, please click here.
-          </chakra.h4>
-          {error && <chakra.h4 color={colors.text.danger}>{error}</chakra.h4>}
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            variant="primary"
-            borderRadius="4rem"
-            onClick={async () => {
-              const path = await window.selectFolder()
-              const check = await checkPath(manifest, path)
-              if (check.hasError) {
-                setError(check.error)
-                return
-              }
-
-              start(path)
-              onConfirm()
-            }}
-          >
-            Download
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  )
-}
-
 const SnapshotMessage: FC<{
   data: NodeStatusResponse | undefined
-  onDownload: () => void
   isMinified: boolean
-}> = ({ data, onDownload }) => {
+}> = ({ data }) => {
   const [open, setOpen] = useState(false)
   const [manifest] = useSnapshotManifest()
+
   return (
     <>
       <WarningIcon
@@ -225,16 +161,15 @@ const SnapshotMessage: FC<{
       >
         <chakra.h5 color="inherit">Download Snapshot</chakra.h5>
       </Button>
-      <DownloadModal
+      <SnapshotDownloadModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={() => {
-          onDownload()
           setOpen(false)
         }}
         size={sizeFormat(manifest?.file_size).toString()}
         estimateTime={formatRemainingTime(
-          ((Number(data?.blockchain?.totalSequences || 0) -
+          ((Number(manifest?.block_sequence || 0) -
             Number(data?.blockchain?.head || 0)) *
             1000) /
             (data?.blockSyncer?.syncing?.speed || 1)
@@ -245,29 +180,59 @@ const SnapshotMessage: FC<{
   )
 }
 
-const DownloadStatus = () => {
-  const { status, checkPath, start, apply } = useSnapshotStatus()
+const SnapshotStatus: FC<{
+  status: Omit<ProgressType, 'statistic'>
+  isMinified: boolean
+}> = ({ status, isMinified }) => {
+  const [open, setOpen] = useState(false)
   return (
     <>
-      <chakra.h5 color="inherit">
+      <chakra.h6
+        mt="0.0625rem"
+        color="inherit"
+        display={isMinified ? 'inherit' : 'none'}
+        onClick={() => setOpen(true)}
+      >
+        {Math.floor(((status?.current || 0) / (status?.total || 1)) * 100)}%
+      </chakra.h6>
+      <chakra.h5 color="inherit" display={isMinified ? 'none' : 'inherit'}>
         Status: {getSnapshotStatus(status?.status)}
       </chakra.h5>
       {status &&
         status?.status > ProgressStatus.NOT_STARTED &&
         status?.status < ProgressStatus.COMPLETED && (
           <>
-            <chakra.h5 color="inherit">
-              {`${(status.current / status.total) * 100}%`}
+            <chakra.h5
+              color="inherit"
+              display={isMinified ? 'none' : 'inherit'}
+            >
+              {`${((status.current / status.total) * 100).toFixed(2)}%`}
               {' | '}
-              {`${formatRemainingTime(status.estimate)}`}
+              {`${formatRemainingTime(status.estimate, 1)}`}
             </chakra.h5>
-            <chakra.h5 color="inherit">
+            <chakra.h5
+              color="inherit"
+              display={isMinified ? 'none' : 'inherit'}
+            >
               {sizeFormat(status.current).toString()}
               {' / '}
               {sizeFormat(status.total).toString()}
             </chakra.h5>
+            <Button
+              variant="secondary"
+              borderRadius="4rem"
+              color="inherit"
+              borderColor="inherit"
+              h="1.7rem"
+              mt="0.25rem"
+              onClick={() => setOpen(true)}
+              display={{ base: 'none', sm: 'inherit' }}
+            >
+              Details
+            </Button>
           </>
         )}
+      <SnapshotStatusModal isOpen={open} onClose={() => setOpen(false)} />
     </>
   )
 }
@@ -352,7 +317,7 @@ const StatusItem: FC<StatusItemProps> = ({
     <Tooltip
       label={
         <StatusItemContent style={style} {...props}>
-          {isMinified => children(isMinified)}
+          {() => children(false)}
         </StatusItemContent>
       }
       isDisabled={!small}
@@ -365,7 +330,7 @@ const StatusItem: FC<StatusItemProps> = ({
       border={`0.0625rem solid ${colors.text[style]}`}
     >
       <StatusItemContent isMinified={small} style={style} {...props}>
-        {isMinified => children(isMinified)}
+        {() => children(small)}
       </StatusItemContent>
     </Tooltip>
   )
@@ -373,7 +338,13 @@ const StatusItem: FC<StatusItemProps> = ({
 
 const ActiveStatus: FC<FlexProps> = props => {
   const { synced, data, requiredSnapshot, sync } = useDataSync()
-  const [download, setDownload] = useState(false)
+  const { status } = useSnapshotStatus()
+  const download = useMemo(
+    () =>
+      status?.status > ProgressStatus.NOT_STARTED &&
+      status?.status < ProgressStatus.COMPLETED,
+    [status?.status]
+  )
   return (
     <Flex
       my={{ base: 0, sm: '1.5rem' }}
@@ -383,19 +354,15 @@ const ActiveStatus: FC<FlexProps> = props => {
       {...props}
     >
       <StatusItem display={download ? 'flex' : 'none'} style="warning">
-        {() => <DownloadStatus />}
+        {isMinified => (
+          <SnapshotStatus status={status} isMinified={isMinified} />
+        )}
       </StatusItem>
       <StatusItem
         display={requiredSnapshot && !download ? 'flex' : 'none'}
         style="danger"
       >
-        {isMinified => (
-          <SnapshotMessage
-            isMinified={isMinified}
-            data={data}
-            onDownload={() => setDownload(true)}
-          />
-        )}
+        {isMinified => <SnapshotMessage isMinified={isMinified} data={data} />}
       </StatusItem>
       <StatusItem
         display={requiredSnapshot || download ? 'none' : 'flex'}

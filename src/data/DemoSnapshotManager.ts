@@ -7,9 +7,24 @@ import {
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 
 class DemoSnapshotManager implements IIronfishSnapshotManager {
-  stat: Omit<ProgressType, 'statistic'>
+  stat: Omit<ProgressType, 'statistic'> = {
+    current: 0,
+    total: 0,
+    estimate: 0,
+    status: ProgressStatus.NOT_STARTED,
+    hasError: false,
+    error: null,
+  }
   async start(pathToSave: string) {
     this.execute(ProgressStatus.DOWLOADING)
+  }
+
+  checkPath(manifest: SnapshotManifest, pathToSave?: string) {
+    return Promise.resolve({ hasError: false, error: null })
+  }
+
+  apply() {
+    return Promise.resolve()
   }
 
   manifest(): Promise<SnapshotManifest> {
@@ -23,7 +38,7 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
     })
   }
 
-  private async execute(status: ProgressStatus) {
+  private async execute(status: ProgressStatus): Promise<void> {
     this.stat = {
       status: status,
       current: 0,
@@ -34,6 +49,9 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
     }
     if (status === ProgressStatus.COMPLETED) {
       return
+    }
+    if (status === ProgressStatus.DOWNLOADED) {
+      return this.execute(status + 1)
     }
     while (true) {
       if (this.stat.current >= this.stat.total) {

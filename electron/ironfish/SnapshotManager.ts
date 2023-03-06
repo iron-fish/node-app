@@ -13,8 +13,7 @@ import {
   SnapshotManifest,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 
-const MANIFEST_URL =
-  'https://ironfish-snapshots.s3-accelerate.amazonaws.com/manifest.json'
+const MANIFEST_URL = 'https://snapshots.ironfish.network/manifest.json'
 
 class SnapshotManager implements IIronfishSnapshotManager {
   private node: IronfishNode
@@ -107,10 +106,15 @@ class SnapshotManager implements IIronfishSnapshotManager {
     await this.node.closeDB()
 
     this.clearDatabase()
-      .then(this.unarchive)
-      .then(this.clearTemporaryFiles)
+      .then(() => this.unarchive())
+      .then(() => this.clearTemporaryFiles())
       .then(() => {
         this.progress.status = ProgressStatus.COMPLETED
+      })
+      .catch(e => {
+        this.progress.error = e.message
+        this.progress.hasError = true
+        throw e
       })
   }
 
@@ -228,6 +232,7 @@ class SnapshotManager implements IIronfishSnapshotManager {
     const extractPath = this.node.files.resolve(
       this.node.config.chainDatabasePath
     )
+    await fs.promises.mkdir(extractPath, { recursive: true })
 
     try {
       await tar.list({

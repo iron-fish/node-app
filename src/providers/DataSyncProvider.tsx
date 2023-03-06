@@ -7,7 +7,10 @@ import {
   useCallback,
   ReactNode,
 } from 'react'
+import IronFishInitStatus from 'Types/IronfishInitStatus'
+import { ProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
+import { useSnapshotStatus } from './SnapshotProvider'
 
 export interface DataSyncContextProps {
   data?: NodeStatusResponse | undefined
@@ -32,6 +35,7 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [synced, setSynced] = useState<boolean>(false)
   const [status, setNodeStatus] = useState<NodeStatusResponse | undefined>()
   const [error, setError] = useState()
+  const { status: snapshotStatus } = useSnapshotStatus()
 
   const loadStatus = () =>
     window.IronfishManager.nodeStatus().then(setNodeStatus).catch(setError)
@@ -43,6 +47,11 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const startSyncing = useCallback(() => window.IronfishManager.sync(), [])
 
   useEffect(() => {
+    if (!status) {
+      loadStatus()
+      return
+    }
+
     if (
       status &&
       status?.blockSyncer.syncing &&
@@ -50,6 +59,7 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
     ) {
       stopSyncing()
     }
+
     setSynced(!!status?.blockchain.synced)
     const interval = setInterval(
       () => {
@@ -65,6 +75,7 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
     data: status,
     error,
     requiredSnapshot:
+      snapshotStatus?.status === ProgressStatus.NOT_STARTED &&
       status &&
       status?.blockSyncer.syncing &&
       status?.blockSyncer.syncing.progress < 0.5,

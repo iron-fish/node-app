@@ -20,7 +20,6 @@ export interface SnapshotProviderProps {
     path?: string
   ) => Promise<{ hasError: boolean; error: string }>
   start: (path?: string) => Promise<void>
-  apply: () => Promise<void>
 }
 
 const SnapshotContext = createContext<SnapshotProviderProps>({
@@ -34,14 +33,14 @@ const SnapshotContext = createContext<SnapshotProviderProps>({
   checkPath: (manifest: SnapshotManifest, path?: string) =>
     window.IronfishManager.snapshot.checkPath(manifest, path),
   start: (path?: string) => window.IronfishManager.downloadChainSnapshot(path),
-  apply: () => window.IronfishManager.snapshot.apply(),
 })
 
 const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [status, setStatus] = useState<Omit<ProgressType, 'statistic'>>(null)
 
-  const loadStatus = () =>
+  const loadStatus = () => {
     window.IronfishManager.snapshot.status().then(setStatus)
+  }
   const checkPath = useCallback(
     (manifest: SnapshotManifest, path?: string) =>
       window.IronfishManager.snapshot.checkPath(manifest, path),
@@ -54,13 +53,22 @@ const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
       }),
     []
   )
-  const apply = useCallback(() => window.IronfishManager.snapshot.apply(), [])
 
   useEffect(() => {
-    let interval
+    let interval: NodeJS.Timer
 
     if (!status) {
       loadStatus()
+      return
+    }
+
+    if (status.status === ProgressStatus.DOWNLOADED) {
+      window.IronfishManager.snapshot.apply()
+    }
+
+    if (status.status === ProgressStatus.COMPLETED) {
+      window.IronfishManager.initialize()
+      window.IronfishManager.snapshot.reset()
     }
 
     if (
@@ -70,7 +78,7 @@ const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
       interval = setInterval(loadStatus, 500)
     }
 
-    return interval && clearInterval(interval)
+    return () => interval && clearInterval(interval)
   }, [status?.status])
 
   return (
@@ -78,7 +86,6 @@ const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
       value={{
         status,
         start,
-        apply,
         checkPath,
       }}
     >

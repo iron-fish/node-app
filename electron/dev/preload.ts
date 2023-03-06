@@ -12,10 +12,12 @@ import { Payment } from 'Types/Transaction'
 import '../common/preload'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
-import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import {
+  IronfishSnaphotManagerAction,
+  SnapshotManifest,
+} from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { IronfishAssetManagerActions } from 'Types/IronfishManager/IIronfishAssetManager'
 import AccountCreateParams from 'Types/AccountCreateParams'
-import SnapshotManager from 'electron/ironfish/SnapshotManager'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
   storageName: string
@@ -231,7 +233,7 @@ contextBridge.exposeInMainWorld('IronfishManager', {
       ),
   },
   snapshot: {
-    checkPath: (manifest: SnapshotManager, path?: string) =>
+    checkPath: (manifest: SnapshotManifest, path?: string) =>
       ipcRenderer.invoke(
         'ironfish-manager-snapshot',
         IronfishSnaphotManagerAction.CHECK_PATH,

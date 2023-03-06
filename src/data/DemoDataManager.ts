@@ -47,6 +47,9 @@ class DemoDataManager {
   }
 
   async initialize(): Promise<void> {
+    if (this.status === IronFishInitStatus.DOWNLOAD_SNAPSHOT) {
+      this.node.complete()
+    }
     this.status = IronFishInitStatus.INITIALIZING_SDK
     await new Promise(resolve =>
       setTimeout(() => {
@@ -63,13 +66,11 @@ class DemoDataManager {
   }
 
   async start(): Promise<void> {
-    if (this.status === IronFishInitStatus.DOWNLOAD_SNAPSHOT) {
-      this.node.complete()
-    }
     this.status = IronFishInitStatus.STARTING_NODE
     await new Promise(resolve =>
-      setTimeout(() => {
+      setTimeout(async () => {
         this.status = IronFishInitStatus.STARTED
+        await this.node.sync()
         resolve(undefined)
       }, 2000)
     )
@@ -86,7 +87,7 @@ class DemoDataManager {
 
   async downloadSnapshot(path: string): Promise<void> {
     await new Promise(resolve =>
-      setTimeout(() => {
+      setTimeout(async () => {
         this.status = IronFishInitStatus.DOWNLOAD_SNAPSHOT
         this.snapshot.start(path)
         resolve(undefined)
