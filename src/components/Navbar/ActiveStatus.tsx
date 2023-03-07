@@ -127,14 +127,14 @@ const renderTime = (time: number) => {
 const SnapshotMessage: FC<{
   data: NodeStatusResponse | undefined
   isMinified: boolean
-}> = ({ data }) => {
+}> = ({ data, isMinified }) => {
   const [open, setOpen] = useState(false)
   const [manifest] = useSnapshotManifest()
 
   return (
     <>
       <WarningIcon
-        display={{ base: 'inherit', sm: 'none' }}
+        display={isMinified ? 'inherit' : 'none'}
         color="inherit"
         w="1.25rem"
         h="0.9375rem"
@@ -143,10 +143,10 @@ const SnapshotMessage: FC<{
       <chakra.h5
         color="inherit"
         m="0.5rem"
-        display={{ base: 'none', sm: 'inherit' }}
+        display={isMinified ? 'none' : 'inherit'}
       >
         You’re required to download our blockchain snapshot
-        <chakra.span display={{ base: 'block', sm: 'none' }}>
+        <chakra.span display={isMinified ? 'block' : 'none'}>
           Click on icon to download
         </chakra.span>
       </chakra.h5>
@@ -156,7 +156,7 @@ const SnapshotMessage: FC<{
         borderColor="inherit"
         borderRadius="4rem"
         mb="1rem"
-        display={{ base: 'none', sm: 'inline-flex' }}
+        display={isMinified ? 'none' : 'inline-flex'}
         onClick={() => setOpen(true)}
       >
         <chakra.h5 color="inherit">Download Snapshot</chakra.h5>
