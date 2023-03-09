@@ -1,6 +1,6 @@
-interface AccountCreateParams {
-  name?: string
-  spendingKey: string
+import { AccountValue } from '@ironfish/sdk'
+
+interface AccountCreateParams extends AccountValue {
   mnemonicPhrase?: string[]
 }
 

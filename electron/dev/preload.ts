@@ -12,6 +12,7 @@ import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfis
 import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
 import { Payment } from 'Types/Transaction'
 import '../common/preload'
+import { IronfishAssetManagerActions } from 'Types/IronfishManager/IIronfishAssetManager'
 import AccountCreateParams from 'Types/AccountCreateParams'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
@@ -64,6 +65,27 @@ contextBridge.exposeInMainWorld('IronfishManager', {
       IronfishManagerAction.SAVE_NODE_CONFIG,
       values
     ),
+  assets: {
+    list: (search?: string, offset?: number, max?: number) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-assets',
+        IronfishAssetManagerActions.LIST,
+        search,
+        offset,
+        max
+      ),
+    get: (id: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-assets',
+        IronfishAssetManagerActions.GET,
+        id
+      ),
+    default: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-assets',
+        IronfishAssetManagerActions.DEFAULT
+      ),
+  },
   accounts: {
     create: (name: string) =>
       ipcRenderer.invoke(
@@ -113,10 +135,23 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         IronfishAccountManagerAction.EXPORT,
         id
       ),
-    balance: (id: string) =>
+    balance: (id: string, assetId?: string) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.BALANCE,
+        id,
+        assetId
+      ),
+    balances: (id: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.BALANCES,
+        id
+      ),
+    getMnemonicPhrase: (id: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.GET_MNEMONIC_PHRASE,
         id
       ),
   },

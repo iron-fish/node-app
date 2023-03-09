@@ -16,8 +16,11 @@ const getAccountOptions = (accounts: CutAccount[] = []): OptionType[] => {
     label: account.name,
     value: account,
     helperText:
-      formatOreToTronWithLanguage(account?.balance?.confirmed || BigInt(0)) +
-      ' $IRON',
+      formatOreToTronWithLanguage(
+        account?.balances?.default?.confirmed || BigInt(0)
+      ) +
+        ' ' +
+        account?.balances?.default?.asset?.name || '',
   }))
 }
 

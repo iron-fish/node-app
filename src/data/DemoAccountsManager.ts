@@ -6,13 +6,14 @@ import { nanoid } from 'nanoid'
 import randomWords from 'random-words'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
-import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
-import CurrencyAsset from 'Types/CurrencyAsset'
 import { formatOreToTronWithLanguage } from 'Utils/number'
+import Asset from 'Types/Asset'
+import { DEFAULT_ASSET } from './DemoAssetManager'
+import Account from 'Types/Account'
 import AccountCreateParams from 'Types/AccountCreateParams'
 
-const DEMO_ACCOUNTS: AccountValue[] = [
+export const DEMO_ACCOUNTS: AccountValue[] = [
   {
     id: 'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     name: 'Primary Account',
@@ -24,6 +25,8 @@ const DEMO_ACCOUNTS: AccountValue[] = [
       'xTbDAiLTrg7hcQg2B5YKFIwJ-u5_IWGs0gudoUInCv30oQSKBmL3ne9hQnn2_6fY',
     spendingKey:
       'JPq_yX-p2PdFev7gGdlCLF9GQw25JHWIb0rNvq-Dnlomj49GNTbOgyn79fHFIQrt',
+    version: 1,
+    viewKey: nanoid(64),
   },
   {
     id: 'H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6',
@@ -36,6 +39,8 @@ const DEMO_ACCOUNTS: AccountValue[] = [
       'BcZvMesaZ8Jh_66kBgRhg-0wWls1RS5tWhy2iE96d2t4zpkrnliiEG-zF4oLt0jx',
     spendingKey:
       'E-cVvstCOWfvkiqeR3-Qc4Vm65EqX_I12Ouvavtk75j-z0Vii0I2L9_1JCtz8rlq',
+    version: 1,
+    viewKey: nanoid(64),
   },
   {
     id: 'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
@@ -48,10 +53,12 @@ const DEMO_ACCOUNTS: AccountValue[] = [
       'xG17AxJB4XrEoGricts13ZfIMLVx4ays4Heh1oA444BID90CzLqhzRin9wEZM225',
     spendingKey:
       'RXFS7bN5gSsnKqSZv208s8EtRwwsHNji3CQuCUlD3jDwlzQ7gfFpsrtf14klpuYF',
+    version: 1,
+    viewKey: nanoid(64),
   },
 ]
 
-const ACCOUNT_SETTINGS: AccountSettings[] = [
+export const ACCOUNT_SETTINGS: AccountSettings[] = [
   {
     accountId:
       'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
@@ -69,7 +76,7 @@ const ACCOUNT_SETTINGS: AccountSettings[] = [
   },
 ]
 
-const ACCOUNT_BALANCES: Record<
+export const ACCOUNT_BALANCES: Record<
   string,
   {
     unconfirmedCount: number
@@ -77,42 +84,39 @@ const ACCOUNT_BALANCES: Record<
     pending: bigint
     unconfirmed: bigint
     confirmed: bigint
-    asset: CurrencyAsset
-  }
+    asset: Asset
+  }[]
 > = {
-  jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8: {
-    confirmed: BigInt(12364),
-    unconfirmed: BigInt(327),
-    pending: BigInt(1234),
-    pendingCount: 12,
-    unconfirmedCount: 3,
-    asset: {
-      id: '$IRON',
-      name: '$IRON',
+  jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8: [
+    {
+      confirmed: BigInt(12364),
+      unconfirmed: BigInt(327),
+      pending: BigInt(1234),
+      pendingCount: 12,
+      unconfirmedCount: 3,
+      asset: DEFAULT_ASSET,
     },
-  },
-  H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6: {
-    confirmed: BigInt(8481),
-    unconfirmed: BigInt(164),
-    pending: BigInt(874),
-    pendingCount: 8,
-    unconfirmedCount: 1,
-    asset: {
-      id: '$IRON',
-      name: '$IRON',
+  ],
+  H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6: [
+    {
+      confirmed: BigInt(8481),
+      unconfirmed: BigInt(164),
+      pending: BigInt(874),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: DEFAULT_ASSET,
     },
-  },
-  q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7: {
-    confirmed: BigInt(1222255000002254),
-    unconfirmed: BigInt(164),
-    pending: BigInt(2200000022310),
-    pendingCount: 8,
-    unconfirmedCount: 1,
-    asset: {
-      id: '$IRON',
-      name: '$IRON',
+  ],
+  q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7: [
+    {
+      confirmed: BigInt(1222255000002254),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: DEFAULT_ASSET,
     },
-  },
+  ],
 }
 
 class DemoAccountsManager {
@@ -129,23 +133,24 @@ class DemoAccountsManager {
           incomingViewKey: nanoid(64),
           outgoingViewKey: nanoid(64),
           spendingKey: nanoid(64),
+          viewKey: nanoid(64),
+          version: 1,
         }
         DEMO_ACCOUNTS.push(account)
         ACCOUNT_SETTINGS.push({
           accountId: account.id,
           currency: 'USD',
         })
-        ACCOUNT_BALANCES[account.id] = {
-          confirmed: BigInt(0),
-          unconfirmed: BigInt(0),
-          pending: BigInt(0),
-          pendingCount: 0,
-          unconfirmedCount: 0,
-          asset: {
-            id: '$IRON',
-            name: '$IRON',
+        ACCOUNT_BALANCES[account.id] = [
+          {
+            confirmed: BigInt(0),
+            unconfirmed: BigInt(0),
+            pending: BigInt(0),
+            pendingCount: 0,
+            unconfirmedCount: 0,
+            asset: DEFAULT_ASSET,
           },
-        }
+        ]
         resolve(account)
       }, 500)
     })
@@ -153,14 +158,19 @@ class DemoAccountsManager {
 
   async prepareAccount(): Promise<AccountCreateParams> {
     return {
+      id: nanoid(64),
+      publicAddress: nanoid(64),
+      name: 'name',
+      incomingViewKey: nanoid(64),
+      outgoingViewKey: nanoid(64),
       spendingKey: nanoid(64),
+      viewKey: nanoid(64),
+      version: 1,
       mnemonicPhrase: randomWords({ exactly: 24, maxLength: 8 }),
     }
   }
 
-  async submitAccount(
-    createParams: AccountCreateParams
-  ): Promise<WalletAccount> {
+  async submitAccount(createParams: AccountCreateParams): Promise<Account> {
     return this.create(createParams.name)
   }
 
@@ -189,17 +199,16 @@ class DemoAccountsManager {
           accountId: newAccount.id,
           currency: 'USD',
         })
-        ACCOUNT_BALANCES[newAccount.id] = {
-          confirmed: BigInt(0),
-          unconfirmed: BigInt(0),
-          pending: BigInt(0),
-          pendingCount: Math.ceil(Math.random() * 10),
-          unconfirmedCount: Math.ceil(Math.random() * 10),
-          asset: {
-            id: '$IRON',
-            name: '$IRON',
+        ACCOUNT_BALANCES[newAccount.id] = [
+          {
+            confirmed: BigInt(0),
+            unconfirmed: BigInt(0),
+            pending: BigInt(0),
+            pendingCount: Math.ceil(Math.random() * 10),
+            unconfirmedCount: Math.ceil(Math.random() * 10),
+            asset: DEFAULT_ASSET,
           },
-        }
+        ]
         resolve(newAccount)
       }, 500)
     })
@@ -213,23 +222,27 @@ class DemoAccountsManager {
           id: account.id,
           publicAddress: account.publicAddress,
           name: account.name,
-          balance: ACCOUNT_BALANCES[account.id],
+          balances: {
+            default: ACCOUNT_BALANCES[account.id][0],
+            assets: ACCOUNT_BALANCES[account.id].slice(1),
+          },
           order: index,
         })).filter(
           account =>
             !search ||
             account.name.toLowerCase().includes(search) ||
             account.publicAddress.toLowerCase().includes(search) ||
-            formatOreToTronWithLanguage(account.balance.confirmed).includes(
-              search
-            )
+            formatOreToTronWithLanguage(
+              account.balances.default.confirmed
+            ).includes(search)
         )
 
         if (sort) {
           accounts.sort(
             (a, b) =>
               (SortType.ASC === sort ? 1 : -1) *
-              (Number(a.balance.confirmed) - Number(b.balance.confirmed))
+              (Number(a.balances.default.confirmed) -
+                Number(b.balances.default.confirmed))
           )
         }
 
@@ -238,12 +251,15 @@ class DemoAccountsManager {
     )
   }
 
-  findById(id: string): Promise<WalletAccount | null> {
+  findById(id: string): Promise<Account | null> {
     const accountIndex = DEMO_ACCOUNTS.findIndex(a => a.id === id)
-    const account: WalletAccount = DEMO_ACCOUNTS[accountIndex]
+    const account: Account = DEMO_ACCOUNTS[accountIndex]
 
     if (account) {
-      account.balance = ACCOUNT_BALANCES[account.id]
+      account.balances = {
+        default: ACCOUNT_BALANCES[account.id][0],
+        assets: ACCOUNT_BALANCES[account.id].slice(1),
+      }
       account.order = accountIndex
       account.mnemonicPhrase = randomWords({ exactly: 24, maxLength: 8 })
     }
@@ -297,11 +313,40 @@ class DemoAccountsManager {
     )
   }
 
-  balance(id: string): Promise<AccountBalance> {
+  balance(
+    id: string,
+    assetId: string = DEFAULT_ASSET.id
+  ): Promise<AccountBalance> {
     return new Promise(resolve => {
       setTimeout(() => {
-        const balance = ACCOUNT_BALANCES[id]
+        const balance = ACCOUNT_BALANCES[id].find(b => b.asset.id === assetId)
         resolve(balance)
+      }, 500)
+    })
+  }
+
+  balances(id: string): Promise<{
+    default: AccountBalance
+    assets: AccountBalance[]
+  } | null> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        if (ACCOUNT_BALANCES[id]) {
+          resolve({
+            default: ACCOUNT_BALANCES[id][0],
+            assets: ACCOUNT_BALANCES[id].slice(1),
+          })
+        } else {
+          resolve(null)
+        }
+      }, 500)
+    })
+  }
+
+  getMnemonicPhrase(id: string): Promise<string[]> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(randomWords({ exactly: 24, maxLength: 8 }))
       }, 500)
     })
   }

@@ -1,7 +1,12 @@
-import { AccountValue, CurrencyUtils, IronfishNode } from '@ironfish/sdk'
+import {
+  AccountValue,
+  CurrencyUtils,
+  IronfishNode,
+  ACCOUNT_SCHEMA_VERSION,
+} from '@ironfish/sdk'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import {
-  Asset,
+  Asset as NativeAsset,
   LanguageCode,
   spendingKeyToWords,
   generateKey,
@@ -10,13 +15,21 @@ import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import CutAccount from 'Types/CutAccount'
 import AccountBalance from 'Types/AccountBalance'
+import AbstractManager from './AbstractManager'
+import AssetManager from './AssetManager'
+import Asset from 'Types/Asset'
 import AccountCreateParams from 'Types/AccountCreateParams'
+import { v4 as uuid } from 'uuid'
 
-class AccountManager implements IIronfishAccountManager {
-  private node: IronfishNode
+class AccountManager
+  extends AbstractManager
+  implements IIronfishAccountManager
+{
+  private assetManager: AssetManager
 
-  constructor(node: IronfishNode) {
-    this.node = node
+  constructor(node: IronfishNode, assetManager: AssetManager) {
+    super(node)
+    this.assetManager = assetManager
   }
 
   async create(name: string): Promise<WalletAccount> {
@@ -29,9 +42,16 @@ class AccountManager implements IIronfishAccountManager {
     const key = generateKey()
 
     return {
-      spendingKey: key.spending_key,
+      version: ACCOUNT_SCHEMA_VERSION,
+      id: uuid(),
+      name: uuid(),
+      incomingViewKey: key.incomingViewKey,
+      outgoingViewKey: key.outgoingViewKey,
+      publicAddress: key.publicAddress,
+      spendingKey: key.spendingKey,
+      viewKey: key.viewKey,
       mnemonicPhrase: spendingKeyToWords(
-        key.spending_key,
+        key.spendingKey,
         LanguageCode.English
       ).split(' '),
     }
@@ -40,11 +60,7 @@ class AccountManager implements IIronfishAccountManager {
   async submitAccount(
     createParams: AccountCreateParams
   ): Promise<WalletAccount> {
-    const newAccount = await this.node.wallet.importAccount({
-      name: createParams.name,
-      spendingKey: createParams.spendingKey,
-    })
-
+    const newAccount = await this.node.wallet.importAccount(createParams)
     return newAccount.serialize()
   }
 
@@ -57,7 +73,7 @@ class AccountManager implements IIronfishAccountManager {
         id: account.id,
         name: account.name,
         publicAddress: account.publicAddress,
-        balance: await this.balance(account.id),
+        balances: await this.balances(account.id),
         order: index,
       }))
     )
@@ -66,7 +82,8 @@ class AccountManager implements IIronfishAccountManager {
       result.sort(
         (a, b) =>
           (SortType.ASC === sort ? 1 : -1) *
-          (Number(a.balance.confirmed) - Number(b.balance.confirmed))
+          (Number(a.balances.default.confirmed) -
+            Number(b.balances.default.confirmed))
       )
     }
 
@@ -75,7 +92,9 @@ class AccountManager implements IIronfishAccountManager {
         !search ||
         account.name.toLowerCase().includes(search) ||
         account.publicAddress.toLowerCase().includes(search) ||
-        CurrencyUtils.renderIron(account.balance.confirmed).includes(search)
+        CurrencyUtils.renderIron(account.balances.default.confirmed).includes(
+          search
+        )
     )
   }
 
@@ -86,7 +105,7 @@ class AccountManager implements IIronfishAccountManager {
       return null
     }
     const account: WalletAccount = accounts[accountIndex].serialize()
-    account.balance = await this.balance(account.id)
+    account.balances = await this.balances(account.id)
     account.order = accountIndex
     account.mnemonicPhrase = spendingKeyToWords(
       account.spendingKey,
@@ -100,38 +119,86 @@ class AccountManager implements IIronfishAccountManager {
     await this.node.wallet.removeAccountByName(name)
   }
 
-  async import(
-    account: Omit<AccountValue, 'id' | 'rescan'>
-  ): Promise<AccountValue> {
+  async import(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
     return this.node.wallet
       .importAccount(account)
       .then(data => data.serialize())
   }
 
-  export(id: string): Promise<Omit<AccountValue, 'id'>> {
-    const account = this.node.wallet.getAccount(id)?.serialize()
-    delete account.id
-    return Promise.resolve(account)
+  async export(id: string): Promise<AccountValue> {
+    return this.node.wallet.getAccount(id)?.serialize()
   }
 
   async balance(
     id: string,
-    assetId: Buffer = Asset.nativeId()
+    assetId: string = NativeAsset.nativeId().toString('hex')
   ): Promise<AccountBalance> {
     const account = this.node.wallet.getAccount(id)
-    if (account) {
-      const balance = await this.node.wallet.getBalance(account, assetId)
-      const asset = await this.node.chain.getAssetById(assetId)
+    if (!account) {
+      throw new Error(`Account with id=${id} was not found.`)
+    }
+
+    const balance = await this.node.wallet.getBalance(
+      account,
+      Buffer.from(assetId, 'hex')
+    )
+    const asset = await this.assetManager.get(assetId)
+    return {
+      ...balance,
+      asset: asset,
+    }
+  }
+
+  async balances(id: string): Promise<{
+    default: AccountBalance
+    assets: AccountBalance[]
+  }> {
+    const account = this.node.wallet.getAccount(id)
+
+    if (!account) {
+      throw new Error(`Account with id=${id} was not found.`)
+    }
+
+    const head = await account.getHead()
+    if (!head) {
       return {
-        ...balance,
-        asset: {
-          id: asset.id.toString('hex'),
-          name: asset?.name.toString('utf8') || '',
+        default: {
+          unconfirmed: BigInt(0),
+          confirmed: BigInt(0),
+          unconfirmedCount: 0,
+          asset: await this.assetManager.get(NativeAsset.nativeId()),
         },
+        assets: [],
       }
     }
 
-    return Promise.reject(new Error(`Account with id=${id} was not found.`))
+    const assetBalances: AccountBalance[] = []
+    let defaultBalance: AccountBalance
+    for await (const balance of this.node.wallet.getBalances(account)) {
+      const asset: Asset = await this.assetManager.get(balance.assetId)
+      const accountBalance: AccountBalance = {
+        ...balance,
+        asset: asset,
+      }
+
+      if (balance.assetId.equals(NativeAsset.nativeId())) {
+        defaultBalance = accountBalance
+      } else {
+        assetBalances.push(accountBalance)
+      }
+    }
+
+    return {
+      default: defaultBalance,
+      assets: assetBalances,
+    }
+  }
+
+  async getMnemonicPhrase(id: string): Promise<string[]> {
+    const account = this.node.wallet.getAccount(id)
+    return spendingKeyToWords(account.spendingKey, LanguageCode.English).split(
+      ' '
+    )
   }
 }
 

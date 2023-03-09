@@ -1,7 +1,10 @@
+import Asset from './Asset'
+
 export interface Note {
   value: bigint
   memo: string
   sender: string
+  asset: Asset
 }
 
 export interface Spend {
@@ -24,6 +27,11 @@ export enum TransactionStatus {
   UNKNOWN = 'unknown',
 }
 
+export interface Amount {
+  value: bigint
+  asset: Asset
+}
+
 export interface Transaction {
   accountId: string
   hash: string
@@ -35,13 +43,15 @@ export interface Transaction {
   status: TransactionStatus
   size: number
   blockHash: string
-  notes: Note[]
+  inputs: Note[]
+  outputs: Note[]
   spends: Spend[]
   creator: boolean
   from: string
   to: string[]
   created: Date
-  amount: string
+  amount: Amount
+  assetAmounts: Amount[]
 }
 
 export default Transaction

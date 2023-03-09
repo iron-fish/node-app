@@ -4,6 +4,7 @@ import NodeStatusResponse from 'Types/NodeStatusResponse'
 
 import { IIronfishAccountManager } from './IIronfishAccountManager'
 import { IIronfishTransactionManager } from './IIronfishTransactionManager'
+import IIronfishAssetManager from './IIronfishAssetManager'
 import { INodeSettingsManager } from './INodeSettingsManager'
 import Peer from 'Types/Peer'
 
@@ -23,6 +24,7 @@ export enum IronfishManagerAction {
 export interface IIronfishManager {
   accounts: IIronfishAccountManager
   transactions: IIronfishTransactionManager
+  assets: IIronfishAssetManager
   nodeSettings: INodeSettingsManager
   initialize: () => Promise<void>
   hasAnyAccount: () => Promise<boolean>

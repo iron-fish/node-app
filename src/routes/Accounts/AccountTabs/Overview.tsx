@@ -30,6 +30,8 @@ import differenceBy from 'lodash/differenceBy'
 import intersectionBy from 'lodash/intersectionBy'
 import useAccountBalance from 'Hooks/accounts/useAccountBalance'
 import WalletCommonTable from 'Components/WalletCommonTable'
+import AssetsAmountPreview from 'Components/AssetsAmountPreview'
+import { formatDate } from 'Utils/formatDate'
 
 interface SearchTransactionsProps {
   address: string
@@ -162,11 +164,17 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
             },
             {
               key: 'transaction-amount-column',
-              label: <chakra.h6>$IRON</chakra.h6>,
-              render: transaction => (
-                <chakra.h5>
-                  {(transaction.creator ? '' : '+') + transaction.amount}
-                </chakra.h5>
+              label: <chakra.h6>Sent</chakra.h6>,
+              render: (transaction: Transaction) => (
+                <AssetsAmountPreview
+                  assetAmounts={
+                    transaction?.assetAmounts.length
+                      ? transaction?.assetAmounts
+                      : transaction?.amount
+                      ? [transaction?.amount]
+                      : []
+                  }
+                />
               ),
             },
             {
@@ -177,7 +185,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
                   addresses={
                     transaction.creator ? transaction.to : [transaction.from]
                   }
-                  notes={transaction.notes}
+                  notes={transaction.outputs}
                 />
               ),
             },
@@ -185,14 +193,14 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               key: 'transaction-date-column',
               label: <chakra.h6>Date</chakra.h6>,
               render: (transaction: Transaction) => (
-                <chakra.h5>{transaction.created.toISOString()}</chakra.h5>
+                <chakra.h5>{formatDate(transaction.created)}</chakra.h5>
               ),
             },
             {
               key: 'transaction-memo-column',
               label: <chakra.h6>Memo</chakra.h6>,
               render: (transaction: Transaction) => (
-                <chakra.h5>"{transaction.notes?.at(0)?.memo}"</chakra.h5>
+                <chakra.h5>"{transaction.outputs?.at(0)?.memo}"</chakra.h5>
               ),
             },
             {

@@ -177,7 +177,7 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           <Flex gap="0.4375rem" mb="-0.4375rem">
             <h6>Mnemonic phrase</h6>
             <CopyToClipboardButton
-              value={phrase?.join(', ')}
+              value={phrase?.join(' ')}
               copyTooltipText="Copy to clipboard"
               copiedTooltipText="Copied"
             />

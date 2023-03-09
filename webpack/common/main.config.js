@@ -23,6 +23,7 @@ module.exports = {
   externals: {
     '@ironfish/sdk': '@ironfish/sdk',
     'geoip-lite': 'geoip-lite',
+    bech32: 'bech32',
   },
   plugins: [
     new CopyPlugin({

@@ -29,6 +29,8 @@ import LargeArrowRightUp from 'Svgx/LargeArrowRightUp'
 import ContactsPreview from 'Components/ContactsPreview'
 import WalletCommonTable from 'Components/WalletCommonTable'
 import InfoBadge from 'Components/InfoBadge'
+import AssetsAmountPreview from 'Components/AssetsAmountPreview'
+import { formatDate } from 'Utils/formatDate'
 
 interface Card {
   render: (tx: Transaction) => ReactNode
@@ -37,8 +39,21 @@ interface Card {
 }
 const CARDS: Card[] = [
   {
-    render: (tx: Transaction) => tx?.amount,
-    label: '$IRON Sent',
+    render: (tx: Transaction) => (
+      <AssetsAmountPreview
+        assetAmounts={
+          tx?.assetAmounts.length
+            ? tx?.assetAmounts
+            : tx?.amount
+            ? [tx?.amount]
+            : []
+        }
+        amountPreviewTextProps={{
+          as: 'h4',
+        }}
+      />
+    ),
+    label: 'Asset',
     icon: DifficultyIcon,
   },
   {
@@ -60,22 +75,25 @@ const CARDS: Card[] = [
     icon: DifficultyIcon,
   },
   {
-    render: (tx: Transaction) => tx?.notes?.at(0)?.memo || <>&nbsp;</>,
+    render: (tx: Transaction) => tx?.outputs?.at(0)?.memo || <>&nbsp;</>,
     label: 'Memo',
     icon: SizeIcon,
   },
   {
-    render: (tx: Transaction) => (
-      <CopyValueToClipboard
-        label={truncateHash(tx?.blockHash || '', 2, 4)}
-        value={tx?.blockHash || ''}
-        iconButtonProps={{
-          color: NAMED_COLORS.GREY,
-        }}
-        copyTooltipText={'Copy block hash'}
-        copiedTooltipText={'Block hash copied'}
-      />
-    ),
+    render: (tx: Transaction) =>
+      tx?.blockHash ? (
+        <CopyValueToClipboard
+          label={truncateHash(tx?.blockHash || '', 2, 4)}
+          value={tx?.blockHash || ''}
+          iconButtonProps={{
+            color: NAMED_COLORS.GREY,
+          }}
+          copyTooltipText={'Copy block hash'}
+          copiedTooltipText={'Block hash copied'}
+        />
+      ) : (
+        'n/a'
+      ),
     label: 'Block Hash',
     icon: DifficultyIcon,
   },
@@ -106,7 +124,7 @@ const CARDS: Card[] = [
     icon: BlockInfoDifficultyIcon,
   },
   {
-    render: (tx: Transaction) => tx?.created.toLocaleString(),
+    render: (tx: Transaction) => formatDate(tx?.created),
     label: 'Timestamp',
     icon: BlockInfoTimestampIcon,
   },
@@ -259,47 +277,90 @@ const TransactionOverview: FC = () => {
       >
         <Box
           w={{ base: '100%', md: '50%' }}
-          mb={{ base: transaction?.spends?.length ? '-2rem' : 0, md: 0 }}
+          mb={{
+            base: transaction?.creator
+              ? transaction?.inputs?.length
+                ? '-2rem'
+                : 0
+              : transaction?.spends?.length
+              ? '-2rem'
+              : 0,
+            md: 0,
+          }}
         >
-          <WalletCommonTable
-            data={transaction?.spends || []}
-            w="100%"
-            columns={[
-              {
-                key: 'input-address',
-                label: 'INPUT ADDRESS',
-                render: (spend: Spend) => (
-                  <Flex alignItems="center">
-                    <Box mr="1rem">
-                      <LargeArrowLeftDown h="1.125rem" w="1.125rem" />
-                    </Box>
-                    <Box
-                      overflow="hidden"
-                      whiteSpace="nowrap"
-                      textOverflow="ellipsis"
-                    >
-                      <CopyValueToClipboard
-                        copiedTooltipText="Input address copied"
-                        copyTooltipText="Copy Input address"
-                        label={truncateHash(spend.nullifier, 2, 4)}
-                        value={spend.nullifier}
-                        iconButtonProps={{
-                          color: NAMED_COLORS.GREY,
-                        }}
-                        labelProps={{
-                          as: 'h5',
-                        }}
-                      />
-                    </Box>
-                  </Flex>
-                ),
-              },
-            ]}
-          />
+          {transaction?.creator ? (
+            <WalletCommonTable
+              data={transaction?.inputs || []}
+              w="100%"
+              columns={[
+                {
+                  key: 'input-address',
+                  label: 'INPUT ADDRESS',
+                  render: (note: Note) => (
+                    <Flex alignItems="center">
+                      <Box mr="1rem">
+                        <LargeArrowRightUp h="1.125rem" w="1.125rem" />
+                      </Box>
+                      <chakra.h5>
+                        <ContactsPreview addresses={[transaction?.from]} />
+                      </chakra.h5>
+                    </Flex>
+                  ),
+                },
+                {
+                  key: 'note-amount',
+                  label: 'Amount',
+                  render: (note: Note) => (
+                    <chakra.h5>
+                      {formatOreToTronWithLanguage(note?.value || BigInt(0)) +
+                        ' ' +
+                        note?.asset.name}
+                    </chakra.h5>
+                  ),
+                },
+              ]}
+            />
+          ) : (
+            <WalletCommonTable
+              data={transaction?.spends || []}
+              w="100%"
+              columns={[
+                {
+                  key: 'input-address',
+                  label: 'INPUT ADDRESS',
+                  render: (spend: Spend) => (
+                    <Flex alignItems="center">
+                      <Box mr="1rem">
+                        <LargeArrowLeftDown h="1.125rem" w="1.125rem" />
+                      </Box>
+                      <Box
+                        overflow="hidden"
+                        whiteSpace="nowrap"
+                        textOverflow="ellipsis"
+                      >
+                        <CopyValueToClipboard
+                          copiedTooltipText="Input address copied"
+                          copyTooltipText="Copy Input address"
+                          label={truncateHash(spend.nullifier, 2, 4)}
+                          value={spend.nullifier}
+                          iconButtonProps={{
+                            color: NAMED_COLORS.GREY,
+                          }}
+                          labelProps={{
+                            as: 'h5',
+                          }}
+                        />
+                      </Box>
+                    </Flex>
+                  ),
+                },
+              ]}
+            />
+          )}
         </Box>
         <Box w={{ base: '100%', md: '50%' }}>
           <WalletCommonTable
-            data={transaction?.notes || []}
+            data={transaction?.outputs || []}
             w="100%"
             columns={[
               {
@@ -318,10 +379,12 @@ const TransactionOverview: FC = () => {
               },
               {
                 key: 'note-amount',
-                label: '$IRON',
+                label: 'Amount',
                 render: (note: Note) => (
                   <chakra.h5>
-                    {formatOreToTronWithLanguage(note?.value || BigInt(0))}
+                    {formatOreToTronWithLanguage(note?.value || BigInt(0)) +
+                      ' ' +
+                      note?.asset.name}
                   </chakra.h5>
                 ),
               },

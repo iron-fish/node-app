@@ -13,8 +13,10 @@ export enum IronfishAccountManagerAction {
   GET = 'get',
   DELETE = 'delete',
   BALANCE = 'balance',
+  BALANCES = 'balances',
   IMPORT = 'import',
   EXPORT = 'export',
+  GET_MNEMONIC_PHRASE = 'getMnemonicPhrase',
 }
 
 export interface IIronfishAccountManager {
@@ -24,7 +26,12 @@ export interface IIronfishAccountManager {
   list: (search?: string, sort?: SortType) => Promise<CutAccount[]>
   get: (id: string) => Promise<Account>
   delete: (name: string) => Promise<void>
-  import: (account: Omit<AccountValue, 'id'>) => Promise<AccountValue>
-  export: (id: string) => Promise<Omit<AccountValue, 'id'>>
-  balance: (id: string) => Promise<AccountBalance>
+  import: (account: AccountValue) => Promise<AccountValue>
+  export: (id: string) => Promise<AccountValue>
+  balance: (id: string, assetId?: string) => Promise<AccountBalance>
+  balances: (id: string) => Promise<{
+    default: AccountBalance
+    assets: AccountBalance[]
+  }>
+  getMnemonicPhrase: (id: string) => Promise<string[]>
 }

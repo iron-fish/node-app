@@ -9,13 +9,10 @@ import {
   Connection,
   ConfigOptions,
   getPackageFrom,
-  VERSION_DATABASE_CHAIN,
-  VERSION_DATABASE_ACCOUNTS,
+  DatabaseVersionError,
 } from '@ironfish/sdk'
 import geoip from 'geoip-lite'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
-import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
-import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTransactionManager'
 import { INodeSettingsManager } from 'Types/IronfishManager/INodeSettingsManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
@@ -23,6 +20,7 @@ import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 import pkg from '../../package.json'
 import AccountManager from './AccountManager'
 import TransactionManager from './TransactionManager'
+import AssetManager from './AssetManager'
 import NodeSettingsManager from './NodeSettingsManager'
 import Peer from 'Types/Peer'
 
@@ -30,8 +28,9 @@ export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   protected sdk: IronfishSdk
   protected node: IronfishNode
-  accounts: IIronfishAccountManager
-  transactions: IIronfishTransactionManager
+  accounts: AccountManager
+  transactions: TransactionManager
+  assets: AssetManager
   nodeSettings: INodeSettingsManager
 
   private getPrivateIdentity(): PrivateIdentity | undefined {
@@ -47,22 +46,14 @@ export class IronFishManager implements IIronfishManager {
 
   async checkForMigrations(): Promise<void> {
     this.initStatus = IronFishInitStatus.CHECKING_FOR_MIGRATIONS
-    if (!this.node.chain.db.isOpen) {
-      await this.node.chain.db.open()
+    try {
+      await this.node.openDB()
+      await this.node.closeDB()
+    } catch (error) {
+      if (error instanceof DatabaseVersionError) {
+        this.sdk.config.setOverride('databaseMigrate', true)
+      }
     }
-    if (!this.node.wallet.walletDb.db.isOpen) {
-      await this.node.wallet.walletDb.db.open()
-    }
-    const chainDbVersion = await this.node.chain.db.getVersion()
-    const walletDbVersion = await this.node.wallet.walletDb.db.getVersion()
-    if (
-      chainDbVersion !== VERSION_DATABASE_CHAIN ||
-      walletDbVersion !== VERSION_DATABASE_ACCOUNTS
-    ) {
-      this.sdk.config.setOverride('databaseMigrate', true)
-    }
-    await this.node.chain.db.close()
-    await this.node.wallet.walletDb.db.close()
   }
 
   private async initializeSdk(): Promise<void> {
@@ -97,8 +88,9 @@ export class IronFishManager implements IIronfishManager {
     this.node.internal.set('networkIdentity', newSecretKey)
     await this.node.internal.save()
 
-    this.accounts = new AccountManager(this.node)
-    this.transactions = new TransactionManager(this.node)
+    this.assets = new AssetManager(this.node)
+    this.accounts = new AccountManager(this.node, this.assets)
+    this.transactions = new TransactionManager(this.node, this.assets)
     this.nodeSettings = new NodeSettingsManager(this.node)
 
     this.initStatus = IronFishInitStatus.INITIALIZED

@@ -12,6 +12,8 @@ import ContactsPreview from 'Components/ContactsPreview'
 import Contact from 'Types/Contact'
 import TransactionStatusView from 'Components/TransactionStatusView'
 import WalletCommonTable from 'Components/WalletCommonTable'
+import AssetsAmountPreview from 'Components/AssetsAmountPreview'
+import { formatDate } from 'Utils/formatDate'
 
 interface AddressTransactionsProps {
   address: string
@@ -94,9 +96,17 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
             },
             {
               key: 'iron',
-              label: '$IRON',
+              label: 'Asset',
               render: (transaction: Transaction) => (
-                <h5>{transaction.amount}</h5>
+                <AssetsAmountPreview
+                  assetAmounts={
+                    transaction?.assetAmounts.length
+                      ? transaction?.assetAmounts
+                      : transaction?.amount
+                      ? [transaction?.amount]
+                      : []
+                  }
+                />
               ),
             },
             {
@@ -105,7 +115,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               render: (transaction: Transaction) => (
                 <ContactsPreview
                   addresses={transaction.to}
-                  notes={transaction.notes}
+                  notes={transaction.outputs}
                 />
               ),
             },
@@ -113,14 +123,14 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               key: 'date',
               label: 'Date',
               render: (transaction: Transaction) => (
-                <h5>{transaction.created.toISOString()}</h5>
+                <h5>{formatDate(transaction.created)}</h5>
               ),
             },
             {
               key: 'memo',
               label: 'Memo',
               render: (transaction: Transaction) => (
-                <h5>{transaction.notes?.at(0)?.memo}</h5>
+                <h5>{transaction.outputs?.at(0)?.memo}</h5>
               ),
             },
             {
