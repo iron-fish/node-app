@@ -13,9 +13,9 @@ import {
   VStack,
   LightMode,
 } from '@ironfish/ui-kit'
-import useNodeStatus from 'Hooks/node/useNodeStatus'
 import NodeOverviewImage from 'Svgx/NodeOverviewImage'
 import { FileUtils } from '@ironfish/sdk/build/src/utils/file'
+import NodeStatusResponse from 'Types/NodeStatusResponse'
 
 interface NodeStatProps {
   isLoaded: boolean
@@ -42,9 +42,12 @@ const NodeStat: FC<NodeStatProps> = ({ isLoaded, label, value }) => (
   </Stat>
 )
 
-const NodeStatus: FC<BoxProps> = props => {
-  const { loaded, data, error } = useNodeStatus()
+interface NodeStatusProps extends BoxProps {
+  data: NodeStatusResponse
+  loaded: boolean
+}
 
+const NodeStatus: FC<NodeStatusProps> = ({ data, loaded, ...props }) => {
   return (
     <Box
       p="4rem"
