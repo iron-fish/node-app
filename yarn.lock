@@ -3472,7 +3472,7 @@
   resolved "https://registry.yarnpkg.com/@ironfish/rust-nodejs-win32-x64-msvc/-/rust-nodejs-win32-x64-msvc-0.1.27.tgz#aeee5898faecb5024fd4e15a6786fa9142141860"
   integrity sha512-ZLEpTO/FjD64kwcnHuQ5vaDH7IvNykmKqOZJwAPR93va1DHSNIWzBjcwIaW3d9TynYD1efIZx/5D6DfNZb8gug==
 
-"@ironfish/rust-nodejs@0.1.27", "@ironfish/rust-nodejs@^0.1.27":
+"@ironfish/rust-nodejs@0.1.27":
   version "0.1.27"
   resolved "https://registry.yarnpkg.com/@ironfish/rust-nodejs/-/rust-nodejs-0.1.27.tgz#318fb8e066317d6a8d9003831dfdd028eb8edc1c"
   integrity sha512-ou0+2PwocxI+FkCN3lPtAaMQ4gjW8XuwlI+LOxaMldmSVI3thnscqefEl7BWTBJlaWUlvtmWT6OK520vCjd0Bw==
@@ -3485,7 +3485,7 @@
     "@ironfish/rust-nodejs-linux-x64-musl" "0.1.27"
     "@ironfish/rust-nodejs-win32-x64-msvc" "0.1.27"
 
-"@ironfish/sdk@^0.0.47":
+"@ironfish/sdk@0.0.47":
   version "0.0.47"
   resolved "https://registry.yarnpkg.com/@ironfish/sdk/-/sdk-0.0.47.tgz#07a33bbada625f1413e6662ab935bab1f35ff920"
   integrity sha512-DBkohYzFeC74LzKb+Nuuyq68jXOfTithqWzThu5At1zMBZryZdco56x4zf0qo4hoks2Mkv5G6tc7vwINezn3FA==
@@ -3517,10 +3517,10 @@
     ws "7.5.1"
     yup "0.29.3"
 
-"@ironfish/ui-kit@^1.1.6":
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-1.1.6.tgz#28b7d789e40863acaa4dcac70abf89b91b92ee23"
-  integrity sha512-iM0i8iHOdzhjHvEXFcdePUp9t1ez2f/4Oo8QfN/ICNCywyswnt/9nilDA08AW4o4gZM+1bn+WPm4GQuTOTwE3g==
+"@ironfish/ui-kit@1.1.7":
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-1.1.7.tgz#442036a14e5465a60c9dcab501e1a161b4929a9b"
+  integrity sha512-Il/z6tUBduXktjVt9cudxm0Kw9ohCSjI4dwxOj59skZMF7iTT2cH69ivtliKVM7AIoNwSUDAk+p4G5AwGEXpcw==
   dependencies:
     "@chakra-ui/icons" "2.0.17"
     "@chakra-ui/react" "2.5.1"
@@ -13766,7 +13766,7 @@ react-flag-kit@^1.1.1:
   resolved "https://registry.yarnpkg.com/react-flag-kit/-/react-flag-kit-1.1.1.tgz#368797185bd5c406b94e641eadddf96b56aba21a"
   integrity sha512-sgelSGSl0HxSL8lMM1TEBidgiGV2hOi+GaLNKeg10aBnL07vpwKvmfILlc1SzOdVyH48NElFyMj4NQn8F+/FHw==
 
-react-focus-lock@^2.9.1:
+react-focus-lock@^2.9.2:
   version "2.9.4"
   resolved "https://registry.yarnpkg.com/react-focus-lock/-/react-focus-lock-2.9.4.tgz#4753f6dcd167c39050c9d84f9c63c71b3ff8462e"
   integrity sha512-7pEdXyMseqm3kVjhdVH18sovparAzLg5h6WvIx7/Ck3ekjhrrDMEegHSa3swwC8wgfdd7DIdUVRGeiHT9/7Sgg==
