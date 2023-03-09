@@ -13,16 +13,21 @@ const AssetsBadge: FC<AssetsBadgeProps> = ({ assets }) => {
     {
       bg: NAMED_COLORS.LIGHTER_GREY,
       color: NAMED_COLORS.GREY,
+      hover: NAMED_COLORS.GREY,
     },
     {
-      bg: NAMED_COLORS.PALE_GREY,
-      color: NAMED_COLORS.DARKER_GREY,
+      bg: NAMED_COLORS.DARK_GREY,
+      color: NAMED_COLORS.PALE_GREY,
+      hover: NAMED_COLORS.PALE_GREY,
     }
   )
 
   return assets && assets.length ? (
     <>
       <Badge
+        _hover={{
+          outline: `0.0625rem solid ${colors.hover}`,
+        }}
         textTransform="capitalize"
         p="0.125rem 0.875rem"
         borderRadius="3.125rem"

@@ -11,11 +11,14 @@ interface AccountAssetsSelectProps extends FlexProps {
   onSelectOption?: (assetBalance: AccountBalance) => void
 }
 
-const getAssetOptions = (assets: AccountBalance[] = []): OptionType[] => {
-  return assets.map(asset => ({
-    label: asset.asset.name,
-    value: asset,
-    helperText: formatOreToTronWithLanguage(asset?.confirmed || BigInt(0)),
+const getAssetOptions = (
+  assetsBalance: AccountBalance[] = []
+): OptionType[] => {
+  return assetsBalance.map(assetBalance => ({
+    label: `${assetBalance.asset.name}: ${formatOreToTronWithLanguage(
+      assetBalance?.confirmed || BigInt(0)
+    )}`,
+    value: { ...assetBalance, ...assetBalance.asset },
   }))
 }
 
@@ -46,6 +49,7 @@ const AccountAssetsSelect: FC<AccountAssetsSelectProps> = ({
 
   return (
     <SelectField
+      size="small"
       options={options}
       value={options.find(({ value }) => value.asset.id === selected.asset?.id)}
       onSelectOption={option => onSelectOption(option.value)}

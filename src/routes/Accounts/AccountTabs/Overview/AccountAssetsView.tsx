@@ -6,9 +6,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Flex,
-  NAMED_COLORS,
 } from '@ironfish/ui-kit'
-import { ChevronRightIcon } from '@chakra-ui/icons'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import AccountBalance from 'Types/AccountBalance'
 
@@ -19,7 +17,7 @@ interface AccountAssetsViewProps {
 const AccountAssetsView: FC<AccountAssetsViewProps> = ({ assets }) => {
   return (
     !!assets?.length && (
-      <Accordion allowToggle={true} pt="1.5rem" pb="2.5rem">
+      <Accordion defaultIndex={0} allowToggle={true} pt="0.5rem" pb="2.5rem">
         <AccordionItem border="0rem">
           <AccordionButton p="0rem" _hover={{ background: 'none' }}>
             <h3>
@@ -48,7 +46,6 @@ const AccountAssetsView: FC<AccountAssetsViewProps> = ({ assets }) => {
                     <h4>{asset.name}</h4>
                     <h2>{formatOreToTronWithLanguage(confirmed)}</h2>
                   </Flex>
-                  <ChevronRightIcon ml="auto" color={NAMED_COLORS.GREY} />
                 </Flex>
               ))}
             </Flex>

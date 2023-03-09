@@ -281,27 +281,24 @@ const Send: FC = () => {
                 </chakra.h4>
               </Flex>
             )}
-            <Flex gap="2rem">
-              <AccountsSelect
-                w="50%"
-                label="From Account"
-                mb="2rem"
-                accountId={account?.id || state?.accountId}
-                onSelectOption={setAccount}
-                showBalance={false}
-              />
-              <AccountAssetsSelect
-                w="50%"
-                label="Asset"
-                assets={
-                  account
-                    ? [account.balances.default, ...account.balances.assets]
-                    : []
-                }
-                selected={balance || account?.balances.default}
-                onSelectOption={setBalance}
-              />
-            </Flex>
+            <AccountsSelect
+              label="From Account"
+              mb="1rem"
+              accountId={account?.id || state?.accountId}
+              onSelectOption={setAccount}
+              showBalance={false}
+            />
+            <AccountAssetsSelect
+              mb="2rem"
+              label="Asset"
+              assets={
+                account
+                  ? [account.balances.default, ...account.balances.assets]
+                  : []
+              }
+              selected={balance || account?.balances.default}
+              onSelectOption={setBalance}
+            />
             <ContactsAutocomplete
               label={'To'}
               contactId={contact?._id}

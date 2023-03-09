@@ -39,10 +39,11 @@ interface SendFlowProps extends Omit<ModalProps, 'children'>, SendProps {
 interface SendProps {
   from: CutAccount
   to: Contact
-  asset: Asset
   amount: bigint
-  memo: string
+  asset: Asset
   fee: bigint
+  feeAsset?: Asset
+  memo: string
   transaction: Transaction | null
   onCreateAccount: (contact: Contact) => void
 }
@@ -83,10 +84,11 @@ const ConfirmStep: FC<StepProps> = ({
   onCancel,
   from,
   to,
-  asset,
   amount,
-  memo,
+  asset,
   fee,
+  feeAsset,
+  memo,
   onCreateAccount,
 }) => {
   const [contactName, setContactName] = useState('')
@@ -208,9 +210,7 @@ const ConfirmStep: FC<StepProps> = ({
             title="Fee:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>
-                  {formatOreToTronWithLanguage(fee)} {asset.name}
-                </chakra.h4>
+                <chakra.h4>{formatOreToTronWithLanguage(fee)} $IRON</chakra.h4>
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -220,10 +220,23 @@ const ConfirmStep: FC<StepProps> = ({
             title="Total:"
             value={
               <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>
-                  {formatOreToTronWithLanguage(amount + fee)}
-                  &nbsp;{asset.name}
-                </chakra.h4>
+                {asset.id === feeAsset.id ? (
+                  <chakra.h4>
+                    {formatOreToTronWithLanguage(amount + fee)}
+                    &nbsp;{asset.name}
+                  </chakra.h4>
+                ) : (
+                  <Flex direction="column">
+                    <chakra.h4>
+                      {formatOreToTronWithLanguage(amount)}
+                      &nbsp;{asset.name}
+                    </chakra.h4>
+                    <chakra.h4>
+                      {formatOreToTronWithLanguage(fee)}
+                      &nbsp;{feeAsset.name}
+                    </chakra.h4>
+                  </Flex>
+                )}
                 <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
               </HStack>
             }
@@ -331,6 +344,12 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
 }) => {
   const [currStep, setCurrentStep] = useState<number>(0)
   const [transaction, setTransaction] = useState<Transaction | null>(null)
+  const [feeAsset, setFeeAsset] = useState<Asset>()
+
+  useEffect(() => {
+    window.IronfishManager.assets.default().then(setFeeAsset)
+  }, [])
+
   const Step = STEPS[currStep]
 
   const handleClose = () => {
@@ -374,9 +393,10 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
             from={from}
             to={to}
             amount={amount}
-            memo={memo}
-            fee={fee}
             asset={asset}
+            fee={fee}
+            feeAsset={feeAsset}
+            memo={memo}
             onConfirm={() => {
               setCurrentStep(1)
               send()
