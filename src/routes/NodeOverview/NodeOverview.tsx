@@ -39,7 +39,7 @@ const NodeOverview: FC = () => {
           <TabPanel p="0" pt="1rem">
             <NodeSettings />
           </TabPanel>
-          <TabPanel p="0" pt="1rem">
+          <TabPanel p="0" pt="2rem">
             <NodeResources data={data} loaded={loaded} />
           </TabPanel>
         </TabPanels>
