@@ -71,7 +71,7 @@ const NodePeers: FC = () => {
           render: ({ address, country }) => (
             <Flex alignItems="center">
               {country && (
-                <Box mr="1rem" w="24px">
+                <Box mr="1rem" w="1.5rem">
                   <FlagIcon code={country} size={24} />
                 </Box>
               )}
