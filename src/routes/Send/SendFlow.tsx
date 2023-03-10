@@ -242,7 +242,9 @@ const ConfirmStep: FC<StepProps> = ({
             }
             w="100%"
           />
-          <DataPreviewLine title="Memo:" value={memo} w="100%" />
+          {memo?.trim() && (
+            <DataPreviewLine title="Memo:" value={memo} w="100%" />
+          )}
         </VStack>
       </ModalBody>
       <ModalFooter mt="2rem" p="0" justifyContent="flex-start">

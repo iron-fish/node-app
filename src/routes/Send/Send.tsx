@@ -283,7 +283,7 @@ const Send: FC = () => {
             )}
             <AccountsSelect
               label="From Account"
-              mb="1rem"
+              mb="2rem"
               accountId={account?.id || state?.accountId}
               onSelectOption={setAccount}
               showBalance={false}

@@ -49,7 +49,6 @@ const AccountAssetsSelect: FC<AccountAssetsSelectProps> = ({
 
   return (
     <SelectField
-      size="small"
       options={options}
       value={options.find(({ value }) => value.asset.id === selected.asset?.id)}
       onSelectOption={option => onSelectOption(option.value)}
