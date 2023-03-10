@@ -60,6 +60,7 @@ const NodeResources: FC<NodeResourcesProps> = ({ data, loaded }) => {
             mb="2.25rem"
             alignItems="space-between"
             justifyContent="space-between"
+            gap="1rem"
           >
             <NodeResource label="Cores" value={data.cpu.cores} />
             <NodeResource
