@@ -1,9 +1,16 @@
-import { FC, useMemo, useEffect, useState, ReactNode, useRef } from 'react'
+import {
+  FC,
+  useMemo,
+  useEffect,
+  useState,
+  ReactNode,
+  useRef,
+  useDeferredValue,
+} from 'react'
 import {
   Autocomplete,
   FlexProps,
   NAMED_COLORS,
-  useDebounce,
   chakra,
   Box,
   BoxProps,
@@ -89,7 +96,7 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
 }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$isValidAddress, setIsValidAddress] = useState(true)
-  const $search = useDebounce($searchTerm, 500)
+  const $search = useDeferredValue($searchTerm)
   const [{ data: contacts = [], loaded: contactsLoaded }, , reloadContacts] =
     useAddressBook($search)
 

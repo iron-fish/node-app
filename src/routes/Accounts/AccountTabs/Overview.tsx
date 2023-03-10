@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState, useDeferredValue } from 'react'
 import {
   Box,
   Button,
@@ -40,12 +40,13 @@ interface SearchTransactionsProps {
 const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
   const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
+  const deferredSearchTerm = useDeferredValue($searchTerm)
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
   const {
     data: transactions = undefined,
     loaded,
     actions: { reload },
-  } = useTransactions(address, $searchTerm, $sortOrder)
+  } = useTransactions(address, deferredSearchTerm, $sortOrder)
   const [, setTransactionsState] = useState([])
   const toast = useIronToast({
     containerStyle: {
@@ -113,7 +114,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
     })
   }, [loaded])
 
-  return loaded && transactions?.length === 0 && !$searchTerm ? null : (
+  return loaded && transactions?.length === 0 && !deferredSearchTerm ? null : (
     <>
       <Box>
         <chakra.h3 pb="1rem">Transactions</chakra.h3>
