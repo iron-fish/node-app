@@ -52,6 +52,9 @@ const NodePeers: FC = () => {
           WrapperProps: {
             w: '33%',
           },
+          ItemProps: {
+            whiteSpace: 'nowrap',
+          },
           render: ({ connectionWebRTC, connectionWebSocket }) =>
             connectionWebRTC
               ? 'WebRTC'
@@ -68,7 +71,7 @@ const NodePeers: FC = () => {
           render: ({ address, country }) => (
             <Flex alignItems="center">
               {country && (
-                <Box mr="1rem">
+                <Box mr="1rem" w="24px">
                   <FlagIcon code={country} size={24} />
                 </Box>
               )}
