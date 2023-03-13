@@ -297,7 +297,10 @@ const Send: FC = () => {
                   : []
               }
               selected={balance || account?.balances.default}
-              onSelectOption={setBalance}
+              onSelectOption={assetBalance => {
+                setBalance(assetBalance)
+                setAmount('0.00')
+              }}
             />
             <ContactsAutocomplete
               label={'To'}

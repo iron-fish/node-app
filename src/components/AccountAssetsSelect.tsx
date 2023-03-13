@@ -15,10 +15,11 @@ const getAssetOptions = (
   assetsBalance: AccountBalance[] = []
 ): OptionType[] => {
   return assetsBalance.map(assetBalance => ({
-    label: `${assetBalance.asset.name}: ${formatOreToTronWithLanguage(
-      assetBalance?.confirmed || BigInt(0)
-    )}`,
+    label: assetBalance.asset.name,
     value: { ...assetBalance, ...assetBalance.asset },
+    helperText: formatOreToTronWithLanguage(
+      assetBalance?.confirmed || BigInt(0)
+    ),
   }))
 }
 
