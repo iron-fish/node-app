@@ -156,11 +156,7 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
                       ? Math.round((status.current / status.total) * 100)
                       : 0
                   }
-                  sx={{
-                    '&>div[role=progressbar]': {
-                      bgColor: '#2c72ff',
-                    },
-                  }}
+                  variant="ironLightBlue"
                   isIndeterminate={isIndeterminate}
                 />
               </Box>
