@@ -126,9 +126,9 @@ const Initializing: FC = () => {
           justifyContent="center"
         >
           <Box mb="4rem">
-            <IronFishLogo height="3rem" />
+            <IronFishLogo height="4rem" isAnimated />
           </Box>
-          <Box w="100%" maxWidth="65.5rem">
+          {/* <Box w="100%" maxWidth="65.5rem">
             <Steps activeStep={currentStep}>
               <Step
                 label="Initialization"
@@ -161,7 +161,7 @@ const Initializing: FC = () => {
                 isCompletedStep={initStatus >= IronFishInitStatus.STARTED}
               />
             </Steps>
-          </Box>
+          </Box> */}
         </Flex>
       )}
     </>

@@ -5,6 +5,7 @@ export enum IronfishSnaphotManagerAction {
   CHECK_PATH = 'checkPath',
   START = 'start',
   APPLY = 'apply',
+  RETRY = 'retry',
   STATUS = 'status',
   RESET = 'reset',
 }
@@ -45,6 +46,7 @@ export interface IIronfishSnapshotManager {
   ) => Promise<{ hasError: boolean; error: string }>
   start: (pathToSave?: string) => Promise<void>
   apply: () => Promise<void>
+  retry: () => Promise<void>
   manifest: () => Promise<SnapshotManifest>
   reset: () => Promise<void>
   status: () => Promise<Omit<ProgressType, 'statistic'>>

@@ -19,6 +19,7 @@ class SnapshotManager implements IIronfishSnapshotManager {
   private node: IronfishNode
   private progress: ProgressType
   private filePath: string
+  private pathToSave: string
 
   constructor(node: IronfishNode) {
     this.node = node
@@ -98,7 +99,9 @@ class SnapshotManager implements IIronfishSnapshotManager {
       return
     }
 
-    this.download(manifest, savePath)
+    this.pathToSave = savePath
+
+    this.download(manifest)
   }
 
   async apply() {
@@ -118,10 +121,29 @@ class SnapshotManager implements IIronfishSnapshotManager {
       })
   }
 
-  private async download(
-    manifest: SnapshotManifest,
-    pathToSave: string
-  ): Promise<void> {
+  async retry(): Promise<void> {
+    if (this.progress.status === ProgressStatus.NOT_STARTED) {
+      return Promise.reject('Nothing to retry.')
+    }
+    if (
+      !this.progress.hasError &&
+      this.progress.status > ProgressStatus.NOT_STARTED
+    ) {
+      return Promise.reject('Flow already in progress')
+    }
+
+    this.progress.error = null
+    this.progress.hasError = false
+
+    if (this.progress.status < ProgressStatus.DOWNLOADED) {
+      const manifest = await this.manifest()
+      this.download(manifest)
+    } else {
+      this.apply()
+    }
+  }
+
+  private async download(manifest: SnapshotManifest): Promise<void> {
     this.progress = {
       current: 0,
       total: manifest.file_size,
@@ -147,7 +169,7 @@ class SnapshotManager implements IIronfishSnapshotManager {
     }
 
     this.filePath = path.resolve(
-      pathToSave,
+      this.pathToSave,
       `snapshot_${manifest.timestamp}.tar.gz`
     )
 

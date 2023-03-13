@@ -46,7 +46,7 @@ const DARK_COLORS = {
   bg: {
     default: '#192D23',
     warning: '#444123',
-    danger: '#FFE2D9',
+    danger: '#3A261D',
   },
 }
 
@@ -156,6 +156,9 @@ const SnapshotMessage: FC<{
         borderColor="inherit"
         borderRadius="4rem"
         mb="1rem"
+        _hover={{
+          bg: 'inherit',
+        }}
         display={isMinified ? 'none' : 'inline-flex'}
         onClick={() => setOpen(true)}
       >

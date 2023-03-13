@@ -27,6 +27,10 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
     return Promise.resolve()
   }
 
+  retry() {
+    return Promise.resolve()
+  }
+
   manifest(): Promise<SnapshotManifest> {
     return Promise.resolve({
       block_sequence: 675443,

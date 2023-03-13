@@ -84,6 +84,11 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         'ironfish-manager-snapshot',
         IronfishSnaphotManagerAction.RESET
       ),
+    retry: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.RETRY
+      ),
     status: () =>
       ipcRenderer.invoke(
         'ironfish-manager-snapshot',

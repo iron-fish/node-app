@@ -1,6 +1,7 @@
 import {
   Button,
   chakra,
+  LightMode,
   Link,
   Modal,
   ModalBody,
@@ -67,42 +68,44 @@ const SnapshotDownloadModal: FC<
   }, [manifest])
 
   return (
-    <Modal {...props}>
-      <ModalOverlay background="rgba(0,0,0,0.75)" />
-      <ModalContent p="4rem" minW="40rem">
-        <ModalHeader>
-          <chakra.h2>Download Snapshot</chakra.h2>
-        </ModalHeader>
-        <ModalCloseButton
-          color={NAMED_COLORS.GREY}
-          borderRadius="50%"
-          borderColor={NAMED_COLORS.LIGHT_GREY}
-          border="0.0125rem solid"
-          mt="1.5rem"
-          mr="1.5rem"
-        />
-        <ModalBody>
-          <chakra.h4>
-            You need to download our chain snapshot as the normal download time
-            could take up to {estimateTime}. The snapshot will be 2 times faster
-            and only {size}.{' '}
-            <Link display="none">If you need help, please click here.</Link>
-          </chakra.h4>
-          {error && <chakra.h4 color={NAMED_COLORS.RED}>{error}</chakra.h4>}
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            variant="primary"
-            borderRadius="4rem"
-            disabled={loading}
-            onClick={handleDownload}
-            leftIcon={loading ? <Spinner /> : <DownloadIcon />}
-          >
-            Download
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <LightMode>
+      <Modal {...props}>
+        <ModalOverlay background="rgba(0,0,0,0.75)" />
+        <ModalContent p="4rem" minW="40rem" color={NAMED_COLORS.DEEP_BLUE}>
+          <ModalHeader>
+            <chakra.h2>Download Snapshot</chakra.h2>
+          </ModalHeader>
+          <ModalCloseButton
+            color={NAMED_COLORS.GREY}
+            borderRadius="50%"
+            borderColor={NAMED_COLORS.LIGHT_GREY}
+            border="0.0125rem solid"
+            mt="1.5rem"
+            mr="1.5rem"
+          />
+          <ModalBody>
+            <chakra.h4>
+              You need to download our chain snapshot as the normal download
+              time could take up to {estimateTime}. The snapshot will be 2 times
+              faster and only {size}.{' '}
+              <Link display="none">If you need help, please click here.</Link>
+            </chakra.h4>
+            {error && <chakra.h4 color={NAMED_COLORS.RED}>{error}</chakra.h4>}
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              variant="primary"
+              borderRadius="4rem"
+              disabled={loading}
+              onClick={handleDownload}
+              leftIcon={loading ? <Spinner /> : <DownloadIcon />}
+            >
+              Download
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </LightMode>
   )
 }
 

@@ -96,6 +96,7 @@ export const IronFishManager: IIronfishManager = {
       Promise.resolve({ hasError: false, error: undefined }),
     start: (path?: string) => window.DemoDataManager.snapshot.start(path),
     apply: () => Promise.resolve(),
+    retry: () => Promise.resolve(),
     manifest: () => window.DemoDataManager.snapshot.manifest(),
     status: () => window.DemoDataManager.snapshot.status(),
     reset: () => window.DemoDataManager.snapshot.reset(),
