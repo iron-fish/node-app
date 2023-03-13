@@ -272,11 +272,10 @@ const OverviewBalance: FC<AccountOverviewProps> = ({ account }) => {
                 {formatOreToTronWithLanguage(balance?.confirmed || BigInt(0))}
               </chakra.h2>
             </Box>
-            <Box>
+            <Flex gap="1rem">
               <Button
                 variant="primary"
                 borderRadius="4rem"
-                mr="1rem"
                 borderColor="transparent"
                 leftIcon={
                   <Icon height={8}>
@@ -297,7 +296,6 @@ const OverviewBalance: FC<AccountOverviewProps> = ({ account }) => {
                 variant="primary"
                 borderRadius="4rem"
                 borderColor="transparent"
-                mr="1rem"
                 leftIcon={
                   <Icon height={8}>
                     <Receive />
@@ -313,7 +311,7 @@ const OverviewBalance: FC<AccountOverviewProps> = ({ account }) => {
               >
                 <h5>Receive</h5>
               </Button>
-            </Box>
+            </Flex>
           </Box>
           <Box display={{ base: 'none', md: 'inline-block' }} m="1rem">
             <FeesImage width={180} height={133} />
