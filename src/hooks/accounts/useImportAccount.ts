@@ -15,6 +15,7 @@ const useImportAccount = () => {
         spendingKey: spendingKey,
         viewKey: nanoid(64),
         version: 1,
+        createdAt: new Date(),
       }),
     []
   )
@@ -30,6 +31,7 @@ const useImportAccount = () => {
         spendingKey: nanoid(64),
         viewKey: nanoid(64),
         version: 1,
+        createdAt: new Date(),
       }),
     []
   )
