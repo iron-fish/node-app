@@ -24,11 +24,11 @@ export enum IronfishAccountManagerAction {
 export interface IIronfishAccountManager {
   create: (name: string) => Promise<Account>
   prepareAccount: () => Promise<AccountCreateParams>
-  submitAccount: (createParams: AccountCreateParams) => Promise<Account>
+  submitAccount: (createParams: AccountValue) => Promise<Account>
   list: (search?: string, sort?: SortType) => Promise<CutAccount[]>
   get: (id: string) => Promise<Account>
   delete: (name: string) => Promise<void>
-  import: (account: AccountValue) => Promise<AccountValue>
+  import: (account: Omit<AccountValue, 'rescan'>) => Promise<AccountValue>
   importByEncodedKey: (data: string) => Promise<AccountValue>
   importByMnemonic: (name: string, mnemonic: string) => Promise<AccountValue>
   export: (id: string) => Promise<AccountValue>

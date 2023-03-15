@@ -89,7 +89,7 @@ class DemoDataManager {
     return this.accounts.create(name)
   }
 
-  importAccount(account: Omit<AccountValue, 'id'>): Promise<AccountValue> {
+  importAccount(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
     return this.accounts.import(account)
   }
   importByMnemonic(name: string, mnemonic: string): Promise<AccountValue> {
@@ -168,9 +168,18 @@ class DemoDataManager {
     to: string,
     amount: bigint,
     memo: string,
-    fee: bigint
+    fee: bigint,
+    assetId: string
   ): Promise<Transaction> {
-    return this.transactions.send(accountId, from, to, amount, memo, fee)
+    return this.transactions.send(
+      accountId,
+      from,
+      to,
+      amount,
+      memo,
+      fee,
+      assetId
+    )
   }
 
   getAddressBook(search: string, sort?: SortType): Promise<Contact[]> {

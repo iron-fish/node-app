@@ -17,6 +17,7 @@ export interface Payment {
   amount: bigint
   memo: string
   publicAddress: string
+  assetId: string
 }
 
 export enum TransactionStatus {

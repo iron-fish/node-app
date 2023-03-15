@@ -10,6 +10,7 @@ const useEstimatedFee = (accountId: string, receiver: Payment) => {
     if (
       accountId &&
       receiver.publicAddress &&
+      receiver.assetId &&
       (receiver?.amount || receiver?.amount === BigInt(0))
     ) {
       return promiseWrapper(

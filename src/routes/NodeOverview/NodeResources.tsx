@@ -18,7 +18,7 @@ interface NodeResourceProps {
 const NodeResource: FC<NodeResourceProps> = ({ label, value }) => (
   <Stat minW="14.375rem">
     <StatLabel>
-      <chakra.h6>{label}</chakra.h6>
+      <chakra.h6 color="#9B7641">{label}</chakra.h6>
     </StatLabel>
     <StatNumber>
       <chakra.h3 textTransform="capitalize">{value}</chakra.h3>
@@ -60,6 +60,7 @@ const NodeResources: FC<NodeResourcesProps> = ({ data, loaded }) => {
             mb="2.25rem"
             alignItems="space-between"
             justifyContent="space-between"
+            gap="1rem"
           >
             <NodeResource label="Cores" value={data.cpu.cores} />
             <NodeResource
