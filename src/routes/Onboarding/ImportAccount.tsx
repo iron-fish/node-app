@@ -87,7 +87,7 @@ const EncodedKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [file, setFile] = useState<File | null>(null)
-  const [, , importByFile] = useImportAccount()
+  const [importAccountByData, , importByFile] = useImportAccount()
   const fileInput = useRef<HTMLInputElement>()
   return (
     <>
@@ -152,11 +152,20 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
             const reader = new FileReader()
             reader.onload = e => {
               const content = e.target.result
-              importByFile(JSON.parse(content.toString()))
-                .then(() => onImport())
-                .catch(() => {
-                  // TODO: add toast
-                })
+              try {
+                const data = JSON.parse(content.toString())
+                importByFile(data)
+                  .then(() => onImport())
+                  .catch(() => {
+                    // TODO: add toast
+                  })
+              } catch (error) {
+                importAccountByData(content.toString())
+                  .then(() => onImport())
+                  .catch(() => {
+                    // TODO: add toast
+                  })
+              }
             }
             reader.readAsText(file)
           }}

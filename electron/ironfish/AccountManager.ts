@@ -170,8 +170,24 @@ class AccountManager
     return this.import(accountData)
   }
 
-  async export(id: string): Promise<AccountValue> {
-    return this.node.wallet.getAccount(id)?.serialize()
+  async export(
+    id: string,
+    encoded?: boolean,
+    viewOnly?: boolean
+  ): Promise<string> {
+    const account = this.node.wallet.getAccount(id)?.serialize()
+    if (!account) {
+      return null
+    }
+    delete account.createdAt
+    const { id: _, ...accountInfo } = account
+    if (viewOnly) {
+      accountInfo.spendingKey = null
+    }
+    if (encoded) {
+      return Bech32m.encode(JSON.stringify(accountInfo), 'ironfishaccount00000')
+    }
+    return JSON.stringify(account)
   }
 
   async balance(

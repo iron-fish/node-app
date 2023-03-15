@@ -16,7 +16,8 @@ const useAccount = (id: string) => {
   }, [])
 
   const exportAccount = useCallback(
-    (identity: string) => window.IronfishManager.accounts.export(identity),
+    (identity: string, encoded?: boolean) =>
+      window.IronfishManager.accounts.export(identity, encoded),
     []
   )
 

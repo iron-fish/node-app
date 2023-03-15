@@ -20,7 +20,7 @@ export const IronFishManager: IIronfishManager = {
     submitAccount: (createParams: AccountValue) =>
       window.DemoDataManager.accounts.submitAccount(createParams),
     delete: (name: string) => window.DemoDataManager.deleteAccount(name),
-    export: async (id: string) => {
+    export: async (id: string, encoded?: boolean, viewOnly?: boolean) => {
       const account = Object.assign(
         {},
         await window.DemoDataManager.accounts.findById(id)
@@ -28,7 +28,7 @@ export const IronFishManager: IIronfishManager = {
       delete account.id
       delete account.balances
 
-      return account
+      return JSON.stringify(account)
     },
     get: (id: string) => window.DemoDataManager.getAccount(id),
     import: (account: AccountValue) =>

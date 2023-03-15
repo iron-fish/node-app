@@ -8,19 +8,20 @@ import {
   useColorModeValue,
   MnemonicView,
   CopyToClipboardButton,
+  SelectField,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState } from 'react'
 import AccountKeysImage from 'Svgx/AccountKeysImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import DownloadIcon from '@ironfish/ui-kit/dist/svgx/download-icon'
-import { AccountValue } from '@ironfish/sdk'
 import Account from 'Types/Account'
 import useMnemonicPhrase from 'Hooks/accounts/useMnemonicPhrase'
+import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 
 interface AccountKeysProps {
   account: Account
-  exportAccount: (id: string) => Promise<Omit<AccountValue, 'rescan'>>
+  exportAccount: (id: string, encoded?: boolean) => Promise<string>
 }
 
 const Information: FC = memo(() => {
@@ -53,8 +54,14 @@ const Information: FC = memo(() => {
   )
 })
 
+const EXPORT_OPTIONS = [
+  { label: 'JSON', value: false },
+  { label: 'Encoded', value: true },
+]
+
 const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
   const [exporting, setExporting] = useState<boolean>(false)
+  const [exportType, setExportType] = useState<OptionType>(EXPORT_OPTIONS[1])
   const {
     data: phrase,
     loaded,
@@ -64,10 +71,9 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
 
   const handleExport = () => {
     setExporting(true)
-    exportAccount(account.id)
+    exportAccount(account.id, exportType.value)
       .then(exportedAccount => {
-        const data = JSON.stringify(exportedAccount)
-        const file = new Blob([data], { type: 'text/plain' })
+        const file = new Blob([exportedAccount], { type: 'text/plain' })
         const element = document.createElement('a')
         element.href = URL.createObjectURL(file)
         element.download = account.name + '.json'
@@ -106,7 +112,14 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
           wordsAmount={24}
           onBlinkingEyeClick={setShowPhrase}
         />
-        <Flex>
+        <Flex alignItems={'center'} gap="2rem">
+          <SelectField
+            label="Export format"
+            size="small"
+            value={exportType}
+            options={EXPORT_OPTIONS}
+            onSelectOption={setExportType}
+          />
           <Button
             variant="primary"
             size="medium"

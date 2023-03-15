@@ -142,11 +142,13 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         name,
         mnemonic
       ),
-    export: (id: string) =>
+    export: (id: string, encoded?: boolean, viewOnly?: boolean) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.EXPORT,
-        id
+        id,
+        encoded,
+        viewOnly
       ),
     balance: (id: string, assetId?: string) =>
       ipcRenderer.invoke(

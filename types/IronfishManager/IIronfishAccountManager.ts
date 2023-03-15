@@ -31,7 +31,7 @@ export interface IIronfishAccountManager {
   import: (account: Omit<AccountValue, 'rescan'>) => Promise<AccountValue>
   importByEncodedKey: (data: string) => Promise<AccountValue>
   importByMnemonic: (name: string, mnemonic: string) => Promise<AccountValue>
-  export: (id: string) => Promise<AccountValue>
+  export: (id: string, encoded?: boolean, viewOnly?: boolean) => Promise<string>
   balance: (id: string, assetId?: string) => Promise<AccountBalance>
   balances: (id: string) => Promise<{
     default: AccountBalance
