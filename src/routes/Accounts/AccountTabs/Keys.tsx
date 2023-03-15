@@ -90,7 +90,7 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
               <h6>Mnemonic phrase</h6>
               {showPhrase && (
                 <CopyToClipboardButton
-                  value={phrase?.join(', ')}
+                  value={phrase?.join(' ')}
                   copyTooltipText="Copy to clipboard"
                   copiedTooltipText="Copied"
                 />

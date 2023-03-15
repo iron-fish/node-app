@@ -3,6 +3,9 @@ import {
   CurrencyUtils,
   IronfishNode,
   ACCOUNT_SCHEMA_VERSION,
+  Bech32m,
+  JSONUtils,
+  AccountImport,
 } from '@ironfish/sdk'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import {
@@ -10,6 +13,8 @@ import {
   LanguageCode,
   spendingKeyToWords,
   generateKey,
+  wordsToSpendingKey,
+  generateKeyFromPrivateKey,
 } from '@ironfish/rust-nodejs'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
@@ -123,6 +128,45 @@ class AccountManager
     return this.node.wallet
       .importAccount(account)
       .then(data => data.serialize())
+  }
+
+  async importByEncodedKey(data: string): Promise<AccountValue> {
+    const [decoded, _] = Bech32m.decode(data)
+    if (decoded) {
+      let accountData = JSONUtils.parse<AccountImport>(decoded)
+
+      if (accountData.spendingKey) {
+        accountData = {
+          id: uuid(),
+          ...accountData,
+          ...generateKeyFromPrivateKey(accountData.spendingKey),
+        }
+      }
+
+      return this.import(accountData)
+    }
+  }
+
+  async importByMnemonic(
+    name: string,
+    mnemonic: string
+  ): Promise<AccountValue> {
+    let spendingKey: string | null = null
+    if (mnemonic.trim().split(/\s+/).length !== 24) {
+      return null
+    }
+    spendingKey = wordsToSpendingKey(mnemonic.trim(), LanguageCode.English)
+
+    const key = generateKeyFromPrivateKey(spendingKey)
+    const accountData = {
+      id: uuid(),
+      name,
+      version: ACCOUNT_SCHEMA_VERSION,
+      createdAt: null,
+      ...key,
+    }
+
+    return this.import(accountData)
   }
 
   async export(id: string): Promise<AccountValue> {

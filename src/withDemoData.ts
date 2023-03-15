@@ -34,6 +34,10 @@ export const IronFishManager: IIronfishManager = {
     get: (id: string) => window.DemoDataManager.getAccount(id),
     import: (account: AccountValue) =>
       window.DemoDataManager.importAccount(account),
+    importByMnemonic: (name: string, mnemonic: string) =>
+      window.DemoDataManager.importByMnemonic(name, mnemonic),
+    importByEncodedKey: (data: string) =>
+      window.DemoDataManager.importByEncodedKey(data),
     list: (search: string, sort: SortType) =>
       window.DemoDataManager.getAccounts(search, sort),
     balance: (id: string, assetId?: string) =>
