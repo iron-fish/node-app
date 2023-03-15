@@ -31,6 +31,9 @@ const DownloadSnapshotMessage: FC<{
         h={show ? '3rem' : '0rem'}
         justifyContent="center"
         alignItems="center"
+        _dark={{
+          bg: '#3A261D',
+        }}
       >
         <chakra.h5 mx="0.5rem" color={NAMED_COLORS.RED} hidden={!show}>
           You’re required to download our blockchain snapshot
@@ -42,6 +45,14 @@ const DownloadSnapshotMessage: FC<{
           borderRadius="4rem"
           h="2.2rem"
           hidden={!show}
+          _hover={{
+            bg: '#FFEEE9',
+          }}
+          _dark={{
+            _hover: {
+              bg: '#6A3C27',
+            },
+          }}
           onClick={() => setOpen(true)}
         >
           <chakra.h5 color="inherit">Download Snapshot</chakra.h5>

@@ -40,7 +40,12 @@ const SnapshotRequirement: FC<{
         borderRadius="4rem"
         mb="1rem"
         _hover={{
-          bg: 'inherit',
+          bg: '#FFEEE9',
+        }}
+        _dark={{
+          _hover: {
+            bg: '#6A3C27',
+          },
         }}
         display={{ base: 'none', sm: 'inline-flex' }}
         onClick={() => setOpen(true)}
