@@ -14,7 +14,7 @@ import Nav from './Nav'
 import IronFishLogo from 'Svgx/IronFishLogo'
 import HexFishLogo from 'Svgx/hexfish'
 
-import ActiveStatus from './ActiveStatus'
+import StatusBar from './StatusBar'
 import ROUTES from 'Routes/data'
 import { NavItemProps } from './NavItem'
 
@@ -89,7 +89,7 @@ export const Navbar: FC<FlexProps> = props => {
         <Nav list={primaryNavItems} />
       </Box>
       <Box marginTop="auto">
-        <ActiveStatus />
+        <StatusBar />
         <Toggle />
       </Box>
     </Flex>
