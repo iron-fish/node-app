@@ -1,16 +1,17 @@
 import {
   AccountValue,
+  ACCOUNT_SCHEMA_VERSION,
   CurrencyUtils,
   IronfishNode,
-  ACCOUNT_SCHEMA_VERSION,
 } from '@ironfish/sdk'
-import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
+import { v4 as uuid } from 'uuid'
 import {
   Asset as NativeAsset,
   LanguageCode,
   spendingKeyToWords,
   generateKey,
 } from '@ironfish/rust-nodejs'
+import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
 import CutAccount from 'Types/CutAccount'
@@ -19,7 +20,6 @@ import AbstractManager from './AbstractManager'
 import AssetManager from './AssetManager'
 import Asset from 'Types/Asset'
 import AccountCreateParams from 'Types/AccountCreateParams'
-import { v4 as uuid } from 'uuid'
 
 class AccountManager
   extends AbstractManager
@@ -58,10 +58,9 @@ class AccountManager
     }
   }
 
-  async submitAccount(
-    createParams: AccountCreateParams
-  ): Promise<WalletAccount> {
+  async submitAccount(createParams: AccountValue): Promise<WalletAccount> {
     const newAccount = await this.node.wallet.importAccount(createParams)
+
     return newAccount.serialize()
   }
 

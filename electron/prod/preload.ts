@@ -99,7 +99,7 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.PREPARE_ACCOUNT
       ),
-    submitAccount: (createParams: AccountCreateParams) =>
+    submitAccount: (createParams: AccountValue) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.SUBMIT_ACCOUNT,

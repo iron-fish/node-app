@@ -1,15 +1,19 @@
 import { AccountSettings } from './types/Account'
 import { AccountValue } from '@ironfish/sdk'
 import { nanoid } from 'nanoid'
-// seems that it can be used thought preload script
-// import { generateMnemonic } from 'bip39'
 import randomWords from 'random-words'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import SortType from 'Types/SortType'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import Asset from 'Types/Asset'
-import { DEFAULT_ASSET } from './DemoAssetManager'
+import {
+  DEFAULT_ASSET,
+  DEMO_ASSET,
+  IRON_BTC_ASSET,
+  IRON_ETH_ASSET,
+  TEST_ASSET,
+} from './DemoAssetManager'
 import Account from 'Types/Account'
 import AccountCreateParams from 'Types/AccountCreateParams'
 
@@ -99,6 +103,22 @@ export const ACCOUNT_BALANCES: Record<
       unconfirmedCount: 3,
       asset: DEFAULT_ASSET,
     },
+    {
+      confirmed: BigInt(12366),
+      unconfirmed: BigInt(327),
+      pending: BigInt(1234),
+      pendingCount: 12,
+      unconfirmedCount: 3,
+      asset: TEST_ASSET,
+    },
+    {
+      confirmed: BigInt(12367),
+      unconfirmed: BigInt(327),
+      pending: BigInt(1234),
+      pendingCount: 12,
+      unconfirmedCount: 3,
+      asset: DEMO_ASSET,
+    },
   ],
   H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6: [
     {
@@ -109,15 +129,63 @@ export const ACCOUNT_BALANCES: Record<
       unconfirmedCount: 1,
       asset: DEFAULT_ASSET,
     },
+    {
+      confirmed: BigInt(8481),
+      unconfirmed: BigInt(164),
+      pending: BigInt(874),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: DEMO_ASSET,
+    },
+    {
+      confirmed: BigInt(8481),
+      unconfirmed: BigInt(164),
+      pending: BigInt(874),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: TEST_ASSET,
+    },
   ],
   q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7: [
     {
-      confirmed: BigInt(1222255000002254),
+      confirmed: BigInt(122520002254),
       unconfirmed: BigInt(164),
       pending: BigInt(2200000022310),
       pendingCount: 8,
       unconfirmedCount: 1,
       asset: DEFAULT_ASSET,
+    },
+    {
+      confirmed: BigInt(12254),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: DEMO_ASSET,
+    },
+    {
+      confirmed: BigInt(122224),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: TEST_ASSET,
+    },
+    {
+      confirmed: BigInt(1222254),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: IRON_BTC_ASSET,
+    },
+    {
+      confirmed: BigInt(125000254),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: IRON_ETH_ASSET,
     },
   ],
 }
@@ -175,7 +243,7 @@ class DemoAccountsManager {
     }
   }
 
-  async submitAccount(createParams: AccountCreateParams): Promise<Account> {
+  async submitAccount(createParams: AccountValue): Promise<Account> {
     return this.create(createParams.name)
   }
 
@@ -266,7 +334,6 @@ class DemoAccountsManager {
         assets: ACCOUNT_BALANCES[account.id].slice(1),
       }
       account.order = accountIndex
-      account.mnemonicPhrase = randomWords({ exactly: 24, maxLength: 8 })
     }
 
     return new Promise(resolve => setTimeout(() => resolve(account), 500))

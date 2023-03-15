@@ -80,6 +80,9 @@ const ContactsPreview: FC<{ addresses?: string[]; notes?: Note[] }> = ({
               border="0.0125rem solid"
               mt="1.5rem"
               mr="1.5rem"
+              _focus={{
+                boxShadow: 'none',
+              }}
             />
             <ModalBody>
               <SimpleTable
