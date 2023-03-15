@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState, useDeferredValue } from 'react'
 import {
   Box,
   Button,
@@ -29,12 +29,14 @@ interface SearchTransactionsProps {
 const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
   const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
+  const deferredSearchTerm = useDeferredValue($searchTerm)
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
   const {
     data: transactions = undefined,
     loaded,
     actions: { reload },
-  } = useTransactions(address, $searchTerm, $sortOrder)
+  } = useTransactions(address, deferredSearchTerm, $sortOrder)
+  const trxLoaded = useDeferredValue(loaded)
   const [, setTransactionsState] = useState([])
   const toast = useIronToast({
     containerStyle: {
@@ -44,12 +46,12 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
 
   useEffect(() => {
     let interval: NodeJS.Timer
-    if (loaded) {
+    if (trxLoaded) {
       interval = setInterval(reload, 5000)
     }
 
     return () => interval && clearInterval(interval)
-  }, [loaded])
+  }, [trxLoaded])
 
   useEffect(() => {
     setTransactionsState(prevTransactions => {
@@ -100,9 +102,11 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
       }
       return transactions.map(({ hash, status }) => ({ hash, status }))
     })
-  }, [loaded])
+  }, [trxLoaded])
 
-  return loaded && transactions?.length === 0 && !$searchTerm ? null : (
+  return trxLoaded &&
+    transactions?.length === 0 &&
+    !deferredSearchTerm ? null : (
     <>
       <Box>
         <chakra.h3 pb="1rem">Transactions</chakra.h3>

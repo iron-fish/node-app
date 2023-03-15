@@ -31,6 +31,7 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
       'JPq_yX-p2PdFev7gGdlCLF9GQw25JHWIb0rNvq-Dnlomj49GNTbOgyn79fHFIQrt',
     version: 1,
     viewKey: nanoid(64),
+    createdAt: new Date(),
   },
   {
     id: 'H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6',
@@ -45,6 +46,7 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
       'E-cVvstCOWfvkiqeR3-Qc4Vm65EqX_I12Ouvavtk75j-z0Vii0I2L9_1JCtz8rlq',
     version: 1,
     viewKey: nanoid(64),
+    createdAt: new Date(),
   },
   {
     id: 'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
@@ -59,6 +61,7 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
       'RXFS7bN5gSsnKqSZv208s8EtRwwsHNji3CQuCUlD3jDwlzQ7gfFpsrtf14klpuYF',
     version: 1,
     viewKey: nanoid(64),
+    createdAt: new Date(),
   },
 ]
 
@@ -203,6 +206,7 @@ class DemoAccountsManager {
           spendingKey: nanoid(64),
           viewKey: nanoid(64),
           version: 1,
+          createdAt: new Date(),
         }
         DEMO_ACCOUNTS.push(account)
         ACCOUNT_SETTINGS.push({
@@ -235,6 +239,7 @@ class DemoAccountsManager {
       viewKey: nanoid(64),
       version: 1,
       mnemonicPhrase: randomWords({ exactly: 24, maxLength: 8 }),
+      createdAt: new Date(),
     }
   }
 
@@ -242,7 +247,7 @@ class DemoAccountsManager {
     return this.create(createParams.name)
   }
 
-  import(account: Omit<AccountValue, 'id'>): Promise<AccountValue> {
+  import(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
     return new Promise(resolve => {
       setTimeout(() => {
         if (DEMO_ACCOUNTS.find(({ name }) => name === account.name)) {

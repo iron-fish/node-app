@@ -330,7 +330,7 @@ class TransactionManager
           transaction.inputs.find(note =>
             note.memo?.toLowerCase().includes(search)
           ) ||
-          transaction.amount.toString().includes(search)
+          transaction.amount?.value.toString().includes(search)
       )
       .sort((t1, t2) => {
         const date1: number = (t1.created || new Date()).getTime()
@@ -387,7 +387,7 @@ class TransactionManager
           transaction.outputs.find(note =>
             note.memo?.toLowerCase().includes(searchTerm)
           ) ||
-          transaction.amount.toString().includes(searchTerm)
+          transaction.amount?.value.toString().includes(searchTerm)
       )
       .sort((t1, t2) => {
         const date1: number = (t1.created || new Date()).getTime()

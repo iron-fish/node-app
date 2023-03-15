@@ -168,6 +168,19 @@ export class IronFishManager implements IIronfishManager {
           : NodeStatusType.STOPPED,
         nodeName: this.node.config.get('nodeName'),
       },
+      cpu: {
+        cores: this.node.metrics.cpuCores,
+        percentRollingAvg: this.node.metrics.cpuMeter.rollingAverage,
+        percentCurrent: this.node.metrics.cpuMeter.current,
+      },
+      memory: {
+        heapMax: this.node.metrics.heapMax,
+        heapTotal: this.node.metrics.heapTotal.value,
+        heapUsed: this.node.metrics.heapUsed.value,
+        rss: this.node.metrics.rss.value,
+        memFree: this.node.metrics.memFree.value,
+        memTotal: this.node.metrics.memTotal,
+      },
       peerNetwork: {
         peers: this.node.metrics.p2p_PeersCount.value,
         isReady: this.node.peerNetwork.isReady,

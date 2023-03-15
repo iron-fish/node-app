@@ -20,7 +20,7 @@ import useMnemonicPhrase from 'Hooks/accounts/useMnemonicPhrase'
 
 interface AccountKeysProps {
   account: Account
-  exportAccount: (id: string) => Promise<Omit<AccountValue, 'id'>>
+  exportAccount: (id: string) => Promise<Omit<AccountValue, 'rescan'>>
 }
 
 const Information: FC = memo(() => {

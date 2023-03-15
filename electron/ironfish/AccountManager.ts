@@ -50,6 +50,7 @@ class AccountManager
       publicAddress: key.publicAddress,
       spendingKey: key.spendingKey,
       viewKey: key.viewKey,
+      createdAt: new Date(),
       mnemonicPhrase: spendingKeyToWords(
         key.spendingKey,
         LanguageCode.English

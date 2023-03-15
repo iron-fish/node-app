@@ -26,7 +26,7 @@ export interface IIronfishAccountManager {
   list: (search?: string, sort?: SortType) => Promise<CutAccount[]>
   get: (id: string) => Promise<Account>
   delete: (name: string) => Promise<void>
-  import: (account: AccountValue) => Promise<AccountValue>
+  import: (account: Omit<AccountValue, 'rescan'>) => Promise<AccountValue>
   export: (id: string) => Promise<AccountValue>
   balance: (id: string, assetId?: string) => Promise<AccountBalance>
   balances: (id: string) => Promise<{

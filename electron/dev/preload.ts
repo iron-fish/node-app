@@ -13,6 +13,7 @@ import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAcc
 import { Payment } from 'Types/Transaction'
 import '../common/preload'
 import { IronfishAssetManagerActions } from 'Types/IronfishManager/IIronfishAssetManager'
+import { NodeSettingsManagerAction } from 'Types/IronfishManager/INodeSettingsManager'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
   storageName: string
@@ -122,7 +123,7 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         IronfishAccountManagerAction.DELETE,
         name
       ),
-    import: (account: Omit<AccountValue, 'id' | 'rescan'>) =>
+    import: (account: Omit<AccountValue, 'rescan'>) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.IMPORT,
@@ -208,6 +209,26 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         address,
         searchTerm,
         sort
+      ),
+  },
+  nodeSettings: {
+    getConfig: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager',
+        NodeSettingsManagerAction.GET_CONFIG
+      ),
+    setValues: (values: Partial<ConfigOptions>) =>
+      ipcRenderer.invoke(
+        'ironfish-manager',
+        NodeSettingsManagerAction.SET_VALUES,
+        values
+      ),
+    save: () =>
+      ipcRenderer.invoke('ironfish-manager', NodeSettingsManagerAction.SAVE),
+    clearConfig: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager',
+        NodeSettingsManagerAction.CLEAR_CONFIG
       ),
   },
 } as IIronfishManager)
