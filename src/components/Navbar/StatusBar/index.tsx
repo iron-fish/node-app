@@ -1,4 +1,10 @@
-import { chakra, ConfirmedIcon, Flex, FlexProps } from '@ironfish/ui-kit'
+import {
+  chakra,
+  ConfirmedIcon,
+  Flex,
+  FlexProps,
+  useBreakpointValue,
+} from '@ironfish/ui-kit'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { useSnapshotStatus } from 'Providers/SnapshotProvider'
 import { FC, useMemo } from 'react'
@@ -12,6 +18,7 @@ import WalletSyncStatus from './WalletSyncStatus'
 const ActiveStatus: FC<FlexProps> = props => {
   const { synced, data, requiredSnapshot, sync } = useDataSync()
   const { status } = useSnapshotStatus()
+  const small = useBreakpointValue({ base: true, sm: false })
   const download = useMemo(
     () =>
       status?.status > ProgressStatus.NOT_STARTED &&
@@ -30,7 +37,7 @@ const ActiveStatus: FC<FlexProps> = props => {
         display={download ? 'flex' : 'none'}
         style="warning"
         TooltipProps={{
-          isDisabled: status?.status > ProgressStatus.DOWNLOADED,
+          isDisabled: small ? status?.status > ProgressStatus.DOWNLOADED : true,
         }}
       >
         {isMinified => (

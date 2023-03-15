@@ -15,6 +15,8 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
     hasError: false,
     error: null,
   }
+  downloadError = false
+  applyError = false
   async start(pathToSave: string) {
     this.execute(ProgressStatus.DOWLOADING)
   }
@@ -28,7 +30,9 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
   }
 
   retry() {
-    return Promise.resolve()
+    this.stat.hasError = false
+    this.stat.error = null
+    return this.execute(this.stat.status)
   }
 
   manifest(): Promise<SnapshotManifest> {
@@ -51,12 +55,27 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
       hasError: false,
       error: undefined,
     }
+    if (status === ProgressStatus.DOWLOADING && !this.downloadError) {
+      this.stat.hasError = true
+      this.stat.error =
+        'Connection with server lost. Please check your internet connection and try again.'
+      this.downloadError = true
+      return
+    }
+    if (status === ProgressStatus.UNARHIVING && !this.applyError) {
+      this.stat.hasError = true
+      this.stat.error =
+        'Cannot unarchiving snapshot. Please check, that archive is not used by another applications.'
+      this.applyError = true
+      return
+    }
     if (status === ProgressStatus.COMPLETED) {
       return
     }
     if (status === ProgressStatus.DOWNLOADED) {
       return this.execute(status + 1)
     }
+
     while (true) {
       if (this.stat.current >= this.stat.total) {
         break

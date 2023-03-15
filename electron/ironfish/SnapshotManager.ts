@@ -95,7 +95,8 @@ class SnapshotManager implements IIronfishSnapshotManager {
 
     if (result.hasError) {
       this.progress.hasError = true
-      this.progress.error = result.error
+      this.progress.error =
+        "You don't have enougth space for succesfull applying of snapshot. Please choose another folder."
       return
     }
 
@@ -115,8 +116,6 @@ class SnapshotManager implements IIronfishSnapshotManager {
         this.progress.status = ProgressStatus.COMPLETED
       })
       .catch(e => {
-        this.progress.error = e.message
-        this.progress.hasError = true
         throw e
       })
   }
@@ -201,7 +200,8 @@ class SnapshotManager implements IIronfishSnapshotManager {
 
       response.data.on('error', (e: Error) => {
         this.progress.hasError = true
-        this.progress.error = 'Cannot download snapshot'
+        this.progress.error =
+          'Connection with server lost. Please check your internet connection and try again.'
         writer.destroy(e)
       })
 
@@ -283,7 +283,8 @@ class SnapshotManager implements IIronfishSnapshotManager {
       })
     } catch (e) {
       this.progress.hasError = true
-      this.progress.error = 'Cannot unarchive snapshot'
+      this.progress.error =
+        'Cannot unarchiving snapshot. Please check, that archive is not used by another applications.'
     }
 
     this.progress.statistic.stop()
@@ -325,7 +326,8 @@ class SnapshotManager implements IIronfishSnapshotManager {
       })
     } catch (e) {
       this.progress.hasError = true
-      this.progress.error = 'Imposible to delete current chain database files.'
+      this.progress.error =
+        'Imposible to delete current chain database files. Please check, that files is not used by another applications.'
       this.progress.statistic.stop()
       return Promise.reject()
     }
@@ -354,7 +356,8 @@ class SnapshotManager implements IIronfishSnapshotManager {
       )
     } catch (e) {
       this.progress.hasError = true
-      this.progress.error = 'Imposible to clear temporary files.'
+      this.progress.error =
+        'Imposible to clear temporary files. Please check, that files not used by another applications.'
       this.progress.statistic.stop()
       return Promise.reject()
     }

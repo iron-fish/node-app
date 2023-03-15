@@ -84,7 +84,7 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
       <Modal
         {...props}
         id="snapshot-status-modal"
-        isOpen={isApplyingInProgress ? true : props.isOpen}
+        isOpen={isApplyingInProgress || status?.hasError ? true : props.isOpen}
         useInert={
           status?.status > ProgressStatus.DOWNLOADED &&
           status?.status < ProgressStatus.COMPLETED
