@@ -81,7 +81,15 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
 
   return (
     <LightMode>
-      <Modal {...props} isOpen={isApplyingInProgress ? true : props.isOpen}>
+      <Modal
+        {...props}
+        id="snapshot-status-modal"
+        isOpen={isApplyingInProgress ? true : props.isOpen}
+        useInert={
+          status?.status > ProgressStatus.DOWNLOADED &&
+          status?.status < ProgressStatus.COMPLETED
+        }
+      >
         <ModalOverlay background="rgba(0,0,0,0.75)" />
         <ModalContent p="4rem" minW="40rem" color={NAMED_COLORS.DEEP_BLUE}>
           <ModalHeader>

@@ -26,7 +26,13 @@ const ActiveStatus: FC<FlexProps> = props => {
       gap="0.375rem"
       {...props}
     >
-      <StatusItem display={download ? 'flex' : 'none'} style="warning">
+      <StatusItem
+        display={download ? 'flex' : 'none'}
+        style="warning"
+        TooltipProps={{
+          isDisabled: status?.status > ProgressStatus.DOWNLOADED,
+        }}
+      >
         {isMinified => (
           <SnapshotStatus status={status} isMinified={isMinified} />
         )}

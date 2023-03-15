@@ -42,7 +42,7 @@ const SnapshotRequirement: FC<{
         _hover={{
           bg: 'inherit',
         }}
-        display={isMinified ? 'none' : 'inline-flex'}
+        display={{ base: 'none', sm: 'inline-flex' }}
         onClick={() => setOpen(true)}
       >
         <chakra.h5 color="inherit">Download Snapshot</chakra.h5>

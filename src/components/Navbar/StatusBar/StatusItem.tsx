@@ -3,10 +3,11 @@ import {
   FlexProps,
   NAMED_COLORS,
   Tooltip,
+  TooltipProps as TooltipProperties,
   useBreakpointValue,
   useColorModeValue,
 } from '@ironfish/ui-kit'
-import { ReactNode, FC, forwardRef, useMemo } from 'react'
+import { ReactNode, FC, forwardRef } from 'react'
 
 export const LIGHT_COLORS = {
   text: {
@@ -35,16 +36,14 @@ export const DARK_COLORS = {
 }
 
 export interface StatusItemProps extends Omit<FlexProps, 'style' | 'children'> {
+  TooltipProps?: Partial<TooltipProperties>
   style?: 'default' | 'warning' | 'danger'
   children: (isMinified: boolean) => ReactNode
 }
 
 export const StatusItemContent = forwardRef<
   HTMLDivElement,
-  { isMinified?: boolean; children: ReactNode } & Omit<
-    StatusItemProps,
-    'children'
-  >
+  { isMinified?: boolean } & StatusItemProps
 >(({ isMinified = false, style = 'default', children, ...props }, ref) => {
   const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
   return (
@@ -67,7 +66,7 @@ export const StatusItemContent = forwardRef<
       color={colors.text[style]}
       {...props}
     >
-      {children}
+      {children(isMinified)}
     </Flex>
   )
 })
@@ -75,17 +74,17 @@ export const StatusItemContent = forwardRef<
 export const StatusItem: FC<StatusItemProps> = ({
   style = 'default',
   children,
+  TooltipProps,
   ...props
 }) => {
   const small = useBreakpointValue({ base: true, sm: false })
   const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
-  const fullContent = useMemo(() => children(false), [])
-  const content = useMemo(() => children(small), [small])
+
   return (
     <Tooltip
       label={
         <StatusItemContent style={style} {...props}>
-          {fullContent}
+          {() => children(false)}
         </StatusItemContent>
       }
       isDisabled={!small}
@@ -96,9 +95,10 @@ export const StatusItem: FC<StatusItemProps> = ({
       p={0}
       m={0}
       border={`0.0625rem solid ${colors.text[style]}`}
+      {...TooltipProps}
     >
       <StatusItemContent isMinified={small} style={style} {...props}>
-        {content}
+        {() => children(small)}
       </StatusItemContent>
     </Tooltip>
   )
