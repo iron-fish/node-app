@@ -36,7 +36,7 @@ class NodeSettingsManager implements INodeSettingsManager {
     return this.config.save()
   }
 
-  clearConfig(): void {
+  async clearConfig(): Promise<void> {
     this.config.loaded = {}
   }
 }

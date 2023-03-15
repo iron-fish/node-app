@@ -87,7 +87,7 @@ class DemoDataManager {
     return this.accounts.create(name)
   }
 
-  importAccount(account: Omit<AccountValue, 'id'>): Promise<AccountValue> {
+  importAccount(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
     return this.accounts.import(account)
   }
 
