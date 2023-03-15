@@ -102,6 +102,7 @@ class DemoDataManager {
       spendingKey: nanoid(64),
       viewKey: nanoid(64),
       version: 1,
+      createdAt: new Date(),
     }
     return this.accounts.import(account)
   }
@@ -115,6 +116,7 @@ class DemoDataManager {
       spendingKey: nanoid(64),
       viewKey: nanoid(64),
       version: 1,
+      createdAt: new Date(),
     }
     return this.accounts.import(account)
   }

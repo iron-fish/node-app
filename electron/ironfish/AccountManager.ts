@@ -3,10 +3,8 @@ import {
   ACCOUNT_SCHEMA_VERSION,
   CurrencyUtils,
   IronfishNode,
-  ACCOUNT_SCHEMA_VERSION,
   Bech32m,
   JSONUtils,
-  AccountImport,
 } from '@ironfish/sdk'
 import { v4 as uuid } from 'uuid'
 import {
@@ -26,6 +24,7 @@ import AbstractManager from './AbstractManager'
 import AssetManager from './AssetManager'
 import Asset from 'Types/Asset'
 import AccountCreateParams from 'Types/AccountCreateParams'
+import { AccountImport } from '@ironfish/sdk/build/src/wallet/walletdb/accountValue'
 
 class AccountManager
   extends AbstractManager
@@ -134,13 +133,14 @@ class AccountManager
   async importByEncodedKey(data: string): Promise<AccountValue> {
     const [decoded, _] = Bech32m.decode(data)
     if (decoded) {
-      let accountData = JSONUtils.parse<AccountImport>(decoded)
+      const decodedData = JSONUtils.parse<AccountImport>(decoded)
+      let accountData: Omit<AccountValue, 'rescan'>
 
-      if (accountData.spendingKey) {
+      if (decodedData.spendingKey) {
         accountData = {
           id: uuid(),
-          ...accountData,
-          ...generateKeyFromPrivateKey(accountData.spendingKey),
+          ...decodedData,
+          ...generateKeyFromPrivateKey(decodedData.spendingKey),
         }
       }
 
@@ -159,7 +159,7 @@ class AccountManager
     spendingKey = wordsToSpendingKey(mnemonic.trim(), LanguageCode.English)
 
     const key = generateKeyFromPrivateKey(spendingKey)
-    const accountData = {
+    const accountData: Omit<AccountValue, 'rescan'> = {
       id: uuid(),
       name,
       version: ACCOUNT_SCHEMA_VERSION,
