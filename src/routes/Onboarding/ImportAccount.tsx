@@ -50,7 +50,7 @@ const EncodedKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           boxShadow: '0 0.25rem 0.688rem rgba(0, 0, 0, 0.04)',
           transition: 'border-color 300ms ease-in',
           fontSize: '1rem',
-          px: '0.625rem',
+          p: '1.5rem',
           fontWeight: '400',
           fontFamily: FONTS.FAVORIT,
           color: NAMED_COLORS.DEEP_BLUE,
