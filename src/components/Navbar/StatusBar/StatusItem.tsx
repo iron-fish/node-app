@@ -20,18 +20,28 @@ export const LIGHT_COLORS = {
     warning: '#FFF9BC',
     danger: '#FFE2D9',
   },
+  hover: {
+    default: '#357A48',
+    warning: '#FFFBD0',
+    danger: '#F37929',
+  },
 }
 
 export const DARK_COLORS = {
   text: {
     default: '#5FC89A',
-    warning: '#FFF9BC',
+    warning: '#FEF8C3',
     danger: NAMED_COLORS.RED,
   },
   bg: {
     default: '#192D23',
-    warning: '#444123',
+    warning: '#434127',
     danger: '#3A261D',
+  },
+  hover: {
+    default: '#1A3D23',
+    warning: '#706719',
+    danger: '#3C461D',
   },
 }
 
@@ -65,6 +75,9 @@ export const StatusItemContent = forwardRef<
       borderColor={colors.text[style]}
       color={colors.text[style]}
       {...props}
+      sx={{
+        '--statusbar-hover-color': colors.hover[style],
+      }}
     >
       {children(isMinified)}
     </Flex>

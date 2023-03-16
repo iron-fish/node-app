@@ -21,6 +21,7 @@ export interface SnapshotProviderProps {
   ) => Promise<{ hasError: boolean; error: string }>
   start: (path?: string) => Promise<void>
   retry: () => Promise<void>
+  reset: () => Promise<void>
 }
 
 const SnapshotContext = createContext<SnapshotProviderProps>({
@@ -35,6 +36,7 @@ const SnapshotContext = createContext<SnapshotProviderProps>({
     window.IronfishManager.snapshot.checkPath(manifest, path),
   start: (path?: string) => window.IronfishManager.downloadChainSnapshot(path),
   retry: () => window.IronfishManager.snapshot.retry(),
+  reset: () => window.IronfishManager.snapshot.reset(),
 })
 
 const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -58,6 +60,13 @@ const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const retry = useCallback(
     () =>
       window.IronfishManager.snapshot.retry().then(() => {
+        setTimeout(loadStatus, 250)
+      }),
+    []
+  )
+  const reset = useCallback(
+    () =>
+      window.IronfishManager.snapshot.reset().then(() => {
         setTimeout(loadStatus, 250)
       }),
     []
@@ -97,6 +106,7 @@ const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
         start,
         checkPath,
         retry,
+        reset,
       }}
     >
       {children}

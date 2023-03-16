@@ -1,11 +1,4 @@
-import {
-  Flex,
-  Box,
-  NAMED_COLORS,
-  chakra,
-  Button,
-  Collapse,
-} from '@ironfish/ui-kit'
+import { Flex, Box, chakra, Button, Collapse } from '@ironfish/ui-kit'
 import SnapshotDownloadModal from 'Components/Snapshot/SnapshotDownloadModal'
 import useSnapshotManifest from 'Hooks/snapshot/useSnapshotManifest'
 import { useDataSync } from 'Providers/DataSyncProvider'
@@ -14,8 +7,11 @@ import sizeFormat from 'byte-size'
 import { Outlet } from 'react-router-dom'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
 import { formatRemainingTime } from 'Utils/remainingTimeFormat'
-
 import Navbar from '../components/Navbar'
+import {
+  DARK_COLORS,
+  LIGHT_COLORS,
+} from 'Components/Navbar/StatusBar/StatusItem'
 
 const DownloadSnapshotMessage: FC<{
   show: boolean
@@ -27,30 +23,37 @@ const DownloadSnapshotMessage: FC<{
     <Collapse in={show} startingHeight={0} endingHeight="3rem">
       <Flex
         w="100%"
-        bg="#FFE2D9"
+        bg={LIGHT_COLORS.bg.warning}
         h={show ? '3rem' : '0rem'}
         justifyContent="center"
         alignItems="center"
         _dark={{
-          bg: '#3A261D',
+          bg: DARK_COLORS.bg.warning,
         }}
       >
-        <chakra.h5 mx="0.5rem" color={NAMED_COLORS.RED} hidden={!show}>
+        <chakra.h5
+          mx="0.5rem"
+          color={LIGHT_COLORS.text.warning}
+          _dark={{ color: DARK_COLORS.text.warning }}
+          hidden={!show}
+        >
           You’re required to download our blockchain snapshot
         </chakra.h5>
         <Button
           variant="outline"
-          color={NAMED_COLORS.RED}
-          borderColor={NAMED_COLORS.RED}
+          color={LIGHT_COLORS.text.warning}
+          borderColor={LIGHT_COLORS.text.warning}
           borderRadius="4rem"
           h="2.2rem"
           hidden={!show}
           _hover={{
-            bg: '#FFEEE9',
+            bg: LIGHT_COLORS.hover.warning,
           }}
           _dark={{
+            color: DARK_COLORS.text.warning,
+            borderColor: DARK_COLORS.text.warning,
             _hover: {
-              bg: '#6A3C27',
+              bg: DARK_COLORS.hover.warning,
             },
           }}
           onClick={() => setOpen(true)}

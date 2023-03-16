@@ -96,7 +96,7 @@ class SnapshotManager implements IIronfishSnapshotManager {
     if (result.hasError) {
       this.progress.hasError = true
       this.progress.error =
-        "You don't have enougth space for succesfull applying of snapshot. Please choose another folder."
+        "You don't have enough space to download the snapshot. Please choose another folder."
       return
     }
 
@@ -284,7 +284,7 @@ class SnapshotManager implements IIronfishSnapshotManager {
     } catch (e) {
       this.progress.hasError = true
       this.progress.error =
-        'Cannot unarchiving snapshot. Please check, that archive is not used by another applications.'
+        'Cannot unarchive snapshot. Please check that archive is not used by other applications.'
     }
 
     this.progress.statistic.stop()
@@ -327,7 +327,7 @@ class SnapshotManager implements IIronfishSnapshotManager {
     } catch (e) {
       this.progress.hasError = true
       this.progress.error =
-        'Imposible to delete current chain database files. Please check, that files is not used by another applications.'
+        'Cannot delete current chain database files. Please check that files are not used by other applications.'
       this.progress.statistic.stop()
       return Promise.reject()
     }
@@ -357,7 +357,7 @@ class SnapshotManager implements IIronfishSnapshotManager {
     } catch (e) {
       this.progress.hasError = true
       this.progress.error =
-        'Imposible to clear temporary files. Please check, that files not used by another applications.'
+        'Cannot clear temporary files. Please check that files are not used by other applications.'
       this.progress.statistic.stop()
       return Promise.reject()
     }

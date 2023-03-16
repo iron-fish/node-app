@@ -63,14 +63,18 @@ const SnapshotStatus: FC<{
               {sizeFormat(status.total).toString()}
             </chakra.h5>
             <Button
-              variant="secondary"
               borderRadius="4rem"
+              variant="outline"
               color="inherit"
               borderColor="inherit"
-              h="1.7rem"
-              mt="0.25rem"
+              h="2rem"
+              w="75%"
+              my="0.25rem"
               onClick={() => setOpen(true)}
               display={{ base: 'none', sm: 'inherit' }}
+              _hover={{
+                bg: 'var(--statusbar-hover-color)',
+              }}
             >
               Details
             </Button>

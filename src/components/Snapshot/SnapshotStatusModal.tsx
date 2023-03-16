@@ -60,7 +60,7 @@ const getContent = (status: ProgressStatus) => {
 }
 
 const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
-  const { status, retry } = useSnapshotStatus()
+  const { status, retry, reset } = useSnapshotStatus()
   const [loading, setLoading] = useState(false)
   const isApplyingInProgress = useMemo(
     () =>
@@ -89,6 +89,13 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
           status?.status > ProgressStatus.DOWNLOADED &&
           status?.status < ProgressStatus.COMPLETED
         }
+        onClose={() => {
+          if (status?.hasError) {
+            retry().finally(() => props?.onClose())
+          } else {
+            props?.onClose()
+          }
+        }}
       >
         <ModalOverlay background="rgba(0,0,0,0.75)" />
         <ModalContent p="4rem" minW="40rem" color={NAMED_COLORS.DEEP_BLUE}>
@@ -129,6 +136,9 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
                 variant="ghost"
                 borderRadius="4rem"
                 colorScheme={NAMED_COLORS.GREY}
+                onClick={() => {
+                  reset().finally(() => props?.onClose())
+                }}
               >
                 Cancel
               </Button>

@@ -46,7 +46,7 @@ const ActiveStatus: FC<FlexProps> = props => {
       </StatusItem>
       <StatusItem
         display={requiredSnapshot && !download ? 'flex' : 'none'}
-        style="danger"
+        style="warning"
       >
         {isMinified => (
           <SnapshotRequirement isMinified={isMinified} data={data} />
