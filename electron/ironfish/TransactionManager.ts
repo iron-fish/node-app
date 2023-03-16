@@ -42,9 +42,10 @@ class TransactionManager
   ): Promise<Transaction> {
     const account = this.node.wallet.getAccount(accountId)
     const head = await account.getHead()
+
     const transaction = await this.node.wallet.send(
       account,
-      [{ ...payment, assetId: Asset.nativeId() }],
+      [{ ...payment, assetId: Buffer.from(payment.assetId, 'hex') }],
       transactionFee,
       this.node.config.get('transactionExpirationDelta')
     )
@@ -123,7 +124,7 @@ class TransactionManager
               publicAddress: receive.publicAddress,
               amount: receive.amount,
               memo: receive.memo,
-              assetId: Asset.nativeId(),
+              assetId: Buffer.from(receive.assetId, 'hex'),
             },
           ],
           feeRate,
@@ -216,6 +217,7 @@ class TransactionManager
 
       spends.push(spend)
     }
+
     const notes = await Promise.all(
       (transaction
         ? await account.getTransactionNotes(transaction.transaction)
@@ -328,7 +330,7 @@ class TransactionManager
           transaction.inputs.find(note =>
             note.memo?.toLowerCase().includes(search)
           ) ||
-          transaction.amount.toString().includes(search)
+          transaction.amount?.value.toString().includes(search)
       )
       .sort((t1, t2) => {
         const date1: number = (t1.created || new Date()).getTime()
@@ -385,7 +387,7 @@ class TransactionManager
           transaction.outputs.find(note =>
             note.memo?.toLowerCase().includes(searchTerm)
           ) ||
-          transaction.amount.toString().includes(searchTerm)
+          transaction.amount?.value.toString().includes(searchTerm)
       )
       .sort((t1, t2) => {
         const date1: number = (t1.created || new Date()).getTime()

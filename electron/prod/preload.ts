@@ -12,9 +12,12 @@ import { Payment } from 'Types/Transaction'
 import '../common/preload'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
-import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import {
+  IronfishSnaphotManagerAction,
+  SnapshotManifest,
+} from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { IronfishAssetManagerActions } from 'Types/IronfishManager/IIronfishAssetManager'
-import AccountCreateParams from 'Types/AccountCreateParams'
+import { NodeSettingsManagerAction } from 'Types/IronfishManager/INodeSettingsManager'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
   storageName: string
@@ -73,21 +76,33 @@ contextBridge.exposeInMainWorld('IronfishManager', {
   peers: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.PEERS),
   snapshot: {
-    start: (path: string) =>
+    checkPath: (manifest: SnapshotManifest, path?: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.CHECK_PATH,
+        manifest,
+        path
+      ),
+    start: (path?: string) =>
       ipcRenderer.invoke(
         'ironfish-manager-snapshot',
         IronfishSnaphotManagerAction.START,
         path
       ),
-    reset: () =>
+    apply: () =>
       ipcRenderer.invoke(
         'ironfish-manager-snapshot',
-        IronfishSnaphotManagerAction.RESET
+        IronfishSnaphotManagerAction.APPLY
       ),
     retry: () =>
       ipcRenderer.invoke(
         'ironfish-manager-snapshot',
         IronfishSnaphotManagerAction.RETRY
+      ),
+    reset: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.RESET
       ),
     status: () =>
       ipcRenderer.invoke(
@@ -144,7 +159,7 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.PREPARE_ACCOUNT
       ),
-    submitAccount: (createParams: AccountCreateParams) =>
+    submitAccount: (createParams: AccountValue) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.SUBMIT_ACCOUNT,
@@ -169,7 +184,7 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         IronfishAccountManagerAction.DELETE,
         name
       ),
-    import: (account: Omit<AccountValue, 'id' | 'rescan'>) =>
+    import: (account: Omit<AccountValue, 'rescan'>) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.IMPORT,
@@ -255,6 +270,26 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         address,
         searchTerm,
         sort
+      ),
+  },
+  nodeSettings: {
+    getConfig: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager',
+        NodeSettingsManagerAction.GET_CONFIG
+      ),
+    setValues: (values: Partial<ConfigOptions>) =>
+      ipcRenderer.invoke(
+        'ironfish-manager',
+        NodeSettingsManagerAction.SET_VALUES,
+        values
+      ),
+    save: () =>
+      ipcRenderer.invoke('ironfish-manager', NodeSettingsManagerAction.SAVE),
+    clearConfig: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager',
+        NodeSettingsManagerAction.CLEAR_CONFIG
       ),
   },
 } as IIronfishManager)

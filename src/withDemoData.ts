@@ -10,7 +10,6 @@ import {
 import { Payment } from 'Types/Transaction'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
-import AccountCreateParams from 'Types/AccountCreateParams'
 
 export const IronFishManager: IIronfishManager = {
   assets: {
@@ -22,7 +21,7 @@ export const IronFishManager: IIronfishManager = {
   accounts: {
     create: (name: string) => window.DemoDataManager.createAccount(name),
     prepareAccount: () => window.DemoDataManager.accounts.prepareAccount(),
-    submitAccount: (createParams: AccountCreateParams) =>
+    submitAccount: (createParams: AccountValue) =>
       window.DemoDataManager.accounts.submitAccount(createParams),
     delete: (name: string) => window.DemoDataManager.deleteAccount(name),
     export: async (id: string) => {
@@ -88,7 +87,8 @@ export const IronFishManager: IIronfishManager = {
         payment.publicAddress,
         payment.amount,
         payment.memo,
-        transactionFee || BigInt(100)
+        transactionFee || BigInt(100),
+        payment.assetId
       ),
   },
   snapshot: {

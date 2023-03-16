@@ -53,7 +53,7 @@ const ActionButtons: FC<ActionButtonsProps> = ({ showCreate, showImport }) => {
     ],
     [showCreate, showImport]
   )
-  const isGroup = useBreakpointValue({ base: true, sm2: false })
+  const isGroup = useBreakpointValue({ base: true, sm4: false })
   return isGroup ? (
     <ButtonsGroup menuItems={buttons} />
   ) : (

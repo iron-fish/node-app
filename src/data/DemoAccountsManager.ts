@@ -1,15 +1,19 @@
 import { AccountSettings } from './types/Account'
 import { AccountValue } from '@ironfish/sdk'
 import { nanoid } from 'nanoid'
-// seems that it can be used thought preload script
-// import { generateMnemonic } from 'bip39'
 import randomWords from 'random-words'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import SortType from 'Types/SortType'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import Asset from 'Types/Asset'
-import { DEFAULT_ASSET } from './DemoAssetManager'
+import {
+  DEFAULT_ASSET,
+  DEMO_ASSET,
+  IRON_BTC_ASSET,
+  IRON_ETH_ASSET,
+  TEST_ASSET,
+} from './DemoAssetManager'
 import Account from 'Types/Account'
 import AccountCreateParams from 'Types/AccountCreateParams'
 
@@ -27,6 +31,7 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
       'JPq_yX-p2PdFev7gGdlCLF9GQw25JHWIb0rNvq-Dnlomj49GNTbOgyn79fHFIQrt',
     version: 1,
     viewKey: nanoid(64),
+    createdAt: new Date(),
   },
   {
     id: 'H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6',
@@ -41,6 +46,7 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
       'E-cVvstCOWfvkiqeR3-Qc4Vm65EqX_I12Ouvavtk75j-z0Vii0I2L9_1JCtz8rlq',
     version: 1,
     viewKey: nanoid(64),
+    createdAt: new Date(),
   },
   {
     id: 'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
@@ -55,6 +61,7 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
       'RXFS7bN5gSsnKqSZv208s8EtRwwsHNji3CQuCUlD3jDwlzQ7gfFpsrtf14klpuYF',
     version: 1,
     viewKey: nanoid(64),
+    createdAt: new Date(),
   },
 ]
 
@@ -96,6 +103,22 @@ export const ACCOUNT_BALANCES: Record<
       unconfirmedCount: 3,
       asset: DEFAULT_ASSET,
     },
+    {
+      confirmed: BigInt(12366),
+      unconfirmed: BigInt(327),
+      pending: BigInt(1234),
+      pendingCount: 12,
+      unconfirmedCount: 3,
+      asset: TEST_ASSET,
+    },
+    {
+      confirmed: BigInt(12367),
+      unconfirmed: BigInt(327),
+      pending: BigInt(1234),
+      pendingCount: 12,
+      unconfirmedCount: 3,
+      asset: DEMO_ASSET,
+    },
   ],
   H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6: [
     {
@@ -106,15 +129,63 @@ export const ACCOUNT_BALANCES: Record<
       unconfirmedCount: 1,
       asset: DEFAULT_ASSET,
     },
+    {
+      confirmed: BigInt(8481),
+      unconfirmed: BigInt(164),
+      pending: BigInt(874),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: DEMO_ASSET,
+    },
+    {
+      confirmed: BigInt(8481),
+      unconfirmed: BigInt(164),
+      pending: BigInt(874),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: TEST_ASSET,
+    },
   ],
   q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7: [
     {
-      confirmed: BigInt(1222255000002254),
+      confirmed: BigInt(122520002254),
       unconfirmed: BigInt(164),
       pending: BigInt(2200000022310),
       pendingCount: 8,
       unconfirmedCount: 1,
       asset: DEFAULT_ASSET,
+    },
+    {
+      confirmed: BigInt(12254),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: DEMO_ASSET,
+    },
+    {
+      confirmed: BigInt(122224),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: TEST_ASSET,
+    },
+    {
+      confirmed: BigInt(1222254),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: IRON_BTC_ASSET,
+    },
+    {
+      confirmed: BigInt(125000254),
+      unconfirmed: BigInt(164),
+      pending: BigInt(2200000022310),
+      pendingCount: 8,
+      unconfirmedCount: 1,
+      asset: IRON_ETH_ASSET,
     },
   ],
 }
@@ -135,6 +206,7 @@ class DemoAccountsManager {
           spendingKey: nanoid(64),
           viewKey: nanoid(64),
           version: 1,
+          createdAt: new Date(),
         }
         DEMO_ACCOUNTS.push(account)
         ACCOUNT_SETTINGS.push({
@@ -167,14 +239,15 @@ class DemoAccountsManager {
       viewKey: nanoid(64),
       version: 1,
       mnemonicPhrase: randomWords({ exactly: 24, maxLength: 8 }),
+      createdAt: new Date(),
     }
   }
 
-  async submitAccount(createParams: AccountCreateParams): Promise<Account> {
+  async submitAccount(createParams: AccountValue): Promise<Account> {
     return this.create(createParams.name)
   }
 
-  import(account: Omit<AccountValue, 'id'>): Promise<AccountValue> {
+  import(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
     return new Promise(resolve => {
       setTimeout(() => {
         if (DEMO_ACCOUNTS.find(({ name }) => name === account.name)) {
@@ -261,7 +334,6 @@ class DemoAccountsManager {
         assets: ACCOUNT_BALANCES[account.id].slice(1),
       }
       account.order = accountIndex
-      account.mnemonicPhrase = randomWords({ exactly: 24, maxLength: 8 })
     }
 
     return new Promise(resolve => setTimeout(() => resolve(account), 500))

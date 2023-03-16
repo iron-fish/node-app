@@ -333,7 +333,7 @@ class DemoTransactionsManager {
               transaction.inputs.find(note =>
                 note.memo?.toLowerCase().includes(search)
               ) ||
-              transaction.amount.toString().includes(search))
+              transaction.amount?.value.toString().includes(search))
         )
         transactions.sort(
           (a, b) =>
@@ -366,7 +366,7 @@ class DemoTransactionsManager {
               transaction.inputs.find(note =>
                 note.memo?.toLowerCase().includes(search)
               ) ||
-              transaction.amount.toString().includes(search))
+              transaction.amount?.value.toString().includes(search))
         )
         transactions.sort(
           (a, b) =>
@@ -401,13 +401,19 @@ class DemoTransactionsManager {
     to: string,
     amount: bigint,
     memo: string,
-    fee: bigint
+    fee: bigint,
+    assetId: string
   ): Promise<Transaction> {
     return new Promise(resolve => {
       setTimeout(() => {
         const transaction: Transaction = {
           amount: { value: amount, asset: DEFAULT_ASSET },
-          assetAmounts: [],
+          assetAmounts: [
+            {
+              value: amount,
+              asset: DEMO_ASSETS.find(({ id }) => id === assetId),
+            },
+          ],
           created: new Date(),
           creator: true,
           fee: fee.toString(),

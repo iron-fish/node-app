@@ -29,14 +29,14 @@ const primaryNavItems: NavItemProps[] = [
   {
     hotkey: 'S',
     to: ROUTES.SEND,
-    label: 'Send $IRON',
+    label: 'Send',
     icon: IconSend,
     aliases: [],
   },
   {
     hotkey: 'R',
     to: ROUTES.RECEIVE,
-    label: 'Receive $IRON',
+    label: 'Receive',
     icon: IconReceive,
     aliases: [],
   },

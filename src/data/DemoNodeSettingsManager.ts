@@ -46,7 +46,7 @@ class DemoNodeSettingsManager {
     })
   }
 
-  clearConfig(): void {
+  async clearConfig(): Promise<void> {
     DEMO_NODE_CONFIG = {}
   }
 }

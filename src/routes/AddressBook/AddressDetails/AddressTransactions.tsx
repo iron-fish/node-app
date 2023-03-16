@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState, useDeferredValue } from 'react'
 import { Flex, chakra, NAMED_COLORS, Button, Box } from '@ironfish/ui-kit'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import SearchSortField from 'Components/Search&Sort'
@@ -26,12 +26,13 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
 }) => {
   const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
+  const deferredSearchTerm = useDeferredValue($searchTerm)
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
   const {
     data: transactions,
     loaded,
     actions: { reload },
-  } = useTransactions(address, $searchTerm, $sortOrder)
+  } = useTransactions(address, deferredSearchTerm, $sortOrder)
 
   useEffect(() => {
     let interval: NodeJS.Timer
