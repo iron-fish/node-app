@@ -1,12 +1,5 @@
 import { FC, useEffect, useState, useDeferredValue } from 'react'
-import {
-  Box,
-  Button,
-  chakra,
-  NAMED_COLORS,
-  useIronToast,
-} from '@ironfish/ui-kit'
-import { ChevronRightIcon } from '@chakra-ui/icons'
+import { Box, chakra, useIronToast } from '@ironfish/ui-kit'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAccountTransactions'
 import { useNavigate } from 'react-router-dom'
@@ -18,7 +11,7 @@ import EmptyOverview from 'Components/EmptyOverview'
 import ContactsPreview from 'Components/ContactsPreview'
 import differenceBy from 'lodash/differenceBy'
 import intersectionBy from 'lodash/intersectionBy'
-import WalletCommonTable from 'Components/WalletCommonTable'
+import WalletCommonTable, { ACTIONS_COLUMN } from 'Components/WalletCommonTable'
 import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 import { formatDate } from 'Utils/formatDate'
 
@@ -200,23 +193,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
                 <chakra.h5>"{transaction.outputs?.at(0)?.memo}"</chakra.h5>
               ),
             },
-            {
-              key: 'transaction-details-column',
-              label: '',
-              ItemProps: {
-                marginLeft: 'auto',
-                width: 'min-content',
-              },
-              render: () => (
-                <Button
-                  variant="link"
-                  color={NAMED_COLORS.LIGHT_BLUE}
-                  rightIcon={<ChevronRightIcon />}
-                >
-                  <chakra.h5>View Details</chakra.h5>
-                </Button>
-              ),
-            },
+            ACTIONS_COLUMN,
           ]}
         />
       )}

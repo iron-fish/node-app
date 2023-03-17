@@ -4,17 +4,14 @@ import {
   Button,
   Flex,
   Icon,
-  IconButton,
   chakra,
   NAMED_COLORS,
   CopyValueToClipboard,
   useBreakpointValue,
-  useColorModeValue,
   useIronToast,
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SendIcon from 'Svgx/send'
-import Caret from 'Svgx/caret-icon'
 import HexFishCircle from 'Components/HexFishCircle'
 import { truncateHash } from 'Utils/hash'
 import SimpleTable from 'Components/SimpleTable'
@@ -28,6 +25,7 @@ import AddContactModal from './AddContactModal'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { stringToColor } from 'Utils/stringToColor'
 import EmptyOverview from 'Components/EmptyOverview'
+import { ACTIONS_COLUMN } from 'Components/WalletCommonTable'
 
 const AddContactButton: FC<{
   onAdd: (name: string, address: string) => Promise<Contact>
@@ -64,16 +62,6 @@ const AddContactButton: FC<{
 
 const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
   const navigate = useNavigate()
-  const $colors = useColorModeValue(
-    {
-      hoverBorder: NAMED_COLORS.DEEP_BLUE,
-      caretColor: NAMED_COLORS.PALE_GREY,
-    },
-    {
-      hoverBorder: NAMED_COLORS.WHITE,
-      caretColor: NAMED_COLORS.PALE_GREY,
-    }
-  )
   const $getAddressLabel = useBreakpointValue({
     base: (address: string) => truncateHash(address, 2, 9),
     md: (address: string) => truncateHash(address, 2, 16),
@@ -192,30 +180,12 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
                         <h5>Send</h5>
                       </Button>
                     </Box>
-                    <IconButton
-                      aria-label="book-details"
-                      variant="ghost"
-                      icon={<Caret />}
-                      _active={{ bg: 'none' }}
-                      _hover={{ bg: 'none' }}
-                    />
                   </Flex>
                 )
               },
             },
+            ACTIONS_COLUMN,
           ]}
-          sx={{
-            tr: {
-              '[aria-label="book-details"]': {
-                color: $colors.caretColor,
-              },
-              _hover: {
-                '[aria-label="book-details"]': {
-                  color: $colors.hoverBorder,
-                },
-              },
-            },
-          }}
         />
       )}
     </>

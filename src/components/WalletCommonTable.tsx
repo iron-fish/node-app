@@ -1,9 +1,15 @@
 import { FC } from 'react'
-import { CommonTable } from '@ironfish/ui-kit'
+import {
+  CommonTable,
+  useColorModeValue,
+  NAMED_COLORS,
+  Flex,
+} from '@ironfish/ui-kit'
 import {
   CommonTableProps,
   TableComponentProps,
 } from '@ironfish/ui-kit/dist/components/Table/types'
+import Caret from 'Svgx/caret-icon'
 
 const borderStyle = {
   base: 'none !important',
@@ -53,12 +59,48 @@ const DEFAULT_TABLE_ROW_ITEM_PROPS: TableComponentProps = {
   },
 }
 
+export const ACTIONS_COLUMN = {
+  key: 'actions-column',
+  label: '',
+  WrapperProps: {
+    alignSelf: 'center',
+  },
+  render: () => (
+    <Flex w="100%">
+      <Caret ml="auto" mr="-0.4375rem" aria-label="actions-column" />
+    </Flex>
+  ),
+}
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WalletCommonTable: FC<CommonTableProps<any>> = props => {
+  const $colors = useColorModeValue(
+    {
+      hoverBorder: NAMED_COLORS.DEEP_BLUE,
+      caretColor: NAMED_COLORS.PALE_GREY,
+    },
+    {
+      hoverBorder: NAMED_COLORS.WHITE,
+      caretColor: NAMED_COLORS.PALE_GREY,
+    }
+  )
+
   return (
     <CommonTable
       tableComponentProps={DEFAULT_TABLE_PROPS}
       tableComponentRowItemProps={DEFAULT_TABLE_ROW_ITEM_PROPS}
+      sx={{
+        tr: {
+          '[aria-label="actions-column"]': {
+            color: $colors.caretColor,
+            transition: 'color 300ms ease-in-out',
+          },
+          _hover: {
+            '[aria-label="actions-column"]': {
+              color: $colors.hoverBorder,
+            },
+          },
+        },
+      }}
       {...props}
     />
   )

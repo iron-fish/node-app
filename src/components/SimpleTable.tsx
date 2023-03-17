@@ -22,9 +22,20 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
   ...rest
 }) => {
   const $colors = useColorModeValue(
-    { bg: NAMED_COLORS.WHITE, borderColor: NAMED_COLORS.LIGHT_GREY },
-    { bg: NAMED_COLORS.DARKER_GREY, borderColor: NAMED_COLORS.DARK_GREY }
+    {
+      bg: NAMED_COLORS.WHITE,
+      borderColor: NAMED_COLORS.LIGHT_GREY,
+      hoverBorder: NAMED_COLORS.DEEP_BLUE,
+      caretColor: NAMED_COLORS.PALE_GREY,
+    },
+    {
+      bg: NAMED_COLORS.DARKER_GREY,
+      borderColor: NAMED_COLORS.DARK_GREY,
+      hoverBorder: NAMED_COLORS.WHITE,
+      caretColor: NAMED_COLORS.PALE_GREY,
+    }
   )
+
   return (
     <Table {...rest}>
       <Thead>
@@ -51,6 +62,17 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
             border="0.063rem solid"
             borderRadius="0.25rem"
             borderColor="inherit"
+            sx={{
+              '[aria-label="actions-column"]': {
+                color: $colors.caretColor,
+                transition: 'color 300ms ease-in-out',
+              },
+              _hover: {
+                '[aria-label="actions-column"]': {
+                  color: $colors.hoverBorder,
+                },
+              },
+            }}
             boxShadow="0 0.25rem 0.668rem rgba(0, 0, 0, 0.04)"
             p={{ base: '1rem 0', lg: '1rem' }}
             cursor={item && onRowClick ? 'pointer' : 'default'}
