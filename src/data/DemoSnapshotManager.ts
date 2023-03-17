@@ -65,7 +65,7 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
     if (status === ProgressStatus.UNARHIVING && !this.applyError) {
       this.stat.hasError = true
       this.stat.error =
-        'Cannot unarchiving snapshot. Please check, that archive is not used by another applications.'
+        'Cannot unarchive snapshot. Please check that archive is not used by other applications.'
       this.applyError = true
       return
     }

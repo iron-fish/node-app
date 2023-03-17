@@ -69,7 +69,8 @@ class SnapshotManager implements IIronfishSnapshotManager {
     if (diskSpace.free < manifest.file_size * 2) {
       return {
         hasError: true,
-        error: "You don't have enougth free space in selected folder.",
+        error:
+          "You don't have enough space to download the snapshot. Please choose another folder.",
       }
     }
 
@@ -95,8 +96,7 @@ class SnapshotManager implements IIronfishSnapshotManager {
 
     if (result.hasError) {
       this.progress.hasError = true
-      this.progress.error =
-        "You don't have enough space to download the snapshot. Please choose another folder."
+      this.progress.error = result.error
       return
     }
 
