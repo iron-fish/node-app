@@ -31,7 +31,7 @@ const AccountPreview: FC<CutAccount> = ({
   balances,
 }) => {
   const navigate = useNavigate()
-  const { loaded: synced } = useDataSync()
+  const { synced } = useDataSync()
   const $colors = useColorModeValue(
     {
       bg: NAMED_COLORS.WHITE,

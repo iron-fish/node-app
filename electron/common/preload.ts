@@ -6,3 +6,6 @@ contextBridge.exposeInMainWorld(
     ipcRenderer.invoke('theme-mode-change', mode)
   }
 )
+contextBridge.exposeInMainWorld('selectFolder', () =>
+  ipcRenderer.invoke('dialog:openDirectory')
+)

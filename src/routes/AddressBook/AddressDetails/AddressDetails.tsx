@@ -30,7 +30,7 @@ const AddressDetails = () => {
   const navigate = useNavigate()
   const $color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
   const [{ data: contact }, updateContact, deleteContact] = useContact(identity)
-  const { loaded: synced } = useDataSync()
+  const { synced } = useDataSync()
 
   return (
     <Flex width="100%" height="100%" direction="column">

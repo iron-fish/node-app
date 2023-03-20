@@ -83,7 +83,7 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
 
-  const { loaded: synced } = useDataSync()
+  const { synced } = useDataSync()
   const [{ data: contacts, loaded }, , reloadContacts] = useAddressBook(
     $searchTerm,
     $sortOrder

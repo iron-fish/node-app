@@ -3,6 +3,10 @@ import noop from 'lodash/noop'
 import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
 import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
+import {
+  ProgressStatus,
+  SnapshotManifest,
+} from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { Payment } from 'Types/Transaction'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
@@ -87,6 +91,16 @@ export const IronFishManager: IIronfishManager = {
         payment.assetId
       ),
   },
+  snapshot: {
+    checkPath: (manifest: SnapshotManifest, path?: string) =>
+      Promise.resolve({ hasError: false, error: undefined }),
+    start: (path?: string) => window.DemoDataManager.snapshot.start(path),
+    apply: () => window.DemoDataManager.snapshot.apply(),
+    retry: () => window.DemoDataManager.snapshot.retry(),
+    manifest: () => window.DemoDataManager.snapshot.manifest(),
+    status: () => window.DemoDataManager.snapshot.status(),
+    reset: () => window.DemoDataManager.snapshot.reset(),
+  },
   nodeSettings: {
     getConfig: () => window.DemoDataManager.nodeSettings.getConfig(),
     setValues: (values: Partial<ConfigOptions>) =>
@@ -97,8 +111,12 @@ export const IronFishManager: IIronfishManager = {
   nodeStatus: () => window.DemoDataManager.getNodeStatus(),
   peers: () => window.DemoDataManager.getNodePeers(),
   hasAnyAccount: () => window.DemoDataManager.hasAnyAccount(),
-  sync: () => Promise.resolve(),
+  sync: () => window.DemoDataManager.node.sync(),
+  stopSyncing: () => window.DemoDataManager.node.stopSyncing(),
   initialize: () => window.DemoDataManager.initialize(),
+  chainProgress: () => window.DemoDataManager.node.chainProgress(),
+  downloadChainSnapshot: (path: string) =>
+    window.DemoDataManager.downloadSnapshot(path),
   start: () => window.DemoDataManager.start(),
   stop: () => window.DemoDataManager.stop(),
   status: () => window.DemoDataManager.initStatus(),

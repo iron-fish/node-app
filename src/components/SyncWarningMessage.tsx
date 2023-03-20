@@ -10,7 +10,7 @@ const SyncWarningMessage: FC<SyncWarningMessageProps> = ({
   message = 'Your account balance might not be accurate while you’re syncing to the blockchain',
   ...rest
 }) => {
-  const { loaded: synced } = useDataSync()
+  const { synced } = useDataSync()
   const $colors = useColorModeValue(
     { text: '#7E7400', bg: '#FFF9BC' },
     {

@@ -1,8 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { AccountValue, ConfigOptions } from '@ironfish/sdk'
 
-import SortType from 'Types/SortType'
-import IStorage from 'Types/IStorage'
 import Entity from 'Types/Entity'
 import {
   IIronfishManager,
@@ -12,8 +10,13 @@ import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfis
 import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
 import { Payment } from 'Types/Transaction'
 import '../common/preload'
+import IStorage from 'Types/IStorage'
+import SortType from 'Types/SortType'
+import {
+  IronfishSnaphotManagerAction,
+  SnapshotManifest,
+} from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { IronfishAssetManagerActions } from 'Types/IronfishManager/IIronfishAssetManager'
-import AccountCreateParams from 'Types/AccountCreateParams'
 import { NodeSettingsManagerAction } from 'Types/IronfishManager/INodeSettingsManager'
 
 function wrapMethodsWithCallbacks<T extends Entity>(
@@ -47,14 +50,71 @@ contextBridge.exposeInMainWorld('IronfishManager', {
     ),
   start: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.START),
-  stop: () =>
-    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.STOP),
+  stop: (changeStatus?: boolean) =>
+    ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.STOP,
+      changeStatus
+    ),
   nodeStatus: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.NODE_STATUS),
+  chainProgress: () =>
+    ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.CHAIN_PROGRESS
+    ),
+  downloadChainSnapshot: (path: string) =>
+    ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.DOWNLOAD_SNAPSHOT,
+      path
+    ),
   sync: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.SYNC),
+  stopSyncing: () =>
+    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.STOP_SYNCING),
   peers: () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.PEERS),
+  snapshot: {
+    checkPath: (manifest: SnapshotManifest, path?: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.CHECK_PATH,
+        manifest,
+        path
+      ),
+    start: (path?: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.START,
+        path
+      ),
+    apply: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.APPLY
+      ),
+    retry: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.RETRY
+      ),
+    reset: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.RESET
+      ),
+    status: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.STATUS
+      ),
+    manifest: () =>
+      ipcRenderer.invoke(
+        'ironfish-manager-snapshot',
+        IronfishSnaphotManagerAction.MANIFEST
+      ),
+  },
   getNodeConfig: () =>
     ipcRenderer.invoke(
       'ironfish-manager',

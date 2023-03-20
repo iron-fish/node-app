@@ -38,6 +38,7 @@ module.exports = {
   resolve: {
     fallback: {
       stream: false,
+      path: false,
     },
     alias: {
       Components: resolve('./src/components'),
