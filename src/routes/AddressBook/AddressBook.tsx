@@ -63,9 +63,10 @@ const AddContactButton: FC<{
 const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
   const navigate = useNavigate()
   const $getAddressLabel = useBreakpointValue({
-    base: (address: string) => truncateHash(address, 2, 9),
-    md: (address: string) => truncateHash(address, 2, 16),
-    lg: (address: string) => address,
+    base: (address: string) => truncateHash(address, 2, 3),
+    sm: (address: string) => truncateHash(address, 2, 6),
+    md: (address: string) => truncateHash(address, 2, 12),
+    lg: (address: string) => truncateHash(address, 2, 18),
   })
 
   const [$searchTerm, $setSearchTerm] = useState('')
