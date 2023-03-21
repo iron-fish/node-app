@@ -81,8 +81,17 @@ ipcMain.handle(
 
 ipcMain.handle(
   'ironfish-manager-snapshot',
-  (e, action: IronfishSnaphotManagerAction, ...args): Promise<any> =>
-    ironfishManager.snapshot[action](...args)
+  (e, action: IronfishSnaphotManagerAction, ...args): Promise<any> =>{
+    let result
+    try {
+      result = ironfishManager.snapshot[action](...args)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error)
+    }
+
+    return result
+  }
 )
 
 process.on('exit', shutdownNode)

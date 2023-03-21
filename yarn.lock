@@ -10686,6 +10686,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"electron-log@npm:^5.0.0-beta.16":
+  version: 5.0.0-beta.19
+  resolution: "electron-log@npm:5.0.0-beta.19"
+  checksum: 31b45d0ce1f9d634db6d275304ffa170c0352bb61a41fa98ae301f19cc80b4a7e807e174ac9a9de90b96d1360365c3f84164ff9ecbba59ddd06b8b1958054ffe
+  languageName: node
+  linkType: hard
+
 "electron-notarize@npm:^1.1.1":
   version: 1.2.2
   resolution: "electron-notarize@npm:1.2.2"
@@ -21550,6 +21557,7 @@ __metadata:
     electron: ^19.0.2
     electron-devtools-installer: ^3.2.0
     electron-is-dev: ^2.0.0
+    electron-log: ^5.0.0-beta.16
     electron-reload: ^2.0.0-alpha.1
     electron-squirrel-startup: ^1.0.0
     enzyme: 3.11.0

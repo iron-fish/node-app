@@ -28,7 +28,7 @@ import SnapshotManager from './SnapshotManager'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
-  protected sdk: IronfishSdk
+  sdk: IronfishSdk
   protected node: IronfishNode
   accounts: AccountManager
   transactions: TransactionManager
