@@ -4,7 +4,7 @@ import SortType from './SortType'
 interface IStorage<T extends Entity> {
   list: (searchTerm: string, sort: SortType) => Promise<T[]>
   get: (identity: string) => Promise<T | null>
-  add: (entity: Omit<T, '_id'>) => Promise<T>
+  add: (entity: Partial<Omit<T, '_id'>>) => Promise<T>
   update: (
     identity: string,
     fieldsToUpdate: Partial<Omit<T, '_id'>>

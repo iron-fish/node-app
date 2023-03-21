@@ -26,8 +26,8 @@ import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import AddContactModal from './AddContactModal'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { stringToColor } from 'Utils/stringToColor'
 import EmptyOverview from 'Components/EmptyOverview'
+import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 
 const AddContactButton: FC<{
   onAdd: (name: string, address: string) => Promise<Contact>
@@ -133,7 +133,7 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
                 <Flex alignItems="center">
                   <HexFishCircle
                     mr="1rem"
-                    bg={stringToColor(contact._id, 73)}
+                    bg={accountGradientByOrder(contact.order)}
                   />
                   <h5>{contact.name}</h5>
                 </Flex>

@@ -48,6 +48,11 @@
   font-display: swap;
 }
 
+@keyframes opacity-animation {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
 html,
 body {
   font-family: 'favorit-regular' !important;

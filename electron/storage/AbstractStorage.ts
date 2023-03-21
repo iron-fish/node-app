@@ -28,7 +28,7 @@ abstract class AbstractStorage<T extends Entity> implements IStorage<T> {
     })
   }
 
-  add(entity: Omit<T, '_id'>): Promise<T> {
+  add(entity: Partial<Omit<T, '_id'>>): Promise<T> {
     return new Promise((resolve, reject) => {
       this.storage.insert(entity, (err, result) => {
         if (err) {
