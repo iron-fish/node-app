@@ -23,14 +23,14 @@ import ContactSettings from './ContactSettings'
 import useContact from 'Hooks/addressBook/useContact'
 import ROUTES from 'Routes/data'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { stringToColor } from 'Utils/stringToColor'
+import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 
 const AddressDetails = () => {
   const { identity } = useParams()
   const navigate = useNavigate()
   const $color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
   const [{ data: contact }, updateContact, deleteContact] = useContact(identity)
-  const { loaded: synced } = useDataSync()
+  const { synced } = useDataSync()
 
   return (
     <Flex width="100%" height="100%" direction="column">
@@ -40,7 +40,11 @@ const AddressDetails = () => {
         label={'Back to address book'}
       />
       <Flex mb="0.5rem" align="center">
-        <HexFishCircle mr="1rem" bg={stringToColor(identity, 73)} />
+        <HexFishCircle
+          mr="1rem"
+          bg={contact ? accountGradientByOrder(contact.order) : 'white'}
+          isAnimated={!contact}
+        />
         <chakra.h3 mr="1rem">{contact?.name}</chakra.h3>
         <CopyValueToClipboard
           containerProps={{

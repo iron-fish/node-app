@@ -1,6 +1,6 @@
 import { Flex, HexFish, FlexProps, NAMED_COLORS } from '@ironfish/ui-kit'
 
-const HexFishCircle = (props: FlexProps) => {
+const HexFishCircle = (props: FlexProps & { isAnimated?: boolean }) => {
   return (
     <Flex
       border="0.125rem solid"
@@ -13,6 +13,11 @@ const HexFishCircle = (props: FlexProps) => {
       minW="2.8rem"
       justifyContent="center"
       alignItems="center"
+      animation={
+        props.isAnimated
+          ? 'opacity-animation 1s ease-in alternate infinite'
+          : undefined
+      }
       {...props}
     >
       <HexFish style={{ height: '1rem' }} />

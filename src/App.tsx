@@ -16,7 +16,7 @@ import Send from 'Routes/Send/Send'
 import AddressDetails from 'Routes/AddressBook/AddressDetails'
 import NodeOverview from 'Routes/NodeOverview/NodeOverview'
 import ReceiveMoney from 'Routes/Receive/ReceiveMoney'
-import { DataSyncProvider } from './providers/DataSyncProvider'
+import Providers from './providers'
 import ElectronThemeChangeHandler from 'Components/ElectronThemeChangeHandler'
 import Initializing from 'Routes/Initializing'
 import TransactionOverview from 'Routes/Transaction/TransactionOverview'
@@ -39,10 +39,10 @@ function App() {
   return (
     <IronFishUIProvider theme={{ breakpoints }}>
       <ElectronThemeChangeHandler />
-      <DataSyncProvider>
-        <HashRouter>
-          <Routes>
-            <Route element={<Initializing />}>
+      <HashRouter>
+        <Routes>
+          <Route element={<Initializing />}>
+            <Route element={<Providers />}>
               <Route element={<CreateLayout />}>
                 <Route path={ROUTES.ONBOARDING} element={<Action />} />
                 <Route path={ROUTES.CREATE} element={<CreateAccount />} />
@@ -67,9 +67,9 @@ function App() {
                 {/* <Route path={ROUTES.MINER} element={<Miner />} /> */}
               </Route>
             </Route>
-          </Routes>
-        </HashRouter>
-      </DataSyncProvider>
+          </Route>
+        </Routes>
+      </HashRouter>
     </IronFishUIProvider>
   )
 }

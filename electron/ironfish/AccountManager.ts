@@ -220,32 +220,34 @@ class AccountManager
       throw new Error(`Account with id=${id} was not found.`)
     }
 
-    const head = await account.getHead()
-    if (!head) {
-      return {
-        default: {
-          unconfirmed: BigInt(0),
-          confirmed: BigInt(0),
-          unconfirmedCount: 0,
-          asset: await this.assetManager.get(NativeAsset.nativeId()),
-        },
-        assets: [],
-      }
+    const assetBalances: AccountBalance[] = []
+    let defaultBalance: AccountBalance = {
+      unconfirmed: BigInt(0),
+      confirmed: BigInt(0),
+      unconfirmedCount: 0,
+      asset: await this.assetManager.get(NativeAsset.nativeId()),
     }
 
-    const assetBalances: AccountBalance[] = []
-    let defaultBalance: AccountBalance
-    for await (const balance of this.node.wallet.getBalances(account)) {
-      const asset: Asset = await this.assetManager.get(balance.assetId)
-      const accountBalance: AccountBalance = {
-        ...balance,
-        asset: asset,
-      }
+    const head = await account.getHead()
+    if (head) {
+      //This try/catch block is needed for catching errors on getting balances witn swithed off node.syncer.peerNetwork
+      try {
+        for await (const balance of this.node.wallet.getBalances(account)) {
+          const asset: Asset = await this.assetManager.get(balance.assetId)
+          const accountBalance: AccountBalance = {
+            ...balance,
+            asset: asset,
+          }
 
-      if (balance.assetId.equals(NativeAsset.nativeId())) {
-        defaultBalance = accountBalance
-      } else {
-        assetBalances.push(accountBalance)
+          if (balance.assetId.equals(NativeAsset.nativeId())) {
+            defaultBalance = accountBalance
+          } else {
+            assetBalances.push(accountBalance)
+          }
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e)
       }
     }
 

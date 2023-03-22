@@ -4,17 +4,14 @@ import {
   Button,
   Flex,
   Icon,
-  IconButton,
   chakra,
   NAMED_COLORS,
   CopyValueToClipboard,
   useBreakpointValue,
-  useColorModeValue,
   useIronToast,
 } from '@ironfish/ui-kit'
 import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SendIcon from 'Svgx/send'
-import Caret from 'Svgx/caret-icon'
 import HexFishCircle from 'Components/HexFishCircle'
 import { truncateHash } from 'Utils/hash'
 import SimpleTable from 'Components/SimpleTable'
@@ -26,8 +23,9 @@ import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import AddContactModal from './AddContactModal'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { stringToColor } from 'Utils/stringToColor'
 import EmptyOverview from 'Components/EmptyOverview'
+import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
+import { ACTIONS_COLUMN } from 'Components/WalletCommonTable'
 
 const AddContactButton: FC<{
   onAdd: (name: string, address: string) => Promise<Contact>
@@ -64,26 +62,17 @@ const AddContactButton: FC<{
 
 const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
   const navigate = useNavigate()
-  const $colors = useColorModeValue(
-    {
-      hoverBorder: NAMED_COLORS.DEEP_BLUE,
-      caretColor: NAMED_COLORS.PALE_GREY,
-    },
-    {
-      hoverBorder: NAMED_COLORS.WHITE,
-      caretColor: NAMED_COLORS.PALE_GREY,
-    }
-  )
   const $getAddressLabel = useBreakpointValue({
-    base: (address: string) => truncateHash(address, 2, 9),
-    md: (address: string) => truncateHash(address, 2, 16),
-    lg: (address: string) => address,
+    base: (address: string) => truncateHash(address, 2, 3),
+    sm: (address: string) => truncateHash(address, 2, 6),
+    md: (address: string) => truncateHash(address, 2, 12),
+    lg: (address: string) => truncateHash(address, 2, 18),
   })
 
   const [$searchTerm, $setSearchTerm] = useState('')
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.ASC)
 
-  const { loaded: synced } = useDataSync()
+  const { synced } = useDataSync()
   const [{ data: contacts, loaded }, , reloadContacts] = useAddressBook(
     $searchTerm,
     $sortOrder
@@ -133,7 +122,7 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
                 <Flex alignItems="center">
                   <HexFishCircle
                     mr="1rem"
-                    bg={stringToColor(contact._id, 73)}
+                    bg={accountGradientByOrder(contact.order)}
                   />
                   <h5>{contact.name}</h5>
                 </Flex>
@@ -192,30 +181,12 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
                         <h5>Send</h5>
                       </Button>
                     </Box>
-                    <IconButton
-                      aria-label="book-details"
-                      variant="ghost"
-                      icon={<Caret />}
-                      _active={{ bg: 'none' }}
-                      _hover={{ bg: 'none' }}
-                    />
                   </Flex>
                 )
               },
             },
+            ACTIONS_COLUMN,
           ]}
-          sx={{
-            tr: {
-              '[aria-label="book-details"]': {
-                color: $colors.caretColor,
-              },
-              _hover: {
-                '[aria-label="book-details"]': {
-                  color: $colors.hoverBorder,
-                },
-              },
-            },
-          }}
         />
       )}
     </>

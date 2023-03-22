@@ -1,6 +1,5 @@
 import { FC, useEffect, useState, useDeferredValue } from 'react'
-import { Flex, chakra, NAMED_COLORS, Button, Box } from '@ironfish/ui-kit'
-import { ChevronRightIcon } from '@chakra-ui/icons'
+import { Flex, chakra, Box } from '@ironfish/ui-kit'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAddressTransactions'
 import SortType from 'Types/SortType'
@@ -11,7 +10,7 @@ import ROUTES from 'Routes/data'
 import ContactsPreview from 'Components/ContactsPreview'
 import Contact from 'Types/Contact'
 import TransactionStatusView from 'Components/TransactionStatusView'
-import WalletCommonTable from 'Components/WalletCommonTable'
+import WalletCommonTable, { ACTIONS_COLUMN } from 'Components/WalletCommonTable'
 import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 import { formatDate } from 'Utils/formatDate'
 
@@ -134,23 +133,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
                 <h5>{transaction.outputs?.at(0)?.memo}</h5>
               ),
             },
-            {
-              key: 'actions',
-              label: '',
-              ItemProps: {
-                marginLeft: 'auto',
-                width: 'min-content',
-              },
-              render: () => (
-                <Button
-                  variant="link"
-                  color={NAMED_COLORS.LIGHT_BLUE}
-                  rightIcon={<ChevronRightIcon />}
-                >
-                  <chakra.h5>View Details</chakra.h5>
-                </Button>
-              ),
-            },
+            ACTIONS_COLUMN,
           ]}
         />
       )}

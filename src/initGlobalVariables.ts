@@ -1,8 +1,8 @@
-import DemoDataManager from './data/DemoDataManager'
-import IStorage from 'Types/IStorage'
-import Contact from 'Types/Contact'
+import DemoDataManager from 'Data/DemoDataManager'
 import AccountSettings from 'Types/AccountSettings'
+import Contact from 'Types/Contact'
 import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
+import IStorage from 'Types/IStorage'
 
 declare global {
   interface Window {
@@ -11,6 +11,7 @@ declare global {
     AddressBookStorage: IStorage<Contact>
     AccountSettingsStorage: IStorage<AccountSettings>
     setElectronThemeMode: (mode: string) => void
+    selectFolder: () => Promise<string>
     IronfishManager: IIronfishManager
   }
 }

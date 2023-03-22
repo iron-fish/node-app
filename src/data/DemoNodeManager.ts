@@ -79,33 +79,60 @@ const PEERS: Peer[] = Array(23)
   })
 
 class DemoNodeManager {
+  private interval: NodeJS.Timer
+  complete(): void {
+    STATUS.blockSyncer.syncing.progress = 0.93
+    STATUS.blockchain.head = Math.round(
+      Number(STATUS.blockchain.totalSequences) * 0.93
+    ).toString()
+    this.sync()
+  }
+  private update() {
+    const head = Number(STATUS.blockchain.head)
+    const total = Number(STATUS.blockchain.totalSequences)
+    if (head === total) {
+      STATUS.blockSyncer.status = BlockSyncerStatusType.IDLE
+    }
+    if (STATUS.blockSyncer.status === BlockSyncerStatusType.SYNCING) {
+      STATUS.blockchain.synced = false
+      STATUS.blockSyncer.syncing.blockSpeed = Math.random() * 10
+      STATUS.blockSyncer.syncing.speed =
+        total - head > STATUS.blockSyncer.syncing.speed
+          ? STATUS.blockSyncer.syncing.speed
+          : total - head
+      STATUS.blockchain.head = (
+        head +
+        (total - head > STATUS.blockSyncer.syncing.speed
+          ? STATUS.blockSyncer.syncing.speed
+          : total - head)
+      ).toString()
+      STATUS.blockSyncer.syncing.progress = head / total
+    } else {
+      STATUS.blockchain.synced = true
+      STATUS.blockSyncer.syncing.blockSpeed = BLOCK_SPEED
+      STATUS.blockSyncer.syncing.progress = 100.0
+    }
+  }
+  sync(): Promise<void> {
+    STATUS.blockSyncer.status = BlockSyncerStatusType.SYNCING
+    if (!this.interval) {
+      this.interval = setInterval(() => this.update(), 500)
+    }
+
+    return new Promise(resolve => setTimeout(resolve, 500))
+  }
+  stopSyncing(): Promise<void> {
+    STATUS.blockSyncer.status = BlockSyncerStatusType.STOPPED
+    if (this.interval) {
+      clearInterval(this.interval)
+      this.interval = null
+    }
+
+    return new Promise(resolve => setTimeout(resolve, 500))
+  }
   status(): Promise<NodeStatusResponse> {
     return new Promise(resolve => {
       setTimeout(() => {
-        const head = Number(STATUS.blockchain.head)
-        const total = Number(STATUS.blockchain.totalSequences)
-        if (head === total) {
-          STATUS.blockSyncer.status = BlockSyncerStatusType.IDLE
-        }
-        if (STATUS.blockSyncer.status === BlockSyncerStatusType.SYNCING) {
-          STATUS.blockchain.synced = false
-          STATUS.blockSyncer.syncing.blockSpeed = Math.random() * 1000
-          STATUS.blockSyncer.syncing.speed =
-            total - head > STATUS.blockSyncer.syncing.speed
-              ? STATUS.blockSyncer.syncing.speed
-              : total - head
-          STATUS.blockchain.head = (
-            head +
-            (total - head > STATUS.blockSyncer.syncing.speed
-              ? STATUS.blockSyncer.syncing.speed
-              : total - head)
-          ).toString()
-          STATUS.blockSyncer.syncing.progress = head / total
-        } else {
-          STATUS.blockchain.synced = true
-          STATUS.blockSyncer.syncing.blockSpeed = BLOCK_SPEED
-          STATUS.blockSyncer.syncing.progress = 100.0
-        }
         resolve({
           ...STATUS,
           cpu: {
@@ -142,6 +169,10 @@ class DemoNodeManager {
         resolve(PEERS)
       }, 500)
     })
+  }
+
+  chainProgress(): Promise<number> {
+    return Promise.resolve(STATUS.blockSyncer.syncing?.progress || null)
   }
 }
 

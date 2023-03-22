@@ -29,7 +29,7 @@ const OverviewBalance: FC<OverviewBalanceProps> = ({ account }) => {
   }, [balanceLoaded])
 
   const navigate = useNavigate()
-  const { loaded: synced } = useDataSync()
+  const { synced } = useDataSync()
   return (
     <Flex w="100%" pb="2rem">
       <Box

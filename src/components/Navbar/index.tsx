@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Flex, Box } from '@ironfish/ui-kit'
+import { Flex, Box, FlexProps } from '@ironfish/ui-kit'
 
 import IconHome from 'Svgx/home'
 import IconSend from 'Svgx/send'
@@ -14,7 +14,7 @@ import Nav from './Nav'
 import IronFishLogo from 'Svgx/IronFishLogo'
 import HexFishLogo from 'Svgx/hexfish'
 
-import ActiveStatus from './ActiveStatus'
+import StatusBar from './StatusBar'
 import ROUTES from 'Routes/data'
 import { NavItemProps } from './NavItem'
 
@@ -60,7 +60,7 @@ const primaryNavItems: NavItemProps[] = [
 //   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
 // ]
 
-export const Navbar: FC = () => {
+export const Navbar: FC<FlexProps> = props => {
   return (
     <Flex
       bg="inherit"
@@ -75,6 +75,7 @@ export const Navbar: FC = () => {
       flexDirection="column"
       alignItems="start"
       zIndex={100}
+      {...props}
     >
       <IronFishLogo
         m="0.5rem 1rem"
@@ -88,7 +89,7 @@ export const Navbar: FC = () => {
         <Nav list={primaryNavItems} />
       </Box>
       <Box marginTop="auto">
-        <ActiveStatus />
+        <StatusBar />
         <Toggle />
       </Box>
     </Flex>

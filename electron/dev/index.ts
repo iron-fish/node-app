@@ -3,8 +3,9 @@
 //@ts-nocheck
 import { ipcMain } from 'electron'
 import { IronfishManagerAction } from 'Types/IronfishManager/IIronfishManager'
-import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfishTransactionManager'
 import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
+import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfishTransactionManager'
 import initStorageCallbacks from '../common/initStorage'
 import { IronFishManager } from '../ironfish/IronFishManager'
 import '../common/index'
@@ -76,6 +77,12 @@ ipcMain.handle(
 
     return result
   }
+)
+
+ipcMain.handle(
+  'ironfish-manager-snapshot',
+  (e, action: IronfishSnaphotManagerAction, ...args): Promise<any> =>
+    ironfishManager.snapshot[action](...args)
 )
 
 process.on('exit', shutdownNode)

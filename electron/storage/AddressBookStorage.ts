@@ -17,6 +17,41 @@ class AddressBookStorage extends AbstractStorage<Contact> {
         },
       ]
     )
+
+    this.migrations()
+  }
+
+  private migrations() {
+    this.storage.update(
+      { order: { $exists: false } },
+      { $set: { order: 0 } },
+      { multi: true, returnUpdatedDocs: true }
+    )
+
+    let cnt = 1
+
+    this.storage.find({ order: 0 }).exec((err, docs) => {
+      docs.forEach(doc => {
+        this.storage.update(doc, { $set: { order: cnt } })
+        cnt++
+      })
+    })
+  }
+
+  getNextNumber(): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.storage
+        .find({})
+        .sort({ number: -1 })
+        .limit(1)
+        .exec((err, docs) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve((docs.at(0)?.number || 0) + 1)
+          }
+        })
+    })
   }
 
   list(searchTerm: string, sort: SortType): Promise<Contact[]> {
@@ -37,6 +72,13 @@ class AddressBookStorage extends AbstractStorage<Contact> {
           }
         })
     })
+  }
+
+  async add(entity: Omit<Contact, '_id' | 'order'>): Promise<Contact> {
+    const order = await this.getNextNumber()
+    const contact = await super.add({ ...entity, order: order })
+
+    return contact
   }
 }
 

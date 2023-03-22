@@ -23,6 +23,8 @@ import TransactionManager from './TransactionManager'
 import AssetManager from './AssetManager'
 import NodeSettingsManager from './NodeSettingsManager'
 import Peer from 'Types/Peer'
+import { IIronfishSnapshotManager } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import SnapshotManager from './SnapshotManager'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -32,6 +34,7 @@ export class IronFishManager implements IIronfishManager {
   transactions: TransactionManager
   assets: AssetManager
   nodeSettings: INodeSettingsManager
+  snapshot: IIronfishSnapshotManager
 
   private getPrivateIdentity(): PrivateIdentity | undefined {
     const networkIdentity = this.sdk.internal.get('networkIdentity')
@@ -92,6 +95,7 @@ export class IronFishManager implements IIronfishManager {
     this.accounts = new AccountManager(this.node, this.assets)
     this.transactions = new TransactionManager(this.node, this.assets)
     this.nodeSettings = new NodeSettingsManager(this.node)
+    this.snapshot = new SnapshotManager(this.node)
 
     this.initStatus = IronFishInitStatus.INITIALIZED
   }
@@ -108,7 +112,10 @@ export class IronFishManager implements IIronfishManager {
   }
 
   async start(): Promise<void> {
-    if (this.initStatus !== IronFishInitStatus.INITIALIZED) {
+    if (
+      this.initStatus !== IronFishInitStatus.INITIALIZED &&
+      this.initStatus !== IronFishInitStatus.DOWNLOAD_SNAPSHOT
+    ) {
       throw new Error(
         'SDK and node is not initialized. Please call init method first.'
       )
@@ -131,10 +138,13 @@ export class IronFishManager implements IIronfishManager {
     this.initStatus = IronFishInitStatus.STARTED
   }
 
-  async stop(): Promise<void> {
+  async stop(changeStatus = true): Promise<void> {
     await this.node?.shutdown()
     await this.node?.closeDB()
-    this.initStatus = IronFishInitStatus.NOT_STARTED
+
+    if (changeStatus) {
+      this.initStatus = IronFishInitStatus.NOT_STARTED
+    }
   }
 
   async hasAnyAccount(): Promise<boolean> {
@@ -143,6 +153,10 @@ export class IronFishManager implements IIronfishManager {
 
   status(): Promise<IronFishInitStatus> {
     return Promise.resolve(this.initStatus)
+  }
+
+  chainProgress(): Promise<number> {
+    return Promise.resolve(this.node.chain.getProgress())
   }
 
   nodeStatus(): Promise<NodeStatusResponse> {
@@ -217,7 +231,11 @@ export class IronFishManager implements IIronfishManager {
   }
 
   async sync(): Promise<void> {
-    await this.node.syncer.findPeer()
+    await this.node.syncer.peerNetwork.start()
+  }
+
+  async stopSyncing(): Promise<void> {
+    await this.node.syncer.peerNetwork.stop()
   }
 
   peers(): Promise<Peer[]> {
@@ -278,6 +296,17 @@ export class IronFishManager implements IIronfishManager {
     }
 
     return Promise.resolve(result)
+  }
+
+  async downloadChainSnapshot(path?: string): Promise<void> {
+    if (
+      this.initStatus < IronFishInitStatus.INITIALIZED ||
+      this.initStatus === IronFishInitStatus.ERROR
+    ) {
+      return Promise.reject(new Error('Node is not initialized.'))
+    }
+    this.initStatus = IronFishInitStatus.DOWNLOAD_SNAPSHOT
+    return this.snapshot.start(path)
   }
 
   getNodeConfig(): Promise<Partial<ConfigOptions>> {

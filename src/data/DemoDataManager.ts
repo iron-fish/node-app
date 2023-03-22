@@ -9,18 +9,20 @@ import SortType from 'Types/SortType'
 import DemoAccountsManager from './DemoAccountsManager'
 import DemoAddressBookManager from './DemoAddressBookManager'
 import DemoMinerManager from './DemoMinerManager'
-import DemoNodeManager from './DemoNodeManager'
+import DemoNodeManager, { STATUS } from './DemoNodeManager'
 import DemoTransactionsManager from './DemoTransactionsManager'
 import { AccountSettings } from './types/Account'
 import { AccountMinerStatistic, MinerProps } from './types/AccountMiner'
 import { Contact } from './types/Contact'
 import Transaction from 'Types/Transaction'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
+import DemoSnapshotManager from './DemoSnapshotManager'
 import DemoAssetManager from './DemoAssetManager'
 import Account from 'Types/Account'
 import DemoNodeSettingsManager from './DemoNodeSettingsManager'
 
 class DemoDataManager {
+  snapshot: DemoSnapshotManager
   accounts: DemoAccountsManager
   assets: DemoAssetManager
   transactions: DemoTransactionsManager
@@ -37,6 +39,7 @@ class DemoDataManager {
     this.addressBook = new DemoAddressBookManager()
     this.miner = new DemoMinerManager()
     this.node = new DemoNodeManager()
+    this.snapshot = new DemoSnapshotManager()
     this.nodeSettings = new DemoNodeSettingsManager()
     this.status = IronFishInitStatus.NOT_STARTED
   }
@@ -46,6 +49,9 @@ class DemoDataManager {
   }
 
   async initialize(): Promise<void> {
+    if (this.status === IronFishInitStatus.DOWNLOAD_SNAPSHOT) {
+      this.node.complete()
+    }
     this.status = IronFishInitStatus.INITIALIZING_SDK
     await new Promise(resolve =>
       setTimeout(() => {
@@ -64,8 +70,9 @@ class DemoDataManager {
   async start(): Promise<void> {
     this.status = IronFishInitStatus.STARTING_NODE
     await new Promise(resolve =>
-      setTimeout(() => {
+      setTimeout(async () => {
         this.status = IronFishInitStatus.STARTED
+        await this.node.sync()
         resolve(undefined)
       }, 2000)
     )
@@ -75,6 +82,16 @@ class DemoDataManager {
     await new Promise(resolve =>
       setTimeout(() => {
         this.status = IronFishInitStatus.NOT_STARTED
+        resolve(undefined)
+      }, 2000)
+    )
+  }
+
+  async downloadSnapshot(path: string): Promise<void> {
+    await new Promise(resolve =>
+      setTimeout(async () => {
+        this.status = IronFishInitStatus.DOWNLOAD_SNAPSHOT
+        this.snapshot.start(path)
         resolve(undefined)
       }, 2000)
     )
