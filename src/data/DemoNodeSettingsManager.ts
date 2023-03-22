@@ -17,11 +17,11 @@ class DemoNodeSettingsManager {
     obj[key] = value
   }
 
-  getConfig(): Partial<ConfigOptions> {
-    return { ...DEMO_NODE_CONFIG, ...DEMO_NODE_CONFIG_TMP }
+  getConfig(): Promise<Partial<ConfigOptions>> {
+    return Promise.resolve({ ...DEMO_NODE_CONFIG, ...DEMO_NODE_CONFIG_TMP })
   }
 
-  setValues(values: Partial<ConfigOptions>): void {
+  setValues(values: Partial<ConfigOptions>): Promise<void> {
     for (const key in values) {
       if (key in DEMO_NODE_CONFIG) {
         this.setProperty(
@@ -31,6 +31,8 @@ class DemoNodeSettingsManager {
         )
       }
     }
+
+    return Promise.resolve()
   }
 
   async save(): Promise<void> {
