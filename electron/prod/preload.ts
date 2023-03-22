@@ -190,11 +190,26 @@ contextBridge.exposeInMainWorld('IronfishManager', {
         IronfishAccountManagerAction.IMPORT,
         account
       ),
-    export: (id: string) =>
+    importByEncodedKey: (data: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.IMPORT_BY_ENCODED_KEY,
+        data
+      ),
+    importByMnemonic: (name: string, mnemonic: string) =>
+      ipcRenderer.invoke(
+        'ironfish-manager-accounts',
+        IronfishAccountManagerAction.IMPORT_BY_MNEMONIC,
+        name,
+        mnemonic
+      ),
+    export: (id: string, encoded?: boolean, viewOnly?: boolean) =>
       ipcRenderer.invoke(
         'ironfish-manager-accounts',
         IronfishAccountManagerAction.EXPORT,
-        id
+        id,
+        encoded,
+        viewOnly
       ),
     balance: (id: string, assetId?: string) =>
       ipcRenderer.invoke(

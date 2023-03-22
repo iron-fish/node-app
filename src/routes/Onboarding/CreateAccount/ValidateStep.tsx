@@ -22,7 +22,7 @@ const ValidateStep: FC<StepProps> = ({
   handleCreateAccount,
   onBack,
 }) => {
-  const [inputtedPhrase, setInputtedPhrase] = useState<string[]>([])
+  const [inputtedPhrase, setInputtedPhrase] = useState<string[]>(phrase)
   const [error, setError] = useState<MnemonicValidationError>({})
   const originalPhrase = phrase.join('')
 

@@ -15,6 +15,8 @@ export enum IronfishAccountManagerAction {
   BALANCE = 'balance',
   BALANCES = 'balances',
   IMPORT = 'import',
+  IMPORT_BY_ENCODED_KEY = 'importByEncodedKey',
+  IMPORT_BY_MNEMONIC = 'importByMnemonic',
   EXPORT = 'export',
   GET_MNEMONIC_PHRASE = 'getMnemonicPhrase',
 }
@@ -27,7 +29,9 @@ export interface IIronfishAccountManager {
   get: (id: string) => Promise<Account>
   delete: (name: string) => Promise<void>
   import: (account: Omit<AccountValue, 'rescan'>) => Promise<AccountValue>
-  export: (id: string) => Promise<AccountValue>
+  importByEncodedKey: (data: string) => Promise<AccountValue>
+  importByMnemonic: (name: string, mnemonic: string) => Promise<AccountValue>
+  export: (id: string, encoded?: boolean, viewOnly?: boolean) => Promise<string>
   balance: (id: string, assetId?: string) => Promise<AccountBalance>
   balances: (id: string) => Promise<{
     default: AccountBalance
