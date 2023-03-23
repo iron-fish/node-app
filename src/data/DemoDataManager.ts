@@ -1,4 +1,6 @@
 import { AccountValue, ConfigOptions } from '@ironfish/sdk'
+import { nanoid } from 'nanoid'
+import uniqueId from 'lodash/uniqueId'
 import AccountBalance from 'Types/AccountBalance'
 import CutAccount from 'Types/CutAccount'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
@@ -105,6 +107,34 @@ class DemoDataManager {
   }
 
   importAccount(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
+    return this.accounts.import(account)
+  }
+  importByMnemonic(name: string, mnemonic: string): Promise<AccountValue> {
+    const account = {
+      id: nanoid(64),
+      incomingViewKey: nanoid(64),
+      outgoingViewKey: nanoid(64),
+      name: name,
+      publicAddress: nanoid(64),
+      spendingKey: nanoid(64),
+      viewKey: nanoid(64),
+      version: 1,
+      createdAt: new Date(),
+    }
+    return this.accounts.import(account)
+  }
+  importByEncodedKey(data: string): Promise<AccountValue> {
+    const account = {
+      id: nanoid(64),
+      incomingViewKey: nanoid(64),
+      outgoingViewKey: nanoid(64),
+      name: uniqueId('Imported Account'),
+      publicAddress: nanoid(64),
+      spendingKey: nanoid(64),
+      viewKey: nanoid(64),
+      version: 1,
+      createdAt: new Date(),
+    }
     return this.accounts.import(account)
   }
 

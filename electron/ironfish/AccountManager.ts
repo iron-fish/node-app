@@ -3,6 +3,8 @@ import {
   ACCOUNT_SCHEMA_VERSION,
   CurrencyUtils,
   IronfishNode,
+  Bech32m,
+  JSONUtils,
 } from '@ironfish/sdk'
 import { v4 as uuid } from 'uuid'
 import {
@@ -10,6 +12,8 @@ import {
   LanguageCode,
   spendingKeyToWords,
   generateKey,
+  wordsToSpendingKey,
+  generateKeyFromPrivateKey,
 } from '@ironfish/rust-nodejs'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import WalletAccount from 'Types/Account'
@@ -20,6 +24,7 @@ import AbstractManager from './AbstractManager'
 import AssetManager from './AssetManager'
 import Asset from 'Types/Asset'
 import AccountCreateParams from 'Types/AccountCreateParams'
+import { AccountImport } from '@ironfish/sdk/build/src/wallet/walletdb/accountValue'
 
 class AccountManager
   extends AbstractManager
@@ -125,8 +130,64 @@ class AccountManager
       .then(data => data.serialize())
   }
 
-  async export(id: string): Promise<AccountValue> {
-    return this.node.wallet.getAccount(id)?.serialize()
+  async importByEncodedKey(data: string): Promise<AccountValue> {
+    const [decoded, _] = Bech32m.decode(data)
+    if (decoded) {
+      const decodedData = JSONUtils.parse<AccountImport>(decoded)
+      let accountData: Omit<AccountValue, 'rescan'>
+
+      if (decodedData.spendingKey) {
+        accountData = {
+          id: uuid(),
+          ...decodedData,
+          ...generateKeyFromPrivateKey(decodedData.spendingKey),
+        }
+      }
+
+      return this.import(accountData)
+    }
+  }
+
+  async importByMnemonic(
+    name: string,
+    mnemonic: string
+  ): Promise<AccountValue> {
+    let spendingKey: string | null = null
+    if (mnemonic.trim().split(/\s+/).length !== 24) {
+      return null
+    }
+    spendingKey = wordsToSpendingKey(mnemonic.trim(), LanguageCode.English)
+
+    const key = generateKeyFromPrivateKey(spendingKey)
+    const accountData: Omit<AccountValue, 'rescan'> = {
+      id: uuid(),
+      name,
+      version: ACCOUNT_SCHEMA_VERSION,
+      createdAt: null,
+      ...key,
+    }
+
+    return this.import(accountData)
+  }
+
+  async export(
+    id: string,
+    encoded?: boolean,
+    viewOnly?: boolean
+  ): Promise<string> {
+    const account = this.node.wallet.getAccount(id)?.serialize()
+    if (!account) {
+      return null
+    }
+    delete account.createdAt
+    const { id: _, ...accountInfo } = account
+    if (viewOnly) {
+      accountInfo.spendingKey = null
+    }
+    if (encoded) {
+      return Bech32m.encode(JSON.stringify(accountInfo), 'ironfishaccount00000')
+    }
+    return JSON.stringify(account)
   }
 
   async balance(
