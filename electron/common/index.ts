@@ -77,7 +77,7 @@ ipcMain.handle('dialog:openDirectory', async () => {
 })
 
 if (app.isPackaged) {
-  const server = 'https://your-deployment-url.com'
+  const server = 'https://your-deployment-url.com' //need update URL after selecting the update server
   const url = `${server}/update/${process.platform}/${app.getVersion()}`
 
   autoUpdater.setFeedURL({ url })
