@@ -3531,10 +3531,10 @@
     ws "8.12.1"
     yup "0.29.3"
 
-"@ironfish/ui-kit@1.1.7":
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-1.1.7.tgz#442036a14e5465a60c9dcab501e1a161b4929a9b"
-  integrity sha512-Il/z6tUBduXktjVt9cudxm0Kw9ohCSjI4dwxOj59skZMF7iTT2cH69ivtliKVM7AIoNwSUDAk+p4G5AwGEXpcw==
+"@ironfish/ui-kit@1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@ironfish/ui-kit/-/ui-kit-1.1.8.tgz#9a434d47ef3f69e0003e9e79be23ffb887004e75"
+  integrity sha512-wQthr+CJCBMQ8Z78UTC9kDhyLhlTj7Pj9hsA2ftPIkc/WOGBrgWLDYm/Al/yljASepDNPNduXxSRIisKH2AxlQ==
   dependencies:
     "@chakra-ui/icons" "2.0.17"
     "@chakra-ui/react" "2.5.1"
@@ -7972,11 +7972,6 @@ electron-is-dev@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-2.0.0.tgz#833487a069b8dad21425c67a19847d9064ab19bd"
   integrity sha512-3X99K852Yoqu9AcW50qz3ibYBWY79/pBhlMCab8ToEWS48R0T9tyxRiQhwylE7zQdXrMnx2JKqUJyMPmt5FBqA==
-
-electron-log@^5.0.0-beta.16:
-  version "5.0.0-beta.16"
-  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-5.0.0-beta.16.tgz#70277007f4d438d4c1a658ba4c1219e93ef79481"
-  integrity sha512-oBGFKjAsOXyzhvJIW0s+HIA7cV+kZ0B0FvO3hKyS8yPDGFsjQyr3M8N7ZyYxI6yEeihVID3CCfsTmpi6L9k0gw==
 
 electron-notarize@^1.1.1:
   version "1.2.2"

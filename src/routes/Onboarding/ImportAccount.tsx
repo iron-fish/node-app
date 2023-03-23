@@ -11,19 +11,16 @@ import {
   TabPanels,
   TabPanel,
   TextField,
-  HStack,
   MnemonicView,
-  CopyToClipboardButton,
   useIronToast,
+  Textarea,
+  FONTS,
 } from '@ironfish/ui-kit'
 import { FC, useState, useCallback, useRef } from 'react'
 import { ROUTES } from '..'
-import IconEye from '@ironfish/ui-kit/dist/svgx/icon-eye'
-import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
 import BackButtonLink from 'Components/BackButtonLink'
 import useImportAccount from 'Hooks/accounts/useImportAccount'
 import { useNavigate } from 'react-router-dom'
-import MnemonicPhraseType from 'Types/MnemonicPhraseType'
 import CloseIcon from 'Svgx/CloseIcon'
 import FileIcon from 'Svgx/FileIcon'
 import { truncateHash } from 'Utils/hash'
@@ -33,39 +30,26 @@ interface DesktopModeProps {
   onImport?: VoidFunction
 }
 
-const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
-  const [show, setShow] = useState(false)
-  const [key, setKey] = useState('')
+const EncodedKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
+  const [data, setData] = useState('')
   const [importBySpendingKey] = useImportAccount()
 
   return (
     <>
-      <TextField
-        label="Key"
-        InputProps={{
-          onChange: e => setKey(e.target.value),
-          type: show ? 'text' : 'password',
-          placeholder: 'Enter key',
-        }}
-        value={key}
+      <Textarea
+        value={data}
+        onChange={e => setData(e.target.value.trim())}
+        placeholder={'Enter encoded key'}
         my="2rem"
-        RightAddons={
-          <HStack marginLeft={'2.5rem'} spacing={'0.875rem'}>
-            <IconEye
-              cursor="pointer"
-              crossed={show}
-              onClick={() => setShow(!show)}
-            />
-            <IconInfo cursor={'pointer'} />
-          </HStack>
-        }
+        h="12.5rem"
+        resize="none"
       />
       <Box>
         <Button
           variant="primary"
-          isDisabled={!key}
+          isDisabled={!data}
           onClick={() => {
-            importBySpendingKey(key).then(() => onImport())
+            importBySpendingKey(data).then(() => onImport())
           }}
           size="large"
           w={desktopMode ? undefined : '100%'}
@@ -79,7 +63,7 @@ const SpendingKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 
 const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   const [file, setFile] = useState<File | null>(null)
-  const [, , importByFile] = useImportAccount()
+  const [importAccountByData, , importByFile] = useImportAccount()
   const fileInput = useRef<HTMLInputElement>()
   return (
     <>
@@ -144,11 +128,20 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
             const reader = new FileReader()
             reader.onload = e => {
               const content = e.target.result
-              importByFile(JSON.parse(content.toString()))
-                .then(() => onImport())
-                .catch(() => {
-                  // TODO: add toast
-                })
+              try {
+                const data = JSON.parse(content.toString())
+                importByFile(data)
+                  .then(() => onImport())
+                  .catch(() => {
+                    // TODO: add toast
+                  })
+              } catch (error) {
+                importAccountByData(content.toString())
+                  .then(() => onImport())
+                  .catch(() => {
+                    // TODO: add toast
+                  })
+              }
             }
             reader.readAsText(file)
           }}
@@ -161,7 +154,8 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
 }
 
 const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
-  const [phrase, setPhrase] = useState([])
+  const [phrase, setPhrase] = useState([''])
+  const [name, setName] = useState('')
   const [, importByMnemonicPhrase] = useImportAccount()
   return (
     <>
@@ -171,18 +165,19 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
       <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
         Fill out your recovery phrase in the proper order
       </chakra.h5>
+      <TextField
+        label="Name"
+        InputProps={{
+          onChange: e => setName(e.target.value.trim()),
+          placeholder: 'Enter account name',
+        }}
+        value={name}
+        mb="2rem"
+      />
       <MnemonicView
         value={phrase}
-        header={
-          <Flex gap="0.4375rem" mb="-0.4375rem">
-            <h6>Mnemonic phrase</h6>
-            <CopyToClipboardButton
-              value={phrase?.join(' ')}
-              copyTooltipText="Copy to clipboard"
-              copiedTooltipText="Copied"
-            />
-          </Flex>
-        }
+        header={<h6>Mnemonic phrase</h6>}
+        wordsAmount={24}
         placeholder="Empty"
         visible={true}
         isReadOnly={false}
@@ -193,15 +188,11 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           variant="primary"
           mt="2rem"
           onClick={() => {
-            importByMnemonicPhrase(phrase as MnemonicPhraseType).then(() =>
+            importByMnemonicPhrase(name, phrase.join(' ')).then(() =>
               onImport()
             )
           }}
-          disabled={
-            !phrase ||
-            phrase.length < 12 ||
-            phrase.findIndex(word => !word) !== -1
-          }
+          isDisabled={!name || phrase.findIndex(word => !word) !== -1}
           size="large"
           w={desktopMode ? undefined : '100%'}
         >
@@ -251,13 +242,13 @@ const ImportAccount: FC<DesktopModeProps> = ({
       </chakra.h3>
       <Tabs>
         <TabList>
-          {/* <Tab>Spending Key</Tab>
-          <Tab>Mnemonic Phrase</Tab> */}
+          <Tab>Encoded Key</Tab>
+          <Tab>Mnemonic Phrase</Tab>
           <Tab>File</Tab>
         </TabList>
         <TabPanels>
-          {/* <TabPanel w="100%" p={0}>
-            <SpendingKeyTab
+          <TabPanel w="100%" p={0}>
+            <EncodedKeyTab
               desktopMode={desktopMode}
               onImport={handleOnImport}
             />
@@ -267,7 +258,7 @@ const ImportAccount: FC<DesktopModeProps> = ({
               desktopMode={desktopMode}
               onImport={handleOnImport}
             />
-          </TabPanel> */}
+          </TabPanel>
           <TabPanel w="100%" p={0}>
             <ImportFileTab
               desktopMode={desktopMode}

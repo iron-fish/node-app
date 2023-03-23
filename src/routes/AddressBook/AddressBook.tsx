@@ -23,8 +23,8 @@ import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import AddContactModal from './AddContactModal'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { stringToColor } from 'Utils/stringToColor'
 import EmptyOverview from 'Components/EmptyOverview'
+import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 import { ACTIONS_COLUMN } from 'Components/WalletCommonTable'
 
 const AddContactButton: FC<{
@@ -63,9 +63,10 @@ const AddContactButton: FC<{
 const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
   const navigate = useNavigate()
   const $getAddressLabel = useBreakpointValue({
-    base: (address: string) => truncateHash(address, 2, 9),
-    md: (address: string) => truncateHash(address, 2, 16),
-    lg: (address: string) => address,
+    base: (address: string) => truncateHash(address, 2, 3),
+    sm: (address: string) => truncateHash(address, 2, 6),
+    md: (address: string) => truncateHash(address, 2, 12),
+    lg: (address: string) => truncateHash(address, 2, 18),
   })
 
   const [$searchTerm, $setSearchTerm] = useState('')
@@ -121,7 +122,7 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
                 <Flex alignItems="center">
                   <HexFishCircle
                     mr="1rem"
-                    bg={stringToColor(contact._id, 73)}
+                    bg={accountGradientByOrder(contact.order)}
                   />
                   <h5>{contact.name}</h5>
                 </Flex>
