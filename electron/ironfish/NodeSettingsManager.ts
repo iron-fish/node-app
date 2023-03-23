@@ -13,14 +13,14 @@ class NodeSettingsManager implements INodeSettingsManager {
     this.config = node.config
   }
 
-  getConfig(): Partial<ConfigOptions> {
-    return {
+  getConfig(): Promise<Partial<ConfigOptions>> {
+    return Promise.resolve({
       ...this.config.defaults,
       ...this.config.loaded,
-    }
+    })
   }
 
-  setValues(values: Partial<ConfigOptions>): void {
+  setValues(values: Partial<ConfigOptions>): Promise<void> {
     for (const key in values) {
       if (key in this.config.defaults) {
         setUnknownConfigValue(
@@ -30,6 +30,8 @@ class NodeSettingsManager implements INodeSettingsManager {
         )
       }
     }
+
+    return Promise.resolve()
   }
 
   async save(): Promise<void> {

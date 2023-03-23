@@ -8,8 +8,8 @@ export enum NodeSettingsManagerAction {
 }
 
 export interface INodeSettingsManager {
-  getConfig: () => Partial<ConfigOptions>
-  setValues: (values: Partial<ConfigOptions>) => void
+  getConfig: () => Promise<Partial<ConfigOptions>>
+  setValues: (values: Partial<ConfigOptions>) => Promise<void>
   save: () => Promise<void>
   clearConfig: () => Promise<void>
 }
