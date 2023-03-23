@@ -29,7 +29,7 @@ import { createAppLogger } from '../utils/AppLogger'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
-  sdk: IronfishSdk
+  protected sdk: IronfishSdk
   protected node: IronfishNode
   accounts: AccountManager
   transactions: TransactionManager
