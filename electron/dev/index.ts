@@ -10,8 +10,10 @@ import initStorageCallbacks from '../common/initStorage'
 import { IronFishManager } from '../ironfish/IronFishManager'
 import '../common/index'
 import { IronfishAssetManagerActions } from 'Types/IronfishManager/IIronfishAssetManager'
+import log from 'electron-log'
 
 const ironfishManager = new IronFishManager()
+log.log('Application started.')
 
 async function shutdownNode() {
   return await ironfishManager.stop()
@@ -21,13 +23,13 @@ initStorageCallbacks(ipcMain)
 
 ipcMain.handle(
   'ironfish-manager',
-  (e, action: IronfishManagerAction, ...args): Promise<any> => {
+  async (e, action: IronfishManagerAction, ...args): Promise<any> => {
     let result
     try {
-      result = ironfishManager[action](...args)
+      result = await ironfishManager[action](...args)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error)
+      log.error(error)
     }
 
     return result
@@ -36,13 +38,13 @@ ipcMain.handle(
 
 ipcMain.handle(
   'ironfish-manager-assets',
-  (e, action: IronfishAssetManagerActions, ...args): Promise<any> => {
+  async (e, action: IronfishAssetManagerActions, ...args): Promise<any> => {
     let result
     try {
-      result = ironfishManager.assets[action](...args)
+      result = await ironfishManager.assets[action](...args)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error)
+      log.error(error)
     }
 
     return result
@@ -51,13 +53,13 @@ ipcMain.handle(
 
 ipcMain.handle(
   'ironfish-manager-accounts',
-  (e, action: IronfishAccountManagerAction, ...args): Promise<any> => {
+  async (e, action: IronfishAccountManagerAction, ...args): Promise<any> => {
     let result
     try {
-      result = ironfishManager.accounts[action](...args)
+      result = await ironfishManager.accounts[action](...args)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error)
+      log.error(error)
     }
 
     return result
@@ -66,13 +68,17 @@ ipcMain.handle(
 
 ipcMain.handle(
   'ironfish-manager-transactions',
-  (e, action: IronfishTransactionManagerAction, ...args): Promise<any> => {
+  async (
+    e,
+    action: IronfishTransactionManagerAction,
+    ...args
+  ): Promise<any> => {
     let result
     try {
-      result = ironfishManager.transactions[action](...args)
+      result = await ironfishManager.transactions[action](...args)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error)
+      log.error(error)
     }
 
     return result
@@ -81,8 +87,17 @@ ipcMain.handle(
 
 ipcMain.handle(
   'ironfish-manager-snapshot',
-  (e, action: IronfishSnaphotManagerAction, ...args): Promise<any> =>
-    ironfishManager.snapshot[action](...args)
+  async (e, action: IronfishSnaphotManagerAction, ...args): Promise<any> => {
+    let result
+    try {
+      result = await ironfishManager.snapshot[action](...args)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      log.error(error)
+    }
+
+    return result
+  }
 )
 
 process.on('exit', shutdownNode)

@@ -25,6 +25,7 @@ import NodeSettingsManager from './NodeSettingsManager'
 import Peer from 'Types/Peer'
 import { IIronfishSnapshotManager } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import SnapshotManager from './SnapshotManager'
+import { createAppLogger } from '../utils/AppLogger'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -64,6 +65,7 @@ export class IronFishManager implements IIronfishManager {
     this.initStatus = IronFishInitStatus.INITIALIZING_SDK
     this.sdk = await IronfishSdk.init({
       pkg: getPackageFrom(pkg),
+      logger: createAppLogger(),
     })
 
     if (!this.sdk.internal.get('telemetryNodeId')) {
