@@ -29,7 +29,7 @@ interface DesktopModeProps {
   onImport?: VoidFunction
 }
 
-const EncodedKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
+const EncodedKeyTab: FC<DesktopModeProps> = ({ onImport }) => {
   const [data, setData] = useState('')
   const [importBySpendingKey] = useImportAccount()
 
@@ -51,7 +51,6 @@ const EncodedKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
             importBySpendingKey(data).then(() => onImport())
           }}
           size="medium"
-          w={desktopMode ? undefined : '100%'}
         >
           Import Account
         </Button>
@@ -122,7 +121,6 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           mt="2rem"
           isDisabled={!file}
           size={desktopMode ? 'large' : 'medium'}
-          w={desktopMode ? undefined : '100%'}
           onClick={() => {
             const reader = new FileReader()
             reader.onload = e => {
@@ -193,7 +191,6 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           }}
           isDisabled={!name || phrase.findIndex(word => !word) !== -1}
           size={desktopMode ? 'large' : 'medium'}
-          w={desktopMode ? undefined : '100%'}
         >
           Import Account
         </Button>

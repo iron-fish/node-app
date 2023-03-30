@@ -98,6 +98,7 @@ class DemoAddressBookManager {
           identity: id,
           address: address,
           name: name,
+          order: DEMO_ADDRESS_BOOK.at(-1).order + 1,
         })
         resolve(id)
       }, 500)

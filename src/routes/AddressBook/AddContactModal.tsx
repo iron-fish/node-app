@@ -66,7 +66,6 @@ const AddContactModal: FC<AddContactModalProps> = ({
         variant="primary"
         size="medium"
         my="1rem"
-        width="100%"
         onClick={() => {
           onAdd(name, presetAddress || address)
           setName('')

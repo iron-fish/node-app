@@ -86,7 +86,6 @@ const CreateStep: FC<StepProps> = ({
           variant="primary"
           isDisabled={checkChanges()}
           size={desktopMode ? 'large' : 'medium'}
-          w={desktopMode ? undefined : '100%'}
           onClick={onNext}
         >
           Next
