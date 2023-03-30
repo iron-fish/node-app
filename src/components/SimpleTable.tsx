@@ -12,6 +12,14 @@ import {
 import { CommonTableProps } from '@ironfish/ui-kit/dist/components/Table/types'
 import RowItemSpin from '@ironfish/ui-kit/dist/components/Table/RowItemSpin'
 
+const nonInteractiveTbodyStyles = {
+  tr: {
+    _hover: {
+      borderColor: null,
+    },
+  },
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SimpleTable: FC<CommonTableProps<any>> = ({
   data = null,
@@ -24,13 +32,11 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
   const $colors = useColorModeValue(
     {
       bg: NAMED_COLORS.WHITE,
-      borderColor: NAMED_COLORS.LIGHT_GREY,
       hoverBorder: NAMED_COLORS.DEEP_BLUE,
       caretColor: NAMED_COLORS.PALE_GREY,
     },
     {
       bg: NAMED_COLORS.DARKER_GREY,
-      borderColor: NAMED_COLORS.DARK_GREY,
       hoverBorder: NAMED_COLORS.WHITE,
       caretColor: NAMED_COLORS.PALE_GREY,
     }
@@ -53,7 +59,7 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
           ))}
         </Tr>
       </Thead>
-      <Tbody borderColor={$colors.borderColor}>
+      <Tbody sx={!onRowClick ? nonInteractiveTbodyStyles : null}>
         {data?.map((item, index) => (
           <Tr
             key={item?.id || `load-${index}`}
