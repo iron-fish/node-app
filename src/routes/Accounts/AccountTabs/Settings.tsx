@@ -101,8 +101,8 @@ const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
           <Flex>
             <Button
               variant="primary"
-              size="large"
-              mr="24px"
+              size="medium"
+              mr="1.5rem"
               bgColor="#F15929"
               isDisabled={removePhrase !== 'REMOVE'}
               onClick={() => onDelete()}

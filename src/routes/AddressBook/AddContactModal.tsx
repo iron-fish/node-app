@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import {
   ModalProps,
   chakra,
@@ -64,16 +64,15 @@ const AddContactModal: FC<AddContactModalProps> = ({
       />
       <Button
         variant="primary"
+        size="medium"
         my="1rem"
-        py="2rem"
         width="100%"
-        borderRadius="2rem"
         onClick={() => {
           onAdd(name, presetAddress || address)
           setName('')
           setAddress('')
         }}
-        disabled={!name || (!presetAddress && !address)}
+        isDisabled={!name || (!presetAddress && !address)}
       >
         <chakra.h4>Add Contact</chakra.h4>
       </Button>

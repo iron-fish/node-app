@@ -95,10 +95,10 @@ const SnapshotDownloadModal: FC<
           <ModalFooter>
             <Button
               variant="primary"
-              borderRadius="4rem"
+              size="medium"
               disabled={loading}
               onClick={handleDownload}
-              leftIcon={loading ? <Spinner /> : <DownloadIcon />}
+              leftIcon={loading ? <Spinner /> : null}
             >
               Download
             </Button>

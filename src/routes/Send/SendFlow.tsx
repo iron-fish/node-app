@@ -248,18 +248,7 @@ const ConfirmStep: FC<StepProps> = ({
         </VStack>
       </ModalBody>
       <ModalFooter mt="2rem" p="0" justifyContent="flex-start">
-        <Button
-          variant="primary"
-          mr="2rem"
-          p="2rem"
-          borderRadius="4.5rem"
-          onClick={onConfirm}
-          leftIcon={
-            <Icon height={26} width={26}>
-              <SendIcon fill="currentColor" />
-            </Icon>
-          }
-        >
+        <Button variant="primary" mr="2rem" size="medium" onClick={onConfirm}>
           Confirm & Send
         </Button>
         <Link onClick={onCancel}>Cancel Transaction</Link>
@@ -295,8 +284,7 @@ const ResultStep: FC<StepProps> = ({ from, amount, asset, transaction }) => {
           <Flex gap="1rem">
             <Button
               variant="primary"
-              size="small"
-              rightIcon={<ArrowRight mr="-0.5rem" />}
+              size="medium"
               onClick={() =>
                 navigate(ROUTES.ACCOUNT, { state: { accountId: from.id } })
               }
@@ -305,8 +293,7 @@ const ResultStep: FC<StepProps> = ({ from, amount, asset, transaction }) => {
             </Button>
             <Button
               variant="primary"
-              size="small"
-              rightIcon={<ArrowRight mr="-0.5rem" />}
+              size="medium"
               onClick={() =>
                 navigate(ROUTES.TRANSACTION, {
                   state: {

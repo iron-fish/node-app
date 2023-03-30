@@ -100,7 +100,11 @@ const ValidateStep: FC<StepProps> = ({
       <Flex gap="1rem">
         {!desktopMode && (
           <Box mt="2rem">
-            <Button variant="primary" size="large" onClick={onBack}>
+            <Button
+              variant="primary"
+              size={desktopMode ? 'large' : 'medium'}
+              onClick={onBack}
+            >
               Back
             </Button>
           </Box>
@@ -109,7 +113,7 @@ const ValidateStep: FC<StepProps> = ({
           <Button
             variant="primary"
             isDisabled={checkChanges()}
-            size="large"
+            size={desktopMode ? 'large' : 'medium'}
             onClick={handleCreateAccount}
           >
             Create Account
