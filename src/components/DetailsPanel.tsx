@@ -14,6 +14,7 @@ import {
 import { FC, useRef, ReactNode } from 'react'
 import InfoIcon from 'Svgx/Info'
 import CloseIcon from 'Svgx/CloseIcon'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 interface DetailsPanelProps {
   children: ReactNode
@@ -23,6 +24,7 @@ const DetailsPanel: FC<DetailsPanelProps> = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   const bg = useColorModeValue(NAMED_COLORS.WHITE, NAMED_COLORS.LIGHT_BLACK)
+  const { requiredSnapshot } = useDataSync()
   return (
     <>
       <Box
@@ -52,7 +54,7 @@ const DetailsPanel: FC<DetailsPanelProps> = ({ children }) => {
         aria-label={'account-keys-info-button'}
         borderRadius="50%"
         position="absolute"
-        top="1.5rem"
+        top={requiredSnapshot ? '4.5rem' : '1.5rem'}
         right="1.5rem"
         onClick={onOpen}
         display={{ base: 'block', md: 'none' }}

@@ -1,5 +1,10 @@
 import { FC } from 'react'
-import { Flex, NAMED_COLORS, useColorModeValue } from '@ironfish/ui-kit'
+import {
+  Flex,
+  NAMED_COLORS,
+  useBreakpointValue,
+  useColorModeValue,
+} from '@ironfish/ui-kit'
 import { SVGProps } from 'Svgx/types'
 import Hotkey from 'Components/Hotkey'
 
@@ -41,13 +46,16 @@ export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
       activeFontColor: NAMED_COLORS.WHITE,
     }
   )
+  const isOpen = useBreakpointValue({ base: false, sm: true })
   return (
     <>
       <Flex
         flexDirection="row"
         justifyContent={{ base: 'center', sm: 'flex-start' }}
         alignItems="center"
-        width={{ base: '3.5rem', sm: '14.5rem' }}
+        w={isOpen ? '14.5rem' : '3.5rem'}
+        transition="width 0.5s ease-in-out"
+        overflow="hidden"
         h="2.5rem"
         borderRadius="0.25rem"
         p={{ base: '0.5rem', sm: '0.5rem 0.5rem 0.5rem 1rem' }}

@@ -64,10 +64,13 @@ export const StatusItemContent = forwardRef<
       borderRadius="0.25rem"
       h={isMinified ? '2.75rem' : 'auto'}
       minH="2.125rem"
+      transition="width 0.5s ease-in-out"
       width={isMinified ? '2.75rem' : '14.5rem'}
       alignItems="center"
       justifyContent="center"
       textAlign="center"
+      overflow="hidden"
+      mx={{ base: '0.375rem', sm: 0 }}
       flexDirection={isMinified ? 'row' : 'column'}
       _hover={{
         border: isMinified ? `0.0625rem solid ${colors.text[style]}` : 'none',

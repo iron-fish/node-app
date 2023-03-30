@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Flex, Box, FlexProps } from '@ironfish/ui-kit'
+import { Flex, Box, FlexProps, useBreakpointValue } from '@ironfish/ui-kit'
 
 import IconHome from 'Svgx/home'
 import IconSend from 'Svgx/send'
@@ -61,15 +61,16 @@ const primaryNavItems: NavItemProps[] = [
 // ]
 
 export const Navbar: FC<FlexProps> = props => {
+  const isOpen = useBreakpointValue({ base: false, sm: true })
   return (
     <Flex
       bg="inherit"
       height="100%"
       maxHeight="100vh"
       p="3rem 1rem 1rem"
-      w={{ base: '5.5rem', sm: '16.4375rem' }}
-      transition="width 0.3s ease-in-out"
-      position="fixed"
+      w={isOpen ? '16.4375rem' : '5.5rem'}
+      transition="width 0.5s ease-in-out"
+      position="sticky"
       left="0"
       top="0"
       flexDirection="column"
@@ -77,14 +78,16 @@ export const Navbar: FC<FlexProps> = props => {
       zIndex={100}
       {...props}
     >
-      <IronFishLogo
-        m="0.5rem 1rem"
-        display={{ base: 'none', sm: 'inline-block' }}
-      />
-      <HexFishLogo
-        m="0.5rem 1rem"
-        display={{ base: 'inline-block', sm: 'none' }}
-      />
+      <Flex>
+        <HexFishLogo m="0.5rem 1rem" mr={0} />
+        <Box
+          w={isOpen ? '10.3125rem' : '0'}
+          transition="width 0.5s ease-in-out"
+          overflow="hidden"
+        >
+          <IronFishLogo m="0.5rem 1rem" ml="-1.8125rem" />
+        </Box>
+      </Flex>
       <Box mt="2rem">
         <Nav list={primaryNavItems} />
       </Box>
