@@ -14,7 +14,6 @@ import {
   NAMED_COLORS,
   Spinner,
 } from '@ironfish/ui-kit'
-import DownloadIcon from '@ironfish/ui-kit/dist/svgx/download-icon'
 import { useSnapshotStatus } from 'Providers/SnapshotProvider'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { SnapshotManifest } from 'Types/IronfishManager/IIronfishSnapshotManager'
@@ -92,7 +91,7 @@ const SnapshotDownloadModal: FC<
             </chakra.h4>
             {error && <chakra.h4 color={NAMED_COLORS.RED}>{error}</chakra.h4>}
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter justifyContent="flex-start">
             <Button
               variant="primary"
               size="medium"
