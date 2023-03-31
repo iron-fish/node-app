@@ -190,7 +190,12 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               key: 'transaction-memo-column',
               label: <chakra.h6>Memo</chakra.h6>,
               render: (transaction: Transaction) => (
-                <chakra.h5>"{transaction.outputs?.at(0)?.memo}"</chakra.h5>
+                <chakra.h5>
+                  "
+                  {transaction.outputs?.at(0)?.memo ||
+                    transaction.inputs?.at(0)?.memo}
+                  "
+                </chakra.h5>
               ),
             },
             ACTIONS_COLUMN,
