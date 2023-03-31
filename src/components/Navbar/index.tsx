@@ -17,6 +17,7 @@ import HexFishLogo from 'Svgx/hexfish'
 import StatusBar from './StatusBar'
 import ROUTES from 'Routes/data'
 import { NavItemProps } from './NavItem'
+import Updates from 'Svgx/Updates'
 
 const primaryNavItems: NavItemProps[] = [
   {
@@ -55,10 +56,17 @@ const primaryNavItems: NavItemProps[] = [
     aliases: [],
   },
 ]
-// const secondaryNavItems = [
-//   { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
-//   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
-// ]
+const secondaryNavItems = [
+  {
+    hotkey: 'U',
+    to: ROUTES.UPDATES,
+    label: 'Updates',
+    icon: Updates,
+    aliases: [ROUTES.ACCOUNT, ROUTES.TRANSACTION],
+  },
+  //   { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
+  //   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
+]
 
 export const Navbar: FC<FlexProps> = props => {
   return (
@@ -89,6 +97,7 @@ export const Navbar: FC<FlexProps> = props => {
         <Nav list={primaryNavItems} />
       </Box>
       <Box marginTop="auto">
+        <Nav list={secondaryNavItems} />
         <StatusBar />
         <Toggle />
       </Box>

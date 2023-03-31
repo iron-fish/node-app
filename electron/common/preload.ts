@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import UpdateManagerContext from '../contextBridge/UpdateManagerContext'
 
 contextBridge.exposeInMainWorld(
   'setElectronThemeMode',
@@ -9,3 +10,4 @@ contextBridge.exposeInMainWorld(
 contextBridge.exposeInMainWorld('selectFolder', () =>
   ipcRenderer.invoke('dialog:openDirectory')
 )
+contextBridge.exposeInMainWorld('UpdateManager', UpdateManagerContext)
