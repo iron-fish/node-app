@@ -20,6 +20,8 @@ The following steps should only be used to install if you are planning on contri
 
 1. Run `yarn install` from the root directory to install packages.
 
+ #### Other platform might require additional actions see [Iron Fish Developer Install section](https://github.com/iron-fish/ironfish#developer-install)
+
 ### Usage
 
 Once your environment is set up its possible to run app:
