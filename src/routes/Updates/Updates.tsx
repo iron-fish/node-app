@@ -19,7 +19,7 @@ interface ReleaseNoteProps {
   setIntersectionId: (id: string) => void
 }
 
-const ReleaseNote: FC<ReleaseNoteProps> = ({ note, setIntersectionId }) => {
+const ReleaseNoteItem: FC<ReleaseNoteProps> = ({ note, setIntersectionId }) => {
   const ref = useRef()
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -114,7 +114,7 @@ const UpdateList: FC = () => {
       <Flex direction="column" maxW="35rem" w="calc(100% - 8rem)" mr="1rem">
         {(data?.data || new Array(3).fill(null))?.map(note => {
           return note ? (
-            <ReleaseNote
+            <ReleaseNoteItem
               key={note.version}
               note={note}
               setIntersectionId={handleVisibleTagChange}
@@ -140,45 +140,44 @@ const UpdateList: FC = () => {
         <Box mb="1rem">
           <b>RELEASES</b>
         </Box>
-        {monthRange.map(
-          ({ month, version }: { month: string; version: string }) =>
-            month && version ? (
-              <Link
-                key={`${month}-${version}`}
-                onClick={() => {
-                  const element = document.getElementById(version)
-                  if (element) {
-                    element.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'center',
-                    })
-                  }
-                }}
-                mb="1rem"
-                fontWeight={intersectionId === version ? 'bold' : 'normal'}
-                color={
-                  intersectionId === version
-                    ? NAMED_COLORS.BLACK
-                    : NAMED_COLORS.GREY
+        {monthRange.map(({ month, version }) =>
+          month && version ? (
+            <Link
+              key={`${month}-${version}`}
+              onClick={() => {
+                const element = document.getElementById(version)
+                if (element) {
+                  element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                  })
                 }
-                _dark={{
-                  color:
-                    intersectionId === version
-                      ? NAMED_COLORS.WHITE
-                      : NAMED_COLORS.PALE_GREY,
-                }}
-              >
-                {month}
-              </Link>
-            ) : (
-              <Skeleton
-                variant="ironFish"
-                w="100%"
-                h="24px"
-                mb="1rem"
-                isLoaded={loaded}
-              />
-            )
+              }}
+              mb="1rem"
+              fontWeight={intersectionId === version ? 'bold' : 'normal'}
+              color={
+                intersectionId === version
+                  ? NAMED_COLORS.BLACK
+                  : NAMED_COLORS.GREY
+              }
+              _dark={{
+                color:
+                  intersectionId === version
+                    ? NAMED_COLORS.WHITE
+                    : NAMED_COLORS.PALE_GREY,
+              }}
+            >
+              {month}
+            </Link>
+          ) : (
+            <Skeleton
+              variant="ironFish"
+              w="100%"
+              h="24px"
+              mb="1rem"
+              isLoaded={loaded}
+            />
+          )
         )}
       </Flex>
     </Flex>

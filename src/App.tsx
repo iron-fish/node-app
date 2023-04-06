@@ -22,6 +22,7 @@ import Initializing from 'Routes/Initializing'
 import TransactionOverview from 'Routes/Transaction/TransactionOverview'
 import Updates from 'Routes/Updates/Updates'
 import Update from 'Routes/Updates/Update'
+import { UpdateWrapper } from 'Providers/UpdatesProvider'
 
 const breakpoints = {
   xs: '46.875rem', //750px
