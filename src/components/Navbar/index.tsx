@@ -1,5 +1,5 @@
-import { FC } from 'react'
-import { Flex, Box, FlexProps } from '@ironfish/ui-kit'
+import { FC, useEffect, useMemo, useState } from 'react'
+import { Flex, Box, FlexProps, NAMED_COLORS } from '@ironfish/ui-kit'
 
 import IconHome from 'Svgx/home'
 import IconSend from 'Svgx/send'
@@ -56,19 +56,56 @@ const primaryNavItems: NavItemProps[] = [
     aliases: [],
   },
 ]
-const secondaryNavItems = [
-  {
-    hotkey: 'U',
-    to: ROUTES.UPDATES,
-    label: 'Updates',
-    icon: Updates,
-    aliases: [ROUTES.ACCOUNT, ROUTES.TRANSACTION],
-  },
-  //   { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
-  //   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
-]
+// const secondaryNavItems = [
+//   {
+//     hotkey: 'U',
+//     to: ROUTES.UPDATES,
+//     label: 'Updates',
+//     icon: Updates,
+//     aliases: [ROUTES.ACCOUNT, ROUTES.TRANSACTION],
+//   },
+//   //   { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
+//   //   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
+// ]
 
 export const Navbar: FC<FlexProps> = props => {
+  const [updatesCount, setUpdatesCount] = useState(0)
+
+  useEffect(() => {
+    window.UpdateManager.getVersionsBefore().then(versions => {
+      setUpdatesCount(versions.length)
+    })
+  }, [])
+
+  const secondaryNavItems = useMemo(() => {
+    return [
+      {
+        // hotkey: 'U',
+        statItem:
+          updatesCount > 0 ? (
+            <Box
+              w="18px"
+              h="18px"
+              borderRadius="50%"
+              textAlign="center"
+              bgColor="#335A48"
+              color={NAMED_COLORS.WHITE}
+              _dark={{
+                bgColor: '#5FC89A',
+                color: NAMED_COLORS.BLACK,
+              }}
+            >
+              <h6>{updatesCount}</h6>
+            </Box>
+          ) : null,
+        to: ROUTES.UPDATES,
+        label: 'Updates',
+        icon: Updates,
+        aliases: [ROUTES.ACCOUNT, ROUTES.TRANSACTION],
+      },
+    ]
+  }, [updatesCount])
+
   return (
     <Flex
       bg="inherit"
@@ -97,7 +134,7 @@ export const Navbar: FC<FlexProps> = props => {
         <Nav list={primaryNavItems} />
       </Box>
       <Box marginTop="auto">
-        <Nav list={secondaryNavItems} />
+        <Nav mb="1rem" list={secondaryNavItems} />
         <StatusBar />
         <Toggle />
       </Box>

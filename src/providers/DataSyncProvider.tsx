@@ -7,7 +7,6 @@ import {
   useCallback,
   ReactNode,
 } from 'react'
-import IronFishInitStatus from 'Types/IronfishInitStatus'
 import { ProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
 import { useSnapshotStatus } from './SnapshotProvider'

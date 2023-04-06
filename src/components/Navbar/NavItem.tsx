@@ -1,5 +1,5 @@
-import { FC } from 'react'
-import { Flex, NAMED_COLORS, useColorModeValue } from '@ironfish/ui-kit'
+import { FC, ReactNode } from 'react'
+import { Flex, NAMED_COLORS, useColorModeValue, Box } from '@ironfish/ui-kit'
 import { SVGProps } from 'Svgx/types'
 import Hotkey from 'Components/Hotkey'
 
@@ -8,8 +8,9 @@ export type NavItemProps = {
   to: string
   label: string
   icon: FC<SVGProps>
-  hotkey: string
+  hotkey?: string
   aliases: string[]
+  statItem?: ReactNode
 }
 
 export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
@@ -17,6 +18,7 @@ export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
   label,
   icon,
   hotkey,
+  statItem,
 }) => {
   const Icon = icon as FC<SVGProps>
   const $colors = useColorModeValue(
@@ -100,7 +102,8 @@ export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
           justifyContent="space-between"
         >
           {label}
-          {active && <Hotkey>{hotkey}</Hotkey>}
+          {!statItem && hotkey && active && <Hotkey>{hotkey}</Hotkey>}
+          {statItem && <Box mr="0.5rem">{statItem}</Box>}
         </Flex>
       </Flex>
     </>

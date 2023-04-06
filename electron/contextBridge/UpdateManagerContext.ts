@@ -3,6 +3,7 @@ import {
   IUpdateManager,
   ReleaseNote,
   UpdateManagerAction,
+  UpdateReleaseNotesResponse,
   UpdateStatus,
 } from 'Types/IUpdateManager'
 
@@ -31,14 +32,31 @@ class UpdateManagerContext implements IUpdateManager {
       UpdateManagerAction.INSTALL_UPDATES
     )
   }
-  notes: () => Promise<ReleaseNote[]> = () => {
-    return ipcRenderer.invoke('update-manager', UpdateManagerAction.NOTES)
+  notes: (
+    after?: string,
+    limit?: number
+  ) => Promise<UpdateReleaseNotesResponse> = (
+    after?: string,
+    limit?: number
+  ) => {
+    return ipcRenderer.invoke(
+      'update-manager',
+      UpdateManagerAction.NOTES,
+      after,
+      limit
+    )
   }
   note: (version: string) => Promise<ReleaseNote> = (version: string) => {
     return ipcRenderer.invoke(
       'update-manager',
       UpdateManagerAction.NOTE,
       version
+    )
+  }
+  getVersionsBefore: () => Promise<string[]> = () => {
+    return ipcRenderer.invoke(
+      'update-manager',
+      UpdateManagerAction.GET_VERSIONS_BEFORE
     )
   }
 }

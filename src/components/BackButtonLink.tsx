@@ -16,9 +16,14 @@ interface BackButtonLinkProps
   extends LinkProps,
     Omit<RouterLinkProps, 'color'> {
   label: string
+  toTheRight?: boolean
 }
 
-const BackButtonLink: FC<BackButtonLinkProps> = ({ label, ...rest }) => {
+const BackButtonLink: FC<BackButtonLinkProps> = ({
+  label,
+  toTheRight,
+  ...rest
+}) => {
   const $colors = useColorModeValue(
     {
       chevron: NAMED_COLORS.BLACK,
@@ -36,10 +41,12 @@ const BackButtonLink: FC<BackButtonLinkProps> = ({ label, ...rest }) => {
   return (
     <Link
       display="flex"
+      flexDirection={toTheRight ? 'row-reverse' : 'row'}
       w="max-content"
       alignItems="center"
       cursor="pointer"
       as={RouterLink}
+      gap="0.625rem"
       {...rest}
       _hover={{
         color: $colors.linkHover,
@@ -54,14 +61,18 @@ const BackButtonLink: FC<BackButtonLinkProps> = ({ label, ...rest }) => {
     >
       <Flex
         borderRadius="50%"
-        mr="0.625rem"
         w="1.5rem"
         h="1.5rem"
         border={$colors.chevronBorder}
         justifyContent="center"
         alignItems="center"
       >
-        <ChevronLeftIcon w="1rem" h="1rem" color={$colors.chevron} />
+        <ChevronLeftIcon
+          w="1rem"
+          h="1rem"
+          transform={`rotate(${toTheRight ? 180 : 0}deg)`}
+          color={$colors.chevron}
+        />
       </Flex>
       <h5>{label}</h5>
     </Link>

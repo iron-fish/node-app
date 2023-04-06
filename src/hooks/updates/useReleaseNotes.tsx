@@ -1,9 +1,10 @@
 import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
 import { useEffect } from 'react'
-import { ReleaseNote } from 'Types/IUpdateManager'
+import { UpdateReleaseNotesResponse } from 'Types/IUpdateManager'
 
 const useReleaseNotes = () => {
-  const [result, promiseWrapper] = useAsyncDataWrapper<ReleaseNote[]>([])
+  const [result, promiseWrapper] =
+    useAsyncDataWrapper<UpdateReleaseNotesResponse>()
 
   useEffect(() => {
     promiseWrapper(window.UpdateManager.notes())

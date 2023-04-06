@@ -66,8 +66,10 @@ function App() {
                 />
                 {/* <Route path={ROUTES.RESOURCES} element={null} /> */}
                 <Route path={ROUTES.NODE} element={<NodeOverview />} />
-                <Route path={ROUTES.UPDATE} element={<Update />} />
-                <Route path={ROUTES.UPDATES} element={<Updates />} />
+                <Route element={<UpdateWrapper />}>
+                  <Route path={ROUTES.UPDATE} element={<Update />} />
+                  <Route path={ROUTES.UPDATES} element={<Updates />} />
+                </Route>
                 {/* <Route path={ROUTES.MINER} element={<Miner />} /> */}
               </Route>
             </Route>

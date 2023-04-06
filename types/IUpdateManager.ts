@@ -12,6 +12,22 @@ export interface ReleaseNote {
   notes: string
   version?: string
   date: Date
+  prevVersion?: string
+  nextVersion?: string
+  isNew?: boolean
+}
+
+export interface UpdateMonthVersion {
+  month?: string
+  version?: string
+}
+
+export interface UpdateReleaseNotesResponse {
+  data?: ReleaseNote[]
+  metadata: {
+    has_next: boolean
+    month_range: UpdateMonthVersion[]
+  }
 }
 
 export enum UpdateManagerAction {
@@ -22,6 +38,7 @@ export enum UpdateManagerAction {
   INSTALL_UPDATES = 'installUpdates',
   NOTES = 'notes',
   NOTE = 'note',
+  GET_VERSIONS_BEFORE = 'getVersionsBefore',
 }
 
 export interface IUpdateManager {
@@ -30,6 +47,7 @@ export interface IUpdateManager {
   ignoreUpdates: () => Promise<UpdateStatus>
   resetError: () => Promise<UpdateStatus>
   installUpdates: () => Promise<void>
-  notes: () => Promise<ReleaseNote[]>
+  notes: (after?: string, limit?: number) => Promise<UpdateReleaseNotesResponse>
   note: (version: string) => Promise<ReleaseNote>
+  getVersionsBefore: () => Promise<string[]>
 }
