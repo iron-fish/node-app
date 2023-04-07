@@ -68,7 +68,7 @@ const ReleaseNoteItem: FC<ReleaseNoteProps> = ({ note, setIntersectionId }) => {
         .&nbsp;{note.version}
       </chakra.h5>
       <chakra.h3 mb="1rem">{note.name}</chakra.h3>
-      <Box w="100%" h="3rem" overflow="hidden" mb="1rem">
+      <Box w="100%" h="6rem" overflow="hidden" mb="1rem">
         <ReactMarkdown>{note.notes}</ReactMarkdown>
       </Box>
       <Box>
@@ -111,7 +111,7 @@ const UpdateList: FC = () => {
 
   return (
     <Flex justifyContent="space-between">
-      <Flex direction="column" maxW="35rem" w="calc(100% - 8rem)" mr="1rem">
+      <Flex direction="column" w="calc(100% - 13rem)">
         {(data?.data || new Array(3).fill(null))?.map(note => {
           return note ? (
             <ReleaseNoteItem
@@ -135,7 +135,7 @@ const UpdateList: FC = () => {
         w="7rem"
         position="fixed"
         top="8.5rem"
-        right="2rem"
+        right="4rem"
       >
         <Box mb="1rem">
           <b>RELEASES</b>
