@@ -16,7 +16,7 @@ class DemoUpdateManager implements IUpdateManager {
     ignoreUpdates: false,
     hasUpdates: false,
     hasError: false,
-    version: 'v1.0.0',
+    version: '1.0.0',
   }
 
   initialize: () => Promise<void> = () => {
