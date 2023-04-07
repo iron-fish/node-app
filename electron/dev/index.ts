@@ -79,6 +79,7 @@ ipcMain.handle(
     } catch (error) {
       // eslint-disable-next-line no-console
       log.error(error)
+      throw new Error(error.message)
     }
 
     return result
