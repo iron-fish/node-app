@@ -18,6 +18,7 @@ import StatusBar from './StatusBar'
 import ROUTES from 'Routes/data'
 import { NavItemProps } from './NavItem'
 import Updates from 'Svgx/Updates'
+import useUpdatesCount from 'Hooks/updates/useUpdatesCount'
 
 const primaryNavItems: NavItemProps[] = [
   {
@@ -69,20 +70,13 @@ const primaryNavItems: NavItemProps[] = [
 // ]
 
 export const Navbar: FC<FlexProps> = props => {
-  const [updatesCount, setUpdatesCount] = useState(0)
-
-  useEffect(() => {
-    window.UpdateManager.getVersionsBefore().then(versions => {
-      setUpdatesCount(versions.length)
-    })
-  }, [])
+  const { data: updatesCount, loaded } = useUpdatesCount()
 
   const secondaryNavItems = useMemo(() => {
     return [
       {
-        // hotkey: 'U',
         statItem:
-          updatesCount > 0 ? (
+          loaded && updatesCount > 0 ? (
             <Box
               w="18px"
               h="18px"
@@ -104,7 +98,7 @@ export const Navbar: FC<FlexProps> = props => {
         aliases: [ROUTES.ACCOUNT, ROUTES.TRANSACTION],
       },
     ]
-  }, [updatesCount])
+  }, [updatesCount, loaded])
 
   return (
     <Flex
@@ -114,7 +108,7 @@ export const Navbar: FC<FlexProps> = props => {
       p="3rem 1rem 1rem"
       w={{ base: '5.5rem', sm: '16.4375rem' }}
       transition="width 0.3s ease-in-out"
-      position="fixed"
+      position="sticky"
       left="0"
       top="0"
       flexDirection="column"

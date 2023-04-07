@@ -86,16 +86,15 @@ export const PageLayout: FC = () => {
     <>
       <DownloadSnapshotMessage show={requiredSnapshot} data={data} />
       <Flex
-        top="0"
         className="App"
         justifyContent="center"
         minHeight={requiredSnapshot ? 'calc(100vh - 3rem)' : '100vh'}
       >
         <Navbar
           top={requiredSnapshot ? '3rem' : '0'}
-          maxHeight={requiredSnapshot ? 'calc(100vh - 3rem)' : '100vh'}
+          height={requiredSnapshot ? 'calc(100vh - 3rem)' : '100vh'}
         />
-        <Box marginLeft={{ base: '6rem', sm: '17rem' }} w="100%">
+        <Box w="100%">
           <Flex
             width="100%"
             height="100%"
