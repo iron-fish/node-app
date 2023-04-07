@@ -90,20 +90,46 @@ class DemoUpdateManager implements IUpdateManager {
   ) => {
     const res = await axios.get(`${this.serverUrl}/notes`, {
       params: { afterVersion: after, limit },
+      headers: {
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers':
+          'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+        'Access-Control-Allow-Methods': 'GET',
+      },
     })
 
     return res.data
   }
 
   note: (version: string) => Promise<ReleaseNote> = async version => {
-    return (await axios.get(`${this.serverUrl}/notes/${version}`)).data
+    return (
+      await axios.get(`${this.serverUrl}/notes/${version}`, {
+        headers: {
+          'Access-Control-Allow-Credentials': true,
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers':
+            'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+          'Access-Control-Allow-Methods': 'GET',
+        },
+      })
+    ).data
   }
 
   getVersionsBefore: () => Promise<string[]> = async () => {
     try {
       return (
         await axios.get(
-          `${this.serverUrl}/notes/before/v${this.status.version}`
+          `${this.serverUrl}/notes/before/v${this.status.version}`,
+          {
+            headers: {
+              'Access-Control-Allow-Credentials': true,
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Headers':
+                'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+              'Access-Control-Allow-Methods': 'GET',
+            },
+          }
         )
       ).data.map((note: ReleaseNote) => note.version)
     } catch (error) {
