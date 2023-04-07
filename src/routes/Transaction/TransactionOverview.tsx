@@ -60,7 +60,7 @@ const CARDS: Card[] = [
     render: (tx: Transaction) =>
       tx?.to?.length > 1
         ? tx?.to?.length + ' Addresses'
-        : tx?.to?.length === 1 && (
+        : (tx?.to?.length === 1 && (
             <CopyValueToClipboard
               label={truncateHash(tx.to[0] || '', 2, 4)}
               value={tx.to[0] || ''}
@@ -70,7 +70,8 @@ const CARDS: Card[] = [
               copyTooltipText={'Copy address'}
               copiedTooltipText={'Address copied'}
             />
-          ),
+          )) ||
+          'n / a',
     label: 'To',
     icon: DifficultyIcon,
   },

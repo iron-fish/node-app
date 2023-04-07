@@ -4,6 +4,7 @@ import {
   Account,
   CurrencyUtils,
   IronfishNode,
+  Note,
   RawTransaction,
   TransactionType,
 } from '@ironfish/sdk'
@@ -218,15 +219,35 @@ class TransactionManager
       spends.push(spend)
     }
 
-    const notes = await Promise.all(
-      (transaction
-        ? await account.getTransactionNotes(transaction.transaction)
-        : []
-      ).map(async n => ({
-        ...n,
-        asset: await this.assetManager.get(n.note.assetId()),
-      }))
+    const notesByAccount = await this.node.wallet.decryptNotes(
+      transaction.transaction,
+      null,
+      true,
+      [account]
     )
+    const notes = notesByAccount.get(account.id) ?? []
+
+    const serializedNotes = []
+    for await (const decryptedNote of notes) {
+      const noteHash = decryptedNote.hash
+      const decryptedNoteForOwner = await account.getDecryptedNote(noteHash)
+
+      const isOwner = !!decryptedNoteForOwner
+      const note = decryptedNoteForOwner
+        ? decryptedNoteForOwner.note
+        : new Note(decryptedNote.serializedNote)
+
+      const asset = await this.assetManager.get(note.assetId())
+
+      serializedNotes.push({
+        isOwner,
+        value: note.value(),
+        memo: note.memo(),
+        owner: note.owner(),
+        asset,
+        sender: note.sender(),
+      })
+    }
 
     const assetAmounts: Amount[] = []
     const feePaid = transaction.transaction.fee()
@@ -268,12 +289,7 @@ class TransactionManager
           asset: await this.assetManager.get(n.note.assetId()),
         }))
       ),
-      outputs: notes.map(n => ({
-        value: n.note.value(),
-        memo: n.note.memo(),
-        sender: n.note.sender(),
-        asset: n.asset,
-      })),
+      outputs: serializedNotes,
       spends: spends.map(spend => ({
         commitment: spend.commitment.toString('hex'),
         nullifier: spend.nullifier.toString('hex'),
@@ -285,11 +301,8 @@ class TransactionManager
       from:
         creatorNotes.length > 0
           ? account.publicAddress
-          : notes.at(0)?.note?.sender(),
-      to:
-        creatorNotes.length > 0
-          ? notes.map(n => n.note.sender())
-          : [account.publicAddress],
+          : serializedNotes.at(0)?.sender,
+      to: serializedNotes.filter(n => !n.isOwner).map(n => n.owner),
       created: created?.header?.timestamp || transaction.timestamp,
       amount: assetAmounts.find(
         ({ asset }) => asset.id === Asset.nativeId().toString('hex')
