@@ -168,39 +168,10 @@ class DemoUpdateManager implements IUpdateManager {
 
   initialize: () => Promise<void> = () => {
     this.url = `${this.serverUrl}/update/${process.platform}/${this.status.version}`
-
-    // if (app.isPackaged) {
-    //   autoUpdater.setFeedURL({ url: this.url })
-
-    //   autoUpdater.on(
-    //     'update-downloaded',
-    //     (e, releaseNotes, releaseName, releaseDate) => {
-    //       this.status = {
-    //         ...this.status,
-    //         hasUpdates: true,
-    //         update: {
-    //           name: releaseName,
-    //           notes: releaseNotes,
-    //           date: releaseDate,
-    //         },
-    //       }
-    //     }
-    //   )
-
-    //   autoUpdater.on('error', error => {
-    //     this.status = {
-    //       ...this.status,
-    //       hasError: true,
-    //       error: error.message,
-    //     }
-    //   })
-    // }
-
     return Promise.resolve()
   }
 
   checkUpdates: () => Promise<UpdateStatus> = () => {
-    // app.isPackaged && autoUpdater.checkForUpdates()
     return Promise.resolve(this.status)
   }
 
@@ -223,8 +194,6 @@ class DemoUpdateManager implements IUpdateManager {
   }
 
   installUpdates: () => Promise<void> = () => {
-    // app.isPackaged && autoUpdater.quitAndInstall()
-
     return Promise.resolve()
   }
 
@@ -253,8 +222,9 @@ class DemoUpdateManager implements IUpdateManager {
   getNewVersions: () => Promise<string[]> = async () => {
     return new Promise(resolve =>
       setTimeout(() => {
+        const appVersion = `v${this.status.version}`
         const noteIndex = RELEASE_NOTES.data.findIndex(
-          ({ version }) => version === this.status.version
+          ({ version }) => version === appVersion
         )
 
         resolve(
