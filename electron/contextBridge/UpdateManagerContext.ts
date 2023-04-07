@@ -53,7 +53,7 @@ class UpdateManagerContext implements IUpdateManager {
       version
     )
   }
-  getVersionsBefore: () => Promise<string[]> = () => {
+  getNewVersions: () => Promise<string[]> = () => {
     return ipcRenderer.invoke(
       'update-manager',
       UpdateManagerAction.GET_VERSIONS_BEFORE

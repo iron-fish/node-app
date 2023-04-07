@@ -3,10 +3,7 @@ import noop from 'lodash/noop'
 import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
 import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
-import {
-  ProgressStatus,
-  SnapshotManifest,
-} from 'Types/IronfishManager/IIronfishSnapshotManager'
+import { SnapshotManifest } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { Payment } from 'Types/Transaction'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
