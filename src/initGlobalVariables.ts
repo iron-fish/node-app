@@ -1,4 +1,5 @@
 import DemoDataManager from 'Data/DemoDataManager'
+import DemoUpdateManager from 'Data/DemoUpdateManager'
 import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
 import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
@@ -20,3 +21,4 @@ declare global {
 
 //TODO: Remove after full integration of @ironfish/sdk
 window.DemoDataManager = new DemoDataManager()
+window.UpdateManager = new DemoUpdateManager()
