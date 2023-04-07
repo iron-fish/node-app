@@ -112,7 +112,7 @@ const UpdateList: FC = () => {
   return (
     <Flex justifyContent="space-between">
       <Flex direction="column" w="calc(100% - 13rem)">
-        {(data?.data || new Array(3).fill(null))?.map(note => {
+        {(data?.data || new Array(3).fill(null))?.map((note, index) => {
           return note ? (
             <ReleaseNoteItem
               key={note.version}
@@ -121,6 +121,7 @@ const UpdateList: FC = () => {
             />
           ) : (
             <Skeleton
+              key={index}
               variant="ironFish"
               my="1rem"
               w="100%"
@@ -140,7 +141,7 @@ const UpdateList: FC = () => {
         <Box mb="1rem">
           <b>RELEASES</b>
         </Box>
-        {monthRange.map(({ month, version }) =>
+        {monthRange.map(({ month, version }, index) =>
           month && version ? (
             <Link
               key={`${month}-${version}`}
@@ -171,6 +172,7 @@ const UpdateList: FC = () => {
             </Link>
           ) : (
             <Skeleton
+              key={index}
               variant="ironFish"
               w="100%"
               h="24px"

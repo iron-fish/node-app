@@ -6,7 +6,7 @@ const useUpdatesCount = () => {
 
   useEffect(() => {
     promiseWrapper(
-      window.UpdateManager.getVersionsBefore().then(versions => versions.length)
+      window.UpdateManager.getNewVersions().then(versions => versions.length)
     )
   }, [])
 

@@ -38,7 +38,7 @@ export enum UpdateManagerAction {
   INSTALL_UPDATES = 'installUpdates',
   NOTES = 'notes',
   NOTE = 'note',
-  GET_VERSIONS_BEFORE = 'getVersionsBefore',
+  GET_VERSIONS_BEFORE = 'getNewVersions',
 }
 
 export interface IUpdateManager {
@@ -49,5 +49,5 @@ export interface IUpdateManager {
   installUpdates: () => Promise<void>
   notes: (after?: string, limit?: number) => Promise<UpdateReleaseNotesResponse>
   note: (version: string) => Promise<ReleaseNote>
-  getVersionsBefore: () => Promise<string[]>
+  getNewVersions: () => Promise<string[]>
 }
