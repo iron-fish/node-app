@@ -13,17 +13,20 @@ const useUpdates = () => {
       loadUpdateStatus()
     }
 
-    const interval = setInterval(loadUpdateStatus, 300000)
+    const interval = status?.ignoreUpdates
+      ? null
+      : setInterval(loadUpdateStatus, 300000)
 
     return () => {
       interval && clearInterval(interval)
     }
-  }, [])
+  }, [status?.ignoreUpdates])
 
   return {
     status,
-    install: () => window.UpdateManager.installUpdates(),
-    ignore: () => window.UpdateManager.ignoreUpdates(),
+    install: () =>
+      window.UpdateManager.installUpdates().then(() => loadUpdateStatus()),
+    ignore: () => window.UpdateManager.ignoreUpdates().then(setStatus),
   }
 }
 

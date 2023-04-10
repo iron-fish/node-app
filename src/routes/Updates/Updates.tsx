@@ -9,10 +9,10 @@ import {
 } from '@ironfish/ui-kit'
 import { Link as NavigateLink } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
-import useUpdates from 'Hooks/updates/useUpdates'
 import { ROUTES } from '..'
 import { useUpdateProvider } from 'Providers/UpdatesProvider'
 import { ReleaseNote, UpdateMonthVersion } from 'Types/IUpdateManager'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 interface ReleaseNoteProps {
   note: ReleaseNote
@@ -187,7 +187,9 @@ const UpdateList: FC = () => {
 }
 
 const Updates: FC = () => {
-  const { status } = useUpdates()
+  const {
+    updates: { status },
+  } = useDataSync()
 
   return (
     <Box w="100%">

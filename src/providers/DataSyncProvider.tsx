@@ -6,10 +6,13 @@ import {
   useEffect,
   useCallback,
   ReactNode,
+  useMemo,
 } from 'react'
 import { ProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
 import { useSnapshotStatus } from './SnapshotProvider'
+import useUpdates from 'Hooks/updates/useUpdates'
+import { UpdateStatus } from 'Types/IUpdateManager'
 
 export interface DataSyncContextProps {
   data?: NodeStatusResponse | undefined
@@ -19,6 +22,11 @@ export interface DataSyncContextProps {
   sync: {
     start: () => Promise<void>
     stop: () => Promise<void>
+  }
+  updates?: {
+    status: UpdateStatus
+    install: () => Promise<void>
+    ignore: () => Promise<void>
   }
 }
 
@@ -35,9 +43,23 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [status, setNodeStatus] = useState<NodeStatusResponse | undefined>()
   const [error, setError] = useState()
   const { status: snapshotStatus } = useSnapshotStatus()
+  const updates = useUpdates()
 
   const loadStatus = () =>
-    window.IronfishManager.nodeStatus().then(setNodeStatus).catch(setError)
+    window.IronfishManager.nodeStatus()
+      .then(nextStatus => {
+        setNodeStatus({
+          blockSyncer: {
+            syncing: {
+              progress: nextStatus.blockSyncer.syncing.progress,
+            },
+          },
+          blockchain: {
+            synced: nextStatus.blockchain.synced,
+          },
+        })
+      })
+      .catch(setError)
 
   const stopSyncing = useCallback(
     () => window.IronfishManager.stopSyncing(),
@@ -67,22 +89,30 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
       status?.blockchain.synced ? 10000 : 5000
     )
     return () => clearInterval(interval)
-  }, [status?.blockchain.synced, status?.blockSyncer.syncing?.progress])
+  }, [status?.blockchain?.synced, status?.blockSyncer?.syncing?.progress])
 
-  const value = {
+  const value = useMemo(() => {
+    return {
+      synced,
+      data: status,
+      error,
+      requiredSnapshot:
+        snapshotStatus?.status === ProgressStatus.NOT_STARTED &&
+        status &&
+        status?.blockSyncer.syncing &&
+        status?.blockSyncer.syncing.progress < 0.5,
+      sync: {
+        start: startSyncing,
+        stop: stopSyncing,
+      },
+      updates,
+    } as DataSyncContextProps
+  }, [
     synced,
-    data: status,
-    error,
-    requiredSnapshot:
-      snapshotStatus?.status === ProgressStatus.NOT_STARTED &&
-      status &&
-      status?.blockSyncer.syncing &&
-      status?.blockSyncer.syncing.progress < 0.5,
-    sync: {
-      start: startSyncing,
-      stop: stopSyncing,
-    },
-  } as DataSyncContextProps
+    JSON.stringify(status),
+    JSON.stringify(snapshotStatus),
+    JSON.stringify(updates.status),
+  ])
 
   return (
     <DataSyncContext.Provider value={value}>

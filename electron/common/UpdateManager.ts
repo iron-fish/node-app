@@ -6,9 +6,12 @@ import {
   UpdateStatus,
 } from 'Types/IUpdateManager'
 import axios from 'axios'
+import log from 'electron-log'
 
 class UpdateManager implements IUpdateManager {
-  private serverUrl = 'https://wallet-app-deploy.vercel.app/' //need update URL after selecting the update server
+  // private serverUrl = 'https://wallet-app-deploy.vercel.app/' //need update URL after selecting the update server
+  private serverUrl =
+    'https://wallet-app-update-server-git-add-notes-endpoint-ironfish.vercel.app' //need update URL after selecting the update server
   private url: string
   private status: UpdateStatus = {
     ignoreUpdates: false,
@@ -41,6 +44,7 @@ class UpdateManager implements IUpdateManager {
       )
 
       autoUpdater.on('error', error => {
+        log.error(error)
         this.status = {
           ...this.status,
           hasError: true,
@@ -54,6 +58,9 @@ class UpdateManager implements IUpdateManager {
 
   checkUpdates: () => Promise<UpdateStatus> = () => {
     app.isPackaged && autoUpdater.checkForUpdates()
+    if (!app.isPackaged) {
+      this.status.hasUpdates = true
+    }
     return Promise.resolve(this.status)
   }
 
@@ -77,7 +84,9 @@ class UpdateManager implements IUpdateManager {
 
   installUpdates: () => Promise<void> = () => {
     app.isPackaged && autoUpdater.quitAndInstall()
-
+    if (!app.isPackaged) {
+      app.quit()
+    }
     return Promise.resolve()
   }
 
