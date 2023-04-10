@@ -8,10 +8,7 @@ import {
 import axios from 'axios'
 
 class UpdateManager implements IUpdateManager {
-  // private serverUrl = 'https://wallet-app-deploy.vercel.app/' //need update URL after selecting the update server
-  private serverUrl =
-    'https://wallet-app-update-server-git-add-notes-endpoint-ironfish.vercel.app' //vercel develop branch server
-  // 'http://localhost:5005' //need update URL after selecting the update server
+  private serverUrl = 'https://wallet-app-deploy.vercel.app/' //need update URL after selecting the update server
   private url: string
   private status: UpdateStatus = {
     ignoreUpdates: false,
@@ -106,9 +103,9 @@ class UpdateManager implements IUpdateManager {
     try {
       return (
         await axios.get(
-          `${this.serverUrl}/notes/before/v${this.status.version}`
+          `${this.serverUrl}/notes?beforeVersion=v${this.status.version}&limit=100`
         )
-      ).data.map((note: ReleaseNote) => note.version)
+      ).data.data.map((note: ReleaseNote) => note.version)
     } catch (error) {
       return []
     }
