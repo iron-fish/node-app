@@ -168,6 +168,19 @@ class DemoUpdateManager implements IUpdateManager {
 
   initialize: () => Promise<void> = () => {
     this.url = `${this.serverUrl}/update/${process.platform}/${this.status.version}`
+
+    setTimeout(() => {
+      this.status = {
+        ...this.status,
+        hasUpdates: true,
+        update: {
+          name: 'v1.1.8',
+          notes: 'just note',
+          date: new Date(),
+        },
+      }
+    })
+
     return Promise.resolve()
   }
 
