@@ -4,46 +4,46 @@ export enum NodeStatusType {
   ERROR = 'error',
 }
 
-export interface NodeStatusResponse {
+export type NodeStatusResponse = Partial<{
   node: {
     status: NodeStatusType
     nodeName: string
   }
-  cpu: {
+  cpu: Partial<{
     cores: number
     percentRollingAvg: number
     percentCurrent: number
-  }
-  memory: {
+  }>
+  memory: Partial<{
     heapMax: number
     heapTotal: number
     heapUsed: number
     rss: number
     memFree: number
     memTotal: number
-  }
-  peerNetwork: {
+  }>
+  peerNetwork: Partial<{
     peers: number
     isReady: boolean
     inboundTraffic: number
     outboundTraffic: number
-  }
-  blockchain: {
+  }>
+  blockchain: Partial<{
     synced: boolean
     head: string
     totalSequences: string
     headTimestamp: number
     newBlockSpeed: number
-  }
-  blockSyncer: {
+  }>
+  blockSyncer: Partial<{
     status: 'stopped' | 'idle' | 'stopping' | 'syncing'
-    syncing?: {
+    syncing: Partial<{
       blockSpeed: number
       speed: number
       progress: number
-      ours?: string
-    }
-  }
-}
+      ours: string
+    }>
+  }>
+}>
 
 export default NodeStatusResponse

@@ -12,7 +12,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       name: 'Version 1.1.8',
       date: new Date('2023-04-03T09:15:54Z'),
       notes:
-        "## What's Changed\r\n* Update buttons outline by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/120\r\n* Add styled Textarea. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/121\r\n* Added paste handling for mnemonic phrase. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/119\r\n\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v1.1.7...v1.1.8",
+        '* Update buttons outline \r\n* Add styled Textarea. \r\n* Added paste handling for mnemonic phrase. \r\n',
       prevVersion: 'v1.1.7',
       nextVersion: null,
     },
@@ -20,8 +20,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       version: 'v1.1.7',
       name: 'Version 1.1.7',
       date: new Date('2023-04-03T09:17:48Z'),
-      notes:
-        "## What's Changed\r\n* Update chakra-ui to latest. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/117\r\n\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v1.1.6...v1.1.7",
+      notes: '* Update chakra-ui to latest. \r\n',
       prevVersion: 'v1.1.6',
       nextVersion: 'v1.1.8',
     },
@@ -29,8 +28,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       version: 'v1.1.6',
       name: 'Version 1.1.6',
       date: new Date('2023-04-03T09:18:06Z'),
-      notes:
-        "## What's Changed\r\n* Add blinking eye click handler. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/115\r\n\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v1.1.5...v1.1.6",
+      notes: '* Add blinking eye click handler. \r\n',
       prevVersion: 'v1.1.5',
       nextVersion: 'v1.1.7',
     },
@@ -38,8 +36,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       version: 'v1.1.5',
       name: 'Version 1.1.5',
       date: new Date('2023-02-16T11:13:59Z'),
-      notes:
-        "## What's Changed\r\n* Allow to specify amount of words for mnemonic view. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/112\r\n\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v1.1.4...v1.1.5",
+      notes: '* Allow to specify amount of words for mnemonic view. \r\n',
       prevVersion: 'v1.1.4',
       nextVersion: 'v1.1.6',
     },
@@ -48,7 +45,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       name: 'Version 1.1.4',
       date: new Date('2023-02-10T08:28:00Z'),
       notes:
-        "## What's Changed\r\n* Allow to customize styles for table components by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/109\r\n* Add mnemonic phrase warning mode by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/107\r\n\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v1.1.3...v1.1.4",
+        '* Allow to customize styles for table components \r\n* Add mnemonic phrase warning mode \r\n',
       prevVersion: 'v1.1.3',
       nextVersion: 'v1.1.5',
     },
@@ -56,8 +53,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       version: 'v1.1.3',
       name: 'Version 1.1.3',
       date: new Date('2023-01-19T09:39:20Z'),
-      notes:
-        "## What's Changed\r\n* Show clear button when label or helper text available. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/105\r\n\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v1.1.2...v1.1.3",
+      notes: '* Show clear button when label or helper text available. \r\n',
       prevVersion: 'v1.1.2',
       nextVersion: 'v1.1.4',
     },
@@ -65,8 +61,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       version: 'v1.1.2',
       name: 'Version 1.1.2',
       date: new Date('2022-12-22T12:07:24Z'),
-      notes:
-        "## What's Changed\r\n* Fix autocomplete flip by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/103\r\n* Add stepper component by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/100\r\n\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v1.0.2...v1.1.2",
+      notes: '* Fix autocomplete flip \r\n* Add stepper component \r\n',
       prevVersion: 'v1.0.2',
       nextVersion: 'v1.1.3',
     },
@@ -74,8 +69,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       version: 'v1.0.2',
       name: 'Version 1.0.2',
       date: new Date('2022-12-19T13:31:11Z'),
-      notes:
-        "## What's Changed\r\n* Fixed dark mode colors. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/101\r\n\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v1.0.0...v1.0.2",
+      notes: '* Fixed dark mode colors. \r\n',
       prevVersion: 'v1.0.0',
       nextVersion: 'v1.1.2',
     },
@@ -84,7 +78,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       name: 'Version 1.0.0',
       date: new Date('2022-12-05T13:11:43Z'),
       notes:
-        "## What's Changed\r\n* Updated Chackra UI version. by @ndemidovich-sc in https://github.com/iron-fish/ui-kit/pull/95\r\n* Add styled toast. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/96\r\n* Added clear button. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/97\r\n\r\n## Breaking changes\r\n* Migrated to react 18 and chakra-ui v2\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v0.0.18...v1.0.0\r\n",
+        '* Updated Chackra UI version. \r\n* Add styled toast. \r\n* Added clear button. * Migrated to react 18 and chakra-ui v2\r\n',
       prevVersion: 'v0.0.18',
       nextVersion: 'v1.0.2',
     },
@@ -92,7 +86,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       version: 'v0.0.18',
       name: 'Release v.0.0.18',
       date: new Date('2022-11-24T04:20:44Z'),
-      notes: '* Added `onClose` callback for Autocomplete component',
+      notes: '* Added `onClose` callback for Autocomplete component\r\n',
       prevVersion: 'v0.0.17',
       nextVersion: 'v1.0.0',
     },
@@ -101,7 +95,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       name: 'Version 0.0.17',
       date: new Date('2022-11-15T14:31:55Z'),
       notes:
-        "## What's Changed\r\n* (IRO-2683) Fix disabled button hover. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/91\r\n* (IRO-2692) autocomplete overflow. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/92\r\n\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v0.0.16...v0.0.17",
+        '* (IRO-2683) Fix disabled button hover. \r\n* (IRO-2692) autocomplete overflow. \r\n',
       prevVersion: 'v0.0.16',
       nextVersion: 'v0.0.18',
     },
@@ -110,7 +104,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       name: 'Version 0.0.16',
       date: new Date('2022-10-20T08:39:49Z'),
       notes:
-        "## What's Changed\r\n* (IRO-2668) Added progress colors. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/87\r\n* (IRO-2639) Add transaction state icons icons. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/86\r\n* Update Icons story. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/66\r\n\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v0.0.15...v0.0.16",
+        '* (IRO-2668) Added progress colors. \r\n* (IRO-2639) Add transaction state icons icons. \r\n* Update Icons story. \r\n',
       prevVersion: 'v0.0.15',
       nextVersion: 'v0.0.17',
     },
@@ -118,8 +112,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       version: 'v0.0.15',
       name: 'Version 0.0.15',
       date: new Date('2022-10-03T12:21:23Z'),
-      notes:
-        "## What's Changed\r\n* [Make menu props not required for Button Group.](https://github.com/iron-fish/ui-kit/commit/56a1340523ad21ea48dafc76e83e76ed4f9fad78)\r\n\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v0.0.14...v0.0.15",
+      notes: '* Make menu props not required for Button Group.\r\n',
       prevVersion: 'v0.0.14',
       nextVersion: 'v0.0.16',
     },
@@ -128,7 +121,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       name: 'Version 0.0.14',
       date: new Date('2022-09-30T09:49:10Z'),
       notes:
-        "## What's Changed\r\n* (IRO-2580) Create buttons group component. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/81\r\n* (IRO-2581) Added compact view for SelectField. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/80\r\n* (IRO-2638) Update table styles for Table. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/83\r\n* (IRO-2625) Make mnemonic view header accept ReactNode. by @azhurauski-sc in https://github.com/iron-fish/ui-kit/pull/82\r\n\r\n\r\n**Full Changelog**: https://github.com/iron-fish/ui-kit/compare/v0.0.13...v0.0.14",
+        '* (IRO-2580) Create buttons group component. \r\n* (IRO-2581) Added compact view for SelectField. \r\n* (IRO-2638) Update table styles for Table. \r\n* (IRO-2625) Make mnemonic view header accept ReactNode. \r\n',
       prevVersion: 'null',
       nextVersion: 'v0.0.15',
     },
@@ -150,6 +143,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
       },
     ],
     has_next: false,
+    has_prev: false,
   },
 }
 
@@ -167,7 +161,20 @@ class DemoUpdateManager implements IUpdateManager {
   }
 
   initialize: () => Promise<void> = () => {
-    this.url = `${this.serverUrl}/update/${process.platform}/${this.status.version}`
+    this.url = `${this.serverUrl}/update/demo/${this.status.version}`
+
+    setTimeout(() => {
+      this.status = {
+        ...this.status,
+        hasUpdates: true,
+        update: {
+          name: 'v1.1.8',
+          notes: 'just note',
+          date: new Date(),
+        },
+      }
+    }, 10000)
+
     return Promise.resolve()
   }
 
@@ -194,6 +201,11 @@ class DemoUpdateManager implements IUpdateManager {
   }
 
   installUpdates: () => Promise<void> = () => {
+    this.status = {
+      ...this.status,
+      version: '1.1.8',
+      ignoreUpdates: true,
+    }
     return Promise.resolve()
   }
 

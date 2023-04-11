@@ -22,7 +22,7 @@ import Initializing from 'Routes/Initializing'
 import TransactionOverview from 'Routes/Transaction/TransactionOverview'
 import Updates from 'Routes/Updates/Updates'
 import Update from 'Routes/Updates/Update'
-import { UpdateWrapper } from 'Providers/UpdatesProvider'
+import { ReleaseNotesProviderWrapper } from 'Providers/ReleaseNotesProvider'
 
 const breakpoints = {
   xs: '46.875rem', //750px
@@ -67,7 +67,7 @@ function App() {
                 />
                 {/* <Route path={ROUTES.RESOURCES} element={null} /> */}
                 <Route path={ROUTES.NODE} element={<NodeOverview />} />
-                <Route element={<UpdateWrapper />}>
+                <Route element={<ReleaseNotesProviderWrapper />}>
                   <Route path={ROUTES.UPDATE} element={<Update />} />
                   <Route path={ROUTES.UPDATES} element={<Updates />} />
                 </Route>

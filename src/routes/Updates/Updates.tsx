@@ -9,10 +9,10 @@ import {
 } from '@ironfish/ui-kit'
 import { Link as NavigateLink } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
-import useUpdates from 'Hooks/updates/useUpdates'
 import { ROUTES } from '..'
-import { useUpdateProvider } from 'Providers/UpdatesProvider'
+import { useReleaseNotesProvider } from 'Providers/ReleaseNotesProvider'
 import { ReleaseNote, UpdateMonthVersion } from 'Types/IUpdateManager'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 interface ReleaseNoteProps {
   note: ReleaseNote
@@ -68,7 +68,7 @@ const ReleaseNoteItem: FC<ReleaseNoteProps> = ({ note, setIntersectionId }) => {
         .&nbsp;{note.version}
       </chakra.h5>
       <chakra.h3 mb="1rem">{note.name}</chakra.h3>
-      <Box w="100%" h="6rem" overflow="hidden" mb="1rem">
+      <Box w="100%" h="3rem" overflow="hidden" mb="1rem">
         <ReactMarkdown>{note.notes}</ReactMarkdown>
       </Box>
       <Box>
@@ -88,7 +88,7 @@ const ReleaseNoteItem: FC<ReleaseNoteProps> = ({ note, setIntersectionId }) => {
 
 const UpdateList: FC = () => {
   const [intersectionId, setIntersectionId] = useState(null)
-  const { data, loaded } = useUpdateProvider()
+  const { data, loaded } = useReleaseNotesProvider()
 
   const monthRange: UpdateMonthVersion[] = useMemo(() => {
     const month = data?.metadata?.month_range || new Array(12).fill({})
@@ -187,7 +187,9 @@ const UpdateList: FC = () => {
 }
 
 const Updates: FC = () => {
-  const { status } = useUpdates()
+  const {
+    updates: { status },
+  } = useDataSync()
 
   return (
     <Box w="100%">

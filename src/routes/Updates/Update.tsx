@@ -12,7 +12,7 @@ import { FC, useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import LocationStateProps from 'Types/LocationState'
-import { useUpdateProvider } from 'Providers/UpdatesProvider'
+import { useReleaseNotesProvider } from 'Providers/ReleaseNotesProvider'
 import { ReleaseNote } from 'Types/IUpdateManager'
 
 interface CurrentNoteStateProps {
@@ -24,7 +24,7 @@ interface CurrentNoteStateProps {
 const Update: FC = () => {
   const location = useLocation()
   const { version } = location.state as LocationStateProps
-  const { data, loaded } = useUpdateProvider()
+  const { data, loaded } = useReleaseNotesProvider()
   const [currentNote, setCurrentNote] = useState<CurrentNoteStateProps>()
 
   useEffect(() => {
@@ -75,7 +75,7 @@ const Update: FC = () => {
           noOfLines={16}
           spacing="4"
         >
-          <Box w="100%">
+          <Box w="100%" overflow={'hidden'}>
             <ReactMarkdown>{currentNote.note?.notes}</ReactMarkdown>
           </Box>
         </SkeletonText>

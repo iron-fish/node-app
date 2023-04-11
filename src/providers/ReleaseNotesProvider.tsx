@@ -25,13 +25,14 @@ const UpdateProviderContext = createContext<
     data: [],
     metadata: {
       has_next: false,
+      has_prev: false,
       month_range: [],
     },
   },
   loaded: false,
 })
 
-const UpdateProvider: FC<{ children: ReactNode }> = ({ children }) => {
+const ReleaseNotesProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [result, promiseWrapper] =
     useAsyncDataWrapper<UpdateReleaseNotesResponse>()
 
@@ -60,18 +61,24 @@ const UpdateProvider: FC<{ children: ReactNode }> = ({ children }) => {
   )
 }
 
-function useUpdateProvider() {
+function useReleaseNotesProvider() {
   const context = useContext(UpdateProviderContext)
   if (context === undefined) {
-    throw new Error('useUpdateProvider must be used within a useUpdateProvider')
+    throw new Error(
+      'useReleaseNotesProvider must be used within a ReleaseNotesProvider'
+    )
   }
   return context
 }
 
-const UpdateWrapper = () => (
-  <UpdateProvider>
+const ReleaseNotesProviderWrapper = () => (
+  <ReleaseNotesProvider>
     <Outlet />
-  </UpdateProvider>
+  </ReleaseNotesProvider>
 )
 
-export { UpdateProvider, useUpdateProvider, UpdateWrapper }
+export {
+  ReleaseNotesProvider,
+  useReleaseNotesProvider,
+  ReleaseNotesProviderWrapper,
+}
