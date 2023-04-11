@@ -135,27 +135,17 @@ const UpdateList: FC = () => {
         direction="column"
         w="7rem"
         position="fixed"
-        top="8.5rem"
+        top="11.75rem"
         right="4rem"
       >
-        <Box mb="1rem">
+        <Box mb="1.25rem" letterSpacing="0.01rem">
           <b>RELEASES</b>
         </Box>
         {monthRange.map(({ month, version }, index) =>
           month && version ? (
             <Link
               key={`${month}-${version}`}
-              onClick={() => {
-                const element = document.getElementById(version)
-                if (element) {
-                  element.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                  })
-                }
-              }}
-              mb="1rem"
-              fontWeight={intersectionId === version ? 'bold' : 'normal'}
+              mb="1.25rem"
               color={
                 intersectionId === version
                   ? NAMED_COLORS.BLACK
@@ -167,6 +157,15 @@ const UpdateList: FC = () => {
                     ? NAMED_COLORS.WHITE
                     : NAMED_COLORS.PALE_GREY,
               }}
+              onClick={() => {
+                const element = document.getElementById(version)
+                if (element) {
+                  element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                  })
+                }
+              }}
             >
               {month}
             </Link>
@@ -175,7 +174,7 @@ const UpdateList: FC = () => {
               key={index}
               variant="ironFish"
               w="100%"
-              h="24px"
+              h="1.5rem"
               mb="1rem"
               isLoaded={loaded}
             />

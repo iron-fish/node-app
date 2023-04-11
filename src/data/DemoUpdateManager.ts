@@ -148,10 +148,7 @@ const RELEASE_NOTES: UpdateReleaseNotesResponse = {
 }
 
 class DemoUpdateManager implements IUpdateManager {
-  // private serverUrl = 'https://wallet-app-deploy.vercel.app/' //need update URL after selecting the update server
-  private serverUrl =
-    'https://wallet-app-update-server-git-add-notes-endpoint-ironfish.vercel.app' //vercel develop branch server
-  // 'http://localhost:5005' //need update URL after selecting the update server
+  private serverUrl = 'http://localhost:5005'
   private url: string
   private status: UpdateStatus = {
     ignoreUpdates: false,

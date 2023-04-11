@@ -9,9 +9,7 @@ import axios from 'axios'
 import log from 'electron-log'
 
 class UpdateManager implements IUpdateManager {
-  // private serverUrl = 'https://wallet-app-deploy.vercel.app/' //need update URL after selecting the update server
-  private serverUrl =
-    'https://wallet-app-update-server-git-add-notes-endpoint-ironfish.vercel.app' //need update URL after selecting the update server
+  private serverUrl = 'https://wallet-app-deploy.vercel.app'
   private url: string
   private status: UpdateStatus = {
     ignoreUpdates: false,

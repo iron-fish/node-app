@@ -75,7 +75,15 @@ const Update: FC = () => {
           noOfLines={16}
           spacing="4"
         >
-          <Box w="100%" overflow={'hidden'}>
+          <Box
+            w="100%"
+            overflow={'hidden'}
+            sx={{
+              ul: {
+                paddingLeft: '2rem',
+              },
+            }}
+          >
             <ReactMarkdown>{currentNote.note?.notes}</ReactMarkdown>
           </Box>
         </SkeletonText>

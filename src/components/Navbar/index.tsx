@@ -57,17 +57,6 @@ const primaryNavItems: NavItemProps[] = [
     aliases: [],
   },
 ]
-// const secondaryNavItems = [
-//   {
-//     hotkey: 'U',
-//     to: ROUTES.UPDATES,
-//     label: 'Updates',
-//     icon: Updates,
-//     aliases: [ROUTES.ACCOUNT, ROUTES.TRANSACTION],
-//   },
-//   //   { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
-//   //   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
-// ]
 
 export const Navbar: FC<FlexProps> = props => {
   const { data: updatesCount, loaded } = useUpdatesCount()
@@ -78,8 +67,8 @@ export const Navbar: FC<FlexProps> = props => {
         statItem:
           loaded && updatesCount > 0 ? (
             <Box
-              w="18px"
-              h="18px"
+              w="1.125rem"
+              h="1.125rem"
               borderRadius="50%"
               textAlign="center"
               bgColor="#335A48"
