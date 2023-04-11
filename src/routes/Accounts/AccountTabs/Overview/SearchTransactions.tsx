@@ -1,5 +1,5 @@
 import { FC, useEffect, useState, useDeferredValue } from 'react'
-import { Box, chakra, useIronToast } from '@ironfish/ui-kit'
+import { Box, chakra, useBreakpointValue, useIronToast } from '@ironfish/ui-kit'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAccountTransactions'
 import { useNavigate } from 'react-router-dom'
@@ -31,6 +31,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
   } = useTransactions(address, deferredSearchTerm, $sortOrder)
   const trxLoaded = useDeferredValue(loaded)
   const [, setTransactionsState] = useState([])
+  const isCompactView = useBreakpointValue({ base: true, md: false })
   const toast = useIronToast({
     containerStyle: {
       mb: '1rem',
@@ -198,7 +199,8 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
                 </chakra.h5>
               ),
             },
-            ACTIONS_COLUMN,
+            ...(isCompactView ? [] : [ACTIONS_COLUMN]),
+            ,
           ]}
         />
       )}
