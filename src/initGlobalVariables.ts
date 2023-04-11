@@ -23,4 +23,5 @@ declare global {
 window.DemoDataManager = new DemoDataManager()
 if (!window.UpdateManager) {
   window.UpdateManager = new DemoUpdateManager()
+  window.UpdateManager.initialize()
 }

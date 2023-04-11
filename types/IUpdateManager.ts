@@ -26,6 +26,7 @@ export interface UpdateReleaseNotesResponse {
   data?: ReleaseNote[]
   metadata: {
     has_next: boolean
+    has_prev: boolean
     month_range: UpdateMonthVersion[]
   }
 }

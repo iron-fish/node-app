@@ -26,7 +26,9 @@ if (require('electron-squirrel-startup')) {
 }
 
 let mainWindow: BrowserWindow
-UpdateManager.initialize()
+if (process.env.MODE !== 'demo') {
+  UpdateManager.initialize()
+}
 
 const createWindow = () => {
   if (!mainWindow) {

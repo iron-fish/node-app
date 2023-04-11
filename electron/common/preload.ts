@@ -10,4 +10,7 @@ contextBridge.exposeInMainWorld(
 contextBridge.exposeInMainWorld('selectFolder', () =>
   ipcRenderer.invoke('dialog:openDirectory')
 )
-contextBridge.exposeInMainWorld('UpdateManager', UpdateManagerContext)
+
+if (process.env.MODE !== 'demo') {
+  contextBridge.exposeInMainWorld('UpdateManager', UpdateManagerContext)
+}

@@ -10,7 +10,7 @@ import {
 import { Link as NavigateLink } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import { ROUTES } from '..'
-import { useUpdateProvider } from 'Providers/UpdatesProvider'
+import { useReleaseNotesProvider } from 'Providers/ReleaseNotesProvider'
 import { ReleaseNote, UpdateMonthVersion } from 'Types/IUpdateManager'
 import { useDataSync } from 'Providers/DataSyncProvider'
 
@@ -68,7 +68,7 @@ const ReleaseNoteItem: FC<ReleaseNoteProps> = ({ note, setIntersectionId }) => {
         .&nbsp;{note.version}
       </chakra.h5>
       <chakra.h3 mb="1rem">{note.name}</chakra.h3>
-      <Box w="100%" h="6rem" overflow="hidden" mb="1rem">
+      <Box w="100%" h="3rem" overflow="hidden" mb="1rem">
         <ReactMarkdown>{note.notes}</ReactMarkdown>
       </Box>
       <Box>
@@ -88,7 +88,7 @@ const ReleaseNoteItem: FC<ReleaseNoteProps> = ({ note, setIntersectionId }) => {
 
 const UpdateList: FC = () => {
   const [intersectionId, setIntersectionId] = useState(null)
-  const { data, loaded } = useUpdateProvider()
+  const { data, loaded } = useReleaseNotesProvider()
 
   const monthRange: UpdateMonthVersion[] = useMemo(() => {
     const month = data?.metadata?.month_range || new Array(12).fill({})
