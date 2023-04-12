@@ -68,7 +68,7 @@ const ReleaseNoteItem: FC<ReleaseNoteProps> = ({ note, setIntersectionId }) => {
         .&nbsp;{note.version}
       </chakra.h5>
       <chakra.h3 mb="1rem">{note.name}</chakra.h3>
-      <Box w="100%" h="3rem" overflow="hidden" mb="1rem">
+      <Box w="100%" maxH="3rem" h="min-content" overflow="hidden" mb="1rem">
         <ReactMarkdown>{note.notes}</ReactMarkdown>
       </Box>
       <Box>
