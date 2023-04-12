@@ -83,7 +83,10 @@ class UpdateManager implements IUpdateManager {
   installUpdates: () => Promise<void> = () => {
     app.isPackaged && autoUpdater.quitAndInstall()
     if (!app.isPackaged) {
-      app.quit()
+      this.status = {
+        ...this.status,
+        ignoreUpdates: true,
+      }
     }
     return Promise.resolve()
   }
