@@ -84,7 +84,7 @@ export const Navbar: FC<FlexProps> = props => {
         to: ROUTES.UPDATES,
         label: 'Updates',
         icon: Updates,
-        aliases: [ROUTES.ACCOUNT, ROUTES.TRANSACTION],
+        aliases: [],
       },
     ]
   }, [updatesCount, loaded])
