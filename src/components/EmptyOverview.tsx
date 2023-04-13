@@ -1,11 +1,5 @@
 import { FC, ReactNode } from 'react'
-import {
-  Flex,
-  VStack,
-  chakra,
-  useColorModeValue,
-  NAMED_COLORS,
-} from '@ironfish/ui-kit'
+import { Flex, VStack, chakra, NAMED_COLORS } from '@ironfish/ui-kit'
 import EmptyOverviewImage from 'Svgx/EmptyOverviewImage'
 
 interface EmptyOverviewProps {
@@ -18,15 +12,18 @@ const EmptyOverview: FC<EmptyOverviewProps> = ({
   description,
   ...props
 }) => {
-  const $fontColor = useColorModeValue(
-    NAMED_COLORS.GREY,
-    NAMED_COLORS.PALE_GREY
-  )
   return (
     <Flex mt="2rem" justifyContent="center" {...props}>
       <VStack w="25rem">
         <chakra.h3 mb="1rem">{header}</chakra.h3>
-        <chakra.h5 mb="1.5rem !important" textAlign="center" color={$fontColor}>
+        <chakra.h5
+          mb="1.5rem !important"
+          textAlign="center"
+          color={NAMED_COLORS.GREY}
+          _dark={{
+            color: NAMED_COLORS.PALE_GREY,
+          }}
+        >
           {description}
         </chakra.h5>
         <EmptyOverviewImage />

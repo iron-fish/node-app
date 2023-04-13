@@ -9,7 +9,6 @@ import {
   NAMED_COLORS,
   chakra,
   CopyValueToClipboard,
-  useColorModeValue,
 } from '@ironfish/ui-kit'
 import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
@@ -32,20 +31,7 @@ const AccountPreview: FC<CutAccount> = ({
 }) => {
   const navigate = useNavigate()
   const { synced } = useDataSync()
-  const $colors = useColorModeValue(
-    {
-      bg: NAMED_COLORS.WHITE,
-      borderColor: NAMED_COLORS.LIGHT_GREY,
-      hoverBorder: NAMED_COLORS.DEEP_BLUE,
-      caretColor: NAMED_COLORS.PALE_GREY,
-    },
-    {
-      bg: NAMED_COLORS.DARKER_GREY,
-      borderColor: NAMED_COLORS.DARK_GREY,
-      hoverBorder: NAMED_COLORS.WHITE,
-      caretColor: NAMED_COLORS.PALE_GREY,
-    }
-  )
+
   return (
     <Flex
       p="0.75rem 2rem 0.75rem 0.75rem"
@@ -56,17 +42,27 @@ const AccountPreview: FC<CutAccount> = ({
       onClick={() => navigate(ROUTES.ACCOUNT, { state: { accountId: id } })}
       sx={{
         transition: '0.3s',
-        bg: $colors.bg,
-        borderColor: $colors.borderColor,
+        bg: NAMED_COLORS.WHITE,
+        borderColor: NAMED_COLORS.LIGHT_GREY,
         boxShadow: '0 0.25rem 0.6875rem rgba(0, 0, 0, 0.04)',
         '[aria-label="account-details"]': {
-          color: $colors.caretColor,
+          color: NAMED_COLORS.PALE_GREY,
         },
         _hover: {
           '[aria-label="account-details"]': {
-            color: $colors.hoverBorder,
+            color: NAMED_COLORS.DEEP_BLUE,
           },
-          borderColor: $colors.hoverBorder,
+          borderColor: NAMED_COLORS.DEEP_BLUE,
+        },
+        _dark: {
+          bg: NAMED_COLORS.DARKER_GREY,
+          borderColor: NAMED_COLORS.DARK_GREY,
+          _hover: {
+            '[aria-label="account-details"]': {
+              color: NAMED_COLORS.WHITE,
+            },
+            borderColor: NAMED_COLORS.WHITE,
+          },
         },
         zIndex: 0,
       }}
@@ -118,6 +114,9 @@ const AccountPreview: FC<CutAccount> = ({
           <CopyValueToClipboard
             containerProps={{
               color: NAMED_COLORS.GREY,
+              _dark: {
+                color: NAMED_COLORS.PALE_GREY,
+              },
             }}
             iconButtonProps={{
               justifyContent: 'none',

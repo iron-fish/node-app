@@ -6,7 +6,6 @@ import {
   chakra,
   CopyValueToClipboard,
   NAMED_COLORS,
-  useColorModeValue,
   Skeleton,
   Grid,
   useIronToast,
@@ -137,7 +136,6 @@ const CARDS: Card[] = [
 ]
 
 const TransactionOverview: FC = () => {
-  const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
   const { hash, accountId, contactId } = useLocation()?.state
   const [{ data: account, loaded: accountLoaded }] = useAccount(accountId)
   const {
@@ -214,7 +212,10 @@ const TransactionOverview: FC = () => {
               }}
               containerProps={{
                 pb: '0.45rem',
-                color: color,
+                color: NAMED_COLORS.GREY,
+                _dark: {
+                  color: NAMED_COLORS.PALE_GREY,
+                },
               }}
             />
           </Skeleton>
@@ -252,7 +253,14 @@ const TransactionOverview: FC = () => {
                 >
                   <Box mr="1rem">
                     <Box>
-                      <chakra.h4 color={color}>{card.label}</chakra.h4>
+                      <chakra.h4
+                        color={NAMED_COLORS.GREY}
+                        _dark={{
+                          color: NAMED_COLORS.PALE_GREY,
+                        }}
+                      >
+                        {card.label}
+                      </chakra.h4>
                     </Box>
                     <Box overflow="hidden" whiteSpace="nowrap">
                       {card.render(transaction)}

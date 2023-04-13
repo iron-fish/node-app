@@ -5,7 +5,6 @@ import {
   Tooltip,
   TooltipProps as TooltipProperties,
   useBreakpointValue,
-  useColorModeValue,
 } from '@ironfish/ui-kit'
 import { ReactNode, FC, forwardRef } from 'react'
 
@@ -55,12 +54,10 @@ export const StatusItemContent = forwardRef<
   HTMLDivElement,
   { isMinified?: boolean } & StatusItemProps
 >(({ isMinified = false, style = 'default', children, ...props }, ref) => {
-  const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
   return (
     <Flex
       ref={ref}
       p="0.25rem"
-      bgColor={colors.bg[style]}
       borderRadius="0.25rem"
       h={isMinified ? '2.75rem' : 'auto'}
       minH="2.125rem"
@@ -70,13 +67,27 @@ export const StatusItemContent = forwardRef<
       textAlign="center"
       flexDirection={isMinified ? 'row' : 'column'}
       _hover={{
-        border: isMinified ? `0.0625rem solid ${colors.text[style]}` : 'none',
+        border: isMinified
+          ? `0.0625rem solid ${LIGHT_COLORS.text[style]}`
+          : 'none',
+        _dark: {
+          border: isMinified
+            ? `0.0625rem solid ${DARK_COLORS.text[style]}`
+            : 'none',
+        },
       }}
-      borderColor={colors.text[style]}
-      color={colors.text[style]}
       {...props}
       sx={{
-        '--statusbar-hover-color': colors.hover[style],
+        bgColor: LIGHT_COLORS.bg[style],
+        borderColor: LIGHT_COLORS.text[style],
+        color: LIGHT_COLORS.text[style],
+        '--statusbar-hover-color': LIGHT_COLORS.hover[style],
+        _dark: {
+          '--statusbar-hover-color': DARK_COLORS.hover[style],
+          bgColor: DARK_COLORS.bg[style],
+          borderColor: DARK_COLORS.text[style],
+          color: DARK_COLORS.text[style],
+        },
       }}
     >
       {children(isMinified)}
@@ -91,7 +102,6 @@ export const StatusItem: FC<StatusItemProps> = ({
   ...props
 }) => {
   const small = useBreakpointValue({ base: true, sm: false })
-  const colors = useColorModeValue(LIGHT_COLORS, DARK_COLORS)
 
   return (
     <Tooltip
@@ -107,7 +117,10 @@ export const StatusItem: FC<StatusItemProps> = ({
       offset={[0, 16]}
       p={0}
       m={0}
-      border={`0.0625rem solid ${colors.text[style]}`}
+      border={`0.0625rem solid ${LIGHT_COLORS.text[style]}`}
+      _dark={{
+        border: `0.0625rem solid ${DARK_COLORS.text[style]}`,
+      }}
       {...TooltipProps}
     >
       <StatusItemContent isMinified={small} style={style} {...props}>

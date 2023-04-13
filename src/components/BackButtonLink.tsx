@@ -1,12 +1,6 @@
 import { FC } from 'react'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
-import {
-  NAMED_COLORS,
-  useColorModeValue,
-  Link,
-  LinkProps,
-  Flex,
-} from '@ironfish/ui-kit'
+import { NAMED_COLORS, Link, LinkProps, Flex } from '@ironfish/ui-kit'
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
@@ -19,20 +13,6 @@ interface BackButtonLinkProps
 }
 
 const BackButtonLink: FC<BackButtonLinkProps> = ({ label, ...rest }) => {
-  const $colors = useColorModeValue(
-    {
-      chevron: NAMED_COLORS.BLACK,
-      chevronBorder: `0.0625rem solid ${NAMED_COLORS.LIGHT_GREY}`,
-      chevronHoverBorder: NAMED_COLORS.DEEP_BLUE,
-      linkHover: NAMED_COLORS.DEEP_BLUE,
-    },
-    {
-      chevron: NAMED_COLORS.WHITE,
-      chevronBorder: `0.0625rem solid ${NAMED_COLORS.GREY}`,
-      chevronHoverBorder: NAMED_COLORS.WHITE,
-      linkHover: NAMED_COLORS.WHITE,
-    }
-  )
   return (
     <Link
       display="flex"
@@ -42,9 +22,15 @@ const BackButtonLink: FC<BackButtonLinkProps> = ({ label, ...rest }) => {
       as={RouterLink}
       {...rest}
       _hover={{
-        color: $colors.linkHover,
+        color: NAMED_COLORS.DEEP_BLUE,
+        _dark: {
+          color: NAMED_COLORS.WHITE,
+        },
         ':hover>div': {
-          borderColor: $colors.chevronHoverBorder,
+          borderColor: NAMED_COLORS.DEEP_BLUE,
+          _dark: {
+            borderColor: NAMED_COLORS.WHITE,
+          },
           background: NAMED_COLORS.WHITE,
           '.chakra-icon': {
             color: NAMED_COLORS.BLACK,
@@ -57,11 +43,21 @@ const BackButtonLink: FC<BackButtonLinkProps> = ({ label, ...rest }) => {
         mr="0.625rem"
         w="1.5rem"
         h="1.5rem"
-        border={$colors.chevronBorder}
+        border={`0.0625rem solid ${NAMED_COLORS.LIGHT_GREY}`}
+        _dark={{
+          border: `0.0625rem solid ${NAMED_COLORS.GREY}`,
+        }}
         justifyContent="center"
         alignItems="center"
       >
-        <ChevronLeftIcon w="1rem" h="1rem" color={$colors.chevron} />
+        <ChevronLeftIcon
+          w="1rem"
+          h="1rem"
+          color={NAMED_COLORS.BLACK}
+          _dark={{
+            color: NAMED_COLORS.WHITE,
+          }}
+        />
       </Flex>
       <h5>{label}</h5>
     </Link>

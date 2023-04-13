@@ -1,13 +1,12 @@
 import { FC } from 'react'
-import { Flex, NAMED_COLORS, useColorModeValue } from '@ironfish/ui-kit'
-import { SVGProps } from 'Svgx/types'
+import { Flex, NAMED_COLORS, useColorModeValue, Icon } from '@ironfish/ui-kit'
 import Hotkey from 'Components/Hotkey'
 
 export type NavItemProps = {
   active?: boolean
   to: string
   label: string
-  icon: FC<SVGProps>
+  icon: typeof Icon
   hotkey: string
   aliases: string[]
 }
@@ -18,27 +17,17 @@ export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
   icon,
   hotkey,
 }) => {
-  const Icon = icon as FC<SVGProps>
+  const ItemIcon = icon as typeof Icon
   const $colors = useColorModeValue(
     {
-      bg: NAMED_COLORS.LIGHTER_GREY,
-      hover: NAMED_COLORS.DEEP_BLUE,
       borderRightColor: NAMED_COLORS.BLACK,
       afterColor: NAMED_COLORS.WHITE,
       afterBg: NAMED_COLORS.BLACK,
-      iconColor: NAMED_COLORS.BLACK,
-      fontColor: NAMED_COLORS.GREY,
-      activeFontColor: NAMED_COLORS.BLACK,
     },
     {
-      bg: NAMED_COLORS.DARK_GREY,
-      hover: NAMED_COLORS.WHITE,
       borderRightColor: NAMED_COLORS.WHITE,
       afterColor: NAMED_COLORS.BLACK,
       afterBg: NAMED_COLORS.WHITE,
-      iconColor: NAMED_COLORS.WHITE,
-      fontColor: NAMED_COLORS.PALE_GREY,
-      activeFontColor: NAMED_COLORS.WHITE,
     }
   )
   return (
@@ -51,10 +40,16 @@ export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
         h="2.5rem"
         borderRadius="0.25rem"
         p={{ base: '0.5rem', sm: '0.5rem 0.5rem 0.5rem 1rem' }}
-        bg={active ? $colors.bg : 'transparent'}
+        bg={active ? NAMED_COLORS.LIGHTER_GREY : 'transparent'}
+        _dark={{
+          bg: active ? NAMED_COLORS.DARK_GREY : 'transparent',
+        }}
         _hover={{
           '&>div': {
-            color: $colors.hover,
+            color: NAMED_COLORS.DEEP_BLUE,
+            _dark: {
+              color: NAMED_COLORS.WHITE,
+            },
           },
           '&::before': {
             position: 'absolute',
@@ -86,12 +81,21 @@ export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
         }}
         cursor="pointer"
       >
-        <Icon fill={$colors.iconColor} style={{ minWidth: '1.5rem' }} />
+        <ItemIcon
+          fill={NAMED_COLORS.BLACK}
+          _dark={{
+            fill: NAMED_COLORS.WHITE,
+          }}
+          style={{ minWidth: '1.5rem' }}
+        />
         <Flex
           flexDirection="row"
           paddingLeft="1rem"
           fontSize="0.875rem"
-          color={active ? $colors.activeFontColor : $colors.fontColor}
+          color={active ? NAMED_COLORS.BLACK : NAMED_COLORS.GREY}
+          _dark={{
+            color: active ? NAMED_COLORS.WHITE : NAMED_COLORS.PALE_GREY,
+          }}
           display={{ base: 'none', sm: 'flex' }}
           whiteSpace="nowrap"
           w="100%"

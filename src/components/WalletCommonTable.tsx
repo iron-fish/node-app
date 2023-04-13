@@ -1,10 +1,5 @@
 import { FC } from 'react'
-import {
-  CommonTable,
-  useColorModeValue,
-  NAMED_COLORS,
-  Flex,
-} from '@ironfish/ui-kit'
+import { CommonTable, NAMED_COLORS, Flex } from '@ironfish/ui-kit'
 import {
   CommonTableProps,
   TableComponentProps,
@@ -73,17 +68,6 @@ export const ACTIONS_COLUMN = {
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WalletCommonTable: FC<CommonTableProps<any>> = props => {
-  const $colors = useColorModeValue(
-    {
-      hoverBorder: NAMED_COLORS.DEEP_BLUE,
-      caretColor: NAMED_COLORS.PALE_GREY,
-    },
-    {
-      hoverBorder: NAMED_COLORS.WHITE,
-      caretColor: NAMED_COLORS.PALE_GREY,
-    }
-  )
-
   return (
     <CommonTable
       tableComponentProps={DEFAULT_TABLE_PROPS}
@@ -91,12 +75,15 @@ const WalletCommonTable: FC<CommonTableProps<any>> = props => {
       sx={{
         tr: {
           '[aria-label="actions-column"]': {
-            color: $colors.caretColor,
+            color: NAMED_COLORS.PALE_GREY,
             transition: 'color 300ms ease-in-out',
           },
           _hover: {
             '[aria-label="actions-column"]': {
-              color: $colors.hoverBorder,
+              color: NAMED_COLORS.DEEP_BLUE,
+              _dark: {
+                color: NAMED_COLORS.WHITE,
+              },
             },
           },
         },
