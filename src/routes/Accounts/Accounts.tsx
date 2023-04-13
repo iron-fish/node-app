@@ -5,7 +5,6 @@ import {
   Flex,
   chakra,
   NAMED_COLORS,
-  useColorModeValue,
   useBreakpointValue,
   ButtonsGroup,
   Skeleton,
@@ -23,11 +22,13 @@ import EmptyOverview from 'Components/EmptyOverview'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
 
 interface ActionButtonsProps {
-  showCreate: (show: boolean) => void
-  showImport: (show: boolean) => void
+  reloadAccounts: () => void
 }
 
-const ActionButtons: FC<ActionButtonsProps> = ({ showCreate, showImport }) => {
+const ActionButtons: FC<ActionButtonsProps> = ({ reloadAccounts }) => {
+  const [showCreateAccount, setShowCreateAccount] = useState(false)
+  const [showImportAccount, setShowImportAccount] = useState(false)
+
   const buttons = useMemo(
     () => [
       {
@@ -38,7 +39,7 @@ const ActionButtons: FC<ActionButtonsProps> = ({ showCreate, showImport }) => {
             Create Account
           </Flex>
         ),
-        onClick: () => showCreate(true),
+        onClick: () => setShowCreateAccount(true),
       },
       {
         key: 'accounts-view-import',
@@ -48,27 +49,55 @@ const ActionButtons: FC<ActionButtonsProps> = ({ showCreate, showImport }) => {
             Import Account
           </Flex>
         ),
-        onClick: () => showImport(true),
+        onClick: () => setShowImportAccount(true),
       },
     ],
-    [showCreate, showImport]
+    [setShowCreateAccount, setShowImportAccount]
   )
   const isGroup = useBreakpointValue({ base: true, sm4: false })
-  return isGroup ? (
-    <ButtonsGroup menuItems={buttons} />
-  ) : (
-    <Flex gap="1rem">
-      {buttons.map(({ key, label, onClick }) => (
-        <Button
-          key={key}
-          borderRadius="4rem"
-          variant="secondary"
-          onClick={onClick}
-        >
-          <chakra.h5 mt="0.125rem">{label}</chakra.h5>
-        </Button>
-      ))}
-    </Flex>
+  return (
+    <>
+      {isGroup ? (
+        <ButtonsGroup menuItems={buttons} />
+      ) : (
+        <Flex gap="1rem">
+          {buttons.map(({ key, label, onClick }) => (
+            <Button
+              key={key}
+              borderRadius="4rem"
+              variant="secondary"
+              onClick={onClick}
+            >
+              <chakra.h5 mt="0.125rem">{label}</chakra.h5>
+            </Button>
+          ))}
+        </Flex>
+      )}
+      <ModalWindow
+        isOpen={showCreateAccount}
+        onClose={() => setShowCreateAccount(false)}
+      >
+        <CreateAccount
+          desktopMode={false}
+          onCreate={() => {
+            setShowCreateAccount(false)
+            reloadAccounts()
+          }}
+        />
+      </ModalWindow>
+      <ModalWindow
+        isOpen={showImportAccount}
+        onClose={() => setShowImportAccount(false)}
+      >
+        <ImportAccount
+          desktopMode={false}
+          onImport={() => {
+            setShowImportAccount(false)
+            reloadAccounts()
+          }}
+        />
+      </ModalWindow>
+    </>
   )
 }
 
@@ -78,12 +107,6 @@ const Accounts = () => {
   const [{ data: accounts, loaded }, reloadAccounts] = useAccounts(
     $searchTerm,
     $sortOrder
-  )
-  const [showCreateAccount, setShowCreateAccount] = useState(false)
-  const [showImportAccount, setShowImportAccount] = useState(false)
-  const $colors = useColorModeValue(
-    { subHeader: NAMED_COLORS.GREY },
-    { subHeader: NAMED_COLORS.PALE_GREY }
   )
 
   useEffect(() => {
@@ -110,7 +133,10 @@ const Accounts = () => {
             <h2>Privacy Accounts</h2>
           </Box>
           <Flex>
-            <chakra.h5 color={$colors.subHeader}>
+            <chakra.h5
+              color={NAMED_COLORS.GREY}
+              _dark={{ color: NAMED_COLORS.PALE_GREY }}
+            >
               Total accounts balance:
             </chakra.h5>
             &nbsp;
@@ -128,10 +154,7 @@ const Accounts = () => {
             </Skeleton>
           </Flex>
         </Flex>
-        <ActionButtons
-          showCreate={setShowCreateAccount}
-          showImport={setShowImportAccount}
-        />
+        <ActionButtons reloadAccounts={reloadAccounts} />
       </Flex>
       <SearchSortField
         sortValue={$sortOrder}
@@ -160,30 +183,6 @@ const Accounts = () => {
           )
         ) : null}
       </Flex>
-      <ModalWindow
-        isOpen={showCreateAccount}
-        onClose={() => setShowCreateAccount(false)}
-      >
-        <CreateAccount
-          desktopMode={false}
-          onCreate={() => {
-            setShowCreateAccount(false)
-            reloadAccounts()
-          }}
-        />
-      </ModalWindow>
-      <ModalWindow
-        isOpen={showImportAccount}
-        onClose={() => setShowImportAccount(false)}
-      >
-        <ImportAccount
-          desktopMode={false}
-          onImport={() => {
-            setShowImportAccount(false)
-            reloadAccounts()
-          }}
-        />
-      </ModalWindow>
     </>
   )
 }
