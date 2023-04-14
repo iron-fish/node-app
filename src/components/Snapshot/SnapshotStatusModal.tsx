@@ -121,7 +121,7 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
             <Flex alignItems="center" hidden={!status?.hasError}>
               <Button
                 variant="primary"
-                borderRadius="4rem"
+                size="medium"
                 mr="1rem"
                 disabled={loading}
                 onClick={() => {
@@ -134,7 +134,7 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
               </Button>
               <Button
                 variant="ghost"
-                borderRadius="4rem"
+                size="medium"
                 colorScheme={NAMED_COLORS.GREY}
                 onClick={() => {
                   reset().finally(() => props?.onClose())

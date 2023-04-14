@@ -1,5 +1,5 @@
 import { FC, useEffect, useState, useDeferredValue } from 'react'
-import { Flex, chakra, Box } from '@ironfish/ui-kit'
+import { Flex, chakra, Box, useBreakpointValue } from '@ironfish/ui-kit'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAddressTransactions'
 import SortType from 'Types/SortType'
@@ -32,6 +32,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
     loaded,
     actions: { reload },
   } = useTransactions(address, deferredSearchTerm, $sortOrder)
+  const isCompactView = useBreakpointValue({ base: true, md: false })
 
   useEffect(() => {
     let interval: NodeJS.Timer
@@ -133,7 +134,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
                 <h5>{transaction.outputs?.at(0)?.memo}</h5>
               ),
             },
-            ACTIONS_COLUMN,
+            ...(isCompactView ? [] : [ACTIONS_COLUMN]),
           ]}
         />
       )}

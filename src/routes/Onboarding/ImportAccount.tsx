@@ -14,7 +14,6 @@ import {
   MnemonicView,
   useIronToast,
   Textarea,
-  FONTS,
 } from '@ironfish/ui-kit'
 import { FC, useState, useCallback, useRef } from 'react'
 import { ROUTES } from '..'
@@ -30,7 +29,7 @@ interface DesktopModeProps {
   onImport?: VoidFunction
 }
 
-const EncodedKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
+const EncodedKeyTab: FC<DesktopModeProps> = ({ onImport }) => {
   const [data, setData] = useState('')
   const [importBySpendingKey] = useImportAccount()
 
@@ -51,8 +50,7 @@ const EncodedKeyTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           onClick={() => {
             importBySpendingKey(data).then(() => onImport())
           }}
-          size="large"
-          w={desktopMode ? undefined : '100%'}
+          size="medium"
         >
           Import Account
         </Button>
@@ -74,7 +72,7 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
         <Button
           minW="8.75rem"
           variant="secondary"
-          borderRadius="4rem"
+          size={desktopMode ? 'large' : 'medium'}
           onClick={() => {
             if (!file) {
               fileInput.current.value = ''
@@ -122,8 +120,7 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           variant="primary"
           mt="2rem"
           isDisabled={!file}
-          size="large"
-          w={desktopMode ? undefined : '100%'}
+          size={desktopMode ? 'large' : 'medium'}
           onClick={() => {
             const reader = new FileReader()
             reader.onload = e => {
@@ -193,8 +190,7 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
             )
           }}
           isDisabled={!name || phrase.findIndex(word => !word) !== -1}
-          size="large"
-          w={desktopMode ? undefined : '100%'}
+          size={desktopMode ? 'large' : 'medium'}
         >
           Import Account
         </Button>
