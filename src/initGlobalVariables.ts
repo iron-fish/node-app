@@ -5,8 +5,6 @@ import IStorage from 'Types/IStorage'
 
 declare global {
   interface Window {
-    //TODO: Remove DemoDataManager after full integration of @ironfish/sdk
-    // DemoDataManager: DemoDataManager
     AddressBookStorage: IStorage<Contact>
     AccountSettingsStorage: IStorage<AccountSettings>
     setElectronThemeMode: (mode: string) => void
@@ -14,6 +12,3 @@ declare global {
     IronfishManager: IIronfishManager
   }
 }
-
-//TODO: Remove after full integration of @ironfish/sdk
-// window.IronfishManager = new DemoDataManager()s
