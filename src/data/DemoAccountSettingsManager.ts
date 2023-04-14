@@ -76,13 +76,11 @@ class DemoAccountSettingsManager implements IStorage<AccountSettings> {
         const currentSettingIndex = ACCOUNT_SETTINGS.findIndex(
           setting => setting._id === identity
         )
-        console.log(ACCOUNT_SETTINGS.at(currentSettingIndex))
         const updatedSettings = {
           ...ACCOUNT_SETTINGS.at(currentSettingIndex),
           ...fieldsToUpdate,
         }
         ACCOUNT_SETTINGS.splice(currentSettingIndex, 1, updatedSettings)
-        console.log(ACCOUNT_SETTINGS.at(currentSettingIndex))
         resolve({ ...updatedSettings })
       }, 500)
     )
