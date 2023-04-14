@@ -98,6 +98,12 @@ const WalletCommonTable: FC<CommonTableProps<any>> = props => {
             '[aria-label="actions-column"]': {
               color: $colors.hoverBorder,
             },
+            ...(!props.onRowClick && {
+              borderColor: `${NAMED_COLORS.LIGHT_GREY} !important`,
+              _dark: {
+                borderColor: `${NAMED_COLORS.DARK_GREY} !important`,
+              },
+            }),
           },
         },
       }}

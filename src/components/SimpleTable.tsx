@@ -8,11 +8,12 @@ import {
   Tr,
   NAMED_COLORS,
   useColorModeValue,
+  TableRowProps,
 } from '@ironfish/ui-kit'
 import { CommonTableProps } from '@ironfish/ui-kit/dist/components/Table/types'
 import RowItemSpin from '@ironfish/ui-kit/dist/components/Table/RowItemSpin'
 
-const nonInteractiveTbodyStyles = {
+const nonInteractiveTbodyStyles: { tr: TableRowProps } = {
   tr: {
     _hover: {
       borderColor: null,
