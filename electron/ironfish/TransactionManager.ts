@@ -2,7 +2,6 @@ import { Asset } from '@ironfish/rust-nodejs'
 import { DecryptedNoteValue } from '@ironfish/sdk/build/src/wallet/walletdb/decryptedNoteValue'
 import {
   Account,
-  CurrencyUtils,
   IronfishNode,
   Note,
   RawTransaction,
@@ -12,7 +11,6 @@ import { TransactionValue } from '@ironfish/sdk/build/src/wallet/walletdb/transa
 import { sizeVarBytes } from 'bufio'
 import {
   IIronfishTransactionManager,
-  TransactionFeeStatistic,
   TransactionFeeEstimate,
 } from 'Types/IronfishManager/IIronfishTransactionManager'
 import SortType from 'Types/SortType'
@@ -34,32 +32,6 @@ class TransactionManager
   constructor(node: IronfishNode, assetManager: AssetManager) {
     super(node)
     this.assetManager = assetManager
-  }
-
-  private async getFees(numOfBlocks = 100) {
-    let startBlock
-    const endBlock = this.node.chain.latest.sequence
-    const fees: bigint[] = []
-
-    let hash = this.node.chain.latest.hash
-
-    for (let i = 0; i < numOfBlocks; i++) {
-      const block = await this.node.chain.getBlock(hash)
-      hash = block.header.previousBlockHash
-
-      if (block) {
-        startBlock = block.header.sequence
-        block.transactions.forEach(transaction => {
-          !transaction.isMinersFee() && fees.push(transaction.fee())
-        })
-      }
-    }
-
-    return {
-      startBlock,
-      endBlock,
-      fees,
-    }
   }
 
   private async resolveTransactionFields(
@@ -195,17 +167,6 @@ class TransactionManager
     return status
   }
 
-  async averageFee(numOfBlocks = 100): Promise<bigint> {
-    const { fees } = await this.getFees(numOfBlocks)
-    const totalFees = Number(
-      CurrencyUtils.encodeIron(
-        fees.reduce((prev, curr) => prev + curr, BigInt(0))
-      )
-    )
-    const average = totalFees / fees.length
-    return CurrencyUtils.decodeIron(average.toFixed(8))
-  }
-
   async estimateFeeWithPriority(
     accountId: string,
     receive: Payment
@@ -246,21 +207,6 @@ class TransactionManager
       slow: slow.fee,
       average: average.fee,
       fast: fast.fee,
-    }
-  }
-
-  async fees(numOfBlocks = 100): Promise<TransactionFeeStatistic> {
-    const { startBlock, endBlock, fees } = await this.getFees(numOfBlocks)
-
-    fees.sort((a, b) => Number(a) - Number(b))
-
-    return {
-      startBlock,
-      endBlock,
-      p25: fees[Math.floor(fees.length * 0.25)],
-      p50: fees[Math.floor(fees.length * 0.5)],
-      p75: fees[Math.floor(fees.length * 0.75)],
-      p100: fees[fees.length - 1],
     }
   }
 

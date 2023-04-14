@@ -2,7 +2,6 @@ import { nanoid } from 'nanoid'
 import {
   TransactionFeeEstimate,
   IIronfishTransactionManager,
-  TransactionFeeStatistic,
 } from 'Types/IronfishManager/IIronfishTransactionManager'
 import SortType from 'Types/SortType'
 import { Payment } from 'Types/Transaction'
@@ -304,10 +303,6 @@ const DEMO_TRANSACTIONS: Transaction[] = [
 ]
 
 class DemoTransactionsManager implements IIronfishTransactionManager {
-  averageFee(numOfBlocks?: number): Promise<bigint> {
-    return Promise.resolve(BigInt(Math.round(Math.random() * 1000)))
-  }
-
   estimateFeeWithPriority(
     accountId: string,
     receive: Payment
@@ -316,17 +311,6 @@ class DemoTransactionsManager implements IIronfishTransactionManager {
       slow: BigInt(1),
       average: BigInt(2),
       fast: BigInt(3),
-    })
-  }
-
-  fees(numOfBlocks?: number): Promise<TransactionFeeStatistic> {
-    return Promise.resolve({
-      startBlock: 0,
-      endBlock: 100,
-      p25: BigInt(250),
-      p50: BigInt(500),
-      p75: BigInt(750),
-      p100: BigInt(1000),
     })
   }
 
