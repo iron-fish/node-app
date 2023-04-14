@@ -1,4 +1,3 @@
-import './initGlobalVariables'
 import {
   AccountSettingsStorage,
   AddressBookStorage,
