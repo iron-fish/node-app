@@ -2,13 +2,13 @@ import SortType from '../SortType'
 import Transaction, { Payment } from '../Transaction'
 
 export enum IronfishTransactionManagerAction {
-  GET = 'get',
-  SEND = 'send',
-  FEES = 'fees',
   AVERAGE_FEE = 'averageFee',
   ESTIMATE_FEE = 'estimateFeeWithPriority',
+  FEES = 'fees',
   FIND_BY_ACCOUNT_ID = 'findByAccountId',
   FIND_BY_ADDRESS = 'findByAddress',
+  GET = 'get',
+  SEND = 'send',
 }
 
 export interface TransactionFeeStatistic {
@@ -27,18 +27,12 @@ export interface TransactionFeeEstimate {
 }
 
 export interface IIronfishTransactionManager {
-  get: (hash: string, accountId: string) => Promise<Transaction>
-  send: (
-    accountId: string,
-    payment: Payment,
-    transactionFee?: bigint
-  ) => Promise<Transaction>
-  fees: (numOfBlocks?: number) => Promise<TransactionFeeStatistic>
   averageFee: (numOfBlocks?: number) => Promise<bigint>
   estimateFeeWithPriority: (
     accountId: string,
     receive: Payment
   ) => Promise<TransactionFeeEstimate>
+  fees: (numOfBlocks?: number) => Promise<TransactionFeeStatistic>
   findByAccountId: (
     accountId: string,
     searchTerm?: string,
@@ -49,4 +43,10 @@ export interface IIronfishTransactionManager {
     searchTerm?: string,
     sort?: SortType
   ) => Promise<Transaction[]>
+  get: (hash: string, accountId: string) => Promise<Transaction>
+  send: (
+    accountId: string,
+    payment: Payment,
+    transactionFee?: bigint
+  ) => Promise<Transaction>
 }

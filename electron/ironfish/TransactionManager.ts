@@ -36,30 +36,6 @@ class TransactionManager
     this.assetManager = assetManager
   }
 
-  async send(
-    accountId: string,
-    payment: Payment,
-    transactionFee?: bigint
-  ): Promise<Transaction> {
-    const account = this.node.wallet.getAccount(accountId)
-    const head = await account.getHead()
-
-    const transaction = await this.node.wallet.send(
-      account,
-      [{ ...payment, assetId: Buffer.from(payment.assetId, 'hex') }],
-      transactionFee,
-      this.node.config.get('transactionExpirationDelta')
-    )
-
-    const result = await this.resolveTransactionFields(
-      account,
-      head.sequence,
-      await account.getTransaction(transaction.hash())
-    )
-
-    return result
-  }
-
   private async getFees(numOfBlocks = 100) {
     let startBlock
     const endBlock = this.node.chain.latest.sequence
@@ -84,117 +60,6 @@ class TransactionManager
       endBlock,
       fees,
     }
-  }
-
-  async fees(numOfBlocks = 100): Promise<TransactionFeeStatistic> {
-    const { startBlock, endBlock, fees } = await this.getFees(numOfBlocks)
-
-    fees.sort((a, b) => Number(a) - Number(b))
-
-    return {
-      startBlock,
-      endBlock,
-      p25: fees[Math.floor(fees.length * 0.25)],
-      p50: fees[Math.floor(fees.length * 0.5)],
-      p75: fees[Math.floor(fees.length * 0.75)],
-      p100: fees[fees.length - 1],
-    }
-  }
-
-  async estimateFeeWithPriority(
-    accountId: string,
-    receive: Payment
-  ): Promise<TransactionFeeEstimate> {
-    const estimatedFeeRates = this.node.memPool.feeEstimator.estimateFeeRates()
-    const feeRates = [
-      estimatedFeeRates.slow || BigInt(1),
-      estimatedFeeRates.average || BigInt(1),
-      estimatedFeeRates.fast || BigInt(1),
-    ]
-
-    const account = this.node.wallet.getAccount(accountId)
-
-    const allPromises: Promise<RawTransaction>[] = []
-
-    feeRates.forEach(feeRate => {
-      allPromises.push(
-        this.node.wallet.createTransaction({
-          account,
-          outputs: [
-            {
-              publicAddress: receive.publicAddress,
-              amount: receive.amount,
-              memo: receive.memo,
-              assetId: Buffer.from(receive.assetId, 'hex'),
-            },
-          ],
-          feeRate,
-        })
-      )
-    })
-
-    const [slow, average, fast]: Array<RawTransaction> = await Promise.all(
-      allPromises
-    )
-
-    return {
-      slow: slow.fee,
-      average: average.fee,
-      fast: fast.fee,
-    }
-  }
-
-  async averageFee(numOfBlocks = 100): Promise<bigint> {
-    const { fees } = await this.getFees(numOfBlocks)
-    const totalFees = Number(
-      CurrencyUtils.encodeIron(
-        fees.reduce((prev, curr) => prev + curr, BigInt(0))
-      )
-    )
-    const average = totalFees / fees.length
-    return CurrencyUtils.decodeIron(average.toFixed(8))
-  }
-
-  async get(hash: string, accountId: string): Promise<Transaction> {
-    const account = this.node.wallet.getAccount(accountId)
-
-    if (!account) {
-      throw new Error(`Account with id=${accountId} was not found.`)
-    }
-
-    const head = await account.getHead()
-    const transaction = await account.getTransaction(Buffer.from(hash, 'hex'))
-
-    if (!transaction) {
-      throw new Error(
-        `Transaction with hash=${hash} was not found in account with id=${accountId}`
-      )
-    }
-
-    return await this.resolveTransactionFields(
-      account,
-      head.sequence,
-      transaction
-    )
-  }
-
-  private async status(
-    account: Account,
-    headSequence: number,
-    transaction: Readonly<TransactionValue>
-  ) {
-    let status
-    try {
-      status = await this.node.wallet.getTransactionStatus(
-        account,
-        transaction,
-        { headSequence }
-      )
-    } catch (e) {
-      status = TransactionStatus.UNKNOWN
-    }
-
-    return status
   }
 
   private async resolveTransactionFields(
@@ -311,6 +176,94 @@ class TransactionManager
     }
   }
 
+  private async status(
+    account: Account,
+    headSequence: number,
+    transaction: Readonly<TransactionValue>
+  ) {
+    let status
+    try {
+      status = await this.node.wallet.getTransactionStatus(
+        account,
+        transaction,
+        { headSequence }
+      )
+    } catch (e) {
+      status = TransactionStatus.UNKNOWN
+    }
+
+    return status
+  }
+
+  async averageFee(numOfBlocks = 100): Promise<bigint> {
+    const { fees } = await this.getFees(numOfBlocks)
+    const totalFees = Number(
+      CurrencyUtils.encodeIron(
+        fees.reduce((prev, curr) => prev + curr, BigInt(0))
+      )
+    )
+    const average = totalFees / fees.length
+    return CurrencyUtils.decodeIron(average.toFixed(8))
+  }
+
+  async estimateFeeWithPriority(
+    accountId: string,
+    receive: Payment
+  ): Promise<TransactionFeeEstimate> {
+    const estimatedFeeRates = this.node.memPool.feeEstimator.estimateFeeRates()
+    const feeRates = [
+      estimatedFeeRates.slow || BigInt(1),
+      estimatedFeeRates.average || BigInt(1),
+      estimatedFeeRates.fast || BigInt(1),
+    ]
+
+    const account = this.node.wallet.getAccount(accountId)
+
+    const allPromises: Promise<RawTransaction>[] = []
+
+    feeRates.forEach(feeRate => {
+      allPromises.push(
+        this.node.wallet.createTransaction({
+          account,
+          outputs: [
+            {
+              publicAddress: receive.publicAddress,
+              amount: receive.amount,
+              memo: receive.memo,
+              assetId: Buffer.from(receive.assetId, 'hex'),
+            },
+          ],
+          feeRate,
+        })
+      )
+    })
+
+    const [slow, average, fast]: Array<RawTransaction> = await Promise.all(
+      allPromises
+    )
+
+    return {
+      slow: slow.fee,
+      average: average.fee,
+      fast: fast.fee,
+    }
+  }
+
+  async fees(numOfBlocks = 100): Promise<TransactionFeeStatistic> {
+    const { startBlock, endBlock, fees } = await this.getFees(numOfBlocks)
+
+    fees.sort((a, b) => Number(a) - Number(b))
+
+    return {
+      startBlock,
+      endBlock,
+      p25: fees[Math.floor(fees.length * 0.25)],
+      p50: fees[Math.floor(fees.length * 0.5)],
+      p75: fees[Math.floor(fees.length * 0.75)],
+      p100: fees[fees.length - 1],
+    }
+  }
+
   async findByAccountId(
     accountId: string,
     searchTerm?: string,
@@ -408,6 +361,53 @@ class TransactionManager
 
         return sort === SortType.ASC ? date1 - date2 : date2 - date1
       })
+  }
+
+  async get(hash: string, accountId: string): Promise<Transaction> {
+    const account = this.node.wallet.getAccount(accountId)
+
+    if (!account) {
+      throw new Error(`Account with id=${accountId} was not found.`)
+    }
+
+    const head = await account.getHead()
+    const transaction = await account.getTransaction(Buffer.from(hash, 'hex'))
+
+    if (!transaction) {
+      throw new Error(
+        `Transaction with hash=${hash} was not found in account with id=${accountId}`
+      )
+    }
+
+    return await this.resolveTransactionFields(
+      account,
+      head.sequence,
+      transaction
+    )
+  }
+
+  async send(
+    accountId: string,
+    payment: Payment,
+    transactionFee?: bigint
+  ): Promise<Transaction> {
+    const account = this.node.wallet.getAccount(accountId)
+    const head = await account.getHead()
+
+    const transaction = await this.node.wallet.send(
+      account,
+      [{ ...payment, assetId: Buffer.from(payment.assetId, 'hex') }],
+      transactionFee,
+      this.node.config.get('transactionExpirationDelta')
+    )
+
+    const result = await this.resolveTransactionFields(
+      account,
+      head.sequence,
+      await account.getTransaction(transaction.hash())
+    )
+
+    return result
   }
 }
 

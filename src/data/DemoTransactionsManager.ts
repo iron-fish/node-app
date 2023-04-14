@@ -1,5 +1,9 @@
 import { nanoid } from 'nanoid'
-import { TransactionFeeEstimate } from 'Types/IronfishManager/IIronfishTransactionManager'
+import {
+  TransactionFeeEstimate,
+  IIronfishTransactionManager,
+  TransactionFeeStatistic,
+} from 'Types/IronfishManager/IIronfishTransactionManager'
 import SortType from 'Types/SortType'
 import { Payment } from 'Types/Transaction'
 
@@ -299,15 +303,30 @@ const DEMO_TRANSACTIONS: Transaction[] = [
   },
 ]
 
-class DemoTransactionsManager {
-  get(hash: string, accountId: string): Promise<Transaction | null> {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const transaction = DEMO_TRANSACTIONS.find(
-          tr => tr.accountId === accountId && tr.hash === hash
-        )
-        resolve(transaction)
-      }, 500)
+class DemoTransactionsManager implements IIronfishTransactionManager {
+  averageFee(numOfBlocks?: number): Promise<bigint> {
+    return Promise.resolve(BigInt(Math.round(Math.random() * 1000)))
+  }
+
+  estimateFeeWithPriority(
+    accountId: string,
+    receive: Payment
+  ): Promise<TransactionFeeEstimate> {
+    return Promise.resolve({
+      slow: BigInt(1),
+      average: BigInt(2),
+      fast: BigInt(3),
+    })
+  }
+
+  fees(numOfBlocks?: number): Promise<TransactionFeeStatistic> {
+    return Promise.resolve({
+      startBlock: 0,
+      endBlock: 100,
+      p25: BigInt(250),
+      p50: BigInt(500),
+      p75: BigInt(750),
+      p100: BigInt(1000),
     })
   }
 
@@ -378,34 +397,25 @@ class DemoTransactionsManager {
     })
   }
 
-  calculateFee(amount: number): Promise<number> {
+  get(hash: string, accountId: string): Promise<Transaction> {
     return new Promise(resolve => {
-      setTimeout(() => resolve(amount / 1000), 500)
-    })
-  }
-
-  estimateFeeWithPriority(
-    accountId: string,
-    receive: Payment
-  ): Promise<TransactionFeeEstimate> {
-    return Promise.resolve({
-      slow: BigInt(1),
-      average: BigInt(2),
-      fast: BigInt(3),
+      setTimeout(() => {
+        const transaction = DEMO_TRANSACTIONS.find(
+          tr => tr.accountId === accountId && tr.hash === hash
+        )
+        resolve(transaction)
+      }, 500)
     })
   }
 
   send(
     accountId: string,
-    from: string,
-    to: string,
-    amount: bigint,
-    memo: string,
-    fee: bigint,
-    assetId: string
+    payment: Payment,
+    transactionFee?: bigint
   ): Promise<Transaction> {
     return new Promise(resolve => {
       setTimeout(() => {
+        const { amount, memo, publicAddress, assetId } = payment
         const transaction: Transaction = {
           amount: { value: amount, asset: DEFAULT_ASSET },
           assetAmounts: [
@@ -416,9 +426,9 @@ class DemoTransactionsManager {
           ],
           created: new Date(),
           creator: true,
-          fee: fee.toString(),
-          from: from,
-          to: [to],
+          fee: transactionFee.toString(),
+          from: accountId,
+          to: [publicAddress],
           hash: nanoid(64),
           size: Math.round(Math.random() * 100000),
           blockHash: nanoid(64),
@@ -427,7 +437,7 @@ class DemoTransactionsManager {
             {
               value: ACCOUNT_BALANCES[accountId][0]?.confirmed || BigInt(0),
               memo: memo,
-              sender: to,
+              sender: publicAddress,
               asset: DEFAULT_ASSET,
             },
           ],
@@ -435,7 +445,7 @@ class DemoTransactionsManager {
             {
               value: amount,
               memo: memo,
-              sender: from,
+              sender: accountId,
               asset: DEFAULT_ASSET,
             },
           ],

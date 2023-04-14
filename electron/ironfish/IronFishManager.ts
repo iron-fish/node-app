@@ -24,6 +24,8 @@ import AssetManager from './AssetManager'
 import NodeSettingsManager from './NodeSettingsManager'
 import Peer from 'Types/Peer'
 import { IIronfishSnapshotManager } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTransactionManager'
+import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import SnapshotManager from './SnapshotManager'
 import { createAppLogger } from '../utils/AppLogger'
 
@@ -31,24 +33,13 @@ export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   protected sdk: IronfishSdk
   protected node: IronfishNode
-  accounts: AccountManager
-  transactions: TransactionManager
+  accounts: IIronfishAccountManager
   assets: AssetManager
   nodeSettings: INodeSettingsManager
   snapshot: IIronfishSnapshotManager
+  transactions: IIronfishTransactionManager
 
-  private getPrivateIdentity(): PrivateIdentity | undefined {
-    const networkIdentity = this.sdk.internal.get('networkIdentity')
-    if (
-      !this.sdk.config.get('generateNewIdentity') &&
-      networkIdentity !== undefined &&
-      networkIdentity.length > 31
-    ) {
-      return BoxKeyPair.fromHex(networkIdentity)
-    }
-  }
-
-  async checkForMigrations(): Promise<void> {
+  private async checkForMigrations(): Promise<void> {
     this.initStatus = IronFishInitStatus.CHECKING_FOR_MIGRATIONS
     try {
       await this.node.openDB()
@@ -102,6 +93,40 @@ export class IronFishManager implements IIronfishManager {
     this.initStatus = IronFishInitStatus.INITIALIZED
   }
 
+  private getPrivateIdentity(): PrivateIdentity | undefined {
+    const networkIdentity = this.sdk.internal.get('networkIdentity')
+    if (
+      !this.sdk.config.get('generateNewIdentity') &&
+      networkIdentity !== undefined &&
+      networkIdentity.length > 31
+    ) {
+      return BoxKeyPair.fromHex(networkIdentity)
+    }
+  }
+
+  chainProgress(): Promise<number> {
+    return Promise.resolve(this.node.chain.getProgress())
+  }
+
+  async downloadChainSnapshot(path?: string): Promise<void> {
+    if (
+      this.initStatus < IronFishInitStatus.INITIALIZED ||
+      this.initStatus === IronFishInitStatus.ERROR
+    ) {
+      return Promise.reject(new Error('Node is not initialized.'))
+    }
+    this.initStatus = IronFishInitStatus.DOWNLOAD_SNAPSHOT
+    return this.snapshot.start(path)
+  }
+
+  getNodeConfig(): Promise<Partial<ConfigOptions>> {
+    return Promise.resolve(this.nodeSettings.getConfig())
+  }
+
+  async hasAnyAccount(): Promise<boolean> {
+    return Promise.resolve(this.node.wallet.listAccounts().length > 0)
+  }
+
   async initialize(): Promise<void> {
     try {
       await this.initializeSdk()
@@ -111,54 +136,6 @@ export class IronFishManager implements IIronfishManager {
       // eslint-disable-next-line no-console
       console.error(e)
     }
-  }
-
-  async start(): Promise<void> {
-    if (
-      this.initStatus !== IronFishInitStatus.INITIALIZED &&
-      this.initStatus !== IronFishInitStatus.DOWNLOAD_SNAPSHOT
-    ) {
-      throw new Error(
-        'SDK and node is not initialized. Please call init method first.'
-      )
-    }
-
-    this.initStatus = IronFishInitStatus.STARTING_NODE
-    if (!this.node.wallet.getDefaultAccount()) {
-      const accounts = this.node.wallet.listAccounts()
-      if (accounts.length > 0) {
-        await this.node.wallet.setDefaultAccount(accounts[0].name)
-      } else {
-        throw new Error(
-          'There no accounts in wallet. Please create or import account first.'
-        )
-      }
-    }
-
-    //Starting node
-    await this.node.start()
-    this.initStatus = IronFishInitStatus.STARTED
-  }
-
-  async stop(changeStatus = true): Promise<void> {
-    await this.node?.shutdown()
-    await this.node?.closeDB()
-
-    if (changeStatus) {
-      this.initStatus = IronFishInitStatus.NOT_STARTED
-    }
-  }
-
-  async hasAnyAccount(): Promise<boolean> {
-    return Promise.resolve(this.node.wallet.listAccounts().length > 0)
-  }
-
-  status(): Promise<IronFishInitStatus> {
-    return Promise.resolve(this.initStatus)
-  }
-
-  chainProgress(): Promise<number> {
-    return Promise.resolve(this.node.chain.getProgress())
   }
 
   nodeStatus(): Promise<NodeStatusResponse> {
@@ -232,14 +209,6 @@ export class IronFishManager implements IIronfishManager {
     return Promise.resolve(status)
   }
 
-  async sync(): Promise<void> {
-    await this.node.syncer.peerNetwork.start()
-  }
-
-  async stopSyncing(): Promise<void> {
-    await this.node.syncer.peerNetwork.stop()
-  }
-
   peers(): Promise<Peer[]> {
     const result: Peer[] = []
 
@@ -300,26 +269,59 @@ export class IronFishManager implements IIronfishManager {
     return Promise.resolve(result)
   }
 
-  async downloadChainSnapshot(path?: string): Promise<void> {
-    if (
-      this.initStatus < IronFishInitStatus.INITIALIZED ||
-      this.initStatus === IronFishInitStatus.ERROR
-    ) {
-      return Promise.reject(new Error('Node is not initialized.'))
-    }
-    this.initStatus = IronFishInitStatus.DOWNLOAD_SNAPSHOT
-    return this.snapshot.start(path)
-  }
-
-  getNodeConfig(): Promise<Partial<ConfigOptions>> {
-    return Promise.resolve(this.nodeSettings.getConfig())
-  }
-
   async saveNodeConfig(values: Partial<ConfigOptions>): Promise<void> {
     this.nodeSettings.setValues(values)
     await this.nodeSettings.save()
     await this.stop()
     await this.initializeNode()
     return this.start()
+  }
+
+  async start(): Promise<void> {
+    if (
+      this.initStatus !== IronFishInitStatus.INITIALIZED &&
+      this.initStatus !== IronFishInitStatus.DOWNLOAD_SNAPSHOT
+    ) {
+      throw new Error(
+        'SDK and node is not initialized. Please call init method first.'
+      )
+    }
+
+    this.initStatus = IronFishInitStatus.STARTING_NODE
+    if (!this.node.wallet.getDefaultAccount()) {
+      const accounts = this.node.wallet.listAccounts()
+      if (accounts.length > 0) {
+        await this.node.wallet.setDefaultAccount(accounts[0].name)
+      } else {
+        throw new Error(
+          'There no accounts in wallet. Please create or import account first.'
+        )
+      }
+    }
+
+    //Starting node
+    await this.node.start()
+    this.initStatus = IronFishInitStatus.STARTED
+  }
+
+  status(): Promise<IronFishInitStatus> {
+    return Promise.resolve(this.initStatus)
+  }
+
+  async stop(changeStatus = true): Promise<void> {
+    await this.node?.shutdown()
+    await this.node?.closeDB()
+
+    if (changeStatus) {
+      this.initStatus = IronFishInitStatus.NOT_STARTED
+    }
+  }
+
+  async stopSyncing(): Promise<void> {
+    await this.node.syncer.peerNetwork.stop()
+  }
+
+  async sync(): Promise<void> {
+    await this.node.syncer.peerNetwork.start()
   }
 }
