@@ -7,6 +7,7 @@ import { SnapshotManifest } from 'Types/IronfishManager/IIronfishSnapshotManager
 import { Payment } from 'Types/Transaction'
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
+import DemoUpdateManager from 'Data/DemoUpdateManager'
 
 export const IronFishManager: IIronfishManager = {
   assets: {
@@ -199,3 +200,6 @@ export const AccountSettingsStorage: IStorage<AccountSettings> = {
       currency: fieldsToUpdate.currency,
     })),
 }
+
+export const UpdateManager = new DemoUpdateManager()
+UpdateManager.initialize()

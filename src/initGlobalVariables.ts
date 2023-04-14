@@ -21,7 +21,3 @@ declare global {
 
 //TODO: Remove after full integration of @ironfish/sdk
 window.DemoDataManager = new DemoDataManager()
-if (!window.UpdateManager) {
-  window.UpdateManager = new DemoUpdateManager()
-  window.UpdateManager.initialize()
-}
