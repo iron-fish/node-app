@@ -10,40 +10,41 @@ import Peer from 'Types/Peer'
 import { IIronfishSnapshotManager } from './IIronfishSnapshotManager'
 
 export enum IronfishManagerAction {
-  INITIALIZE = 'initialize',
-  START = 'start',
-  STOP = 'stop',
-  STATUS = 'status',
-  NODE_STATUS = 'nodeStatus',
-  PEERS = 'peers',
-  HAS_ANY_ACCOUNT = 'hasAnyAccount',
   CHAIN_PROGRESS = 'chainProgress',
   DOWNLOAD_SNAPSHOT = 'downloadChainSnapshot',
-  SYNC = 'sync',
-  STOP_SYNCING = 'stopSyncing',
   GET_NODE_CONFIG = 'getNodeConfig',
+  HAS_ANY_ACCOUNT = 'hasAnyAccount',
+  INITIALIZE = 'initialize',
+  NODE_STATUS = 'nodeStatus',
+  PEERS = 'peers',
   SAVE_NODE_CONFIG = 'saveNodeConfig',
+  START = 'start',
+  STATUS = 'status',
+  STOP = 'stop',
+  STOP_SYNCING = 'stopSyncing',
+  SYNC = 'sync',
 }
 
 export interface IIronfishManager {
   accounts: IIronfishAccountManager
-  transactions: IIronfishTransactionManager
-  snapshot: IIronfishSnapshotManager
   assets: IIronfishAssetManager
   nodeSettings: INodeSettingsManager
-  initialize: () => Promise<void>
-  hasAnyAccount: () => Promise<boolean>
-  start: () => Promise<void>
-  stop: (changeStatus?: boolean) => Promise<void>
-  status: () => Promise<IronFishInitStatus>
-  sync: () => Promise<void>
-  stopSyncing: () => Promise<void>
+  snapshot: IIronfishSnapshotManager
+  transactions: IIronfishTransactionManager
+
   chainProgress: () => Promise<number>
   downloadChainSnapshot: (path?: string) => Promise<void>
+  getNodeConfig: () => Promise<Partial<ConfigOptions>>
+  hasAnyAccount: () => Promise<boolean>
+  initialize: () => Promise<void>
   nodeStatus: () => Promise<NodeStatusResponse>
   peers: () => Promise<Peer[]>
-  getNodeConfig: () => Promise<Partial<ConfigOptions>>
   saveNodeConfig: (values: Partial<ConfigOptions>) => Promise<void>
+  start: () => Promise<void>
+  status: () => Promise<IronFishInitStatus>
+  stop: (changeStatus?: boolean) => Promise<void>
+  stopSyncing: () => Promise<void>
+  sync: () => Promise<void>
 }
 
 export default IIronfishManager
