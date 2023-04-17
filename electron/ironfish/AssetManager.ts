@@ -13,6 +13,7 @@ class AssetManager extends AbstractManager implements IIronfishAssetManager {
     name: Buffer.from('$IRON', 'utf8'),
     owner: Buffer.from('Iron Fish', 'utf8'),
     supply: BigInt(0),
+    nonce: 0,
   }
 
   async list(search?: string, offset = 0, max = 100): Promise<Asset[]> {

@@ -174,6 +174,12 @@ class AccountManager
         accountData = {
           id: uuid(),
           ...decodedData,
+          createdAt: decodedData.createdAt
+            ? {
+                hash: Buffer.from(decodedData.createdAt.hash, 'utf-8'),
+                sequence: decodedData.createdAt.sequence,
+              }
+            : null,
           ...generateKeyFromPrivateKey(decodedData.spendingKey),
         }
       }
@@ -250,7 +256,7 @@ class AccountManager
       publicAddress: key.publicAddress,
       spendingKey: key.spendingKey,
       viewKey: key.viewKey,
-      createdAt: new Date(),
+      createdAt: null,
       mnemonicPhrase: spendingKeyToWords(
         key.spendingKey,
         LanguageCode.English
