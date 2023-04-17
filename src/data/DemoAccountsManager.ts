@@ -33,7 +33,13 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
       'JPq_yX-p2PdFev7gGdlCLF9GQw25JHWIb0rNvq-Dnlomj49GNTbOgyn79fHFIQrt',
     version: 1,
     viewKey: nanoid(64),
-    createdAt: new Date(),
+    createdAt: {
+      hash: Buffer.from(
+        'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
+        'utf-8'
+      ),
+      sequence: 1200,
+    },
   },
   {
     id: 'H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6',
@@ -48,7 +54,13 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
       'E-cVvstCOWfvkiqeR3-Qc4Vm65EqX_I12Ouvavtk75j-z0Vii0I2L9_1JCtz8rlq',
     version: 1,
     viewKey: nanoid(64),
-    createdAt: new Date(),
+    createdAt: {
+      hash: Buffer.from(
+        'H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6',
+        'utf-8'
+      ),
+      sequence: 1200,
+    },
   },
   {
     id: 'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
@@ -63,7 +75,13 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
       'RXFS7bN5gSsnKqSZv208s8EtRwwsHNji3CQuCUlD3jDwlzQ7gfFpsrtf14klpuYF',
     version: 1,
     viewKey: nanoid(64),
-    createdAt: new Date(),
+    createdAt: {
+      hash: Buffer.from(
+        'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
+        'utf-8'
+      ),
+      sequence: 1200,
+    },
   },
 ]
 
@@ -220,7 +238,10 @@ class DemoAccountsManager implements IIronfishAccountManager {
           spendingKey: nanoid(64),
           viewKey: nanoid(64),
           version: 1,
-          createdAt: new Date(),
+          createdAt: {
+            hash: Buffer.from(nanoid(64), 'utf-8'),
+            sequence: 1200,
+          },
         }
         DEMO_ACCOUNTS.push(account)
         ACCOUNT_SETTINGS.push({
@@ -341,7 +362,10 @@ class DemoAccountsManager implements IIronfishAccountManager {
       spendingKey: nanoid(64),
       viewKey: nanoid(64),
       version: 1,
-      createdAt: new Date(),
+      createdAt: {
+        hash: Buffer.from(nanoid(64), 'utf-8'),
+        sequence: 1200,
+      },
     }
     return this.import(account)
   }
@@ -356,7 +380,10 @@ class DemoAccountsManager implements IIronfishAccountManager {
       spendingKey: nanoid(64),
       viewKey: nanoid(64),
       version: 1,
-      createdAt: new Date(),
+      createdAt: {
+        hash: Buffer.from(nanoid(64), 'utf-8'),
+        sequence: 1200,
+      },
     }
     return this.import(account)
   }
@@ -409,7 +436,10 @@ class DemoAccountsManager implements IIronfishAccountManager {
       viewKey: nanoid(64),
       version: 1,
       mnemonicPhrase: randomWords({ exactly: 24, maxLength: 8 }),
-      createdAt: new Date(),
+      createdAt: {
+        hash: Buffer.from(nanoid(64), 'utf-8'),
+        sequence: 1200,
+      },
     }
   }
 
