@@ -1,5 +1,12 @@
-import { FC } from 'react'
-import { Flex, NAMED_COLORS, Icon, Tooltip } from '@ironfish/ui-kit'
+import { FC, ReactNode } from 'react'
+import {
+  Flex,
+  NAMED_COLORS,
+  Box,
+  Tooltip,
+  Icon,
+  useBreakpointValue,
+} from '@ironfish/ui-kit'
 import Hotkey from 'Components/Hotkey'
 
 export type NavItemProps = {
@@ -7,8 +14,9 @@ export type NavItemProps = {
   to: string
   label: string
   icon: typeof Icon
-  hotkey: string
+  hotkey?: string
   aliases: string[]
+  statItem?: ReactNode
 }
 
 export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
@@ -16,7 +24,9 @@ export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
   label,
   icon,
   hotkey,
+  statItem,
 }) => {
+  const isOpen = useBreakpointValue({ base: false, sm: true })
   const ItemIcon = icon as typeof Icon
   return (
     <>
@@ -44,9 +54,10 @@ export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
           flexDirection="row"
           justifyContent={{ base: 'center', sm: 'flex-start' }}
           alignItems="center"
-          width={{ base: '3.5rem', sm: '14.5rem' }}
+          width={isOpen ? '14.5rem' : '3.5rem'}
           h="2.5rem"
           borderRadius="0.25rem"
+          transition="width 0.5s ease-in-out"
           p={{ base: '0.5rem', sm: '0.5rem 0.5rem 0.5rem 1rem' }}
           bg={active ? NAMED_COLORS.LIGHTER_GREY : 'transparent'}
           _dark={{
@@ -77,7 +88,8 @@ export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
             justifyContent="space-between"
           >
             {label}
-            {active && <Hotkey>{hotkey}</Hotkey>}
+            {!statItem && hotkey && active && <Hotkey>{hotkey}</Hotkey>}
+            {statItem && <Box mr="0.5rem">{statItem}</Box>}
           </Flex>
         </Flex>
       </Tooltip>

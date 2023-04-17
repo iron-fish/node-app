@@ -1,6 +1,6 @@
 {
   "name": "wallet-app",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Iron Fish Wallet",
   "main": ".webpack/main",
   "repository": "https://github.com/iron-fish/wallet-app",
@@ -80,6 +80,7 @@
     "random-words": "^1.2.0",
     "react-app-rewired": "^2.2.1",
     "react-flag-kit": "^1.1.1",
+    "react-markdown": "^8.0.6",
     "react-scripts": "^5.0.1",
     "react-spring": "9.5.2",
     "stream-browserify": "^3.0.0",

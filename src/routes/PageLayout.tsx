@@ -5,6 +5,7 @@ import {
   Button,
   Collapse,
   ScaleFade,
+  Link,
 } from '@ironfish/ui-kit'
 import SnapshotDownloadModal from 'Components/Snapshot/SnapshotDownloadModal'
 import useSnapshotManifest from 'Hooks/snapshot/useSnapshotManifest'
@@ -19,6 +20,7 @@ import {
   DARK_COLORS,
   LIGHT_COLORS,
 } from 'Components/Navbar/StatusBar/StatusItem'
+import ModalWindow from 'Components/ModalWindow'
 
 const DownloadSnapshotMessage: FC<{
   show: boolean
@@ -97,13 +99,16 @@ const DownloadSnapshotMessage: FC<{
 }
 
 export const PageLayout: FC = () => {
-  const { data, requiredSnapshot } = useDataSync()
+  const {
+    data,
+    requiredSnapshot,
+    updates: { status, ignore, install },
+  } = useDataSync()
   const location = useLocation()
   return (
     <>
       <DownloadSnapshotMessage show={requiredSnapshot} data={data} />
       <Flex
-        top="0"
         className="App"
         justifyContent="center"
         minHeight={requiredSnapshot ? 'calc(100vh - 3rem)' : '100vh'}
@@ -128,6 +133,36 @@ export const PageLayout: FC = () => {
           </ScaleFade>
         </Box>
       </Flex>
+      {status?.hasUpdates && !status?.ignoreUpdates && (
+        <ModalWindow
+          isOpen={status?.hasUpdates && !status?.ignoreUpdates}
+          onClose={() => ignore()}
+        >
+          <chakra.h2 mb="1rem">Update Available</chakra.h2>
+          <chakra.h4 mb="1.5rem">
+            A new version of the Iron Fish app is available, please restart the
+            application to apply the update.
+          </chakra.h4>
+          <Flex>
+            <Button
+              variant="primary"
+              size="medium"
+              mr="1.5rem"
+              onClick={() => install()}
+            >
+              Restart Now
+            </Button>
+            <Link
+              alignSelf="center"
+              onClick={() => {
+                ignore()
+              }}
+            >
+              <h4>Update on Next Launch</h4>
+            </Link>
+          </Flex>
+        </ModalWindow>
+      )}
     </>
   )
 }
