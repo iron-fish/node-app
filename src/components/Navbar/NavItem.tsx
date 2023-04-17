@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react'
-import { Flex, NAMED_COLORS, Box } from '@ironfish/ui-kit'
+import { Flex, NAMED_COLORS, Box, Tooltip, Icon } from '@ironfish/ui-kit'
 import Hotkey from 'Components/Hotkey'
 
 export type NavItemProps = {
@@ -7,7 +7,7 @@ export type NavItemProps = {
   to: string
   label: string
   icon: typeof Icon
-  hotkey: string
+  hotkey?: string
   aliases: string[]
   statItem?: ReactNode
 }

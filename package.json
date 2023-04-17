@@ -1,6 +1,6 @@
 {
   "name": "wallet-app",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Iron Fish Wallet",
   "main": ".webpack/main",
   "repository": "https://github.com/iron-fish/wallet-app",

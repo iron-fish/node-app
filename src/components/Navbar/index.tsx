@@ -1,5 +1,11 @@
 import { FC, useMemo } from 'react'
-import { Flex, Box, FlexProps, NAMED_COLORS } from '@ironfish/ui-kit'
+import {
+  Flex,
+  Box,
+  FlexProps,
+  NAMED_COLORS,
+  useBreakpointValue,
+} from '@ironfish/ui-kit'
 
 import IconHome from 'Svgx/home'
 import IconSend from 'Svgx/send'
