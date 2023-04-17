@@ -1,4 +1,3 @@
-import './initGlobalVariables'
 import {
   AccountSettingsStorage,
   AddressBookStorage,
@@ -9,6 +8,7 @@ import noop from 'lodash/noop'
 window.IronfishManager = IronFishManager
 window.AddressBookStorage = AddressBookStorage
 window.AccountSettingsStorage = AccountSettingsStorage
+
 if (!window.setElectronThemeMode) {
   window.setElectronThemeMode = noop
 }

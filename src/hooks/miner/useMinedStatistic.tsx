@@ -6,9 +6,10 @@ const useMinedStatistic = (accountId: string, from?: string, to?: string) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<AccountMinerStatistic>()
 
   const loadStatistic = () => {
-    promiseWrapper(
-      window.DemoDataManager.getAccountMinerStatistic(accountId, from, to)
-    )
+    // commented while not required
+    // promiseWrapper(
+    //   window.DemoDataManager.getAccountMinerStatistic(accountId, from, to)
+    // )
   }
 
   useEffect(() => {

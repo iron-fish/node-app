@@ -1,4 +1,3 @@
-import { AccountSettings } from './types/Account'
 import { AccountValue } from '@ironfish/sdk'
 import { nanoid } from 'nanoid'
 import randomWords from 'random-words'
@@ -16,6 +15,9 @@ import {
 } from './DemoAssetManager'
 import Account from 'Types/Account'
 import AccountCreateParams from 'Types/AccountCreateParams'
+import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
+import { ACCOUNT_SETTINGS } from './DemoAccountSettingsManager'
+import uniqueId from 'lodash/uniqueId'
 
 export const DEMO_ACCOUNTS: AccountValue[] = [
   {
@@ -62,24 +64,6 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
     version: 1,
     viewKey: nanoid(64),
     createdAt: new Date(),
-  },
-]
-
-export const ACCOUNT_SETTINGS: AccountSettings[] = [
-  {
-    accountId:
-      'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
-    currency: 'USD',
-  },
-  {
-    accountId:
-      'H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6',
-    currency: 'EUR',
-  },
-  {
-    accountId:
-      'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
-    currency: 'USD',
   },
 ]
 
@@ -190,7 +174,37 @@ export const ACCOUNT_BALANCES: Record<
   ],
 }
 
-class DemoAccountsManager {
+class DemoAccountsManager implements IIronfishAccountManager {
+  balance(
+    id: string,
+    assetId: string = DEFAULT_ASSET.id
+  ): Promise<AccountBalance> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const balance = ACCOUNT_BALANCES[id].find(b => b.asset.id === assetId)
+        resolve(balance)
+      }, 500)
+    })
+  }
+
+  balances(id: string): Promise<{
+    default: AccountBalance
+    assets: AccountBalance[]
+  }> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        if (ACCOUNT_BALANCES[id]) {
+          resolve({
+            default: ACCOUNT_BALANCES[id][0],
+            assets: ACCOUNT_BALANCES[id].slice(1),
+          })
+        } else {
+          resolve(null)
+        }
+      }, 500)
+    })
+  }
+
   create(name: string): Promise<AccountValue> {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -210,6 +224,7 @@ class DemoAccountsManager {
         }
         DEMO_ACCOUNTS.push(account)
         ACCOUNT_SETTINGS.push({
+          _id: nanoid(64),
           accountId: account.id,
           currency: 'USD',
         })
@@ -228,23 +243,51 @@ class DemoAccountsManager {
     })
   }
 
-  async prepareAccount(): Promise<AccountCreateParams> {
-    return {
-      id: nanoid(64),
-      publicAddress: nanoid(64),
-      name: 'name',
-      incomingViewKey: nanoid(64),
-      outgoingViewKey: nanoid(64),
-      spendingKey: nanoid(64),
-      viewKey: nanoid(64),
-      version: 1,
-      mnemonicPhrase: randomWords({ exactly: 24, maxLength: 8 }),
-      createdAt: new Date(),
-    }
+  delete(name: string): Promise<void> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        DEMO_ACCOUNTS.splice(
+          DEMO_ACCOUNTS.findIndex(account => account.name === name),
+          1
+        )
+        resolve()
+      }, 500)
+    })
   }
 
-  async submitAccount(createParams: AccountValue): Promise<Account> {
-    return this.create(createParams.name)
+  async export(
+    id: string,
+    encoded?: boolean,
+    viewOnly?: boolean
+  ): Promise<string> {
+    const account = Object.assign({}, await this.get(id))
+    delete account.id
+    delete account.balances
+
+    return JSON.stringify(account)
+  }
+
+  get(id: string): Promise<Account> {
+    const accountIndex = DEMO_ACCOUNTS.findIndex(a => a.id === id)
+    const account: Account = DEMO_ACCOUNTS[accountIndex]
+
+    if (account) {
+      account.balances = {
+        default: ACCOUNT_BALANCES[account.id][0],
+        assets: ACCOUNT_BALANCES[account.id].slice(1),
+      }
+      account.order = accountIndex
+    }
+
+    return new Promise(resolve => setTimeout(() => resolve(account), 500))
+  }
+
+  getMnemonicPhrase(id: string): Promise<string[]> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(randomWords({ exactly: 24, maxLength: 8 }))
+      }, 500)
+    })
   }
 
   import(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
@@ -269,6 +312,7 @@ class DemoAccountsManager {
         }
         DEMO_ACCOUNTS.push(newAccount)
         ACCOUNT_SETTINGS.push({
+          _id: newAccount.id,
           accountId: newAccount.id,
           currency: 'USD',
         })
@@ -285,6 +329,36 @@ class DemoAccountsManager {
         resolve(newAccount)
       }, 500)
     })
+  }
+
+  importByMnemonic(name: string, mnemonic: string): Promise<AccountValue> {
+    const account = {
+      id: nanoid(64),
+      incomingViewKey: nanoid(64),
+      outgoingViewKey: nanoid(64),
+      name: name,
+      publicAddress: nanoid(64),
+      spendingKey: nanoid(64),
+      viewKey: nanoid(64),
+      version: 1,
+      createdAt: new Date(),
+    }
+    return this.import(account)
+  }
+
+  importByEncodedKey(data: string): Promise<AccountValue> {
+    const account = {
+      id: nanoid(64),
+      incomingViewKey: nanoid(64),
+      outgoingViewKey: nanoid(64),
+      name: uniqueId('Imported Account'),
+      publicAddress: nanoid(64),
+      spendingKey: nanoid(64),
+      viewKey: nanoid(64),
+      version: 1,
+      createdAt: new Date(),
+    }
+    return this.import(account)
   }
 
   list(searchTerm?: string, sort?: SortType): Promise<CutAccount[]> {
@@ -324,103 +398,23 @@ class DemoAccountsManager {
     )
   }
 
-  findById(id: string): Promise<Account | null> {
-    const accountIndex = DEMO_ACCOUNTS.findIndex(a => a.id === id)
-    const account: Account = DEMO_ACCOUNTS[accountIndex]
-
-    if (account) {
-      account.balances = {
-        default: ACCOUNT_BALANCES[account.id][0],
-        assets: ACCOUNT_BALANCES[account.id].slice(1),
-      }
-      account.order = accountIndex
+  async prepareAccount(): Promise<AccountCreateParams> {
+    return {
+      id: nanoid(64),
+      publicAddress: nanoid(64),
+      name: 'name',
+      incomingViewKey: nanoid(64),
+      outgoingViewKey: nanoid(64),
+      spendingKey: nanoid(64),
+      viewKey: nanoid(64),
+      version: 1,
+      mnemonicPhrase: randomWords({ exactly: 24, maxLength: 8 }),
+      createdAt: new Date(),
     }
-
-    return new Promise(resolve => setTimeout(() => resolve(account), 500))
   }
 
-  update(identity: string, name: string): Promise<AccountValue> {
-    return new Promise(resolve =>
-      setTimeout(() => {
-        const currentAccount = DEMO_ACCOUNTS.find(
-          account => account.id === identity
-        )
-        currentAccount.name = name
-        resolve(currentAccount)
-      }, 500)
-    )
-  }
-
-  delete(name: string): Promise<void> {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        DEMO_ACCOUNTS.splice(
-          DEMO_ACCOUNTS.findIndex(account => account.name === name),
-          1
-        )
-        resolve()
-      }, 500)
-    })
-  }
-
-  settings(id: string): Promise<AccountSettings> {
-    return new Promise(resolve =>
-      setTimeout(
-        () =>
-          resolve(ACCOUNT_SETTINGS.find(settings => settings.accountId === id)),
-        500
-      )
-    )
-  }
-
-  updateSettings(id: string, currency: string): Promise<AccountSettings> {
-    return new Promise(resolve =>
-      setTimeout(() => {
-        const currentSettings = ACCOUNT_SETTINGS.find(
-          setting => setting.accountId === id
-        )
-        currentSettings.currency = currency
-        resolve(currentSettings)
-      }, 500)
-    )
-  }
-
-  balance(
-    id: string,
-    assetId: string = DEFAULT_ASSET.id
-  ): Promise<AccountBalance> {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const balance = ACCOUNT_BALANCES[id].find(b => b.asset.id === assetId)
-        resolve(balance)
-      }, 500)
-    })
-  }
-
-  balances(id: string): Promise<{
-    default: AccountBalance
-    assets: AccountBalance[]
-  } | null> {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        if (ACCOUNT_BALANCES[id]) {
-          resolve({
-            default: ACCOUNT_BALANCES[id][0],
-            assets: ACCOUNT_BALANCES[id].slice(1),
-          })
-        } else {
-          resolve(null)
-        }
-      }, 500)
-    })
-  }
-
-  getMnemonicPhrase(id: string): Promise<string[]> {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(randomWords({ exactly: 24, maxLength: 8 }))
-      }, 500)
-    })
+  async submitAccount(createParams: AccountValue): Promise<Account> {
+    return this.create(createParams.name)
   }
 }
 

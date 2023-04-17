@@ -1,2 +1,1 @@
-import './initGlobalVariables'
 import './init'
