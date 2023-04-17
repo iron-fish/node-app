@@ -24,14 +24,16 @@ import useMinedStatistic from 'Hooks/miner/useMinedStatistic'
 import CutAccount from 'Types/CutAccount'
 
 const Information: FC = memo(() => {
-  const textColor = useColorModeValue(
-    NAMED_COLORS.GREY,
-    NAMED_COLORS.LIGHT_GREY
-  )
   return (
     <Box maxWidth="21.5rem">
       <chakra.h3 mb="1rem">Earning $IRON</chakra.h3>
-      <chakra.h5 mb="2rem" color={textColor}>
+      <chakra.h5
+        mb="2rem"
+        color={NAMED_COLORS.GREY}
+        _dark={{
+          color: NAMED_COLORS.LIGHT_GREY,
+        }}
+      >
         Using the miner not only earns you real $IRON but it also helps the
         blockchain as a whole. Use the full power of you machine and all of its
         cores and earn to your fullest potential.

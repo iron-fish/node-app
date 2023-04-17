@@ -9,13 +9,14 @@ const useMinerSpeed = (periodOfUpdate = 500, maxStoreLength = 50) => {
   const [store, setStore] = useState<SpeedRow[]>([])
 
   const loadMinerSpeed = () => {
-    return window.DemoDataManager.getAccountMinerSpeed().then(data => {
-      if (store.length === maxStoreLength) {
-        store.shift()
-      }
-      store.push({ time: new Date(), value: data.speed })
-      setStore([...store])
-    })
+    // commented while not required
+    // return window.DemoDataManager.getAccountMinerSpeed().then(data => {
+    //   if (store.length === maxStoreLength) {
+    //     store.shift()
+    //   }
+    //   store.push({ time: new Date(), value: data.speed })
+    //   setStore([...store])
+    // })
   }
 
   useEffect(() => {

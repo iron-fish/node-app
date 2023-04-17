@@ -1,10 +1,18 @@
-import { Flex, Box, chakra, Button, Collapse, Link } from '@ironfish/ui-kit'
+import {
+  Flex,
+  Box,
+  chakra,
+  Button,
+  Collapse,
+  ScaleFade,
+  Link,
+} from '@ironfish/ui-kit'
 import SnapshotDownloadModal from 'Components/Snapshot/SnapshotDownloadModal'
 import useSnapshotManifest from 'Hooks/snapshot/useSnapshotManifest'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { FC, useState } from 'react'
 import sizeFormat from 'byte-size'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
 import { formatRemainingTime } from 'Utils/remainingTimeFormat'
 import Navbar from '../components/Navbar'
@@ -21,7 +29,16 @@ const DownloadSnapshotMessage: FC<{
   const [open, setOpen] = useState(false)
   const [manifest] = useSnapshotManifest()
   return (
-    <Collapse in={show} startingHeight={0} endingHeight="3rem">
+    <Collapse
+      in={show}
+      startingHeight={0}
+      endingHeight="3rem"
+      style={{
+        position: 'sticky',
+        zIndex: 99,
+        top: 0,
+      }}
+    >
       <Flex
         w="100%"
         bg={LIGHT_COLORS.bg.warning}
@@ -87,6 +104,7 @@ export const PageLayout: FC = () => {
     requiredSnapshot,
     updates: { status, ignore, install },
   } = useDataSync()
+  const location = useLocation()
   return (
     <>
       <DownloadSnapshotMessage show={requiredSnapshot} data={data} />
@@ -100,17 +118,19 @@ export const PageLayout: FC = () => {
           height={requiredSnapshot ? 'calc(100vh - 3rem)' : '100vh'}
         />
         <Box w="100%">
-          <Flex
-            width="100%"
-            height="100%"
-            justifyContent="center"
-            px="2rem"
-            py="2.5rem"
-          >
-            <Box width="100%" height="100%" maxWidth="65.5rem">
-              <Outlet />
-            </Box>
-          </Flex>
+          <ScaleFade in={true} key={location.key}>
+            <Flex
+              width="100%"
+              height="100%"
+              justifyContent="center"
+              px="2rem"
+              py="2.5rem"
+            >
+              <Box width="100%" height="100%" maxWidth="65.5rem">
+                <Outlet />
+              </Box>
+            </Flex>
+          </ScaleFade>
         </Box>
       </Flex>
       {status?.hasUpdates && !status?.ignoreUpdates && (

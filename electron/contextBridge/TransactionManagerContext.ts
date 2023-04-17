@@ -7,37 +7,6 @@ import SortType from 'Types/SortType'
 import { Payment } from 'Types/Transaction'
 
 class TransactionManagerContext implements IIronfishTransactionManager {
-  get = (hash: string, accountId: string) => {
-    return ipcRenderer.invoke(
-      'ironfish-manager-transactions',
-      IronfishTransactionManagerAction.GET,
-      hash,
-      accountId
-    )
-  }
-  send = (accountId: string, payment: Payment, transactionFee?: bigint) => {
-    return ipcRenderer.invoke(
-      'ironfish-manager-transactions',
-      IronfishTransactionManagerAction.SEND,
-      accountId,
-      payment,
-      transactionFee
-    )
-  }
-  fees = (numOfBlocks?: number) => {
-    return ipcRenderer.invoke(
-      'ironfish-manager-transactions',
-      IronfishTransactionManagerAction.FEES,
-      numOfBlocks
-    )
-  }
-  averageFee = (numOfBlocks?: number) => {
-    return ipcRenderer.invoke(
-      'ironfish-manager-transactions',
-      IronfishTransactionManagerAction.AVERAGE_FEE,
-      numOfBlocks
-    )
-  }
   estimateFeeWithPriority = (accountId: string, receive: Payment) => {
     return ipcRenderer.invoke(
       'ironfish-manager-transactions',
@@ -46,6 +15,7 @@ class TransactionManagerContext implements IIronfishTransactionManager {
       receive
     )
   }
+
   findByAccountId = (
     accountId: string,
     searchTerm?: string,
@@ -59,6 +29,7 @@ class TransactionManagerContext implements IIronfishTransactionManager {
       sort
     )
   }
+
   findByAddress = (address: string, searchTerm?: string, sort?: SortType) => {
     return ipcRenderer.invoke(
       'ironfish-manager-transactions',
@@ -66,6 +37,25 @@ class TransactionManagerContext implements IIronfishTransactionManager {
       address,
       searchTerm,
       sort
+    )
+  }
+
+  get = (hash: string, accountId: string) => {
+    return ipcRenderer.invoke(
+      'ironfish-manager-transactions',
+      IronfishTransactionManagerAction.GET,
+      hash,
+      accountId
+    )
+  }
+
+  send = (accountId: string, payment: Payment, transactionFee?: bigint) => {
+    return ipcRenderer.invoke(
+      'ironfish-manager-transactions',
+      IronfishTransactionManagerAction.SEND,
+      accountId,
+      payment,
+      transactionFee
     )
   }
 }

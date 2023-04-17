@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-require('../src/initGlobalVariables')
 const demo = require('../src/withDemoData')
 
 window.IronfishManager = demo.IronFishManager

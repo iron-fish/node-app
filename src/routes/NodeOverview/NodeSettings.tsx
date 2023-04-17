@@ -7,7 +7,6 @@ import {
   Skeleton,
   useIronToast,
   Box,
-  useColorModeValue,
   NAMED_COLORS,
 } from '@ironfish/ui-kit'
 import useNodeSettings from 'Hooks/node/useNodeSettings'
@@ -17,14 +16,14 @@ import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 
 const Information: FC = memo(() => {
-  const textColor = useColorModeValue(
-    NAMED_COLORS.GREY,
-    NAMED_COLORS.LIGHT_GREY
-  )
   return (
     <Box maxWidth="21.5rem" mt="1rem">
       <chakra.h3 mb="1rem">Settings</chakra.h3>
-      <chakra.h5 mb="2rem" color={textColor}>
+      <chakra.h5
+        mb="2rem"
+        color={NAMED_COLORS.GREY}
+        _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
+      >
         Change your node settings to fit you needs
       </chakra.h5>
       <AccountSettingsImage />

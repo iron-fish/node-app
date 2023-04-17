@@ -29,7 +29,6 @@ const ActiveStatus: FC<FlexProps> = props => {
     <Flex
       my={{ base: 0, sm: '1rem' }}
       flexDirection="column"
-      alignItems="center"
       gap="0.375rem"
       {...props}
     >

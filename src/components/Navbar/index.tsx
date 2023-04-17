@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useMemo } from 'react'
 import { Flex, Box, FlexProps, NAMED_COLORS } from '@ironfish/ui-kit'
 
 import IconHome from 'Svgx/home'
@@ -60,7 +60,7 @@ const primaryNavItems: NavItemProps[] = [
 
 export const Navbar: FC<FlexProps> = props => {
   const { data: updatesCount, loaded } = useUpdatesCount()
-
+  const isOpen = useBreakpointValue({ base: false, sm: true })
   const secondaryNavItems = useMemo(() => {
     return [
       {
@@ -95,8 +95,8 @@ export const Navbar: FC<FlexProps> = props => {
       height="100%"
       maxHeight="100vh"
       p="3rem 1rem 1rem"
-      w={{ base: '5.5rem', sm: '16.4375rem' }}
-      transition="width 0.3s ease-in-out"
+      w={isOpen ? '16.4375rem' : '5.5rem'}
+      transition="width 0.5s ease-in-out"
       position="sticky"
       left="0"
       top="0"
@@ -105,22 +105,24 @@ export const Navbar: FC<FlexProps> = props => {
       zIndex={100}
       {...props}
     >
-      <IronFishLogo
-        m="0.5rem 1rem"
-        display={{ base: 'none', sm: 'inline-block' }}
-      />
-      <HexFishLogo
-        m="0.5rem 1rem"
-        display={{ base: 'inline-block', sm: 'none' }}
-      />
+      <Flex>
+        <HexFishLogo m="0.5rem 1rem" mr={0} />
+        <Box
+          w={isOpen ? '10.3125rem' : '0'}
+          transition="width 0.5s ease-in-out"
+          overflow="hidden"
+        >
+          <IronFishLogo m="0.5rem 1rem" ml="-1.8125rem" />
+        </Box>
+      </Flex>
       <Box mt="2rem">
         <Nav list={primaryNavItems} />
       </Box>
-      <Box marginTop="auto">
+      <Flex marginTop="auto" direction="column" alignItems="center">
         <Nav mb="1rem" list={secondaryNavItems} />
         <StatusBar />
         <Toggle />
-      </Box>
+      </Flex>
     </Flex>
   )
 }

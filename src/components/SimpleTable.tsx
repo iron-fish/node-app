@@ -1,14 +1,5 @@
 import { FC } from 'react'
-import {
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  NAMED_COLORS,
-  useColorModeValue,
-} from '@ironfish/ui-kit'
+import { Table, Tbody, Td, Th, Thead, Tr, NAMED_COLORS } from '@ironfish/ui-kit'
 import { CommonTableProps } from '@ironfish/ui-kit/dist/components/Table/types'
 import RowItemSpin from '@ironfish/ui-kit/dist/components/Table/RowItemSpin'
 
@@ -21,21 +12,6 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
   onRowClick,
   ...rest
 }) => {
-  const $colors = useColorModeValue(
-    {
-      bg: NAMED_COLORS.WHITE,
-      borderColor: NAMED_COLORS.LIGHT_GREY,
-      hoverBorder: NAMED_COLORS.DEEP_BLUE,
-      caretColor: NAMED_COLORS.PALE_GREY,
-    },
-    {
-      bg: NAMED_COLORS.DARKER_GREY,
-      borderColor: NAMED_COLORS.DARK_GREY,
-      hoverBorder: NAMED_COLORS.WHITE,
-      caretColor: NAMED_COLORS.PALE_GREY,
-    }
-  )
-
   return (
     <Table {...rest}>
       <Thead>
@@ -53,23 +29,34 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
           ))}
         </Tr>
       </Thead>
-      <Tbody borderColor={$colors.borderColor}>
+      <Tbody
+        borderColor={NAMED_COLORS.LIGHT_GREY}
+        _dark={{
+          borderColor: NAMED_COLORS.DARK_GREY,
+        }}
+      >
         {data?.map((item, index) => (
           <Tr
             key={item?.id || `load-${index}`}
-            bg={$colors.bg}
+            bg={NAMED_COLORS.WHITE}
+            _dark={{
+              bg: NAMED_COLORS.DARKER_GREY,
+            }}
             mb="1rem"
             border="0.063rem solid"
             borderRadius="0.25rem"
             borderColor="inherit"
             sx={{
               '[aria-label="actions-column"]': {
-                color: $colors.caretColor,
+                color: NAMED_COLORS.PALE_GREY,
                 transition: 'color 300ms ease-in-out',
               },
               _hover: {
                 '[aria-label="actions-column"]': {
-                  color: $colors.hoverBorder,
+                  color: NAMED_COLORS.DEEP_BLUE,
+                  _dark: {
+                    color: NAMED_COLORS.WHITE,
+                  },
                 },
               },
             }}

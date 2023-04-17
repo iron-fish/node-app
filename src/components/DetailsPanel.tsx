@@ -9,11 +9,11 @@ import {
   DrawerContent,
   DrawerCloseButton,
   NAMED_COLORS,
-  useColorModeValue,
 } from '@ironfish/ui-kit'
 import { FC, useRef, ReactNode } from 'react'
 import InfoIcon from 'Svgx/Info'
 import CloseIcon from 'Svgx/CloseIcon'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 interface DetailsPanelProps {
   children: ReactNode
@@ -22,7 +22,7 @@ interface DetailsPanelProps {
 const DetailsPanel: FC<DetailsPanelProps> = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
-  const bg = useColorModeValue(NAMED_COLORS.WHITE, NAMED_COLORS.LIGHT_BLACK)
+  const { requiredSnapshot } = useDataSync()
   return (
     <>
       <Box
@@ -52,7 +52,7 @@ const DetailsPanel: FC<DetailsPanelProps> = ({ children }) => {
         aria-label={'account-keys-info-button'}
         borderRadius="50%"
         position="absolute"
-        top="1.5rem"
+        top={requiredSnapshot ? '4.5rem' : '1.5rem'}
         right="1.5rem"
         onClick={onOpen}
         display={{ base: 'block', md: 'none' }}
@@ -65,7 +65,14 @@ const DetailsPanel: FC<DetailsPanelProps> = ({ children }) => {
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
-        <DrawerContent p="4rem 4rem 2rem 4rem" maxWidth="29rem" bg={bg}>
+        <DrawerContent
+          p="4rem 4rem 2rem 4rem"
+          maxWidth="29rem"
+          bg={NAMED_COLORS.WHITE}
+          _dark={{
+            bg: NAMED_COLORS.LIGHT_BLACK,
+          }}
+        >
           <DrawerCloseButton
             border={`0.0625rem solid ${NAMED_COLORS.LIGHT_GREY}`}
             borderRadius="50%"
