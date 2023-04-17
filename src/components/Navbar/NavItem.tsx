@@ -1,5 +1,12 @@
 import { FC, ReactNode } from 'react'
-import { Flex, NAMED_COLORS, Box, Tooltip, Icon } from '@ironfish/ui-kit'
+import {
+  Flex,
+  NAMED_COLORS,
+  Box,
+  Tooltip,
+  Icon,
+  useBreakpointValue,
+} from '@ironfish/ui-kit'
 import Hotkey from 'Components/Hotkey'
 
 export type NavItemProps = {
@@ -19,6 +26,7 @@ export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
   hotkey,
   statItem,
 }) => {
+  const isOpen = useBreakpointValue({ base: false, sm: true })
   const ItemIcon = icon as typeof Icon
   return (
     <>
@@ -46,9 +54,10 @@ export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
           flexDirection="row"
           justifyContent={{ base: 'center', sm: 'flex-start' }}
           alignItems="center"
-          width={{ base: '3.5rem', sm: '14.5rem' }}
+          width={isOpen ? '14.5rem' : '3.5rem'}
           h="2.5rem"
           borderRadius="0.25rem"
+          transition="width 0.5s ease-in-out"
           p={{ base: '0.5rem', sm: '0.5rem 0.5rem 0.5rem 1rem' }}
           bg={active ? NAMED_COLORS.LIGHTER_GREY : 'transparent'}
           _dark={{

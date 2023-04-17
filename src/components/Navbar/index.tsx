@@ -65,8 +65,8 @@ const primaryNavItems: NavItemProps[] = [
 ]
 
 export const Navbar: FC<FlexProps> = props => {
-  const { data: updatesCount, loaded } = useUpdatesCount()
   const isOpen = useBreakpointValue({ base: false, sm: true })
+  const { data: updatesCount, loaded } = useUpdatesCount()
   const secondaryNavItems = useMemo(() => {
     return [
       {
