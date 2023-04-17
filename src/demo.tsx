@@ -2,13 +2,14 @@ import {
   AccountSettingsStorage,
   AddressBookStorage,
   IronFishManager,
+  UpdateManager,
 } from './withDemoData'
 import noop from 'lodash/noop'
 
 window.IronfishManager = IronFishManager
 window.AddressBookStorage = AddressBookStorage
 window.AccountSettingsStorage = AccountSettingsStorage
-
+window.UpdateManager = UpdateManager
 if (!window.setElectronThemeMode) {
   window.setElectronThemeMode = noop
 }

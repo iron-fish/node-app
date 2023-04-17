@@ -2,6 +2,7 @@ import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
 import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
 import IStorage from 'Types/IStorage'
+import { IUpdateManager } from 'Types/IUpdateManager'
 
 declare global {
   interface Window {
@@ -10,5 +11,6 @@ declare global {
     setElectronThemeMode: (mode: string) => void
     selectFolder: () => Promise<string>
     IronfishManager: IIronfishManager
+    UpdateManager: IUpdateManager
   }
 }

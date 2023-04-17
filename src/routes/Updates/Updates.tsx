@@ -1,0 +1,222 @@
+import { FC, useMemo, useEffect, useRef, useState, useCallback } from 'react'
+import {
+  Box,
+  chakra,
+  Flex,
+  Link,
+  NAMED_COLORS,
+  Skeleton,
+} from '@ironfish/ui-kit'
+import { Link as NavigateLink } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
+import { ROUTES } from '..'
+import { useReleaseNotesProvider } from 'Providers/ReleaseNotesProvider'
+import { ReleaseNote, UpdateMonthVersion } from 'Types/IUpdateManager'
+import { useDataSync } from 'Providers/DataSyncProvider'
+
+interface ReleaseNoteProps {
+  note: ReleaseNote
+  setIntersectionId: (id: string) => void
+}
+
+const ReleaseNoteItem: FC<ReleaseNoteProps> = ({ note, setIntersectionId }) => {
+  const ref = useRef()
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIntersectionId(entry.target.id)
+        }
+      },
+      {
+        rootMargin: '0px 0px -40% 0px',
+      }
+    )
+    observer.observe(ref.current)
+
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <Box ref={ref} w="100%" my="2rem" id={note.version}>
+      {note.isNew && (
+        <Flex
+          h="1.625rem"
+          w="min-content"
+          bg={'#EBFBF4'}
+          color={'#335A48'}
+          _dark={{
+            bg: '#192D23',
+            color: '#5FC89A',
+          }}
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="0.25rem"
+          p="0.125rem 0.625rem"
+          mb="1rem"
+        >
+          <chakra.h5>New</chakra.h5>
+        </Flex>
+      )}
+      <chakra.h5 whiteSpace="nowrap" color={NAMED_COLORS.GREY} mb="0.25rem">
+        {new Date(note.date).toLocaleString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })}
+        .&nbsp;{note.version}
+      </chakra.h5>
+      <chakra.h3 mb="1rem">{note.name}</chakra.h3>
+      <Box w="100%" maxH="3rem" h="min-content" overflow="hidden" mb="1rem">
+        <ReactMarkdown>{note.notes}</ReactMarkdown>
+      </Box>
+      <Box>
+        <Link
+          color={NAMED_COLORS.LIGHT_BLUE}
+          _hover={{ opacity: '0.7' }}
+          as={NavigateLink}
+          to={ROUTES.UPDATE}
+          state={{ version: note.version }}
+        >
+          Read more
+        </Link>
+      </Box>
+    </Box>
+  )
+}
+
+const UpdateList: FC = () => {
+  const [intersectionId, setIntersectionId] = useState(null)
+  const { data, loaded } = useReleaseNotesProvider()
+
+  const monthRange: UpdateMonthVersion[] = useMemo(() => {
+    const month = data?.metadata?.month_range || new Array(12).fill({})
+    return month
+  }, [data?.metadata])
+
+  const tags = useMemo(
+    () => monthRange?.map(item => item?.version),
+    [monthRange]
+  )
+
+  const handleVisibleTagChange = useCallback(
+    (newTag: string) => {
+      if (tags?.includes(newTag)) {
+        setIntersectionId(newTag)
+      }
+    },
+    [tags]
+  )
+
+  return (
+    <Flex justifyContent="space-between">
+      <Flex direction="column" w="calc(100% - 13rem)">
+        {(data?.data || new Array(3).fill(null))?.map((note, index) => {
+          return note ? (
+            <ReleaseNoteItem
+              key={note.version}
+              note={note}
+              setIntersectionId={handleVisibleTagChange}
+            />
+          ) : (
+            <Skeleton
+              key={index}
+              variant="ironFish"
+              my="1rem"
+              w="100%"
+              h="200px"
+              isLoaded={loaded}
+            />
+          )
+        })}
+      </Flex>
+      <Flex
+        direction="column"
+        w="7rem"
+        position="fixed"
+        top="11.75rem"
+        right="4rem"
+      >
+        <Box mb="1.25rem" letterSpacing="0.01rem">
+          <b>RELEASES</b>
+        </Box>
+        {monthRange.map(({ month, version }, index) =>
+          month && version ? (
+            <Link
+              key={`${month}-${version}`}
+              mb="1.25rem"
+              color={
+                intersectionId === version
+                  ? NAMED_COLORS.BLACK
+                  : NAMED_COLORS.GREY
+              }
+              _dark={{
+                color:
+                  intersectionId === version
+                    ? NAMED_COLORS.WHITE
+                    : NAMED_COLORS.PALE_GREY,
+              }}
+              onClick={() => {
+                const element = document.getElementById(version)
+                if (element) {
+                  element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                  })
+                }
+              }}
+            >
+              {month}
+            </Link>
+          ) : (
+            <Skeleton
+              key={index}
+              variant="ironFish"
+              w="100%"
+              h="1.5rem"
+              mb="1rem"
+              isLoaded={loaded}
+            />
+          )
+        )}
+      </Flex>
+    </Flex>
+  )
+}
+
+const Updates: FC = () => {
+  const {
+    updates: { status },
+  } = useDataSync()
+
+  return (
+    <Box w="100%">
+      <Flex alignItems="center" h="4rem">
+        <Box mr="1rem">
+          <chakra.h2>Updates</chakra.h2>
+        </Box>
+        <Flex
+          ml="0.5rem"
+          h="2rem"
+          bg={NAMED_COLORS.LIGHTER_GREY}
+          color={NAMED_COLORS.GREY}
+          _dark={{
+            bg: NAMED_COLORS.DARK_GREY,
+            color: NAMED_COLORS.PALE_GREY,
+          }}
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="0.25rem"
+        >
+          <chakra.h5 my="0.25rem" mx="1rem">
+            Version {status?.version}
+          </chakra.h5>
+        </Flex>
+      </Flex>
+      <UpdateList />
+    </Box>
+  )
+}
+
+export default Updates

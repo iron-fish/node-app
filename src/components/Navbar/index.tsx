@@ -1,5 +1,11 @@
-import { FC } from 'react'
-import { Flex, Box, FlexProps, useBreakpointValue } from '@ironfish/ui-kit'
+import { FC, useMemo } from 'react'
+import {
+  Flex,
+  Box,
+  FlexProps,
+  NAMED_COLORS,
+  useBreakpointValue,
+} from '@ironfish/ui-kit'
 
 import IconHome from 'Svgx/home'
 import IconSend from 'Svgx/send'
@@ -17,6 +23,8 @@ import HexFishLogo from 'Svgx/hexfish'
 import StatusBar from './StatusBar'
 import ROUTES from 'Routes/data'
 import { NavItemProps } from './NavItem'
+import Updates from 'Svgx/Updates'
+import useUpdatesCount from 'Hooks/updates/useUpdatesCount'
 
 const primaryNavItems: NavItemProps[] = [
   {
@@ -55,13 +63,38 @@ const primaryNavItems: NavItemProps[] = [
     aliases: [],
   },
 ]
-// const secondaryNavItems = [
-//   { hotkey: 'I', to: '/resources', label: 'Resources', icon: IconResources },
-//   { hotkey: 'M', to: '/miner', label: 'Miner', icon: IconMiner },
-// ]
 
 export const Navbar: FC<FlexProps> = props => {
   const isOpen = useBreakpointValue({ base: false, sm: true })
+  const { data: updatesCount, loaded } = useUpdatesCount()
+  const secondaryNavItems = useMemo(() => {
+    return [
+      {
+        statItem:
+          loaded && updatesCount > 0 ? (
+            <Box
+              w="1.125rem"
+              h="1.125rem"
+              borderRadius="50%"
+              textAlign="center"
+              bgColor="#335A48"
+              color={NAMED_COLORS.WHITE}
+              _dark={{
+                bgColor: '#5FC89A',
+                color: NAMED_COLORS.BLACK,
+              }}
+            >
+              <h6>{updatesCount}</h6>
+            </Box>
+          ) : null,
+        to: ROUTES.UPDATES,
+        label: 'Updates',
+        icon: Updates,
+        aliases: [],
+      },
+    ]
+  }, [updatesCount, loaded])
+
   return (
     <Flex
       bg="inherit"
@@ -92,6 +125,7 @@ export const Navbar: FC<FlexProps> = props => {
         <Nav list={primaryNavItems} />
       </Box>
       <Flex marginTop="auto" direction="column" alignItems="center">
+        <Nav mb="1rem" list={secondaryNavItems} />
         <StatusBar />
         <Toggle />
       </Flex>

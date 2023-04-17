@@ -13,7 +13,7 @@ export const Nav: FC<NavProps> = ({ list, ...props }) => {
   return (
     <chakra.nav {...props}>
       <List spacing={3} maxWidth="16.5rem">
-        {list.map(({ to, label, icon, hotkey, aliases }) => (
+        {list.map(({ to, label, icon, hotkey, aliases, statItem }) => (
           <ListItem key={to}>
             <NavLink to={to}>
               {({ isActive }) => (
@@ -22,6 +22,7 @@ export const Nav: FC<NavProps> = ({ list, ...props }) => {
                   label={label}
                   icon={icon}
                   hotkey={hotkey}
+                  statItem={statItem}
                   active={
                     isActive ||
                     !!aliases.find(alias => alias.includes(location.pathname))
