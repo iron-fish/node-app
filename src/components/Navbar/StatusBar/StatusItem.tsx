@@ -67,7 +67,6 @@ export const StatusItemContent = forwardRef<
       justifyContent="center"
       textAlign="center"
       overflow="hidden"
-      mx={{ base: '0.375rem', sm: 0 }}
       flexDirection={isMinified ? 'row' : 'column'}
       _hover={{
         border: isMinified

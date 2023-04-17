@@ -91,10 +91,10 @@ export const Navbar: FC<FlexProps> = props => {
       <Box mt="2rem">
         <Nav list={primaryNavItems} />
       </Box>
-      <Box marginTop="auto">
+      <Flex marginTop="auto" direction="column" alignItems="center">
         <StatusBar />
         <Toggle />
-      </Box>
+      </Flex>
     </Flex>
   )
 }
