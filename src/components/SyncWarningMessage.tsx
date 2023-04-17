@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Flex, chakra, useColorModeValue, FlexProps } from '@ironfish/ui-kit'
+import { Flex, chakra, FlexProps } from '@ironfish/ui-kit'
 import { useDataSync } from 'Providers/DataSyncProvider'
 
 interface SyncWarningMessageProps extends FlexProps {
@@ -11,25 +11,29 @@ const SyncWarningMessage: FC<SyncWarningMessageProps> = ({
   ...rest
 }) => {
   const { synced } = useDataSync()
-  const $colors = useColorModeValue(
-    { text: '#7E7400', bg: '#FFF9BC' },
-    {
-      text: '#FFF9BC',
-      bg: '#444123',
-    }
-  )
+
   return (
     <Flex
       display={synced ? 'none' : 'flex'}
       borderRadius="0.3125rem"
-      bg={$colors.bg}
+      bg={'#FFF9BC'}
+      _dark={{
+        bg: '#444123',
+      }}
       height="4.3125rem"
       justifyContent="center"
       alignItems="center"
       px="1rem"
       {...rest}
     >
-      <chakra.h4 color={$colors.text}>{message}</chakra.h4>
+      <chakra.h4
+        color={'#7E7400'}
+        _dark={{
+          color: '#FFF9BC',
+        }}
+      >
+        {message}
+      </chakra.h4>
     </Flex>
   )
 }

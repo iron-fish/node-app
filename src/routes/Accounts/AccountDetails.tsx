@@ -4,7 +4,6 @@ import {
   Flex,
   chakra,
   CopyValueToClipboard,
-  useColorModeValue,
   NAMED_COLORS,
   TabPanels,
   TabPanel,
@@ -23,7 +22,6 @@ import BackButtonLink from 'Components/BackButtonLink'
 import useAccount from 'Hooks/accounts/useAccount'
 
 const AccountDetails: FC = () => {
-  const color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.PALE_GREY)
   const location = useLocation()
   const { accountId } = location.state as LocationStateProps
   const [
@@ -54,7 +52,10 @@ const AccountDetails: FC = () => {
                 copiedTooltipText="Copied"
                 containerProps={{
                   pb: '0.45rem',
-                  color: color,
+                  color: NAMED_COLORS.GREY,
+                  _dark: {
+                    color: NAMED_COLORS.PALE_GREY,
+                  },
                 }}
               />
             </Flex>

@@ -3,7 +3,6 @@ import {
   Box,
   Flex,
   chakra,
-  useColorModeValue,
   NAMED_COLORS,
   Button,
   TextField,
@@ -21,15 +20,15 @@ import IconCheck from '@ironfish/ui-kit/dist/svgx/icon-check'
 import CutAccount from 'Types/CutAccount'
 
 const Information: FC = memo(() => {
-  const textColor = useColorModeValue(
-    NAMED_COLORS.GREY,
-    NAMED_COLORS.LIGHT_GREY
-  )
   return (
     <Box maxWidth="21.5rem">
       <chakra.h3 mb="1rem">Use our block explorer</chakra.h3>
-      <chakra.h5 mb="2rem" color={textColor}>
-        Want to ensure your receipient, or yourself, that a transaction has been
+      <chakra.h5
+        mb="2rem"
+        color={NAMED_COLORS.GREY}
+        _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
+      >
+        Want to ensure your recipient, or yourself, that a transaction has been
         sent? Request a transaction link from the iron fish block explorer!
         <br />
         <br />

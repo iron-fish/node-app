@@ -6,7 +6,6 @@ import {
   NAMED_COLORS,
   InputGroup,
   InputRightAddon,
-  useColorModeValue,
   TextField,
   Button,
   Icon,
@@ -35,14 +34,13 @@ import AccountAssetsSelect from 'Components/AccountAssetsSelect'
 import AccountBalance from 'Types/AccountBalance'
 
 const Information: FC = memo(() => {
-  const textColor = useColorModeValue(
-    NAMED_COLORS.GREY,
-    NAMED_COLORS.LIGHT_GREY
-  )
   return (
     <Box maxWidth="21.5rem">
       <chakra.h3 mb="1rem">About Fees</chakra.h3>
-      <chakra.h5 color={textColor}>
+      <chakra.h5
+        color={NAMED_COLORS.GREY}
+        _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
+      >
         You can change the fee amount you’d like to pay however that will
         directly correlate the speed with which youe transaction is picked up by
         the block chain.
@@ -131,18 +129,6 @@ const Send: FC = () => {
     memo: txnMemo,
     assetId: balance?.asset.id,
   })
-  const $colors = useColorModeValue(
-    {
-      bg: NAMED_COLORS.DEEP_BLUE,
-      color: NAMED_COLORS.WHITE,
-      warningBg: '#FFEDE8',
-    },
-    {
-      bg: NAMED_COLORS.WHITE,
-      color: NAMED_COLORS.DEEP_BLUE,
-      warningBg: '#3E251B',
-    }
-  )
   const toast = useIronToast({
     containerStyle: {
       mb: '1rem',
@@ -210,8 +196,12 @@ const Send: FC = () => {
             alignItems="center"
             w="inherit"
             h="16rem"
-            bg={`${$colors.bg} !important`}
-            color={$colors.color}
+            bg={`${NAMED_COLORS.DEEP_BLUE} !important`}
+            color={NAMED_COLORS.WHITE}
+            _dark={{
+              bg: `${NAMED_COLORS.WHITE} !important`,
+              color: NAMED_COLORS.DEEP_BLUE,
+            }}
             mb="2rem"
             borderRadius="0.25rem"
             ml="0"
@@ -269,7 +259,10 @@ const Send: FC = () => {
               <Flex
                 w="100%"
                 borderRadius="0.3125rem"
-                bg={$colors.warningBg}
+                bg={'#FFEDE8'}
+                _dark={{
+                  bg: '#3E251B',
+                }}
                 h="4.3125rem"
                 mt="-1rem"
                 mb="1rem"

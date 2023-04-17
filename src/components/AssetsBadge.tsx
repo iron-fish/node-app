@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import { Badge, NAMED_COLORS, useColorModeValue } from '@ironfish/ui-kit'
+import { Badge, NAMED_COLORS } from '@ironfish/ui-kit'
 import AccountBalance from 'Types/AccountBalance'
 import AssetsAmountPreviewModal from './AssetsAmountPreview/AssetsAmountPreviewModal'
 
@@ -9,30 +9,25 @@ interface AssetsBadgeProps {
 
 const AssetsBadge: FC<AssetsBadgeProps> = ({ assets }) => {
   const [showAssetsInfo, setShowAssetsInfo] = useState(false)
-  const colors = useColorModeValue(
-    {
-      bg: NAMED_COLORS.LIGHTER_GREY,
-      color: NAMED_COLORS.GREY,
-      hover: NAMED_COLORS.GREY,
-    },
-    {
-      bg: NAMED_COLORS.DARK_GREY,
-      color: NAMED_COLORS.PALE_GREY,
-      hover: NAMED_COLORS.PALE_GREY,
-    }
-  )
 
   return assets && assets.length ? (
     <>
       <Badge
         _hover={{
-          outline: `0.0625rem solid ${colors.hover}`,
+          outline: `0.0625rem solid ${NAMED_COLORS.GREY}`,
         }}
         textTransform="capitalize"
         p="0.125rem 0.875rem"
         borderRadius="3.125rem"
-        bgColor={colors.bg}
-        color={colors.color}
+        bgColor={NAMED_COLORS.LIGHTER_GREY}
+        color={NAMED_COLORS.GREY}
+        _dark={{
+          bgColor: NAMED_COLORS.LIGHTER_GREY,
+          color: NAMED_COLORS.GREY,
+          _hover: {
+            outline: `0.0625rem solid ${NAMED_COLORS.PALE_GREY}`,
+          },
+        }}
         onClick={e => {
           e.stopPropagation()
           setShowAssetsInfo(true)

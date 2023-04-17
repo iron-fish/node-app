@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   NAMED_COLORS,
-  useColorModeValue,
   TextField,
   Link,
   useIronToast,
@@ -23,14 +22,14 @@ interface ContactSettingsProps {
 }
 
 const Information: FC = memo(() => {
-  const textColor = useColorModeValue(
-    NAMED_COLORS.GREY,
-    NAMED_COLORS.LIGHT_GREY
-  )
   return (
     <Box maxWidth="21.5rem">
       <chakra.h3 mb="1rem">Settings</chakra.h3>
-      <chakra.h5 mb="2rem" color={textColor}>
+      <chakra.h5
+        mb="2rem"
+        color={NAMED_COLORS.GREY}
+        _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
+      >
         Changing your account name and preferred currency are a great way to
         personalize your wallet experience.
       </chakra.h5>

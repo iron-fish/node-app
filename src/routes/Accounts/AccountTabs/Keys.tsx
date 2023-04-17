@@ -5,7 +5,6 @@ import {
   Flex,
   NAMED_COLORS,
   Spinner,
-  useColorModeValue,
   MnemonicView,
   CopyToClipboardButton,
   SelectField,
@@ -25,14 +24,14 @@ interface AccountKeysProps {
 }
 
 const Information: FC = memo(() => {
-  const textColor = useColorModeValue(
-    NAMED_COLORS.GREY,
-    NAMED_COLORS.LIGHT_GREY
-  )
   return (
     <Box maxWidth="21.5rem">
       <chakra.h3 mb="1rem">Keys</chakra.h3>
-      <chakra.h5 mb="2rem" color={textColor}>
+      <chakra.h5
+        mb="2rem"
+        color={NAMED_COLORS.GREY}
+        _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
+      >
         Keep your keys safe by only revealing their contents when you’re sure
         nobody is peering. These are used to access your accounts and are the
         primary security measure against non-solicited user access.

@@ -1,18 +1,12 @@
 import { FC } from 'react'
-import {
-  Flex,
-  NAMED_COLORS,
-  useBreakpointValue,
-  useColorModeValue,
-} from '@ironfish/ui-kit'
-import { SVGProps } from 'Svgx/types'
+import { Flex, NAMED_COLORS, Icon, Tooltip } from '@ironfish/ui-kit'
 import Hotkey from 'Components/Hotkey'
 
 export type NavItemProps = {
   active?: boolean
   to: string
   label: string
-  icon: FC<SVGProps>
+  icon: typeof Icon
   hotkey: string
   aliases: string[]
 }
@@ -23,94 +17,70 @@ export const NavItem: FC<Omit<NavItemProps, 'aliases'>> = ({
   icon,
   hotkey,
 }) => {
-  const Icon = icon as FC<SVGProps>
-  const $colors = useColorModeValue(
-    {
-      bg: NAMED_COLORS.LIGHTER_GREY,
-      hover: NAMED_COLORS.DEEP_BLUE,
-      borderRightColor: NAMED_COLORS.BLACK,
-      afterColor: NAMED_COLORS.WHITE,
-      afterBg: NAMED_COLORS.BLACK,
-      iconColor: NAMED_COLORS.BLACK,
-      fontColor: NAMED_COLORS.GREY,
-      activeFontColor: NAMED_COLORS.BLACK,
-    },
-    {
-      bg: NAMED_COLORS.DARK_GREY,
-      hover: NAMED_COLORS.WHITE,
-      borderRightColor: NAMED_COLORS.WHITE,
-      afterColor: NAMED_COLORS.BLACK,
-      afterBg: NAMED_COLORS.WHITE,
-      iconColor: NAMED_COLORS.WHITE,
-      fontColor: NAMED_COLORS.PALE_GREY,
-      activeFontColor: NAMED_COLORS.WHITE,
-    }
-  )
-  const isOpen = useBreakpointValue({ base: false, sm: true })
+  const ItemIcon = icon as typeof Icon
   return (
     <>
-      <Flex
-        flexDirection="row"
-        justifyContent={{ base: 'center', sm: 'flex-start' }}
-        alignItems="center"
-        w={isOpen ? '14.5rem' : '3.5rem'}
-        transition="width 0.5s ease-in-out"
-        overflow="hidden"
-        h="2.5rem"
-        borderRadius="0.25rem"
-        p={{ base: '0.5rem', sm: '0.5rem 0.5rem 0.5rem 1rem' }}
-        bg={active ? $colors.bg : 'transparent'}
-        _hover={{
-          '&>div': {
-            color: $colors.hover,
-          },
-          '&::before': {
-            position: 'absolute',
-            left: '4.25rem',
-            content: '""',
-            width: 0,
-            height: 0,
-            border: '0.625rem solid transparent',
-            borderRightColor: $colors.borderRightColor,
-            display: { base: 'flex', sm: 'none' },
-          },
-          '&::after': {
-            content: `"${label}"`,
-            borderRadius: '0.25rem',
-            position: 'absolute',
-            justifyContent: 'center',
-            alignItems: 'center',
-            display: { base: 'flex', sm: 'none' },
-            left: '5.5rem',
-            bg: $colors.afterBg,
-            color: $colors.afterColor,
-            height: '2.5rem',
-            maxWidth: '8rem',
-            whiteSpace: 'nowrap',
-            padding: '0.5rem 0.75rem',
-            fontSize: '0.75rem',
-            fontFamily: 'favorit-regular',
-          },
+      <Tooltip
+        placement="right"
+        bg={NAMED_COLORS.DEEP_BLUE}
+        _dark={{
+          bg: NAMED_COLORS.WHITE,
+          '--popper-arrow-bg': NAMED_COLORS.WHITE,
         }}
-        cursor="pointer"
+        boxShadow="none"
+        p={'0.5rem 0.75rem'}
+        m={0}
+        hasArrow={true}
+        label={label}
+        borderRadius="0.25rem"
+        height="2.5rem"
+        maxW={'8rem'}
+        display={{ base: 'flex', sm: 'none' }}
+        alignItems="center"
+        arrowSize={12.6}
+        offset={[0, 16]}
       >
-        <Icon fill={$colors.iconColor} style={{ minWidth: '1.5rem' }} />
         <Flex
           flexDirection="row"
-          paddingLeft="1rem"
-          fontSize="0.875rem"
-          color={active ? $colors.activeFontColor : $colors.fontColor}
-          display={{ base: 'none', sm: 'flex' }}
-          whiteSpace="nowrap"
-          w="100%"
-          fontFamily="extended-regular"
+          justifyContent={{ base: 'center', sm: 'flex-start' }}
           alignItems="center"
-          justifyContent="space-between"
+          width={{ base: '3.5rem', sm: '14.5rem' }}
+          h="2.5rem"
+          borderRadius="0.25rem"
+          p={{ base: '0.5rem', sm: '0.5rem 0.5rem 0.5rem 1rem' }}
+          bg={active ? NAMED_COLORS.LIGHTER_GREY : 'transparent'}
+          _dark={{
+            bg: active ? NAMED_COLORS.DARK_GREY : 'transparent',
+          }}
+          cursor="pointer"
         >
-          {label}
-          {active && <Hotkey>{hotkey}</Hotkey>}
+          <ItemIcon
+            fill={NAMED_COLORS.BLACK}
+            _dark={{
+              fill: NAMED_COLORS.WHITE,
+            }}
+            style={{ minWidth: '1.5rem' }}
+          />
+          <Flex
+            flexDirection="row"
+            paddingLeft="1rem"
+            fontSize="0.875rem"
+            color={active ? NAMED_COLORS.BLACK : NAMED_COLORS.GREY}
+            _dark={{
+              color: active ? NAMED_COLORS.WHITE : NAMED_COLORS.PALE_GREY,
+            }}
+            display={{ base: 'none', sm: 'flex' }}
+            whiteSpace="nowrap"
+            w="100%"
+            fontFamily="extended-regular"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            {label}
+            {active && <Hotkey>{hotkey}</Hotkey>}
+          </Flex>
         </Flex>
-      </Flex>
+      </Tooltip>
     </>
   )
 }

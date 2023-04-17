@@ -10,7 +10,6 @@ import {
   Button,
   Icon,
   NAMED_COLORS,
-  useColorModeValue,
 } from '@ironfish/ui-kit'
 import { useParams, useNavigate } from 'react-router-dom'
 
@@ -28,7 +27,6 @@ import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 const AddressDetails = () => {
   const { identity } = useParams()
   const navigate = useNavigate()
-  const $color = useColorModeValue(NAMED_COLORS.GREY, NAMED_COLORS.LIGHT_GREY)
   const [{ data: contact }, updateContact, deleteContact] = useContact(identity)
   const { synced } = useDataSync()
 
@@ -48,7 +46,10 @@ const AddressDetails = () => {
         <chakra.h3 mr="1rem">{contact?.name}</chakra.h3>
         <CopyValueToClipboard
           containerProps={{
-            color: $color,
+            color: NAMED_COLORS.GREY,
+            _dark: {
+              color: NAMED_COLORS.PALE_GREY,
+            },
           }}
           iconButtonProps={{
             justifyContent: 'none',
