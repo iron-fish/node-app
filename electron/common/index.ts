@@ -48,7 +48,6 @@ const createWindow = () => {
     })
 
     mainWindow.maximize()
-    mainWindow.webContents
 
     if (process.env.MODE === 'dev') {
       // Open the DevTools.
@@ -119,5 +118,3 @@ app.on('activate', () => {
     createWindow()
   }
 })
-
-module.exports = { mainWindow }

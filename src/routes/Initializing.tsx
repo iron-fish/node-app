@@ -56,8 +56,6 @@ const Initializing: FC = () => {
     window.subscribeOnInitStatusChange(setInitStatus)
   }
 
-  console.log(initStatus)
-
   useEffect(() => {
     loadInitStatus()
   }, [])
@@ -128,7 +126,7 @@ const Initializing: FC = () => {
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
-        >``
+        >
           <Box mb="4rem">
             <IronFishLogo height="4rem" isAnimated />
           </Box>
