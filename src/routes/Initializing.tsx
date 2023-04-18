@@ -53,7 +53,14 @@ const Initializing: FC = () => {
 
   const loadInitStatus = () => {
     window.IronfishManager.status().then(setInitStatus)
+    window.subscribeOnInitStatusChange(setInitStatus)
   }
+
+  console.log(initStatus)
+
+  useEffect(() => {
+    loadInitStatus()
+  }, [])
 
   useEffect(() => {
     if (location?.state?.recheckAccounts) {
@@ -65,11 +72,8 @@ const Initializing: FC = () => {
     let interval: NodeJS.Timer
 
     if (initStatus === null) {
-      loadInitStatus()
       return
     }
-
-    interval = setInterval(loadInitStatus, 1000)
 
     if (initStatus === IronFishInitStatus.NOT_STARTED) {
       window.IronfishManager.initialize()
@@ -124,7 +128,7 @@ const Initializing: FC = () => {
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
-        >
+        >``
           <Box mb="4rem">
             <IronFishLogo height="4rem" isAnimated />
           </Box>

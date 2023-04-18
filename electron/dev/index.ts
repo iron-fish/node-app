@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 //@ts-nocheck
-import { ipcMain } from 'electron'
+import { app, ipcMain } from 'electron'
 import { IronfishManagerAction } from 'Types/IronfishManager/IIronfishManager'
 import { IronfishAccountManagerAction } from 'Types/IronfishManager/IIronfishAccountManager'
 import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSnapshotManager'
