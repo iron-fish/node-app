@@ -159,9 +159,10 @@ class AccountManager
   }
 
   async import(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
-    return this.node.wallet
-      .importAccount(account)
-      .then(data => data.serialize())
+    return this.node.wallet.importAccount(account).then(data => {
+      this.node.wallet.scanTransactions()
+      return data.serialize()
+    })
   }
 
   async importByEncodedKey(data: string): Promise<AccountValue> {
