@@ -125,7 +125,7 @@ export const Navbar: FC<FlexProps> = props => {
         <Nav list={primaryNavItems} />
       </Box>
       <Flex marginTop="auto" direction="column" alignItems="center">
-        <Nav mb="1rem" list={secondaryNavItems} />
+        <Nav mb={{ base: '1rem', sm: '0' }} list={secondaryNavItems} />
         <StatusBar />
         <Toggle />
       </Flex>
