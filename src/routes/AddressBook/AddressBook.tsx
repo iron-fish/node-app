@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react'
+import { FC, useState, useEffect, useDeferredValue } from 'react'
 import {
   Box,
   Button,
@@ -77,6 +77,7 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
     $searchTerm,
     $sortOrder
   )
+  const contactsLoaded = useDeferredValue(loaded)
 
   useEffect(() => {
     reloadContacts()
@@ -113,7 +114,7 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
           onRowClick={contact =>
             navigate(ROUTES.ADDRESS_BOOK + `/${contact._id}`)
           }
-          data={loaded ? contacts : new Array(10).fill(null)}
+          data={contactsLoaded ? contacts : new Array(10).fill(null)}
           columns={[
             {
               key: 'contact',

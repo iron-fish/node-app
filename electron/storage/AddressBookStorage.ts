@@ -59,8 +59,8 @@ class AddressBookStorage extends AbstractStorage<Contact> {
       this.storage
         .find({
           $or: [
-            { name: new RegExp(searchTerm, 'gi') },
-            { address: new RegExp(searchTerm, 'gi') },
+            { name: new RegExp(`${searchTerm}.*`) },
+            { address: new RegExp(`${searchTerm}.*`) },
           ],
         })
         .sort({ createdAt: sort === SortType.DESC ? -1 : 1 })
