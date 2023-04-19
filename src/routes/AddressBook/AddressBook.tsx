@@ -195,7 +195,7 @@ const ContactSearch: FC<{ contactsAmount: number }> = ({ contactsAmount }) => {
 }
 
 const AddressBook: FC = () => {
-  const [{ data: contacts, loaded }, addContact] = useAddressBook()
+  const [{ data: contacts, loaded }, addContact] = useAddressBook('')
 
   return (
     <>

@@ -36,8 +36,8 @@ class AccountManager
   constructor(node: IronfishNode, assetManager: AssetManager) {
     super(node)
     this.assetManager = assetManager
-    this.node.wallet.onAccountImported.on(this.onAccountCountChange)
-    this.node.wallet.onAccountRemoved.on(this.onAccountCountChange)
+    this.node.wallet.onAccountImported.on(this.onAccountCountChange.bind(this))
+    this.node.wallet.onAccountRemoved.on(this.onAccountCountChange.bind(this))
   }
 
   private onAccountCountChange() {
