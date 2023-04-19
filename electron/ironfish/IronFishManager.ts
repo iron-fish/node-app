@@ -28,6 +28,7 @@ import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTran
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import SnapshotManager from './SnapshotManager'
 import { createAppLogger } from '../utils/AppLogger'
+import { BrowserWindow } from 'electron'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -39,8 +40,17 @@ export class IronFishManager implements IIronfishManager {
   snapshot: IIronfishSnapshotManager
   transactions: IIronfishTransactionManager
 
+  private changeInitStatus(initStatus: IronFishInitStatus) {
+    if (this.initStatus !== initStatus) {
+      this.initStatus = initStatus
+      BrowserWindow.getAllWindows().forEach(window => {
+        window.webContents.send('init-status-change', initStatus)
+      })
+    }
+  }
+
   private async checkForMigrations(): Promise<void> {
-    this.initStatus = IronFishInitStatus.CHECKING_FOR_MIGRATIONS
+    this.changeInitStatus(IronFishInitStatus.CHECKING_FOR_MIGRATIONS)
     try {
       await this.node.openDB()
       await this.node.closeDB()
@@ -53,7 +63,7 @@ export class IronFishManager implements IIronfishManager {
 
   private async initializeSdk(): Promise<void> {
     //Initializing Iron Fish SDK
-    this.initStatus = IronFishInitStatus.INITIALIZING_SDK
+    this.changeInitStatus(IronFishInitStatus.INITIALIZING_SDK)
     this.sdk = await IronfishSdk.init({
       pkg: getPackageFrom(pkg),
       logger: createAppLogger(),
@@ -67,7 +77,7 @@ export class IronFishManager implements IIronfishManager {
 
   private async initializeNode(): Promise<void> {
     //Initializing Iron Fish node
-    this.initStatus = IronFishInitStatus.INITIALIZING_NODE
+    this.changeInitStatus(IronFishInitStatus.INITIALIZING_NODE)
     const privateIdentity = this.getPrivateIdentity()
     this.node = await this.sdk.node({
       privateIdentity: privateIdentity,
@@ -90,7 +100,7 @@ export class IronFishManager implements IIronfishManager {
     this.nodeSettings = new NodeSettingsManager(this.node)
     this.snapshot = new SnapshotManager(this.node)
 
-    this.initStatus = IronFishInitStatus.INITIALIZED
+    this.changeInitStatus(IronFishInitStatus.INITIALIZED)
   }
 
   private getPrivateIdentity(): PrivateIdentity | undefined {
@@ -115,7 +125,7 @@ export class IronFishManager implements IIronfishManager {
     ) {
       return Promise.reject(new Error('Node is not initialized.'))
     }
-    this.initStatus = IronFishInitStatus.DOWNLOAD_SNAPSHOT
+    this.changeInitStatus(IronFishInitStatus.DOWNLOAD_SNAPSHOT)
     return this.snapshot.start(path)
   }
 
@@ -132,7 +142,7 @@ export class IronFishManager implements IIronfishManager {
       await this.initializeSdk()
       await this.initializeNode()
     } catch (e) {
-      this.initStatus = IronFishInitStatus.ERROR
+      this.changeInitStatus(IronFishInitStatus.ERROR)
       // eslint-disable-next-line no-console
       console.error(e)
     }
@@ -287,7 +297,7 @@ export class IronFishManager implements IIronfishManager {
       )
     }
 
-    this.initStatus = IronFishInitStatus.STARTING_NODE
+    this.changeInitStatus(IronFishInitStatus.STARTING_NODE)
     if (!this.node.wallet.getDefaultAccount()) {
       const accounts = this.node.wallet.listAccounts()
       if (accounts.length > 0) {
@@ -301,7 +311,7 @@ export class IronFishManager implements IIronfishManager {
 
     //Starting node
     await this.node.start()
-    this.initStatus = IronFishInitStatus.STARTED
+    this.changeInitStatus(IronFishInitStatus.STARTED)
   }
 
   status(): Promise<IronFishInitStatus> {
@@ -313,7 +323,7 @@ export class IronFishManager implements IIronfishManager {
     await this.node?.closeDB()
 
     if (changeStatus) {
-      this.initStatus = IronFishInitStatus.NOT_STARTED
+      this.changeInitStatus(IronFishInitStatus.NOT_STARTED)
     }
   }
 

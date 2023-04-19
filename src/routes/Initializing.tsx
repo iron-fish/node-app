@@ -53,40 +53,38 @@ const Initializing: FC = () => {
 
   const loadInitStatus = () => {
     window.IronfishManager.status().then(setInitStatus)
+    window.subscribeOnInitStatusChange(setInitStatus)
+  }
+  const loadAccountCount = () => {
+    window.IronfishManager.hasAnyAccount().then(setHasAnyAccount)
+    window.subscribeOnAccountCountChange(count => setHasAnyAccount(count > 0))
   }
 
   useEffect(() => {
-    if (location?.state?.recheckAccounts) {
-      window.IronfishManager.hasAnyAccount().then(setHasAnyAccount)
-    }
-  }, [location?.state?.recheckAccounts])
+    loadInitStatus()
+  }, [])
 
   useEffect(() => {
-    let interval: NodeJS.Timer
-
     if (initStatus === null) {
-      loadInitStatus()
       return
     }
 
-    interval = setInterval(loadInitStatus, 1000)
-
     if (initStatus === IronFishInitStatus.NOT_STARTED) {
       window.IronfishManager.initialize()
+      return
     }
 
-    if (initStatus >= IronFishInitStatus.INITIALIZED && !hasAnyAccount) {
-      interval = setInterval(
-        () => window.IronfishManager.hasAnyAccount().then(setHasAnyAccount),
-        500
-      )
+    if (
+      initStatus >= IronFishInitStatus.INITIALIZED &&
+      hasAnyAccount === null
+    ) {
+      loadAccountCount()
+      return
     }
 
     if (initStatus === IronFishInitStatus.INITIALIZED && hasAnyAccount) {
       window.IronfishManager.start()
     }
-
-    return () => interval && clearInterval(interval)
   }, [initStatus, hasAnyAccount])
 
   if (
