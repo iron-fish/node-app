@@ -21,6 +21,7 @@ import {
   LIGHT_COLORS,
 } from 'Components/Navbar/StatusBar/StatusItem'
 import ModalWindow from 'Components/ModalWindow'
+import { useUpdates } from 'Providers/UpdateProvider'
 
 const DownloadSnapshotMessage: FC<{
   show: boolean
@@ -99,11 +100,8 @@ const DownloadSnapshotMessage: FC<{
 }
 
 export const PageLayout: FC = () => {
-  const {
-    data,
-    requiredSnapshot,
-    updates: { status, ignore, install },
-  } = useDataSync()
+  const { data, requiredSnapshot } = useDataSync()
+  const { status, ignore, install } = useUpdates()
   const location = useLocation()
   return (
     <>

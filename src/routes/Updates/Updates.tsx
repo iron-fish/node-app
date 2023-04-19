@@ -12,7 +12,7 @@ import ReactMarkdown from 'react-markdown'
 import { ROUTES } from '..'
 import { useReleaseNotesProvider } from 'Providers/ReleaseNotesProvider'
 import { ReleaseNote, UpdateMonthVersion } from 'Types/IUpdateManager'
-import { useDataSync } from 'Providers/DataSyncProvider'
+import { useUpdates } from 'Providers/UpdateProvider'
 
 interface ReleaseNoteProps {
   note: ReleaseNote
@@ -186,9 +186,7 @@ const UpdateList: FC = () => {
 }
 
 const Updates: FC = () => {
-  const {
-    updates: { status },
-  } = useDataSync()
+  const { status } = useUpdates()
 
   return (
     <Box w="100%">

@@ -11,8 +11,6 @@ import {
 import { ProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
 import { useSnapshotStatus } from './SnapshotProvider'
-import useUpdates from 'Hooks/updates/useUpdates'
-import { UpdateStatus } from 'Types/IUpdateManager'
 
 export interface DataSyncContextProps {
   data?: NodeStatusResponse | undefined
@@ -22,11 +20,6 @@ export interface DataSyncContextProps {
   sync: {
     start: () => Promise<void>
     stop: () => Promise<void>
-  }
-  updates?: {
-    status: UpdateStatus
-    install: () => Promise<void>
-    ignore: () => Promise<void>
   }
 }
 
@@ -43,7 +36,6 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [status, setNodeStatus] = useState<NodeStatusResponse | undefined>()
   const [error, setError] = useState()
   const { status: snapshotStatus } = useSnapshotStatus()
-  const updates = useUpdates()
 
   const loadStatus = () =>
     window.IronfishManager.nodeStatus()
@@ -105,14 +97,8 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
         start: startSyncing,
         stop: stopSyncing,
       },
-      updates,
     } as DataSyncContextProps
-  }, [
-    synced,
-    JSON.stringify(status),
-    JSON.stringify(snapshotStatus),
-    JSON.stringify(updates.status),
-  ])
+  }, [synced, JSON.stringify(status), JSON.stringify(snapshotStatus)])
 
   return (
     <DataSyncContext.Provider value={value}>
