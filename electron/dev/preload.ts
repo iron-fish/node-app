@@ -22,5 +22,12 @@ contextBridge.exposeInMainWorld(
       callback(initStatus)
     )
 )
+contextBridge.exposeInMainWorld(
+  'subscribeOnAccountCountChange',
+  (callback: (count: number) => void) =>
+    ipcRenderer.on('account-count-change', (e, count: number) =>
+      callback(count)
+    )
+)
 
 contextBridge.exposeInMainWorld('UpdateManager', UpdateManagerContext)

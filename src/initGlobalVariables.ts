@@ -14,6 +14,7 @@ declare global {
     subscribeOnInitStatusChange: (
       callback: (initStatus: IronFishInitStatus) => void
     ) => void
+    subscribeOnAccountCountChange: (callback: (count: number) => void) => void
     IronfishManager: IIronfishManager
     UpdateManager: IUpdateManager
   }

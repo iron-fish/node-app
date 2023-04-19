@@ -175,6 +175,13 @@ export const ACCOUNT_BALANCES: Record<
 }
 
 class DemoAccountsManager implements IIronfishAccountManager {
+  private onAccountCountChange() {
+    const event = new CustomEvent('account-count-change', {
+      detail: DEMO_ACCOUNTS.length,
+    })
+    document.dispatchEvent(event)
+  }
+
   balance(
     id: string,
     assetId: string = DEFAULT_ASSET.id
@@ -238,6 +245,7 @@ class DemoAccountsManager implements IIronfishAccountManager {
             asset: DEFAULT_ASSET,
           },
         ]
+        this.onAccountCountChange()
         resolve(account)
       }, 500)
     })
@@ -250,6 +258,7 @@ class DemoAccountsManager implements IIronfishAccountManager {
           DEMO_ACCOUNTS.findIndex(account => account.name === name),
           1
         )
+        this.onAccountCountChange()
         resolve()
       }, 500)
     })
@@ -326,6 +335,7 @@ class DemoAccountsManager implements IIronfishAccountManager {
             asset: DEFAULT_ASSET,
           },
         ]
+        this.onAccountCountChange()
         resolve(newAccount)
       }, 500)
     })

@@ -33,6 +33,16 @@ class DemoDataManager implements IIronfishManager {
     this.transactions = new DemoTransactionsManager()
   }
 
+  private onInitStatusChange(initStatus: IronFishInitStatus) {
+    if (this.initStatus !== initStatus) {
+      this.initStatus = initStatus
+      const event = new CustomEvent('init-status-change', {
+        detail: this.initStatus,
+      })
+      document.dispatchEvent(event)
+    }
+  }
+
   async chainProgress(): Promise<number> {
     return this.node.chainProgress()
   }
@@ -40,7 +50,7 @@ class DemoDataManager implements IIronfishManager {
   async downloadChainSnapshot(path?: string): Promise<void> {
     await new Promise(resolve =>
       setTimeout(async () => {
-        this.initStatus = IronFishInitStatus.DOWNLOAD_SNAPSHOT
+        this.onInitStatusChange(IronFishInitStatus.DOWNLOAD_SNAPSHOT)
         this.snapshot.start(path)
         resolve(undefined)
       }, 2000)
@@ -60,16 +70,16 @@ class DemoDataManager implements IIronfishManager {
     if (this.initStatus === IronFishInitStatus.DOWNLOAD_SNAPSHOT) {
       this.node.complete()
     }
-    this.initStatus = IronFishInitStatus.INITIALIZING_SDK
+    this.onInitStatusChange(IronFishInitStatus.INITIALIZING_SDK)
     await new Promise(resolve =>
       setTimeout(() => {
-        this.initStatus = IronFishInitStatus.INITIALIZING_NODE
+        this.onInitStatusChange(IronFishInitStatus.INITIALIZING_NODE)
         resolve(undefined)
       }, 2000)
     )
     await new Promise(resolve =>
       setTimeout(() => {
-        this.initStatus = IronFishInitStatus.INITIALIZED
+        this.onInitStatusChange(IronFishInitStatus.INITIALIZED)
         resolve(undefined)
       }, 2000)
     )
@@ -92,10 +102,10 @@ class DemoDataManager implements IIronfishManager {
   }
 
   async start(): Promise<void> {
-    this.initStatus = IronFishInitStatus.STARTING_NODE
+    this.onInitStatusChange(IronFishInitStatus.STARTING_NODE)
     await new Promise(resolve =>
       setTimeout(async () => {
-        this.initStatus = IronFishInitStatus.STARTED
+        this.onInitStatusChange(IronFishInitStatus.STARTED)
         await this.node.sync()
         resolve(undefined)
       }, 2000)
@@ -109,7 +119,7 @@ class DemoDataManager implements IIronfishManager {
   async stop(): Promise<void> {
     await new Promise(resolve =>
       setTimeout(() => {
-        this.initStatus = IronFishInitStatus.NOT_STARTED
+        this.onInitStatusChange(IronFishInitStatus.NOT_STARTED)
         resolve(undefined)
       }, 2000)
     )
