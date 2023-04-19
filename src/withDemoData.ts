@@ -15,4 +15,3 @@ export const AccountSettingsStorage: IStorage<AccountSettings> =
   new DemoAccountSettingsManager()
 
 export const UpdateManager = new DemoUpdateManager()
-UpdateManager.initialize()

@@ -1,4 +1,4 @@
-import { app, autoUpdater } from 'electron'
+import { app, autoUpdater, BrowserWindow } from 'electron'
 import {
   IUpdateManager,
   ReleaseNote,
@@ -16,6 +16,12 @@ class UpdateManager implements IUpdateManager {
     hasUpdates: false,
     hasError: false,
     version: app.getVersion(),
+  }
+
+  private onUpdateReady(status: UpdateStatus) {
+    BrowserWindow.getAllWindows().forEach(window => {
+      window.webContents.send('app-update-ready', status)
+    })
   }
 
   initialize: () => Promise<void> = () => {
@@ -38,6 +44,8 @@ class UpdateManager implements IUpdateManager {
               date: releaseDate,
             },
           }
+          log.info('Update downloaded', this.status)
+          this.onUpdateReady(this.status)
         }
       )
 

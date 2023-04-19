@@ -7,6 +7,7 @@ import {
 import UpdateManagerContext from '../contextBridge/UpdateManagerContext'
 import '../common/preload'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
+import { UpdateStatus } from 'Types/IUpdateManager'
 
 contextBridge.exposeInMainWorld('IronfishManager', IronfishManagerContext)
 
@@ -27,6 +28,13 @@ contextBridge.exposeInMainWorld(
   (callback: (count: number) => void) =>
     ipcRenderer.on('account-count-change', (e, count: number) =>
       callback(count)
+    )
+)
+contextBridge.exposeInMainWorld(
+  'subscribeOnAppUpdateReady',
+  (callback: (status: UpdateStatus) => void) =>
+    ipcRenderer.on('app-update-ready', (e, status: UpdateStatus) =>
+      callback(status)
     )
 )
 

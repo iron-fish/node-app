@@ -10,6 +10,8 @@ window.IronfishManager = IronFishManager
 window.AddressBookStorage = AddressBookStorage
 window.AccountSettingsStorage = AccountSettingsStorage
 window.UpdateManager = UpdateManager
+window.UpdateManager.initialize()
+
 window.subscribeOnAccountCountChange = callback => {
   document.addEventListener('account-count-change', (e: CustomEvent) => {
     callback(e.detail)
@@ -17,6 +19,11 @@ window.subscribeOnAccountCountChange = callback => {
 }
 window.subscribeOnInitStatusChange = callback => {
   document.addEventListener('init-status-change', (e: CustomEvent) => {
+    callback(e.detail)
+  })
+}
+window.subscribeOnAppUpdateReady = callback => {
+  document.addEventListener('app-update-ready', (e: CustomEvent) => {
     callback(e.detail)
   })
 }

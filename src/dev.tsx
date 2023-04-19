@@ -17,6 +17,7 @@ if (!window.AccountSettingsStorage) {
 }
 if (!window.UpdateManager) {
   window.UpdateManager = UpdateManager
+  window.UpdateManager.initialize()
 }
 if (!window.setElectronThemeMode) {
   window.setElectronThemeMode = noop
@@ -31,6 +32,13 @@ if (!window.subscribeOnAccountCountChange) {
 if (!window.subscribeOnInitStatusChange) {
   window.subscribeOnInitStatusChange = callback => {
     document.addEventListener('init-status-change', (e: CustomEvent) => {
+      callback(e.detail)
+    })
+  }
+}
+if (!window.subscribeOnAppUpdateReady) {
+  window.subscribeOnAppUpdateReady = callback => {
+    document.addEventListener('app-update-ready', (e: CustomEvent) => {
       callback(e.detail)
     })
   }

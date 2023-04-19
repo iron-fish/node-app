@@ -157,6 +157,13 @@ class DemoUpdateManager implements IUpdateManager {
     version: '1.0.0',
   }
 
+  private onUpdateReady(status: UpdateStatus) {
+    const event = new CustomEvent('app-update-ready', {
+      detail: status,
+    })
+    document.dispatchEvent(event)
+  }
+
   initialize: () => Promise<void> = () => {
     this.url = `${this.serverUrl}/update/demo/${this.status.version}`
 
@@ -170,6 +177,7 @@ class DemoUpdateManager implements IUpdateManager {
           date: new Date(),
         },
       }
+      this.onUpdateReady(this.status)
     }, 10000)
 
     return Promise.resolve()
