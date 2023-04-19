@@ -104,11 +104,8 @@ const SnapshotFlow: FC = () => {
   )
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      window.IronfishManager.snapshot.status().then(setStatus)
-    }, 1000)
-
-    return () => clearInterval(interval)
+    window.IronfishManager.snapshot.status().then(setStatus)
+    window.subscribeOnSnapshotStatusChange(setStatus)
   }, [])
 
   useEffect(() => {
