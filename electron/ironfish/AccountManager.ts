@@ -25,6 +25,7 @@ import AbstractManager from './AbstractManager'
 import AssetManager from './AssetManager'
 import Asset from 'Types/Asset'
 import AccountCreateParams from 'Types/AccountCreateParams'
+import { BrowserWindow } from 'electron'
 
 class AccountManager
   extends AbstractManager
@@ -35,6 +36,17 @@ class AccountManager
   constructor(node: IronfishNode, assetManager: AssetManager) {
     super(node)
     this.assetManager = assetManager
+    this.node.wallet.onAccountImported.on(this.onAccountCountChange)
+    this.node.wallet.onAccountRemoved.on(this.onAccountCountChange)
+  }
+
+  private onAccountCountChange() {
+    BrowserWindow.getAllWindows().forEach(window => {
+      window.webContents.send(
+        'account-count-change',
+        this.node.wallet.listAccounts().length
+      )
+    })
   }
 
   async balance(
@@ -105,9 +117,10 @@ class AccountManager
   }
 
   async create(name: string): Promise<WalletAccount> {
-    return this.node.wallet
-      .createAccount(name)
-      .then(account => account.serialize())
+    return this.node.wallet.createAccount(name).then(account => {
+      this.onAccountCountChange()
+      return account.serialize()
+    })
   }
 
   async delete(name: string): Promise<void> {
