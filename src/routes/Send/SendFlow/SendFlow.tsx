@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import {
   Modal,
   ModalContent,
@@ -6,11 +6,10 @@ import {
   NAMED_COLORS,
   LightMode,
 } from '@ironfish/ui-kit'
-import Transaction from 'Types/Transaction'
-import Asset from 'Types/Asset'
 import ConfirmStep from './ConfirmStep'
 import ResultStep from './ResultStep'
 import { StepProps, SendFlowProps } from './SendFlowTypes'
+import useSendFlow from 'Hooks/transactions/useSendFlow'
 
 const STEPS: FC<StepProps>[] = [ConfirmStep, ResultStep]
 
@@ -24,14 +23,12 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
   onCreateAccount,
   ...props
 }) => {
+  const {
+    transaction,
+    feeAsset,
+    actions: { send },
+  } = useSendFlow(from?.id, amount, memo, to?.address, asset?.id, fee)
   const [currStep, setCurrentStep] = useState<number>(0)
-  const [transaction, setTransaction] = useState<Transaction | null>(null)
-  const [feeAsset, setFeeAsset] = useState<Asset>()
-
-  useEffect(() => {
-    window.IronfishManager.assets.default().then(setFeeAsset)
-  }, [])
-
   const Step = STEPS[currStep]
 
   const handleClose = () => {
@@ -41,20 +38,6 @@ const SendFlow: FC<Omit<SendFlowProps, 'transaction'>> = ({
       props.cleanUp()
     }
   }
-
-  const send = () =>
-    window.IronfishManager.transactions
-      .send(
-        from.id,
-        {
-          amount,
-          memo,
-          publicAddress: to.address,
-          assetId: asset.id,
-        },
-        fee
-      )
-      .then(setTransaction)
 
   return (
     <LightMode>
