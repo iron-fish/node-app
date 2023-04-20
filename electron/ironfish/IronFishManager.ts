@@ -25,6 +25,7 @@ import Peer from 'Types/Peer'
 import SnapshotManager from './SnapshotManager'
 import { createAppLogger } from '../utils/AppLogger'
 import { BrowserWindow } from 'electron'
+import EventType from 'Types/EventType'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -40,7 +41,7 @@ export class IronFishManager implements IIronfishManager {
     if (this.initStatus !== initStatus) {
       this.initStatus = initStatus
       BrowserWindow.getAllWindows().forEach(window => {
-        window.webContents.send('init-status-change', initStatus)
+        window.webContents.send(EventType.INIT_STATUS_CHANGE, initStatus)
       })
     }
   }
@@ -48,7 +49,7 @@ export class IronFishManager implements IIronfishManager {
   private initEventListeners() {
     this.node.peerNetwork.peerManager.onConnectedPeersChanged.on(() => {
       BrowserWindow.getAllWindows().forEach(window => {
-        window.webContents.send('peers-change', this.getPeers())
+        window.webContents.send(EventType.PEERS_CHANGE, this.getPeers())
       })
     })
 

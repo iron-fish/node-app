@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
 } from 'react'
+import EventType from 'Types/EventType';
 import {
   ProgressStatus,
   ProgressType,
@@ -44,7 +45,7 @@ const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const loadStatus = () => {
     window.IronfishManager.snapshot.status().then(setStatus)
-    window.subscribeOnSnapshotStatusChange(setStatus)
+    window.subscribeOn(EventType.SNAPSHOT_STATUS_CHANGE, setStatus)
   }
   const checkPath = useCallback(
     (manifest: SnapshotManifest, path?: string) =>

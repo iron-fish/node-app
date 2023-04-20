@@ -14,6 +14,7 @@ import {
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import AbstractManager from './AbstractManager'
 import { BrowserWindow } from 'electron'
+import EventType from 'Types/EventType'
 
 const MANIFEST_URL = 'https://snapshots.ironfish.network/manifest.json'
 
@@ -43,7 +44,7 @@ class SnapshotManager
       ...diff,
     }
     BrowserWindow.getAllWindows().forEach(window => {
-      window.webContents.send('snapshot-status-change', {
+      window.webContents.send(EventType.SNAPSHOT_STATUS_CHANGE, {
         status: this.progress?.status,
         current: this.progress?.current,
         total: this.progress?.total,

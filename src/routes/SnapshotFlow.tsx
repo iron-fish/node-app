@@ -6,6 +6,7 @@ import {
   ProgressType,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { formatRemainingTime } from 'Utils/remainingTimeFormat'
+import EventType from 'Types/EventType'
 
 enum STEPS {
   DOWNLOADING,
@@ -105,7 +106,7 @@ const SnapshotFlow: FC = () => {
 
   useEffect(() => {
     window.IronfishManager.snapshot.status().then(setStatus)
-    window.subscribeOnSnapshotStatusChange(setStatus)
+    window.subscribeOn(EventType.SNAPSHOT_STATUS_CHANGE, setStatus)
   }, [])
 
   useEffect(() => {
