@@ -20,6 +20,11 @@ window.subscribeOnInitStatusChange = callback => {
     callback(e.detail)
   })
 }
+window.subscribeOnSnapshotStatusChange = callback => {
+  document.addEventListener('snapshot-status-change', (e: CustomEvent) => {
+    callback(e.detail)
+  })
+}
 if (!window.setElectronThemeMode) {
   window.setElectronThemeMode = noop
 }

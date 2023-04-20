@@ -7,6 +7,7 @@ import {
 import UpdateManagerContext from '../contextBridge/UpdateManagerContext'
 import '../common/preload'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
+import { ProgressType } from 'Types/IronfishManager/IIronfishSnapshotManager'
 
 contextBridge.exposeInMainWorld('IronfishManager', IronfishManagerContext)
 
@@ -27,6 +28,14 @@ contextBridge.exposeInMainWorld(
   (callback: (count: number) => void) =>
     ipcRenderer.on('account-count-change', (e, count: number) =>
       callback(count)
+    )
+)
+contextBridge.exposeInMainWorld(
+  'subscribeOnSnapshotStatusChange',
+  (callback: (status: Omit<ProgressType, 'statistic'>) => void) =>
+    ipcRenderer.on(
+      'snapshot-status-change',
+      (e, status: Omit<ProgressType, 'statistic'>) => callback(status)
     )
 )
 
