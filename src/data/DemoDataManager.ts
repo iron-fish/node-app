@@ -14,6 +14,7 @@ import IIronfishAssetManager from 'Types/IronfishManager/IIronfishAssetManager'
 import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTransactionManager'
 import { IIronfishSnapshotManager } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { INodeSettingsManager } from 'Types/IronfishManager/INodeSettingsManager'
+import EventType from 'Types/EventType'
 
 class DemoDataManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -36,7 +37,7 @@ class DemoDataManager implements IIronfishManager {
   private onInitStatusChange(initStatus: IronFishInitStatus) {
     if (this.initStatus !== initStatus) {
       this.initStatus = initStatus
-      const event = new CustomEvent('init-status-change', {
+      const event = new CustomEvent(EventType.INIT_STATUS_CHANGE, {
         detail: this.initStatus,
       })
       document.dispatchEvent(event)
