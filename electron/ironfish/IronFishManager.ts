@@ -13,7 +13,6 @@ import {
 } from '@ironfish/sdk'
 import geoip from 'geoip-lite'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
-import { INodeSettingsManager } from 'Types/IronfishManager/INodeSettingsManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
 // eslint-disable-next-line no-restricted-imports
@@ -23,9 +22,6 @@ import TransactionManager from './TransactionManager'
 import AssetManager from './AssetManager'
 import NodeSettingsManager from './NodeSettingsManager'
 import Peer from 'Types/Peer'
-import { IIronfishSnapshotManager } from 'Types/IronfishManager/IIronfishSnapshotManager'
-import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTransactionManager'
-import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import SnapshotManager from './SnapshotManager'
 import { createAppLogger } from '../utils/AppLogger'
 import { BrowserWindow } from 'electron'
@@ -34,11 +30,11 @@ export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   protected sdk: IronfishSdk
   protected node: IronfishNode
-  accounts: IIronfishAccountManager
+  accounts: AccountManager
   assets: AssetManager
-  nodeSettings: INodeSettingsManager
-  snapshot: IIronfishSnapshotManager
-  transactions: IIronfishTransactionManager
+  nodeSettings: NodeSettingsManager
+  snapshot: SnapshotManager
+  transactions: TransactionManager
 
   private changeInitStatus(initStatus: IronFishInitStatus) {
     if (this.initStatus !== initStatus) {
@@ -47,6 +43,80 @@ export class IronFishManager implements IIronfishManager {
         window.webContents.send('init-status-change', initStatus)
       })
     }
+  }
+
+  private initEventListeners() {
+    this.node.peerNetwork.peerManager.onConnectedPeersChanged.on(() => {
+      BrowserWindow.getAllWindows().forEach(window => {
+        window.webContents.send('peers-change', this.getPeers())
+      })
+    })
+
+    this.accounts.initEventListeners()
+    this.assets.initEventListeners()
+    this.nodeSettings.initEventListeners()
+    this.snapshot.initEventListeners()
+    this.transactions.initEventListeners()
+  }
+
+  private getPeers(): Peer[] {
+    const result: Peer[] = []
+
+    for (const peer of this.node.peerNetwork.peerManager.peers) {
+      if (peer.state.type !== 'CONNECTED') {
+        continue
+      }
+      let connections = 0
+      let connectionWebRTC: Connection['state']['type'] | '' = ''
+      let connectionWebSocket: Connection['state']['type'] | '' = ''
+      let connectionWebRTCError = ''
+      let connectionWebSocketError = ''
+
+      if (peer.state.connections.webSocket) {
+        connectionWebSocket = peer.state.connections.webSocket.state.type
+        connectionWebSocketError = String(
+          peer.state.connections.webSocket.error || ''
+        )
+      }
+
+      if (peer.state.connections.webRtc) {
+        connectionWebRTC = peer.state.connections.webRtc.state.type
+        connectionWebRTCError = String(
+          peer.state.connections.webRtc.error || ''
+        )
+      }
+
+      if (connectionWebSocket !== '') {
+        connections++
+      }
+      if (connectionWebRTC !== '') {
+        connections++
+      }
+
+      result.push({
+        state: peer.state.type,
+        identity: peer.state.identity,
+        version: peer.version,
+        head: peer.head?.toString('hex') || null,
+        sequence: peer.sequence !== null ? Number(peer.sequence) : null,
+        work: String(peer.work),
+        agent: peer.agent,
+        name: peer.name,
+        address: peer.address,
+        country: geoip.lookup(peer.address)?.country,
+        port: peer.port,
+        error: peer.error !== null ? String(peer.error) : null,
+        connections: connections,
+        connectionWebSocket: connectionWebSocket,
+        connectionWebSocketError: connectionWebSocketError,
+        connectionWebRTC: connectionWebRTC,
+        connectionWebRTCError: connectionWebRTCError,
+        networkId: peer.networkId,
+        genesisBlockHash: peer.genesisBlockHash?.toString('hex') || null,
+      })
+    }
+
+    return result
   }
 
   private async checkForMigrations(): Promise<void> {
@@ -220,63 +290,7 @@ export class IronFishManager implements IIronfishManager {
   }
 
   peers(): Promise<Peer[]> {
-    const result: Peer[] = []
-
-    for (const peer of this.node.peerNetwork.peerManager.peers) {
-      if (peer.state.type !== 'CONNECTED') {
-        continue
-      }
-      let connections = 0
-      let connectionWebRTC: Connection['state']['type'] | '' = ''
-      let connectionWebSocket: Connection['state']['type'] | '' = ''
-      let connectionWebRTCError = ''
-      let connectionWebSocketError = ''
-
-      if (peer.state.connections.webSocket) {
-        connectionWebSocket = peer.state.connections.webSocket.state.type
-        connectionWebSocketError = String(
-          peer.state.connections.webSocket.error || ''
-        )
-      }
-
-      if (peer.state.connections.webRtc) {
-        connectionWebRTC = peer.state.connections.webRtc.state.type
-        connectionWebRTCError = String(
-          peer.state.connections.webRtc.error || ''
-        )
-      }
-
-      if (connectionWebSocket !== '') {
-        connections++
-      }
-      if (connectionWebRTC !== '') {
-        connections++
-      }
-
-      result.push({
-        state: peer.state.type,
-        identity: peer.state.identity,
-        version: peer.version,
-        head: peer.head?.toString('hex') || null,
-        sequence: peer.sequence !== null ? Number(peer.sequence) : null,
-        work: String(peer.work),
-        agent: peer.agent,
-        name: peer.name,
-        address: peer.address,
-        country: geoip.lookup(peer.address)?.country,
-        port: peer.port,
-        error: peer.error !== null ? String(peer.error) : null,
-        connections: connections,
-        connectionWebSocket: connectionWebSocket,
-        connectionWebSocketError: connectionWebSocketError,
-        connectionWebRTC: connectionWebRTC,
-        connectionWebRTCError: connectionWebRTCError,
-        networkId: peer.networkId,
-        genesisBlockHash: peer.genesisBlockHash?.toString('hex') || null,
-      })
-    }
-
-    return Promise.resolve(result)
+    return Promise.resolve(this.getPeers())
   }
 
   async saveNodeConfig(values: Partial<ConfigOptions>): Promise<void> {
@@ -312,6 +326,7 @@ export class IronFishManager implements IIronfishManager {
     //Starting node
     await this.node.start()
     this.changeInitStatus(IronFishInitStatus.STARTED)
+    this.initEventListeners()
   }
 
   status(): Promise<IronFishInitStatus> {

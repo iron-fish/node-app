@@ -5,11 +5,16 @@ import {
   ConfigOptions,
 } from '@ironfish/sdk'
 import { INodeSettingsManager } from 'Types/IronfishManager/INodeSettingsManager'
+import AbstractManager from './AbstractManager'
 
-class NodeSettingsManager implements INodeSettingsManager {
+class NodeSettingsManager
+  extends AbstractManager
+  implements INodeSettingsManager
+{
   private config: Config
 
   constructor(node: IronfishNode) {
+    super(node)
     this.config = node.config
   }
 

@@ -12,17 +12,20 @@ import {
   ProgressType,
   SnapshotManifest,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import AbstractManager from './AbstractManager'
 
 const MANIFEST_URL = 'https://snapshots.ironfish.network/manifest.json'
 
-class SnapshotManager implements IIronfishSnapshotManager {
-  private node: IronfishNode
+class SnapshotManager
+  extends AbstractManager
+  implements IIronfishSnapshotManager
+{
   private progress: ProgressType
   private filePath: string
   private pathToSave: string
 
   constructor(node: IronfishNode) {
-    this.node = node
+    super(node)
     this.progress = {
       status: ProgressStatus.NOT_STARTED,
       current: 0,
