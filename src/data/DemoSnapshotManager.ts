@@ -17,6 +17,20 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
   }
   downloadError = false
   applyError = false
+
+  private onStatusChange(diff: Partial<Omit<ProgressType, 'statistic'>>) {
+    this.stat = {
+      ...this.stat,
+      ...diff,
+    }
+
+    const event = new CustomEvent('snapshot-status-change', {
+      detail: Object.assign({}, this.stat),
+    })
+
+    document.dispatchEvent(event)
+  }
+
   async start(pathToSave: string) {
     this.execute(ProgressStatus.DOWLOADING)
   }
@@ -30,8 +44,11 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
   }
 
   retry() {
-    this.stat.hasError = false
-    this.stat.error = null
+    this.onStatusChange({
+      hasError: false,
+      error: null,
+    })
+
     return this.execute(this.stat.status)
   }
 
@@ -47,25 +64,31 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
   }
 
   private async execute(status: ProgressStatus): Promise<void> {
-    this.stat = {
+    this.onStatusChange({
       status: status,
       current: 0,
       total: 378965234,
       estimate: 0,
       hasError: false,
       error: undefined,
-    }
+    })
     if (status === ProgressStatus.DOWLOADING && !this.downloadError) {
-      this.stat.hasError = true
-      this.stat.error =
-        'Connection with server lost. Please check your internet connection and try again.'
+      this.onStatusChange({
+        hasError: true,
+        error:
+          'Connection with server lost. Please check your internet connection and try again.',
+      })
+
       this.downloadError = true
       return
     }
     if (status === ProgressStatus.UNARHIVING && !this.applyError) {
-      this.stat.hasError = true
-      this.stat.error =
-        'Cannot unarchive snapshot. Please check that archive is not used by other applications.'
+      this.onStatusChange({
+        hasError: true,
+        error:
+          'Cannot unarchive snapshot. Please check that archive is not used by other applications.',
+      })
+
       this.applyError = true
       return
     }
@@ -82,12 +105,14 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
       }
       await new Promise<void>(resolve => {
         setTimeout(() => {
-          this.stat.current +=
-            this.stat.total - this.stat.current < 5000000
-              ? this.stat.total - this.stat.current
-              : 5000000
-          this.stat.estimate =
-            ((this.stat.total - this.stat.current) / 5000000) * 100
+          this.onStatusChange({
+            current:
+              this.stat.current +
+              (this.stat.total - this.stat.current < 5000000
+                ? this.stat.total - this.stat.current
+                : 5000000),
+            estimate: ((this.stat.total - this.stat.current) / 5000000) * 100,
+          })
           resolve()
         }, 100)
       })
@@ -96,14 +121,14 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
     await this.execute(status + 1)
   }
   async reset() {
-    this.stat = {
+    this.onStatusChange({
       status: ProgressStatus.NOT_STARTED,
       current: 0,
       total: 0,
       estimate: 0,
       hasError: false,
       error: undefined,
-    }
+    })
   }
   async status() {
     return Promise.resolve(Object.assign({}, this.stat))

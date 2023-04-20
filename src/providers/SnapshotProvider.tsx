@@ -44,6 +44,7 @@ const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const loadStatus = () => {
     window.IronfishManager.snapshot.status().then(setStatus)
+    window.subscribeOnSnapshotStatusChange(setStatus)
   }
   const checkPath = useCallback(
     (manifest: SnapshotManifest, path?: string) =>
@@ -51,32 +52,18 @@ const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
     []
   )
   const start = useCallback(
-    (path?: string) =>
-      window.IronfishManager.downloadChainSnapshot(path).then(() => {
-        setTimeout(loadStatus, 250)
-      }),
+    (path?: string) => window.IronfishManager.downloadChainSnapshot(path),
     []
   )
-  const retry = useCallback(
-    () =>
-      window.IronfishManager.snapshot.retry().then(() => {
-        setTimeout(loadStatus, 250)
-      }),
-    []
-  )
-  const reset = useCallback(
-    () =>
-      window.IronfishManager.snapshot.reset().then(() => {
-        setTimeout(loadStatus, 250)
-      }),
-    []
-  )
+  const retry = useCallback(() => window.IronfishManager.snapshot.retry(), [])
+  const reset = useCallback(() => window.IronfishManager.snapshot.reset(), [])
 
   useEffect(() => {
-    let interval: NodeJS.Timer
+    loadStatus()
+  }, [])
 
+  useEffect(() => {
     if (!status) {
-      loadStatus()
       return
     }
 
@@ -88,15 +75,6 @@ const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
       window.IronfishManager.initialize()
       window.IronfishManager.snapshot.reset()
     }
-
-    if (
-      status?.status > ProgressStatus.NOT_STARTED &&
-      status?.status < ProgressStatus.COMPLETED
-    ) {
-      interval = setInterval(loadStatus, 500)
-    }
-
-    return () => interval && clearInterval(interval)
   }, [status?.status])
 
   return (

@@ -35,6 +35,13 @@ if (!window.subscribeOnInitStatusChange) {
     })
   }
 }
+if (!window.subscribeOnSnapshotStatusChange) {
+  window.subscribeOnSnapshotStatusChange = callback => {
+    document.addEventListener('snapshot-status-change', (e: CustomEvent) => {
+      callback(e.detail)
+    })
+  }
+}
 if (!window.selectFolder) {
   window.selectFolder = () => {
     return new Promise(resolve => {
