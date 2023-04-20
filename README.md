@@ -1,3 +1,7 @@
+# 🚧 The Iron Fish Wallet App is in development 🚧
+
+The Iron Fish Wallet App is still under active development, but has not been released yet.
+
 # Iron Fish Wallet application
 
 This repo is Electron-based application for managing Accounts in Iron Fish network using [Iron Fish modules](https://github.com/iron-fish/ironfish).
