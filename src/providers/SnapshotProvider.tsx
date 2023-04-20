@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from 'react'
-import EventType from 'Types/EventType';
+import EventType from 'Types/EventType'
 import {
   ProgressStatus,
   ProgressType,
