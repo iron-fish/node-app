@@ -49,14 +49,8 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
     window.IronfishManager.nodeStatus()
       .then(nextStatus => {
         setNodeStatus({
-          blockSyncer: {
-            syncing: {
-              progress: nextStatus.blockSyncer.syncing.progress,
-            },
-          },
-          blockchain: {
-            synced: nextStatus.blockchain.synced,
-          },
+          blockSyncer: nextStatus.blockSyncer,
+          blockchain: nextStatus.blockchain,
         })
       })
       .catch(setError)
@@ -76,7 +70,10 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
     if (
       status &&
       status?.blockSyncer.syncing &&
-      status?.blockSyncer.syncing.progress < 0.5
+      status?.blockSyncer.syncing.progress < 0.5 &&
+      Number(status?.blockchain?.totalSequences || 0) -
+        Number(status?.blockchain?.head) >
+        20000
     ) {
       stopSyncing()
     }
@@ -86,7 +83,9 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
       () => {
         loadStatus()
       },
-      status?.blockchain.synced ? 10000 : 5000
+      status?.blockchain.synced && status?.blockSyncer?.syncing?.progress === 1
+        ? 10000
+        : 2000
     )
     return () => clearInterval(interval)
   }, [status?.blockchain?.synced, status?.blockSyncer?.syncing?.progress])
@@ -100,7 +99,10 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
         snapshotStatus?.status === ProgressStatus.NOT_STARTED &&
         status &&
         status?.blockSyncer.syncing &&
-        status?.blockSyncer.syncing.progress < 0.5,
+        status?.blockSyncer.syncing.progress < 0.5 &&
+        Number(status?.blockchain?.totalSequences || 0) -
+          Number(status?.blockchain?.head) >
+          20000,
       sync: {
         start: startSyncing,
         stop: stopSyncing,

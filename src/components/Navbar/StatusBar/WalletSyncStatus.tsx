@@ -3,8 +3,13 @@ import { DataSyncContextProps } from 'Providers/DataSyncProvider'
 import { chakra } from '@ironfish/ui-kit'
 
 const getWalletSyncStatus = (
-  status: 'stopped' | 'idle' | 'stopping' | 'syncing'
+  status: 'stopped' | 'idle' | 'stopping' | 'syncing',
+  progress: number
 ) => {
+  if ((status === 'idle' || !status) && progress > 0 && progress < 1) {
+    return (progress * 100).toFixed(2) + '%'
+  }
+
   switch (status) {
     case 'stopped':
       return 'Stopped'
@@ -63,7 +68,11 @@ const renderTime = (time: number) => {
 const WalletSyncStatus: FC<DataSyncContextProps> = ({ data, synced }) => (
   <>
     <chakra.h5 color="inherit">
-      Wallet Status: {getWalletSyncStatus(data?.blockSyncer.status)}
+      Wallet Status:{' '}
+      {getWalletSyncStatus(
+        data?.blockSyncer.status,
+        data?.blockSyncer?.syncing?.progress
+      )}
     </chakra.h5>
     {!synced &&
       data?.blockSyncer.status !== 'stopped' &&

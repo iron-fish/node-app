@@ -172,6 +172,7 @@ export class IronFishManager implements IIronfishManager {
     this.snapshot = new SnapshotManager(this.node)
 
     this.changeInitStatus(IronFishInitStatus.INITIALIZED)
+    this.initEventListeners()
   }
 
   private getPrivateIdentity(): PrivateIdentity | undefined {
@@ -327,7 +328,6 @@ export class IronFishManager implements IIronfishManager {
     //Starting node
     await this.node.start()
     this.changeInitStatus(IronFishInitStatus.STARTED)
-    this.initEventListeners()
   }
 
   status(): Promise<IronFishInitStatus> {

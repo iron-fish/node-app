@@ -25,6 +25,7 @@ const ActiveStatus: FC<FlexProps> = props => {
       status?.status < ProgressStatus.COMPLETED,
     [status?.status]
   )
+
   return (
     <Flex
       my={{ base: 0, sm: '1rem' }}
