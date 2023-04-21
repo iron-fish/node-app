@@ -46,6 +46,7 @@ function App() {
         <Routes>
           <Route element={<Initializing />}>
             <Route element={<Providers />}>
+              <Route path={ROUTES.BASE} />
               <Route element={<CreateLayout />}>
                 <Route path={ROUTES.ONBOARDING} element={<Action />} />
                 <Route path={ROUTES.CREATE} element={<CreateAccount />} />

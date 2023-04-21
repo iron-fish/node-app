@@ -54,10 +54,12 @@ const Initializing: FC = () => {
 
   const loadInitStatus = () => {
     window.IronfishManager.status().then(setInitStatus)
-    window.subscribeOn(EventType.INIT_STATUS_CHANGE, setInitStatus)
   }
   const loadAccountCount = () => {
     window.IronfishManager.hasAnyAccount().then(setHasAnyAccount)
+  }
+  const subscribeOnEvents = () => {
+    window.subscribeOn(EventType.INIT_STATUS_CHANGE, setInitStatus)
     window.subscribeOn(EventType.ACCOUNTS_CHANGE, count =>
       setHasAnyAccount(count > 0)
     )
@@ -65,6 +67,7 @@ const Initializing: FC = () => {
 
   useEffect(() => {
     loadInitStatus()
+    subscribeOnEvents()
   }, [])
 
   useEffect(() => {
@@ -105,12 +108,13 @@ const Initializing: FC = () => {
     hasAnyAccount &&
     (location.pathname === ROUTES.ONBOARDING ||
       location.pathname === ROUTES.IMPORT ||
-      location.pathname === ROUTES.CREATE)
+      location.pathname === ROUTES.CREATE ||
+      location.pathname === ROUTES.BASE)
   ) {
     navigate(ROUTES.ACCOUNTS)
   }
 
-  const currentStep = getActiveStep(initStatus)
+  // const currentStep = getActiveStep(initStatus)
 
   return (
     <>
