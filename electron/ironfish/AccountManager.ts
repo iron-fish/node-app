@@ -16,6 +16,7 @@ import {
   generateKeyFromPrivateKey,
 } from '@ironfish/rust-nodejs'
 import { AccountImport } from '@ironfish/sdk/build/src/wallet/walletdb/accountValue'
+import log from 'electron-log'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
@@ -42,6 +43,9 @@ class AccountManager
   initEventListeners(): void {
     this.node.wallet.onAccountImported.on(this.onAccountCountChange.bind(this))
     this.node.wallet.onAccountRemoved.on(this.onAccountCountChange.bind(this))
+    this.node.wallet.scan?.onTransaction.on((s, e) =>
+      console.log('--------------------', s, e)
+    )
   }
 
   private onAccountCountChange() {
@@ -109,8 +113,7 @@ class AccountManager
           }
         }
       } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e)
+        log.error(e)
       }
     }
 

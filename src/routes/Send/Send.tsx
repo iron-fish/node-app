@@ -27,7 +27,11 @@ import ContactsAutocomplete from 'Components/ContactsAutocomplete'
 import CutAccount from 'Types/CutAccount'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
-import { decodeIron, formatOreToTronWithLanguage } from 'Utils/number'
+import {
+  IRON_PRECISION,
+  decodeIron,
+  formatOreToTronWithLanguage,
+} from 'Utils/number'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
 import capitalize from 'lodash/capitalize'
 import AccountAssetsSelect from 'Components/AccountAssetsSelect'
@@ -220,6 +224,14 @@ const Send: FC = () => {
                 step={0.00000001}
                 onChange={valueString => {
                   try {
+                    const dotIndex = valueString.indexOf('.')
+                    if (
+                      dotIndex !== -1 &&
+                      valueString.substring(dotIndex + 1, valueString.length)
+                        .length > IRON_PRECISION
+                    ) {
+                      return
+                    }
                     decodeIron(valueString)
                     setAmount(valueString)
                   } catch (error) {
@@ -252,7 +264,7 @@ const Send: FC = () => {
                 {balance?.asset.name || '$IRON'}
               </InputRightAddon>
             </InputGroup>
-            <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5>
+            {/* <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5> */}
           </Flex>
           <Box mr="-0.25rem">
             {!hasEnoughIron && (

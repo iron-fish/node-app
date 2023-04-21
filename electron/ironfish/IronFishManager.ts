@@ -26,6 +26,7 @@ import SnapshotManager from './SnapshotManager'
 import { createAppLogger } from '../utils/AppLogger'
 import { BrowserWindow } from 'electron'
 import EventType from 'Types/EventType'
+import log from 'electron-log'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -215,8 +216,7 @@ export class IronFishManager implements IIronfishManager {
       await this.initializeNode()
     } catch (e) {
       this.changeInitStatus(IronFishInitStatus.ERROR)
-      // eslint-disable-next-line no-console
-      console.error(e)
+      log.error(e)
     }
   }
 

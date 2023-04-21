@@ -1,7 +1,7 @@
 import { formatFixed, parseFixed } from '@ethersproject/bignumber'
 import { FixedNumberUtils } from '@ironfish/sdk/build/src/utils/fixedNumber'
 
-const IRON_PRECISION = 8
+export const IRON_PRECISION = 8
 
 export const formatOreToTronWithLanguage = (
   ore: bigint,

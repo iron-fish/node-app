@@ -137,48 +137,36 @@ const ConfirmStep: FC<StepProps> = ({
           <DataPreviewLine
             title="Amount:"
             value={
-              <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>
-                  {formatOreToTronWithLanguage(amount)} {asset.name}
-                </chakra.h4>
-                <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
-              </HStack>
+              <chakra.h4 textAlign="end" whiteSpace="nowrap">
+                {formatOreToTronWithLanguage(amount)} {asset.name}
+              </chakra.h4>
             }
             w="100%"
           />
           <DataPreviewLine
             title="Fee:"
             value={
-              <HStack w="100%" justifyContent="space-between">
-                <chakra.h4>{formatOreToTronWithLanguage(fee)} $IRON</chakra.h4>
-                <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
-              </HStack>
+              <chakra.h4 textAlign="end" whiteSpace="nowrap">
+                {formatOreToTronWithLanguage(fee)} $IRON
+              </chakra.h4>
             }
             w="100%"
           />
           <DataPreviewLine
             title="Total:"
             value={
-              <HStack w="100%" justifyContent="space-between">
-                {asset.id === feeAsset.id ? (
-                  <chakra.h4>
-                    {formatOreToTronWithLanguage(amount + fee)}
-                    &nbsp;{asset.name}
+              <Flex direction="column">
+                <chakra.h4 textAlign="end">
+                  {formatOreToTronWithLanguage(amount)}
+                  &nbsp;{asset.name}
+                </chakra.h4>
+                {asset.id !== feeAsset.id && (
+                  <chakra.h4 textAlign="end">
+                    {formatOreToTronWithLanguage(fee)}
+                    &nbsp;{feeAsset.name}
                   </chakra.h4>
-                ) : (
-                  <Flex direction="column">
-                    <chakra.h4>
-                      {formatOreToTronWithLanguage(amount)}
-                      &nbsp;{asset.name}
-                    </chakra.h4>
-                    <chakra.h4>
-                      {formatOreToTronWithLanguage(fee)}
-                      &nbsp;{feeAsset.name}
-                    </chakra.h4>
-                  </Flex>
                 )}
-                <chakra.h5 color={NAMED_COLORS.GREY}>USD $--</chakra.h5>
-              </HStack>
+              </Flex>
             }
             w="100%"
           />

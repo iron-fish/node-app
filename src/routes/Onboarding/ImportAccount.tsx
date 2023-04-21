@@ -173,7 +173,7 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
       />
       <MnemonicView
         value={phrase}
-        header={<h6>Mnemonic phrase</h6>}
+        header="Mnemonic phrase"
         wordsAmount={24}
         placeholder="Empty"
         visible={true}
