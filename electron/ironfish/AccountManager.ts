@@ -43,9 +43,6 @@ class AccountManager
   initEventListeners(): void {
     this.node.wallet.onAccountImported.on(this.onAccountCountChange.bind(this))
     this.node.wallet.onAccountRemoved.on(this.onAccountCountChange.bind(this))
-    this.node.wallet.scan?.onTransaction.on((s, e) =>
-      console.log('--------------------', s, e)
-    )
   }
 
   private onAccountCountChange() {
