@@ -4,6 +4,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import IronFishLogo from 'Svgx/IronFishLogo'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import ROUTES from './data'
+import EventType from 'Types/EventType'
 
 enum STEPS {
   INITIALIZATION,
@@ -53,11 +54,13 @@ const Initializing: FC = () => {
 
   const loadInitStatus = () => {
     window.IronfishManager.status().then(setInitStatus)
-    window.subscribeOnInitStatusChange(setInitStatus)
+    window.subscribeOn(EventType.INIT_STATUS_CHANGE, setInitStatus)
   }
   const loadAccountCount = () => {
     window.IronfishManager.hasAnyAccount().then(setHasAnyAccount)
-    window.subscribeOnAccountCountChange(count => setHasAnyAccount(count > 0))
+    window.subscribeOn(EventType.ACCOUNTS_CHANGE, count =>
+      setHasAnyAccount(count > 0)
+    )
   }
 
   useEffect(() => {

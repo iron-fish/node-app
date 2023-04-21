@@ -12,18 +12,22 @@ import {
   ProgressType,
   SnapshotManifest,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import AbstractManager from './AbstractManager'
 import { BrowserWindow } from 'electron'
+import EventType from 'Types/EventType'
 
 const MANIFEST_URL = 'https://snapshots.ironfish.network/manifest.json'
 
-class SnapshotManager implements IIronfishSnapshotManager {
-  private node: IronfishNode
+class SnapshotManager
+  extends AbstractManager
+  implements IIronfishSnapshotManager
+{
   private progress: ProgressType
   private filePath: string
   private pathToSave: string
 
   constructor(node: IronfishNode) {
-    this.node = node
+    super(node)
     this.onStatusChange({
       status: ProgressStatus.NOT_STARTED,
       current: 0,
@@ -40,7 +44,7 @@ class SnapshotManager implements IIronfishSnapshotManager {
       ...diff,
     }
     BrowserWindow.getAllWindows().forEach(window => {
-      window.webContents.send('snapshot-status-change', {
+      window.webContents.send(EventType.SNAPSHOT_STATUS_CHANGE, {
         status: this.progress?.status,
         current: this.progress?.current,
         total: this.progress?.total,

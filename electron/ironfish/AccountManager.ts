@@ -26,6 +26,7 @@ import AssetManager from './AssetManager'
 import Asset from 'Types/Asset'
 import AccountCreateParams from 'Types/AccountCreateParams'
 import { BrowserWindow } from 'electron'
+import EventType from 'Types/EventType'
 
 class AccountManager
   extends AbstractManager
@@ -36,6 +37,9 @@ class AccountManager
   constructor(node: IronfishNode, assetManager: AssetManager) {
     super(node)
     this.assetManager = assetManager
+  }
+
+  initEventListeners(): void {
     this.node.wallet.onAccountImported.on(this.onAccountCountChange.bind(this))
     this.node.wallet.onAccountRemoved.on(this.onAccountCountChange.bind(this))
   }
@@ -43,7 +47,7 @@ class AccountManager
   private onAccountCountChange() {
     BrowserWindow.getAllWindows().forEach(window => {
       window.webContents.send(
-        'account-count-change',
+        EventType.ACCOUNTS_CHANGE,
         this.node.wallet.listAccounts().length
       )
     })

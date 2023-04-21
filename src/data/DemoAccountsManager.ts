@@ -18,6 +18,7 @@ import AccountCreateParams from 'Types/AccountCreateParams'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import { ACCOUNT_SETTINGS } from './DemoAccountSettingsManager'
 import uniqueId from 'lodash/uniqueId'
+import EventType from 'Types/EventType'
 
 export const DEMO_ACCOUNTS: AccountValue[] = [
   {
@@ -176,7 +177,7 @@ export const ACCOUNT_BALANCES: Record<
 
 class DemoAccountsManager implements IIronfishAccountManager {
   private onAccountCountChange() {
-    const event = new CustomEvent('account-count-change', {
+    const event = new CustomEvent(EventType.ACCOUNTS_CHANGE, {
       detail: DEMO_ACCOUNTS.length,
     })
     document.dispatchEvent(event)

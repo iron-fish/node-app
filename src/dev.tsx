@@ -21,23 +21,9 @@ if (!window.UpdateManager) {
 if (!window.setElectronThemeMode) {
   window.setElectronThemeMode = noop
 }
-if (!window.subscribeOnAccountCountChange) {
-  window.subscribeOnAccountCountChange = callback => {
-    document.addEventListener('account-count-change', (e: CustomEvent) => {
-      callback(e.detail)
-    })
-  }
-}
-if (!window.subscribeOnInitStatusChange) {
-  window.subscribeOnInitStatusChange = callback => {
-    document.addEventListener('init-status-change', (e: CustomEvent) => {
-      callback(e.detail)
-    })
-  }
-}
-if (!window.subscribeOnSnapshotStatusChange) {
-  window.subscribeOnSnapshotStatusChange = callback => {
-    document.addEventListener('snapshot-status-change', (e: CustomEvent) => {
+if (!window.subscribeOn) {
+  window.subscribeOn = (type, callback) => {
+    document.addEventListener(type, (e: CustomEvent) => {
       callback(e.detail)
     })
   }

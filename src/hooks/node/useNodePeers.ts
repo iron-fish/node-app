@@ -1,17 +1,20 @@
 import { useEffect } from 'react'
 import Peer from 'Types/Peer'
 import useAsyncDataWrapper from '../useAsyncDataWrapper'
+import EventType from 'Types/EventType'
 
 const useNodePeers = () => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Peer[]>()
 
-  const loadPeers = () => promiseWrapper(window.IronfishManager.peers())
+  const loadPeers = () => {
+    window.subscribeOn(EventType.PEERS_CHANGE, (peers: Peer[]) =>
+      promiseWrapper(Promise.resolve(peers))
+    )
+    return promiseWrapper(window.IronfishManager.peers())
+  }
 
   useEffect(() => {
-    const infinite = setInterval(() => {
-      loadPeers()
-    }, 5000)
-    return () => clearInterval(infinite)
+    loadPeers()
   }, [])
 
   return result

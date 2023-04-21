@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid'
+import EventType from 'Types/EventType'
 import {
   IIronfishSnapshotManager,
   ProgressStatus,
@@ -24,7 +25,7 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
       ...diff,
     }
 
-    const event = new CustomEvent('snapshot-status-change', {
+    const event = new CustomEvent(EventType.SNAPSHOT_STATUS_CHANGE, {
       detail: Object.assign({}, this.stat),
     })
 
