@@ -1,6 +1,8 @@
 # 🚧 The Iron Fish Node App is in development 🚧
 
-The Iron Fish Node App is still under active development, but has not been released yet. Install the released [Iron Fish CLI](https://github.com/iron-fish/ironfish) by (which includes a wallet) by [getting started here](https://ironfish.network/use/get-started/installation).
+The Iron Fish Node App is still under active development, but has not been released yet.
+
+👉 Install the released [Iron Fish CLI](https://github.com/iron-fish/ironfish) by (which includes a wallet) by [getting started here](https://ironfish.network/use/get-started/installation).
 
 # Iron Fish Node application
 
