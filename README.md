@@ -1,16 +1,23 @@
-# 🚧 The Iron Fish Wallet App is in development 🚧
+# 🚧 The Iron Fish Node App is in development 🚧
 
-The Iron Fish Wallet App is still under active development, but has not been released yet.
+The Iron Fish Node App is still under active development, but has not been released yet.
 
-# Iron Fish Wallet application
+👉 Install the released [Iron Fish CLI](https://github.com/iron-fish/ironfish) by (which includes a wallet) by [getting started here](https://ironfish.network/use/get-started/installation).
 
-This repo is Electron-based application for managing Accounts in Iron Fish network using [Iron Fish modules](https://github.com/iron-fish/ironfish).
+# Iron Fish Node application
 
-# Getting Started
+This repo is Electron-based application for running a Iron Fish full node, including a wallet in the Iron Fish network using [Iron Fish modules](https://github.com/iron-fish/ironfish).
+
+# Installation
+🚧 Iron Fish Node App is not released yet and cannot be installed.
+
+# Contributing
+
+These instructions are for setting up the Node App in the case that you want to contribute to it.
 
 ## Environment preparations
 
-The following steps should only be used to install if you are planning on contributing to the Wallet app codebase.
+The following steps should only be used to install if you are planning on contributing to the Node app codebase.
 
 1. Install [Node.js 18.x](https://nodejs.org/en/download/)
 1. Install [Yarn](https://classic.yarnpkg.com/en/docs/install).
