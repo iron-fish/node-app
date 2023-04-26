@@ -75,7 +75,7 @@ const NodePeers: FC = () => {
                   <FlagIcon code={country} size={24} />
                 </Box>
               )}
-              <Box minW="110px" wordBreak="break-word">
+              <Box minW="6.875rem" wordBreak="break-word">
                 {address}
               </Box>
             </Flex>
