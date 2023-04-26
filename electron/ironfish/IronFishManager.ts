@@ -12,6 +12,10 @@ import {
   DatabaseVersionError,
 } from '@ironfish/sdk'
 import geoip from 'geoip-lite'
+import log from 'electron-log'
+import fsAsync from 'fs/promises'
+import dns from 'dns/promises'
+import { BrowserWindow } from 'electron'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
@@ -24,9 +28,8 @@ import NodeSettingsManager from './NodeSettingsManager'
 import Peer from 'Types/Peer'
 import SnapshotManager from './SnapshotManager'
 import { createAppLogger } from '../utils/AppLogger'
-import { BrowserWindow } from 'electron'
 import EventType from 'Types/EventType'
-import log from 'electron-log'
+import { ERROR_MESSAGES } from '../utils/constants'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -49,8 +52,8 @@ export class IronFishManager implements IIronfishManager {
 
   private initEventListeners() {
     this.node.peerNetwork.peerManager.onConnectedPeersChanged.on(() => {
-      BrowserWindow.getAllWindows().forEach(window => {
-        window.webContents.send(EventType.PEERS_CHANGE, this.getPeers())
+      BrowserWindow.getAllWindows().forEach(async window => {
+        window.webContents.send(EventType.PEERS_CHANGE, await this.getPeers())
       })
     })
 
@@ -61,7 +64,7 @@ export class IronFishManager implements IIronfishManager {
     this.transactions.initEventListeners()
   }
 
-  private getPeers(): Peer[] {
+  private async getPeers(): Promise<Peer[]> {
     const result: Peer[] = []
 
     for (const peer of this.node.peerNetwork.peerManager.peers) {
@@ -95,6 +98,12 @@ export class IronFishManager implements IIronfishManager {
         connections++
       }
 
+      let address = peer.address
+      const ipRegexp = /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/
+      if (address && !ipRegexp.test(address)) {
+        address = (await dns.lookup(address)).address
+      }
+
       result.push({
         state: peer.state.type,
         identity: peer.state.identity,
@@ -105,7 +114,7 @@ export class IronFishManager implements IIronfishManager {
         agent: peer.agent,
         name: peer.name,
         address: peer.address,
-        country: geoip.lookup(peer.address)?.country,
+        country: geoip.lookup(address)?.country,
         port: peer.port,
         error: peer.error !== null ? String(peer.error) : null,
         connections: connections,
@@ -133,6 +142,21 @@ export class IronFishManager implements IIronfishManager {
     }
   }
 
+  private async resetChain(): Promise<void> {
+    const chainDatabasePath = this.sdk.config.chainDatabasePath
+    await fsAsync.rm(chainDatabasePath, { recursive: true, force: true })
+    this.sdk.internal.set('isFirstRun', true)
+    await this.sdk.internal.save()
+
+    const walletDb = this.node.wallet.walletDb
+    await walletDb.db.open()
+
+    for (const store of walletDb.cacheStores) {
+      await store.clear()
+    }
+    await walletDb.db.close()
+  }
+
   private async initializeSdk(): Promise<void> {
     //Initializing Iron Fish SDK
     this.changeInitStatus(IronFishInitStatus.INITIALIZING_SDK)
@@ -158,7 +182,16 @@ export class IronFishManager implements IIronfishManager {
 
     await this.checkForMigrations()
 
-    await NodeUtils.waitForOpen(this.node)
+    try {
+      await NodeUtils.waitForOpen(this.node)
+    } catch (error) {
+      if (error.message.includes(ERROR_MESSAGES.GENESIS_BLOCK)) {
+        log.log(ERROR_MESSAGES.GENESIS_BLOCK)
+        log.log('----------- resetting chain ----------------')
+        await this.resetChain()
+        await NodeUtils.waitForOpen(this.node)
+      }
+    }
 
     const newSecretKey = Buffer.from(
       this.node.peerNetwork.localPeer.privateIdentity.secretKey
