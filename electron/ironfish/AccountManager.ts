@@ -16,6 +16,7 @@ import {
   generateKeyFromPrivateKey,
 } from '@ironfish/rust-nodejs'
 import { AccountImport } from '@ironfish/sdk/build/src/wallet/walletdb/accountValue'
+import log from 'electron-log'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import WalletAccount from 'Types/Account'
 import SortType from 'Types/SortType'
@@ -109,8 +110,7 @@ class AccountManager
           }
         }
       } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e)
+        log.error(e)
       }
     }
 
