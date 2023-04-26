@@ -14,6 +14,8 @@ import { useSnapshotStatus } from './SnapshotProvider'
 import useUpdates from 'Hooks/updates/useUpdates'
 import { UpdateStatus } from 'Types/IUpdateManager'
 
+const SNAPSHOT_DOWNLOAD_BLOCKS_LIMIT = 20000
+
 export interface DataSyncContextProps {
   data?: NodeStatusResponse | undefined
   synced?: boolean
@@ -73,7 +75,7 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
       status?.blockSyncer.syncing.progress < 0.5 &&
       Number(status?.blockchain?.totalSequences || 0) -
         Number(status?.blockchain?.head) >
-        20000
+        SNAPSHOT_DOWNLOAD_BLOCKS_LIMIT
     ) {
       stopSyncing()
     }
@@ -102,7 +104,7 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
         status?.blockSyncer.syncing.progress < 0.5 &&
         Number(status?.blockchain?.totalSequences || 0) -
           Number(status?.blockchain?.head) >
-          20000,
+          SNAPSHOT_DOWNLOAD_BLOCKS_LIMIT,
       sync: {
         start: startSyncing,
         stop: stopSyncing,
