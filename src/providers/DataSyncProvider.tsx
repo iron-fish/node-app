@@ -14,7 +14,7 @@ import { useSnapshotStatus } from './SnapshotProvider'
 import useUpdates from 'Hooks/updates/useUpdates'
 import { UpdateStatus } from 'Types/IUpdateManager'
 
-const SNAPSHOT_DOWNLOAD_BLOCKS_LIMIT = 5000
+const SNAPSHOT_DOWNLOAD_BLOCKS_LIMIT = 20000
 
 export interface DataSyncContextProps {
   data?: NodeStatusResponse | undefined
