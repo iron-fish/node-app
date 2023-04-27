@@ -36,6 +36,8 @@ import SyncWarningMessage from 'Components/SyncWarningMessage'
 import capitalize from 'lodash/capitalize'
 import AccountAssetsSelect from 'Components/AccountAssetsSelect'
 import AccountBalance from 'Types/AccountBalance'
+import { Card } from '@ironfish/ui-kit'
+import { CardBody } from '@ironfish/ui-kit'
 
 const Information: FC = memo(() => {
   return (
@@ -193,79 +195,79 @@ const Send: FC = () => {
       </Box>
       <Flex>
         <Box w="37.25rem">
-          <Flex
-            layerStyle="card"
-            flexDirection="column"
+          <Card
+            variant="ironFish"
             justifyContent="center"
-            alignItems="center"
             w="inherit"
             h="16rem"
-            bg={`${NAMED_COLORS.DEEP_BLUE} !important`}
+            bg={NAMED_COLORS.DEEP_BLUE}
             color={NAMED_COLORS.WHITE}
             _dark={{
-              bg: `${NAMED_COLORS.WHITE} !important`,
+              bg: NAMED_COLORS.WHITE,
               color: NAMED_COLORS.DEEP_BLUE,
             }}
             mb="2rem"
             borderRadius="0.25rem"
             ml="0"
           >
-            <chakra.h4>I want to send</chakra.h4>
-            <InputGroup
-              width="auto"
-              fontSize="3rem"
-              alignItems="baseline"
-              my="1rem"
-              flexWrap="wrap"
-              justifyContent="center"
-            >
-              <NumberInput
-                value={amount}
-                step={0.00000001}
-                onChange={valueString => {
-                  try {
-                    const dotIndex = valueString.indexOf('.')
-                    if (
-                      dotIndex !== -1 &&
-                      valueString.substring(dotIndex + 1, valueString.length)
-                        .length > IRON_PRECISION
-                    ) {
+            <CardBody display="flex" flexDirection="column" alignItems="center">
+              <chakra.h4>I want to send</chakra.h4>
+              <InputGroup
+                width="auto"
+                fontSize="3rem"
+                alignItems="baseline"
+                my="1rem"
+                flexWrap="wrap"
+                justifyContent="center"
+              >
+                <NumberInput
+                  value={amount}
+                  step={0.00000001}
+                  onChange={valueString => {
+                    try {
+                      const dotIndex = valueString.indexOf('.')
+                      if (
+                        dotIndex !== -1 &&
+                        valueString.substring(dotIndex + 1, valueString.length)
+                          .length > IRON_PRECISION
+                      ) {
+                        return
+                      }
+                      decodeIron(valueString)
+                      setAmount(valueString)
+                    } catch (error) {
                       return
                     }
-                    decodeIron(valueString)
-                    setAmount(valueString)
-                  } catch (error) {
-                    return
-                  }
-                }}
-                precision={getPrecision(amount)}
-                display="flex"
-              >
-                <NumberInputField
-                  fontSize="3rem"
-                  width={amount.length * 1.9 + 'rem'}
-                  minW="3rem"
-                  h="100%"
-                  p="0rem"
-                  textAlign="end"
-                  border="none"
-                  _focusVisible={{
-                    border: 'none',
                   }}
-                />
-              </NumberInput>
-              <InputRightAddon
-                bg="transparent"
-                border="none"
-                color={NAMED_COLORS.GREY}
-                fontSize="3rem"
-                px="1rem"
-              >
-                {balance?.asset.name || '$IRON'}
-              </InputRightAddon>
-            </InputGroup>
-            {/* <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5> */}
-          </Flex>
+                  precision={getPrecision(amount)}
+                  display="flex"
+                >
+                  <NumberInputField
+                    fontSize="3rem"
+                    width={amount.length * 1.9 + 'rem'}
+                    minW="3rem"
+                    h="100%"
+                    p="0rem"
+                    textAlign="end"
+                    border="none"
+                    _focusVisible={{
+                      border: 'none',
+                    }}
+                  />
+                </NumberInput>
+                <InputRightAddon
+                  bg="transparent"
+                  border="none"
+                  color={NAMED_COLORS.GREY}
+                  fontSize="3rem"
+                  px="1rem"
+                >
+                  {balance?.asset.name || '$IRON'}
+                </InputRightAddon>
+              </InputGroup>
+              {/* <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5> */}
+            </CardBody>
+          </Card>
           <Box mr="-0.25rem">
             {!hasEnoughIron && (
               <Flex

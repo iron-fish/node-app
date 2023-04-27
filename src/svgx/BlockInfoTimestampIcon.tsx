@@ -3,8 +3,8 @@ import { Icon, IconProps } from '@ironfish/ui-kit'
 export function BlockInfoTimestampIcon(props: IconProps) {
   return (
     <Icon
-      height={48}
-      width={46}
+      height="48px"
+      width="46px"
       {...props}
       viewBox="0 0 46 48"
       fill="none"

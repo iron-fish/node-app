@@ -6,6 +6,8 @@ import {
   AccordionItem,
   AccordionPanel,
   Flex,
+  Card,
+  CardBody,
 } from '@ironfish/ui-kit'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import AccountBalance from 'Types/AccountBalance'
@@ -30,9 +32,9 @@ const AccountAssetsView: FC<AccountAssetsViewProps> = ({ assets }) => {
           <AccordionPanel px="0rem" pb="0rem" mb="0.0625rem">
             <Flex wrap={'wrap'} gap="1.25rem" mb="0.25rem">
               {assets.map(({ confirmed, asset }) => (
-                <Flex
+                <Card
+                  variant="ironFish"
                   key={asset.id}
-                  layerStyle="card"
                   p="2rem 2rem 1.5rem 2rem"
                   borderRadius="0.25rem"
                   alignItems="center"
@@ -43,11 +45,13 @@ const AccountAssetsView: FC<AccountAssetsViewProps> = ({ assets }) => {
                     md1: 'calc(33.333333% - 0.9375rem)',
                   }}
                 >
-                  <Flex direction="column">
-                    <h4>{asset.name}</h4>
-                    <h2>{formatOreToTronWithLanguage(confirmed)}</h2>
-                  </Flex>
-                </Flex>
+                  <CardBody>
+                    <Flex direction="column">
+                      <h4>{asset.name}</h4>
+                      <h2>{formatOreToTronWithLanguage(confirmed)}</h2>
+                    </Flex>
+                  </CardBody>
+                </Card>
               ))}
             </Flex>
           </AccordionPanel>

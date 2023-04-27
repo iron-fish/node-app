@@ -86,6 +86,7 @@ const ContactsPreview: FC<{ addresses?: string[]; notes?: Note[] }> = ({
             />
             <ModalBody>
               <SimpleTable
+                disableHover={true}
                 data={notes}
                 columns={[
                   {

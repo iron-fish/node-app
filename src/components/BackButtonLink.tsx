@@ -60,10 +60,6 @@ const BackButtonLink: FC<BackButtonLinkProps> = ({
           w="1rem"
           h="1rem"
           transform={`rotate(${toTheRight ? 180 : 0}deg)`}
-          color={NAMED_COLORS.BLACK}
-          _dark={{
-            color: NAMED_COLORS.WHITE,
-          }}
         />
       </Flex>
       <h5>{label}</h5>

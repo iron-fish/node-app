@@ -47,6 +47,7 @@ export const AssetsAmountPreviewModal: FC<AssetsAmountPreviewModalProps> = ({
           />
           <ModalBody>
             <SimpleTable
+              disableHover={true}
               data={assetAmounts}
               columns={[
                 {

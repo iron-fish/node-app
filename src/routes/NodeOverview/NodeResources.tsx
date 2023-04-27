@@ -6,6 +6,8 @@ import {
   StatNumber,
   Stat,
   NAMED_COLORS,
+  CardBody,
+  Card,
 } from '@ironfish/ui-kit'
 import { FileUtils } from '@ironfish/sdk/build/src/utils/file'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
@@ -41,10 +43,12 @@ const NodeResources: FC<NodeResourcesProps> = ({ data, loaded }) => {
   return (
     loaded && (
       <Flex direction="column">
-        <Flex
+        <Card
+          variant="ironFish"
           p="4rem"
-          ml="0 !important"
-          layerStyle="card"
+          _dark={{
+            bg: NAMED_COLORS.LIGHT_YELLOW,
+          }}
           bg={`${NAMED_COLORS.LIGHT_YELLOW} !important`}
           color={NAMED_COLORS.DEEP_BLUE}
           overflow="hidden"
@@ -53,46 +57,48 @@ const NodeResources: FC<NodeResourcesProps> = ({ data, loaded }) => {
           direction="column"
           gap="1rem"
         >
-          <h3>Node Resources</h3>
-          <Flex
-            w="100%"
-            wrap="wrap"
-            mb="2.25rem"
-            alignItems="space-between"
-            justifyContent="space-between"
-            gap="1rem"
-          >
-            <NodeResource label="Cores" value={data.cpu.cores} />
-            <NodeResource
-              label="Current"
-              value={`${data.cpu.percentCurrent.toFixed(1)}%`}
-            />
-            <NodeResource
-              label="RSS"
-              value={`${rss} (${(
-                (data.memory.rss / data.memory.memTotal) *
-                100
-              ).toFixed(1)}%)`}
-            />
-            <NodeResource
-              label="Free"
-              value={`${memFree} (${(
-                (1 - data.memory.memFree / data.memory.memTotal) *
-                100
-              ).toFixed(1)}
+          <CardBody>
+            <h3>Node Resources</h3>
+            <Flex
+              w="100%"
+              wrap="wrap"
+              mb="2.25rem"
+              alignItems="space-between"
+              justifyContent="space-between"
+              gap="1rem"
+            >
+              <NodeResource label="Cores" value={data.cpu.cores} />
+              <NodeResource
+                label="Current"
+                value={`${data.cpu.percentCurrent.toFixed(1)}%`}
+              />
+              <NodeResource
+                label="RSS"
+                value={`${rss} (${(
+                  (data.memory.rss / data.memory.memTotal) *
+                  100
+                ).toFixed(1)}%)`}
+              />
+              <NodeResource
+                label="Free"
+                value={`${memFree} (${(
+                  (1 - data.memory.memFree / data.memory.memTotal) *
+                  100
+                ).toFixed(1)}
               %)`}
-            />
-            <NodeResource label="Heap used" value={heapUsed} />
-            <NodeResource label="Heap total" value={heapTotal} />
-            <NodeResource
-              label="Heap maximum"
-              value={`${heapMax} (${(
-                (data.memory.heapUsed / data.memory.heapMax) *
-                100
-              ).toFixed(1)}%)`}
-            />
-          </Flex>
-        </Flex>
+              />
+              <NodeResource label="Heap used" value={heapUsed} />
+              <NodeResource label="Heap total" value={heapTotal} />
+              <NodeResource
+                label="Heap maximum"
+                value={`${heapMax} (${(
+                  (data.memory.heapUsed / data.memory.heapMax) *
+                  100
+                ).toFixed(1)}%)`}
+              />
+            </Flex>
+          </CardBody>
+        </Card>
       </Flex>
     )
   )

@@ -30,6 +30,8 @@ import WalletCommonTable from 'Components/WalletCommonTable'
 import InfoBadge from 'Components/InfoBadge'
 import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 import { formatDate } from 'Utils/formatDate'
+import { Card } from '@ironfish/ui-kit'
+import { CardBody } from '@ironfish/ui-kit'
 
 interface Card {
   render: (tx: Transaction) => ReactNode
@@ -243,34 +245,35 @@ const TransactionOverview: FC = () => {
               minW="19rem"
               h="7.5rem"
             >
-              <Box layerStyle="card" h="7.5rem" minW="19rem">
-                <Flex
-                  w="100%"
-                  h="100%"
-                  p="2rem"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Box mr="1rem">
+              <Card variant="ironFish" h="7.5rem" minW="19rem">
+                <CardBody>
+                  <Flex
+                    w="100%"
+                    p="2rem"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Box mr="1rem">
+                      <Box>
+                        <chakra.h4
+                          color={NAMED_COLORS.GREY}
+                          _dark={{
+                            color: NAMED_COLORS.PALE_GREY,
+                          }}
+                        >
+                          {card.label}
+                        </chakra.h4>
+                      </Box>
+                      <Box overflow="hidden" whiteSpace="nowrap">
+                        {card.render(transaction)}
+                      </Box>
+                    </Box>
                     <Box>
-                      <chakra.h4
-                        color={NAMED_COLORS.GREY}
-                        _dark={{
-                          color: NAMED_COLORS.PALE_GREY,
-                        }}
-                      >
-                        {card.label}
-                      </chakra.h4>
+                      <card.icon />
                     </Box>
-                    <Box overflow="hidden" whiteSpace="nowrap">
-                      {card.render(transaction)}
-                    </Box>
-                  </Box>
-                  <Box>
-                    <card.icon />
-                  </Box>
-                </Flex>
-              </Box>
+                  </Flex>
+                </CardBody>
+              </Card>
             </Skeleton>
           ))}
         </Grid>

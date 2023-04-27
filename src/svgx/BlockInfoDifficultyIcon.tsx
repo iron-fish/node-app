@@ -3,8 +3,8 @@ import { Icon, IconProps } from '@ironfish/ui-kit'
 export function BlockInfoDifficultyIcon(props: IconProps) {
   return (
     <Icon
-      height={56}
-      width={35}
+      height="56px"
+      width="35px"
       {...props}
       viewBox="0 0 35 56"
       fill="none"
