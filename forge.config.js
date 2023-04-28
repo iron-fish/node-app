@@ -4,6 +4,7 @@ const spawn = require('cross-spawn')
 
 const COMMON_CONFIG = {
   packagerConfig: {
+    executableName: 'wallet-app',
     name: 'Iron Fish Wallet',
     icon: resolve('./electron/app.ico'),
   },
@@ -20,10 +21,6 @@ const COMMON_CONFIG = {
     },
     {
       name: '@electron-forge/maker-deb',
-      config: {},
-    },
-    {
-      name: '@electron-forge/maker-rpm',
       config: {},
     },
   ],
