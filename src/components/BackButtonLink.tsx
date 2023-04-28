@@ -1,10 +1,10 @@
 import { FC } from 'react'
-import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { NAMED_COLORS, Link, LinkProps, Flex } from '@ironfish/ui-kit'
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
 } from 'react-router-dom'
+import Caret from 'Svgx/caret-icon'
 
 interface BackButtonLinkProps
   extends LinkProps,
@@ -56,10 +56,10 @@ const BackButtonLink: FC<BackButtonLinkProps> = ({
         justifyContent="center"
         alignItems="center"
       >
-        <ChevronLeftIcon
+        <Caret
           w="1rem"
           h="1rem"
-          transform={`rotate(${toTheRight ? 180 : 0}deg)`}
+          transform={`rotate(${toTheRight ? 0 : 180}deg)`}
           color={NAMED_COLORS.BLACK}
           _dark={{
             color: NAMED_COLORS.WHITE,
