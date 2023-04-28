@@ -94,7 +94,7 @@
     "@aws-sdk/client-s3": "3.127.0",
     "@ironfish/rust-nodejs": "1.0.0",
     "@ironfish/sdk": "1.1.0",
-    "@ironfish/ui-kit": "1.1.8",
+    "@ironfish/ui-kit": "1.1.9",
     "@types/nedb": "^1.8.12",
     "bech32": "^2.0.0",
     "date-fns": "^2.28.0",

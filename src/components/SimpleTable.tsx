@@ -10,6 +10,7 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
   textTransform = 'uppercase',
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onRowClick,
+  disableHover,
   ...rest
 }) => {
   return (
@@ -38,6 +39,7 @@ const SimpleTable: FC<CommonTableProps<any>> = ({
         {data?.map((item, index) => (
           <Tr
             key={item?.id || `load-${index}`}
+            className={disableHover ? 'no-hover' : ''}
             bg={NAMED_COLORS.WHITE}
             _dark={{
               bg: NAMED_COLORS.DARKER_GREY,
