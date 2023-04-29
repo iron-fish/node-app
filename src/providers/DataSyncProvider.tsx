@@ -53,6 +53,10 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
         setNodeStatus({
           blockSyncer: nextStatus.blockSyncer,
           blockchain: nextStatus.blockchain,
+          peerNetwork: {
+            isReady: nextStatus.peerNetwork?.isReady,
+            peers: nextStatus.peerNetwork?.peers || 0,
+          },
         })
       })
       .catch(setError)
@@ -80,7 +84,11 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
       stopSyncing()
     }
 
-    setSynced(!!status?.blockchain.synced)
+    setSynced(
+      !!status?.blockchain.synced &&
+        status?.peerNetwork?.isReady &&
+        status?.peerNetwork?.peers > 0
+    )
     const interval = setInterval(
       () => {
         loadStatus()
@@ -90,7 +98,12 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
         : 2000
     )
     return () => clearInterval(interval)
-  }, [status?.blockchain?.synced, status?.blockSyncer?.syncing?.progress])
+  }, [
+    status?.blockchain?.synced,
+    status?.blockSyncer?.syncing?.progress,
+    status?.peerNetwork?.isReady,
+    status?.peerNetwork?.peers > 0,
+  ])
 
   const value = useMemo(() => {
     return {

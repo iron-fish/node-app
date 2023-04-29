@@ -4,8 +4,13 @@ import { chakra } from '@ironfish/ui-kit'
 
 const getWalletSyncStatus = (
   status: 'stopped' | 'idle' | 'stopping' | 'syncing',
-  progress: number
+  progress: number,
+  peerNetworkConnected: boolean
 ) => {
+  if (!peerNetworkConnected) {
+    return 'Connecting'
+  }
+
   if ((status === 'idle' || !status) && progress > 0 && progress < 1) {
     return (progress * 100).toFixed(2) + '%'
   }
@@ -71,13 +76,14 @@ const WalletSyncStatus: FC<DataSyncContextProps> = ({ data, synced }) => (
       Wallet Status:{' '}
       {getWalletSyncStatus(
         data?.blockSyncer.status,
-        data?.blockSyncer?.syncing?.progress
+        data?.blockSyncer?.syncing?.progress,
+        data?.peerNetwork?.isReady && data?.peerNetwork?.peers > 0
       )}
     </chakra.h5>
     {!synced &&
-      data?.blockSyncer.status !== 'stopped' &&
-      (data?.blockSyncer.status === 'syncing' ||
-        data?.blockSyncer.status === 'idle') && (
+      data?.peerNetwork?.isReady &&
+      data?.peerNetwork?.peers > 0 &&
+      data?.blockSyncer.status === 'syncing' && (
         <>
           <chakra.h5 color="inherit">
             {`${(data?.blockSyncer.syncing.progress * 100).toFixed(2)}%`}
