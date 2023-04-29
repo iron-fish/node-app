@@ -71,7 +71,7 @@ const ENV_CONFIGS = {
               {
                 html: './public/index.html',
                 js: './electron/dev/renderer.ts',
-                name: 'wallet',
+                name: 'node-app',
                 preload: {
                   js: './electron/dev/preload.ts',
                 },
@@ -96,7 +96,7 @@ const ENV_CONFIGS = {
               {
                 html: './public/index.html',
                 js: './electron/demo/renderer.ts',
-                name: 'wallet',
+                name: 'node-app',
                 preload: {
                   js: './electron/demo/preload.ts',
                 },
@@ -112,7 +112,7 @@ const ENV_CONFIGS = {
         config: {
           repository: {
             owner: 'iron-fish',
-            name: 'wallet-app',
+            name: 'node-app',
             draft: true,
           },
           prerelease: true,
@@ -135,7 +135,7 @@ const ENV_CONFIGS = {
               {
                 html: './public/index.html',
                 js: './electron/prod/renderer.ts',
-                name: 'wallet',
+                name: 'node-app',
                 preload: {
                   js: './electron/prod/preload.ts',
                 },
@@ -151,7 +151,7 @@ const ENV_CONFIGS = {
         config: {
           repository: {
             owner: 'iron-fish',
-            name: 'wallet-app',
+            name: 'node-app',
             draft: true,
           },
           prerelease: true,
