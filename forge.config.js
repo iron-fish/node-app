@@ -71,7 +71,7 @@ const ENV_CONFIGS = {
               {
                 html: './public/index.html',
                 js: './electron/dev/renderer.ts',
-                name: 'node-app',
+                name: 'node',
                 preload: {
                   js: './electron/dev/preload.ts',
                 },
@@ -96,7 +96,7 @@ const ENV_CONFIGS = {
               {
                 html: './public/index.html',
                 js: './electron/demo/renderer.ts',
-                name: 'node-app',
+                name: 'node',
                 preload: {
                   js: './electron/demo/preload.ts',
                 },
@@ -135,7 +135,7 @@ const ENV_CONFIGS = {
               {
                 html: './public/index.html',
                 js: './electron/prod/renderer.ts',
-                name: 'node-app',
+                name: 'node',
                 preload: {
                   js: './electron/prod/preload.ts',
                 },
