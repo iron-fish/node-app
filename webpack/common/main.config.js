@@ -29,8 +29,8 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: resolve('./electron/app.ico'),
-          to: resolve('./.webpack/main/app.ico'),
+          from: resolve('./electron/icons'),
+          to: resolve('./.webpack/main/icons'),
         },
       ],
     }),

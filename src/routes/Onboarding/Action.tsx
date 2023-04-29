@@ -9,7 +9,7 @@ export const Onboarding = () => {
     <Flex flexDirection="column" p="4rem" pb="0" bg="transparent">
       <Logo mt={{ base: 0, sm: '2rem' }} mb="4rem" color={NAMED_COLORS.BLACK} />
       <chakra.h1 mb="1rem" color={NAMED_COLORS.BLACK}>
-        Iron Fish Wallet
+        Iron Fish Node App
       </chakra.h1>
       <Box
         p="2rem"

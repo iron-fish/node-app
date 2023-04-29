@@ -37,8 +37,8 @@ const createWindow = () => {
       minHeight: 700,
       minWidth: 750,
       autoHideMenuBar: true,
-      icon: __dirname + '/app.ico',
-      title: 'Iron Fish Wallet',
+      icon: __dirname + '/icons/icon.png',
+      title: 'Iron Fish Node App',
       webPreferences: {
         enableRemoteModule: true,
         contextIsolation: true,

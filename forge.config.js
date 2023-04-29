@@ -4,14 +4,17 @@ const spawn = require('cross-spawn')
 
 const COMMON_CONFIG = {
   packagerConfig: {
-    name: 'Iron Fish Wallet',
-    icon: resolve('./electron/app.ico'),
+    name: 'Iron Fish Node App',
+    executableName: 'node-app',
+    icon: resolve('./electron/icons/icon'),
   },
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
       config: {
-        setupIcon: resolve('./electron/app.ico'),
+        // An URL to an ICO file to use as the application icon (displayed in Control Panel > Programs and Features).
+        // iconUrl: 'https://url/to/icon.ico',
+        setupIcon: resolve('./electron/icons/icon.ico'),
       },
     },
     {
@@ -19,9 +22,12 @@ const COMMON_CONFIG = {
       platforms: ['darwin'],
     },
     {
-      executableName: 'wallet-app',
       name: '@electron-forge/maker-deb',
-      config: {},
+      config: {
+        options: {
+          icon: resolve('./electron/icons/icon.png'),
+        },
+      },
     },
   ],
   hooks: {
