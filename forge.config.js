@@ -4,14 +4,17 @@ const spawn = require('cross-spawn')
 
 const COMMON_CONFIG = {
   packagerConfig: {
-    name: 'Iron Fish Wallet',
-    icon: resolve('./electron/app.ico'),
+    name: 'Iron Fish Node App',
+    executableName: 'node-app',
+    icon: resolve('./electron/icons/icon'),
   },
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
       config: {
-        setupIcon: resolve('./electron/app.ico'),
+        // An URL to an ICO file to use as the application icon (displayed in Control Panel > Programs and Features).
+        // iconUrl: 'https://url/to/icon.ico',
+        setupIcon: resolve('./electron/icons/icon.ico'),
       },
     },
     {
@@ -20,11 +23,11 @@ const COMMON_CONFIG = {
     },
     {
       name: '@electron-forge/maker-deb',
-      config: {},
-    },
-    {
-      name: '@electron-forge/maker-rpm',
-      config: {},
+      config: {
+        options: {
+          icon: resolve('./electron/icons/icon.png'),
+        },
+      },
     },
   ],
   hooks: {
@@ -68,7 +71,7 @@ const ENV_CONFIGS = {
               {
                 html: './public/index.html',
                 js: './electron/dev/renderer.ts',
-                name: 'wallet',
+                name: 'node-app',
                 preload: {
                   js: './electron/dev/preload.ts',
                 },
@@ -93,7 +96,7 @@ const ENV_CONFIGS = {
               {
                 html: './public/index.html',
                 js: './electron/demo/renderer.ts',
-                name: 'wallet',
+                name: 'node-app',
                 preload: {
                   js: './electron/demo/preload.ts',
                 },
@@ -109,7 +112,7 @@ const ENV_CONFIGS = {
         config: {
           repository: {
             owner: 'iron-fish',
-            name: 'wallet-app',
+            name: 'node-app',
             draft: true,
           },
           prerelease: true,
@@ -132,7 +135,7 @@ const ENV_CONFIGS = {
               {
                 html: './public/index.html',
                 js: './electron/prod/renderer.ts',
-                name: 'wallet',
+                name: 'node-app',
                 preload: {
                   js: './electron/prod/preload.ts',
                 },
@@ -148,7 +151,7 @@ const ENV_CONFIGS = {
         config: {
           repository: {
             owner: 'iron-fish',
-            name: 'wallet-app',
+            name: 'node-app',
             draft: true,
           },
           prerelease: true,

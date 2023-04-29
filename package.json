@@ -1,9 +1,9 @@
 {
-  "name": "wallet-app",
+  "name": "node-app",
   "version": "1.0.1",
-  "description": "Iron Fish Wallet",
+  "description": "Iron Fish Node App",
   "main": ".webpack/main",
-  "repository": "https://github.com/iron-fish/wallet-app",
+  "repository": "https://github.com/iron-fish/node-app",
   "author": "iron-fish",
   "license": "MPL-2.0",
   "scripts": {

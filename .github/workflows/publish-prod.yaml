@@ -7,19 +7,19 @@ on:
 
 jobs:
 
-  # publish_on_linux:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - uses: actions/setup-node@v3
-  #     with:
-  #       node-version: 18.13
-  #   - name: install dependencies
-  #     run: yarn
-  #   - name: publish
-  #     env:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     run: yarn publish:production
+  publish_on_linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18.13
+    - name: install dependencies
+      run: yarn
+    - name: publish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: yarn publish:production
 
   publish_on_mac:
     runs-on: macos-latest
