@@ -137,7 +137,7 @@ const CARDS: Card[] = [
 
 const TransactionOverview: FC = () => {
   const { hash, accountId, contactId } = useLocation()?.state
-  const [{ data: account, loaded: accountLoaded }] = useAccount(accountId)
+  const { data: account, loaded: accountLoaded } = useAccount(accountId)
   const {
     loaded: transactionLoaded,
     data: transaction,

@@ -23,7 +23,11 @@ import useAccount from 'Hooks/accounts/useAccount'
 const AccountDetails: FC = () => {
   const location = useLocation()
   const { accountId } = location.state as LocationStateProps
-  const [{ data: account, loaded }, exportAccount] = useAccount(accountId)
+  const {
+    data: account,
+    loaded,
+    actions: { exportAccount },
+  } = useAccount(accountId)
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>

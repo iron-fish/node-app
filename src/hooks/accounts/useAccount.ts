@@ -30,7 +30,14 @@ const useAccount = (id: string) => {
     id && loadAccount(id)
   }, [id])
 
-  return [result, updateAccount, exportAccount, deleteAccount] as const
+  return {
+    ...result,
+    actions: {
+      updateAccount,
+      exportAccount,
+      deleteAccount,
+    },
+  }
 }
 
 export default useAccount
