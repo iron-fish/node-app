@@ -17,19 +17,13 @@ import { truncateHash } from 'Utils/hash'
 import LocationStateProps from 'Types/LocationState'
 import AccountOverview from './AccountTabs/Overview'
 import AccountKeys from './AccountTabs/Keys'
-import AccountSettings from './AccountTabs/Settings'
 import BackButtonLink from 'Components/BackButtonLink'
 import useAccount from 'Hooks/accounts/useAccount'
 
 const AccountDetails: FC = () => {
   const location = useLocation()
   const { accountId } = location.state as LocationStateProps
-  const [
-    { data: account, loaded },
-    updateAccount,
-    exportAccount,
-    deleteAccount,
-  ] = useAccount(accountId)
+  const [{ data: account, loaded }, exportAccount] = useAccount(accountId)
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
       <Box>
@@ -67,9 +61,9 @@ const AccountDetails: FC = () => {
                 <Tab>
                   <chakra.h6>Keys</chakra.h6>
                 </Tab>
-                <Tab>
+                {/* <Tab>
                   <chakra.h6>Settings</chakra.h6>
-                </Tab>
+                </Tab> */}
               </TabList>
               <TabPanels>
                 <TabPanel p="0" pt="2rem">
@@ -81,13 +75,13 @@ const AccountDetails: FC = () => {
                     exportAccount={exportAccount}
                   />
                 </TabPanel>
-                <TabPanel p="0" pt="2rem">
+                {/* <TabPanel p="0" pt="2rem">
                   <AccountSettings
                     account={account}
                     updateAccount={updateAccount}
                     deleteAccount={deleteAccount}
                   />
-                </TabPanel>
+                </TabPanel> */}
               </TabPanels>
             </Tabs>
           </>
