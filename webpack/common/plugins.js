@@ -5,20 +5,12 @@ const { resolve } = require('path')
 
 module.exports = [
   new ForkTsCheckerWebpackPlugin(),
-  // new CopyPlugin({
-  //   patterns: [
-  //     {
-  //       from: resolve('./public'),
-  //       to: resolve('./.webpack/renderer'),
-  //     },
-  //     {
-  //       from: resolve('./public/font'),
-  //       to: resolve('./.webpack/renderer/wallet/font'),
-  //     },
-  //     {
-  //       from: resolve('./public/images'),
-  //       to: resolve('./.webpack/renderer/wallet/images'),
-  //     },
-  //   ],
-  // }),
+  new CopyPlugin({
+    patterns: [
+      {
+        from: resolve('./public'),
+        to: resolve('./.webpack/renderer'),
+      },
+    ],
+  }),
 ]

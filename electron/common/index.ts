@@ -29,7 +29,6 @@ let mainWindow: BrowserWindow
 if (process.env.MODE !== 'demo') {
   UpdateManager.initialize()
 }
-
 const createWindow = () => {
   if (!mainWindow) {
     // Create the browser window.
@@ -37,6 +36,7 @@ const createWindow = () => {
       minHeight: 700,
       minWidth: 750,
       autoHideMenuBar: true,
+      icon: __dirname + '/icons/icon.png',
       title: 'Iron Fish Node App',
       webPreferences: {
         enableRemoteModule: true,

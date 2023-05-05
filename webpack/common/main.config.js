@@ -25,16 +25,16 @@ module.exports = {
     'geoip-lite': 'geoip-lite',
     bech32: 'bech32',
   },
-  // plugins: [
-  //   new CopyPlugin({
-  //     patterns: [
-  //       {
-  //         from: resolve('./electron/icons'),
-  //         to: resolve('./.webpack/main/icons'),
-  //       },
-  //     ],
-  //   }),
-  // ],
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: resolve('./electron/icons'),
+          to: resolve('./.webpack/main/icons'),
+        },
+      ],
+    }),
+  ],
   resolve: {
     fallback: {
       stream: false,
