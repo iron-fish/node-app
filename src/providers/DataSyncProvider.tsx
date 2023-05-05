@@ -41,16 +41,15 @@ const DataSyncContext = createContext<DataSyncContextProps>({
 
 const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [synced, setSynced] = useState<boolean>(false)
-  const [syncedStopped, setSyncedStopped] = useState<boolean>(false)
+  const [syncStopped, setSyncStopped] = useState<boolean>(false)
   const [status, setNodeStatus] = useState<NodeStatusResponse | undefined>()
   const [error, setError] = useState()
   const { status: snapshotStatus } = useSnapshotStatus()
   const updates = useUpdates()
   const [manifest] = useSnapshotManifest()
 
-  const loadStatus = () => {
-    console.log('loadStatus')
-    return window.IronfishManager.nodeStatus()
+  const loadStatus = () =>
+    window.IronfishManager.nodeStatus()
       .then(nextStatus => {
         setNodeStatus(prevStatus => {
           let nextTotalSequences = nextStatus.blockchain.totalSequences
@@ -74,7 +73,6 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
         })
       })
       .catch(setError)
-  }
 
   const isSnapshotRequired = useMemo(() => {
     if (status?.blockSyncer.syncing.progress > 0.5) {
@@ -87,12 +85,9 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
     ) {
       return false
     }
-    console.log(Number(status?.blockchain?.totalSequences))
-    console.log(manifest.block_sequence)
     const snapshotToTotal =
       manifest.block_sequence / Number(status?.blockchain?.totalSequences)
 
-    console.log('snapshotToTotal', snapshotToTotal)
     return snapshotToTotal > 0.7
   }, [
     JSON.stringify(manifest),
@@ -101,12 +96,12 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
   ])
 
   const stopSyncing = useCallback(() => {
-    setSyncedStopped(true)
+    setSyncStopped(true)
     return window.IronfishManager.stopSyncing()
   }, [])
 
   const startSyncing = useCallback(() => {
-    setSyncedStopped(false)
+    setSyncStopped(false)
     return window.IronfishManager.sync()
   }, [])
 
@@ -116,13 +111,7 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
       return
     }
 
-    console.log('isSnapshotRequired', isSnapshotRequired)
-    console.log(
-      'status?.blockchain?.totalSequences',
-      status?.blockchain?.totalSequences
-    )
     if (Number(status?.blockchain?.totalSequences) > 0 && isSnapshotRequired) {
-      console.log('stopsync')
       stopSyncing()
     }
 
@@ -131,17 +120,11 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
         status?.peerNetwork?.isReady &&
         status?.peerNetwork?.peers > 0
     )
-    console.log(syncedStopped)
-    console.log(
-      syncedStopped ||
-        (status?.blockchain.synced &&
-          status?.blockSyncer?.syncing?.progress === 1)
-    )
     const interval = setInterval(
       () => {
         loadStatus()
       },
-      syncedStopped ||
+      syncStopped ||
         (status?.blockchain.synced &&
           status?.blockSyncer?.syncing?.progress === 1)
         ? 10000
