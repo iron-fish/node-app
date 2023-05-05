@@ -11,6 +11,14 @@ module.exports = [
         from: resolve('./public'),
         to: resolve('./.webpack/renderer'),
       },
+      {
+        from: resolve('./public/font'),
+        to: resolve('./.webpack/renderer/node/font'),
+      },
+      {
+        from: resolve('./public/images'),
+        to: resolve('./.webpack/renderer/node/images'),
+      },
     ],
   }),
 ]
