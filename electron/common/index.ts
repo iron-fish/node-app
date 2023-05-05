@@ -29,6 +29,7 @@ let mainWindow: BrowserWindow
 if (process.env.MODE !== 'demo') {
   UpdateManager.initialize()
 }
+
 const createWindow = () => {
   if (!mainWindow) {
     // Create the browser window.
