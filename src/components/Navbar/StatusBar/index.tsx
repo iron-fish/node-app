@@ -8,7 +8,7 @@ import {
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { useSnapshotStatus } from 'Providers/SnapshotProvider'
 import { FC, useMemo } from 'react'
-import { ProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import { SnapshotProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import MiningStatus from './MiningStatus'
 import SnapshotRequirement from './SnapshotRequirement'
 import SnapshotStatus from './SnapshotStatus'
@@ -21,8 +21,8 @@ const ActiveStatus: FC<FlexProps> = props => {
   const small = useBreakpointValue({ base: true, sm: false })
   const download = useMemo(
     () =>
-      status?.status > ProgressStatus.NOT_STARTED &&
-      status?.status < ProgressStatus.COMPLETED,
+      status?.status > SnapshotProgressStatus.NOT_STARTED &&
+      status?.status < SnapshotProgressStatus.COMPLETED,
     [status?.status]
   )
 
@@ -37,7 +37,7 @@ const ActiveStatus: FC<FlexProps> = props => {
         display={download ? 'flex' : 'none'}
         style="warning"
         TooltipProps={{
-          isDisabled: small ? status?.status > ProgressStatus.DOWNLOADED : true,
+          isDisabled: small ? status?.status > SnapshotProgressStatus.DOWNLOADED : true,
         }}
       >
         {isMinified => (

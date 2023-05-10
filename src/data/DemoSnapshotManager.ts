@@ -2,24 +2,24 @@ import { nanoid } from 'nanoid'
 import EventType from 'Types/EventType'
 import {
   IIronfishSnapshotManager,
-  ProgressStatus,
-  ProgressType,
+  SnapshotProgressStatus,
+  SnapshotProgressType,
   SnapshotManifest,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 
 class DemoSnapshotManager implements IIronfishSnapshotManager {
-  stat: Omit<ProgressType, 'statistic'> = {
+  stat: Omit<SnapshotProgressType, 'statistic'> = {
     current: 0,
     total: 0,
     estimate: 0,
-    status: ProgressStatus.NOT_STARTED,
+    status: SnapshotProgressStatus.NOT_STARTED,
     hasError: false,
     error: null,
   }
   downloadError = false
   applyError = false
 
-  private onStatusChange(diff: Partial<Omit<ProgressType, 'statistic'>>) {
+  private onStatusChange(diff: Partial<Omit<SnapshotProgressType, 'statistic'>>) {
     this.stat = {
       ...this.stat,
       ...diff,
@@ -33,7 +33,7 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
   }
 
   async start(pathToSave: string) {
-    this.execute(ProgressStatus.DOWLOADING)
+    this.execute(SnapshotProgressStatus.DOWNLOADING)
   }
 
   checkPath(manifest: SnapshotManifest, pathToSave?: string) {
@@ -64,7 +64,7 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
     })
   }
 
-  private async execute(status: ProgressStatus): Promise<void> {
+  private async execute(status: SnapshotProgressStatus): Promise<void> {
     this.onStatusChange({
       status: status,
       current: 0,
@@ -73,7 +73,7 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
       hasError: false,
       error: undefined,
     })
-    if (status === ProgressStatus.DOWLOADING && !this.downloadError) {
+    if (status === SnapshotProgressStatus.DOWNLOADING && !this.downloadError) {
       this.onStatusChange({
         hasError: true,
         error:
@@ -83,7 +83,7 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
       this.downloadError = true
       return
     }
-    if (status === ProgressStatus.UNARHIVING && !this.applyError) {
+    if (status === SnapshotProgressStatus.UNARHIVING && !this.applyError) {
       this.onStatusChange({
         hasError: true,
         error:
@@ -93,10 +93,10 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
       this.applyError = true
       return
     }
-    if (status === ProgressStatus.COMPLETED) {
+    if (status === SnapshotProgressStatus.COMPLETED) {
       return
     }
-    if (status === ProgressStatus.DOWNLOADED) {
+    if (status === SnapshotProgressStatus.DOWNLOADED) {
       return this.execute(status + 1)
     }
 
@@ -123,7 +123,7 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
   }
   async reset() {
     this.onStatusChange({
-      status: ProgressStatus.NOT_STARTED,
+      status: SnapshotProgressStatus.NOT_STARTED,
       current: 0,
       total: 0,
       estimate: 0,

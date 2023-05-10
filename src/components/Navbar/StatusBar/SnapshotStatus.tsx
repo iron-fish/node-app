@@ -2,22 +2,22 @@ import { Button, chakra } from '@ironfish/ui-kit'
 import SnapshotStatusModal from 'Components/Snapshot/SnapshotStatusModal'
 import { FC, useState } from 'react'
 import {
-  ProgressStatus,
-  ProgressType,
+  SnapshotProgressStatus,
+  SnapshotProgressType,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { formatRemainingTime } from 'Utils/remainingTimeFormat'
 import sizeFormat from 'byte-size'
 
-const getSnapshotStatus = (status: ProgressStatus) => {
+const getSnapshotStatus = (status: SnapshotProgressStatus) => {
   switch (status) {
-    case ProgressStatus.DOWLOADING:
+    case SnapshotProgressStatus.DOWNLOADING:
       return 'Downloading'
-    case ProgressStatus.DOWNLOADED:
+    case SnapshotProgressStatus.DOWNLOADED:
       return 'Preparing'
-    case ProgressStatus.CLEARING_CHAIN_DB:
-    case ProgressStatus.UNARHIVING:
+    case SnapshotProgressStatus.CLEARING_CHAIN_DB:
+    case SnapshotProgressStatus.UNARHIVING:
       return 'Applying'
-    case ProgressStatus.CLEARING_TEMP_DATA:
+    case SnapshotProgressStatus.CLEARING_TEMP_DATA:
       return 'Clearing'
     default:
       return '-'
@@ -25,7 +25,7 @@ const getSnapshotStatus = (status: ProgressStatus) => {
 }
 
 const SnapshotStatus: FC<{
-  status: Omit<ProgressType, 'statistic'>
+  status: Omit<SnapshotProgressType, 'statistic'>
   isMinified: boolean
 }> = ({ status, isMinified }) => {
   const [open, setOpen] = useState(false)
@@ -43,8 +43,8 @@ const SnapshotStatus: FC<{
         Status: {getSnapshotStatus(status?.status)}
       </chakra.h5>
       {status &&
-        status?.status > ProgressStatus.NOT_STARTED &&
-        status?.status < ProgressStatus.COMPLETED && (
+        status?.status > SnapshotProgressStatus.NOT_STARTED &&
+        status?.status < SnapshotProgressStatus.COMPLETED && (
           <>
             <chakra.h5
               color="inherit"

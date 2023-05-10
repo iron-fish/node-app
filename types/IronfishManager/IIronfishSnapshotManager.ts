@@ -10,9 +10,9 @@ export enum IronfishSnaphotManagerAction {
   RESET = 'reset',
 }
 
-export enum ProgressStatus {
+export enum SnapshotProgressStatus {
   NOT_STARTED,
-  DOWLOADING,
+  DOWNLOADING,
   DOWNLOADED,
   CLEARING_CHAIN_DB,
   UNARHIVING,
@@ -20,8 +20,8 @@ export enum ProgressStatus {
   COMPLETED,
 }
 
-export interface ProgressType {
-  status: ProgressStatus
+export interface SnapshotProgressType {
+  status: SnapshotProgressStatus
   statistic: Meter
   total: number
   current: number
@@ -49,5 +49,5 @@ export interface IIronfishSnapshotManager {
   retry: () => Promise<void>
   manifest: () => Promise<SnapshotManifest>
   reset: () => Promise<void>
-  status: () => Promise<Omit<ProgressType, 'statistic'>>
+  status: () => Promise<Omit<SnapshotProgressType, 'statistic'>>
 }
