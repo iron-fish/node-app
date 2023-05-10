@@ -7,14 +7,13 @@ interface SyncWarningMessageProps extends FlexProps {
 }
 
 const SyncWarningMessage: FC<SyncWarningMessageProps> = ({
-  message = 'Your account balance might not be accurate while you’re syncing to the blockchain',
+  message = 'Your account balance might not be accurate while you’re syncing',
   ...rest
 }) => {
-  const { synced } = useDataSync()
-
+  const { synced, accountsSynced } = useDataSync()
   return (
     <Flex
-      display={synced ? 'none' : 'flex'}
+      display={synced && accountsSynced ? 'none' : 'flex'}
       borderRadius="0.3125rem"
       bg={'#FFF9BC'}
       _dark={{
