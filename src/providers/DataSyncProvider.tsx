@@ -8,7 +8,7 @@ import {
   ReactNode,
   useMemo,
 } from 'react'
-import { ProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import { SnapshotProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
 import { useSnapshotStatus } from './SnapshotProvider'
 import useUpdates from 'Hooks/updates/useUpdates'
@@ -31,6 +31,9 @@ export interface DataSyncContextProps {
   }
 }
 
+const CHAIN_SYNC_PROGRESS_THRESHOLD = 0.7
+const SNAPSHOT_VALUABLE_PROGRESS = 0.3
+
 const DataSyncContext = createContext<DataSyncContextProps>({
   synced: false,
   sync: {
@@ -41,7 +44,6 @@ const DataSyncContext = createContext<DataSyncContextProps>({
 
 const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [synced, setSynced] = useState<boolean>(false)
-  const [syncStopped, setSyncStopped] = useState<boolean>(false)
   const [status, setNodeStatus] = useState<NodeStatusResponse | undefined>()
   const [error, setError] = useState()
   const { status: snapshotStatus } = useSnapshotStatus()
@@ -75,7 +77,7 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
       .catch(setError)
 
   const isSnapshotRequired = useMemo(() => {
-    if (status?.blockSyncer.syncing.progress > 0.5) {
+    if (status?.blockSyncer.syncing.progress > CHAIN_SYNC_PROGRESS_THRESHOLD) {
       return false
     }
     if (
@@ -85,25 +87,23 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
     ) {
       return false
     }
-    const snapshotToTotal =
-      manifest.block_sequence / Number(status?.blockchain?.totalSequences)
-
-    return snapshotToTotal > 0.7
+    const total = Number(status?.blockchain?.totalSequences)
+    const headToSnapshot =
+      manifest.block_sequence - Number(status?.blockchain?.head)
+    const snapshotToTotal = headToSnapshot / total
+    return snapshotToTotal > SNAPSHOT_VALUABLE_PROGRESS
   }, [
     JSON.stringify(manifest),
     status?.blockSyncer.syncing.progress,
     status?.blockchain?.totalSequences,
   ])
 
-  const stopSyncing = useCallback(() => {
-    setSyncStopped(true)
-    return window.IronfishManager.stopSyncing()
-  }, [])
+  const stopSyncing = useCallback(
+    () => window.IronfishManager.stopSyncing(),
+    []
+  )
 
-  const startSyncing = useCallback(() => {
-    setSyncStopped(false)
-    return window.IronfishManager.sync()
-  }, [])
+  const startSyncing = useCallback(() => window.IronfishManager.sync(), [])
 
   useEffect(() => {
     if (!status) {
@@ -120,11 +120,13 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
         status?.peerNetwork?.isReady &&
         status?.peerNetwork?.peers > 0
     )
+
     const interval = setInterval(
       () => {
         loadStatus()
       },
-      syncStopped ||
+      snapshotStatus.status !== SnapshotProgressStatus.NOT_STARTED ||
+        isSnapshotRequired ||
         (status?.blockchain.synced &&
           status?.blockSyncer?.syncing?.progress === 1)
         ? 10000
@@ -145,7 +147,7 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
       data: status,
       error,
       requiredSnapshot:
-        snapshotStatus?.status === ProgressStatus.NOT_STARTED &&
+        snapshotStatus?.status === SnapshotProgressStatus.NOT_STARTED &&
         isSnapshotRequired,
       sync: {
         start: startSyncing,
