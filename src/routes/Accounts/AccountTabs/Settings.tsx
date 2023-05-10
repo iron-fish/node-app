@@ -3,18 +3,17 @@ import {
   Button,
   Flex,
   NAMED_COLORS,
-  SelectField,
   TextField,
   chakra,
   Link,
   ModalProps,
   useIronToast,
 } from '@ironfish/ui-kit'
-import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
+// import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
+// import useAccountSettings from 'Hooks/accounts/useAccountSettings'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState, useEffect, ChangeEvent } from 'react'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
-import useAccountSettings from 'Hooks/accounts/useAccountSettings'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import Account from 'Types/Account'
@@ -44,23 +43,23 @@ interface AccountSettingsProps {
   deleteAccount: (identity: string) => Promise<void>
 }
 
-const CURRENCIES = [
-  {
-    value: 'USD',
-    label: 'USD',
-    helperText: 'United States dollar',
-  },
-  {
-    value: 'EUR',
-    label: 'EUR',
-    helperText: 'Euro',
-  },
-  {
-    value: 'GBP',
-    label: 'GBP',
-    helperText: 'Pound Sterling',
-  },
-]
+// const CURRENCIES = [
+//   {
+//     value: 'USD',
+//     label: 'USD',
+//     helperText: 'United States dollar',
+//   },
+//   {
+//     value: 'EUR',
+//     label: 'EUR',
+//     helperText: 'Euro',
+//   },
+//   {
+//     value: 'GBP',
+//     label: 'GBP',
+//     helperText: 'Pound Sterling',
+//   },
+// ]
 
 interface RemoveAccountModalProps extends Omit<ModalProps, 'children'> {
   account: Account
@@ -170,12 +169,12 @@ const AccountSettings: FC<AccountSettingsProps> = ({
   account,
   deleteAccount,
 }) => {
-  const [name, setName] = useState<string>('')
-  const [currency, setCurrency] = useState<OptionType>(CURRENCIES[0])
   const navigate = useNavigate()
-  const [{ data: settings, loaded }, updateSettings] = useAccountSettings(
-    account?.id
-  )
+  const [name, setName] = useState<string>('')
+  // const [currency, setCurrency] = useState<OptionType>(CURRENCIES[0])
+  // const [{ data: settings, loaded }, updateSettings] = useAccountSettings(
+  //   account?.id
+  // )
   const toast = useIronToast({
     containerStyle: {
       mb: '1rem',
@@ -183,22 +182,11 @@ const AccountSettings: FC<AccountSettingsProps> = ({
   })
 
   useEffect(() => {
-    if (settings && loaded) {
-      const currencyOption = CURRENCIES.find(
-        ({ value }) => value === settings.currency
-      )
-      if (currencyOption) {
-        setCurrency(currencyOption)
-      }
-    }
-  }, [settings, loaded])
-
-  useEffect(() => {
     setName(account?.name)
   }, [account])
 
-  const checkChanges: () => boolean = () =>
-    (loaded && name !== account?.name) || currency.value !== settings?.currency
+  // const checkChanges: () => boolean = () =>
+  //   (loaded && name !== account?.name) || currency.value !== settings?.currency
 
   return (
     <Flex mb="4rem">
@@ -212,24 +200,24 @@ const AccountSettings: FC<AccountSettingsProps> = ({
             onChange: e => setName(e.target.value),
           }}
         />
-        <SelectField
+        {/* <SelectField
           mb="2rem"
           label="Currency Converter"
           value={currency}
           onSelectOption={setCurrency}
           options={CURRENCIES}
-        />
+        /> */}
         <Flex>
           <Button
             p="2rem"
             borderRadius="4.5rem"
             variant="primary"
             mr="2rem"
-            isDisabled={!checkChanges()}
+            isDisabled={true}
             onClick={() => {
               Promise.all([
                 // updateAccount(account.id, name),
-                updateSettings(account.id, currency.value),
+                // updateSettings(account.id, currency.value),
               ]).then(() => toast({ title: 'Account Details Updated' }))
             }}
           >
