@@ -19,7 +19,9 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
   downloadError = false
   applyError = false
 
-  private onStatusChange(diff: Partial<Omit<SnapshotProgressType, 'statistic'>>) {
+  private onStatusChange(
+    diff: Partial<Omit<SnapshotProgressType, 'statistic'>>
+  ) {
     this.stat = {
       ...this.stat,
       ...diff,
