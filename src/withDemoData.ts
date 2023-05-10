@@ -5,6 +5,7 @@ import DemoUpdateManager from 'Data/DemoUpdateManager'
 import DemoDataManager from 'Data/DemoDataManager'
 import DemoAddressBookManager from 'Data/DemoAddressBookManager'
 import DemoAccountSettingsManager from 'Data/DemoAccountSettingsManager'
+import DemoErrorManager from 'Data/DemoErrorManager'
 
 export const IronFishManager = new DemoDataManager()
 
@@ -16,3 +17,5 @@ export const AccountSettingsStorage: IStorage<AccountSettings> =
 
 export const UpdateManager = new DemoUpdateManager()
 UpdateManager.initialize()
+
+export const ErrorManager = new DemoErrorManager()

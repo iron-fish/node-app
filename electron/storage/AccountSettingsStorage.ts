@@ -2,11 +2,13 @@ import AbstractStorage from './AbstractStorage'
 import AccountSettings from 'Types/AccountSettings'
 import SortType from 'Types/SortType'
 
+export const ACCOUNTS_SETTINGS_STORAGE_NAME = 'accounts_settings.db'
+
 class AccountSettingsStorage extends AbstractStorage<AccountSettings> {
   constructor() {
     super(
       {
-        filename: 'accounts_settings.db',
+        filename: `storage/${ACCOUNTS_SETTINGS_STORAGE_NAME}`,
         autoload: true,
         timestampData: true,
       },

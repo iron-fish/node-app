@@ -2,11 +2,13 @@ import AbstractStorage from './AbstractStorage'
 import Contact from 'Types/Contact'
 import SortType from 'Types/SortType'
 
+export const ADDRESS_BOOK_STORAGE_NAME = 'address_book.db'
+
 class AddressBookStorage extends AbstractStorage<Contact> {
   constructor() {
     super(
       {
-        filename: 'address_book.db',
+        filename: `storage/${ADDRESS_BOOK_STORAGE_NAME}`,
         autoload: true,
         timestampData: true,
       },
