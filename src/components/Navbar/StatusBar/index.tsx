@@ -37,7 +37,9 @@ const ActiveStatus: FC<FlexProps> = props => {
         display={download ? 'flex' : 'none'}
         style="warning"
         TooltipProps={{
-          isDisabled: small ? status?.status > SnapshotProgressStatus.DOWNLOADED : true,
+          isDisabled: small
+            ? status?.status > SnapshotProgressStatus.DOWNLOADED
+            : true,
         }}
       >
         {isMinified => (
