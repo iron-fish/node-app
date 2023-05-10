@@ -381,7 +381,7 @@ const TransactionOverview: FC = () => {
                       <LargeArrowRightUp h="1.125rem" w="1.125rem" />
                     </Box>
                     <chakra.h5>
-                      <ContactsPreview addresses={[note?.sender]} />
+                      <ContactsPreview addresses={[note?.owner]} />
                     </chakra.h5>
                   </Flex>
                 ),

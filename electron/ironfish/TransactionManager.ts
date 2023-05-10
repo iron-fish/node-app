@@ -124,6 +124,7 @@ class TransactionManager
           memo: n.note.memo(),
           sender: n.note.sender(),
           asset: await this.assetManager.get(n.note.assetId()),
+          owner: n.note.owner(),
         }))
       ),
       outputs: serializedNotes,
