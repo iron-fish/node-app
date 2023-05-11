@@ -332,7 +332,6 @@ export class IronFishManager implements IIronfishManager {
     this.nodeSettings.setValues(values)
     await this.nodeSettings.save()
     await this.stop()
-    await this.node.waitForShutdown()
   }
 
   async start(): Promise<void> {
@@ -369,6 +368,7 @@ export class IronFishManager implements IIronfishManager {
   async stop(changeStatus = true): Promise<void> {
     await this.node?.shutdown()
     await this.node?.closeDB()
+    await this.node.waitForShutdown()
 
     if (changeStatus) {
       this.changeInitStatus(IronFishInitStatus.NOT_STARTED)
