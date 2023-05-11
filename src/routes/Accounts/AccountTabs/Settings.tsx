@@ -44,24 +44,6 @@ interface AccountSettingsProps {
   deleteAccount: (identity: string) => Promise<void>
 }
 
-const CURRENCIES = [
-  {
-    value: 'USD',
-    label: 'USD',
-    helperText: 'United States dollar',
-  },
-  {
-    value: 'EUR',
-    label: 'EUR',
-    helperText: 'Euro',
-  },
-  {
-    value: 'GBP',
-    label: 'GBP',
-    helperText: 'Pound Sterling',
-  },
-]
-
 interface RemoveAccountModalProps extends Omit<ModalProps, 'children'> {
   account: Account
   onDelete: () => void
@@ -171,7 +153,6 @@ const AccountSettings: FC<AccountSettingsProps> = ({
   deleteAccount,
 }) => {
   const [name, setName] = useState<string>('')
-  const [currency, setCurrency] = useState<OptionType>(CURRENCIES[0])
   const navigate = useNavigate()
   const [{ data: settings, loaded }, updateSettings] = useAccountSettings(
     account?.id
@@ -183,22 +164,10 @@ const AccountSettings: FC<AccountSettingsProps> = ({
   })
 
   useEffect(() => {
-    if (settings && loaded) {
-      const currencyOption = CURRENCIES.find(
-        ({ value }) => value === settings.currency
-      )
-      if (currencyOption) {
-        setCurrency(currencyOption)
-      }
-    }
-  }, [settings, loaded])
-
-  useEffect(() => {
     setName(account?.name)
   }, [account])
 
-  const checkChanges: () => boolean = () =>
-    (loaded && name !== account?.name) || currency.value !== settings?.currency
+  const checkChanges: () => boolean = () => loaded && name !== account?.name
 
   return (
     <Flex mb="4rem">
@@ -212,13 +181,6 @@ const AccountSettings: FC<AccountSettingsProps> = ({
             onChange: e => setName(e.target.value),
           }}
         />
-        <SelectField
-          mb="2rem"
-          label="Currency Converter"
-          value={currency}
-          onSelectOption={setCurrency}
-          options={CURRENCIES}
-        />
         <Flex>
           <Button
             p="2rem"
@@ -229,7 +191,7 @@ const AccountSettings: FC<AccountSettingsProps> = ({
             onClick={() => {
               Promise.all([
                 // updateAccount(account.id, name),
-                updateSettings(account.id, currency.value),
+                updateSettings(account.id),
               ]).then(() => toast({ title: 'Account Details Updated' }))
             }}
           >

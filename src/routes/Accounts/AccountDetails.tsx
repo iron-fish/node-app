@@ -19,6 +19,7 @@ import AccountOverview from './AccountTabs/Overview'
 import AccountKeys from './AccountTabs/Keys'
 import BackButtonLink from 'Components/BackButtonLink'
 import useAccount from 'Hooks/accounts/useAccount'
+import AccountSettings from './AccountTabs/Settings'
 
 const AccountDetails: FC = () => {
   const location = useLocation()
@@ -26,7 +27,7 @@ const AccountDetails: FC = () => {
   const {
     data: account,
     loaded,
-    actions: { exportAccount },
+    actions: { exportAccount, updateAccount, deleteAccount },
   } = useAccount(accountId)
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
@@ -65,9 +66,9 @@ const AccountDetails: FC = () => {
                 <Tab>
                   <chakra.h6>Keys</chakra.h6>
                 </Tab>
-                {/* <Tab>
+                <Tab>
                   <chakra.h6>Settings</chakra.h6>
-                </Tab> */}
+                </Tab>
               </TabList>
               <TabPanels>
                 <TabPanel p="0" pt="2rem">
@@ -79,13 +80,13 @@ const AccountDetails: FC = () => {
                     exportAccount={exportAccount}
                   />
                 </TabPanel>
-                {/* <TabPanel p="0" pt="2rem">
+                <TabPanel p="0" pt="2rem">
                   <AccountSettings
                     account={account}
                     updateAccount={updateAccount}
                     deleteAccount={deleteAccount}
                   />
-                </TabPanel> */}
+                </TabPanel>
               </TabPanels>
             </Tabs>
           </>

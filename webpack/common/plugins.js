@@ -13,11 +13,11 @@ module.exports = [
       },
       {
         from: resolve('./public/font'),
-        to: resolve('./.webpack/renderer/wallet/font'),
+        to: resolve('./.webpack/renderer/node/font'),
       },
       {
         from: resolve('./public/images'),
-        to: resolve('./.webpack/renderer/wallet/images'),
+        to: resolve('./.webpack/renderer/node/images'),
       },
     ],
   }),
