@@ -330,7 +330,9 @@ export class IronFishManager implements IIronfishManager {
 
   async saveNodeConfig(values: Partial<ConfigOptions>): Promise<void> {
     this.nodeSettings.setValues(values)
-    return await this.nodeSettings.save()
+    await this.nodeSettings.save()
+    await this.stop()
+    await this.node.waitForShutdown()
   }
 
   async start(): Promise<void> {
