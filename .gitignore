@@ -104,3 +104,6 @@ dist/
 
 #vscode
 .vscode/
+
+#certs
+.certs
