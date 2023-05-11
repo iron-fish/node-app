@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { resolve } = require('path')
 const spawn = require('cross-spawn')
+require('dotenv').config()
 
 const COMMON_CONFIG = {
   packagerConfig: {
@@ -59,9 +60,9 @@ const COMMON_CONFIG = {
 const ENV_CONFIGS = {
   dev: {
     plugins: [
-      [
-        '@electron-forge/plugin-webpack',
-        {
+      {
+        name: '@electron-forge/plugin-webpack',
+        config: {
           mainConfig: './webpack/dev/main.config.js',
           devContentSecurityPolicy:
             "connect-src 'self' https://cdn.jsdelivr.net/gh/umidbekk/react-flag-kit@1/assets/* 'unsave-eval'",
@@ -79,14 +80,14 @@ const ENV_CONFIGS = {
             ],
           },
         },
-      ],
+      },
     ],
   },
   demo: {
     plugins: [
-      [
-        '@electron-forge/plugin-webpack',
-        {
+      {
+        name: '@electron-forge/plugin-webpack',
+        config: {
           mainConfig: './webpack/demo/main.config.js',
           devContentSecurityPolicy:
             "connect-src 'self' https://cdn.jsdelivr.net/gh/umidbekk/react-flag-kit@1/assets/* 'unsave-eval'",
@@ -104,7 +105,7 @@ const ENV_CONFIGS = {
             ],
           },
         },
-      ],
+      },
     ],
     publishers: [
       {
@@ -122,10 +123,19 @@ const ENV_CONFIGS = {
     ],
   },
   production: {
+    packagerConfig: {
+      osxSign: {},
+      osxNotarize: {
+        tool: 'notarytool',
+        appleId: process.env.APPLE_ID,
+        appleIdPassword: process.env.APPLE_PASSWORD,
+        teamId: process.env.APPLE_TEAM_ID,
+      },
+    },
     plugins: [
-      [
-        '@electron-forge/plugin-webpack',
-        {
+      {
+        name: '@electron-forge/plugin-webpack',
+        config: {
           mainConfig: './webpack/prod/main.config.js',
           devContentSecurityPolicy:
             "connect-src 'self' https://cdn.jsdelivr.net/gh/umidbekk/react-flag-kit@1/assets/* 'unsave-eval'",
@@ -143,7 +153,7 @@ const ENV_CONFIGS = {
             ],
           },
         },
-      ],
+      },
     ],
     publishers: [
       {
@@ -162,7 +172,11 @@ const ENV_CONFIGS = {
   },
 }
 
-module.exports = {
+const config = {
   ...COMMON_CONFIG,
   ...ENV_CONFIGS[process.env['MODE'] || 'dev'],
 }
+
+console.log(JSON.stringify({ config }, null, 2))
+
+module.exports = config
