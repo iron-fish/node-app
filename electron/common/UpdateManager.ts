@@ -57,7 +57,7 @@ class UpdateManager implements IUpdateManager {
   checkUpdates: () => Promise<UpdateStatus> = () => {
     app.isPackaged && autoUpdater.checkForUpdates()
     if (!app.isPackaged) {
-      this.status.hasUpdates = true
+      this.status.hasUpdates = false //set to true to check how modal window looks
     }
     return Promise.resolve(this.status)
   }

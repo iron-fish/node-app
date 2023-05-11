@@ -9,6 +9,7 @@ import {
   Box,
   NAMED_COLORS,
   Grid,
+  Checkbox,
 } from '@ironfish/ui-kit'
 import useNodeSettings from 'Hooks/node/useNodeSettings'
 import { FC, useState, useEffect, memo, useMemo } from 'react'
@@ -40,6 +41,7 @@ const SETTINGS_KEYS = [
   'minPeers',
   'maxPeers',
   'blocksPerMessage',
+  'enableTelemetry',
 ]
 
 const NodeSettings: FC = () => {
@@ -158,16 +160,57 @@ const NodeSettings: FC = () => {
               }}
             />
           </Skeleton>
-        </Grid>
-        <Button
-          mt="2rem"
-          variant="primary"
-          size="large"
-          onClick={handleSaveSettings}
-          isDisabled={!loaded || hasNoChanges}
-        >
-          Save settings
-        </Button>
+        </Flex>
+        <Flex gap="2rem">
+          <Skeleton w="50%" my="1rem" variant="ironFish" isLoaded={!!data}>
+            <Flex
+              sx={{
+                h: '4.313rem',
+                px: '1.5rem',
+                py: '0.75rem',
+                borderRadius: '0.25rem',
+                bg: NAMED_COLORS.WHITE,
+                border: '0.063rem solid',
+                borderColor: NAMED_COLORS.LIGHT_GREY,
+                boxShadow: '0 0.25rem 0.688rem rgba(0, 0, 0, 0.04)',
+                _dark: {
+                  bg: NAMED_COLORS.DARKER_GREY,
+                  borderColor: NAMED_COLORS.DARK_GREY,
+                },
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
+              <chakra.h6
+                color={NAMED_COLORS.GREY}
+                p="0.25rem"
+                _dark={{ color: NAMED_COLORS.PALE_GREY }}
+              >
+                Telemetry
+              </chakra.h6>
+              <Checkbox
+                pl="0.25rem"
+                isChecked={nodeSettings?.enableTelemetry}
+                onChange={e =>
+                  updateSettingValue('enableTelemetry', e.target.checked)
+                }
+              >
+                Collect telemetry
+              </Checkbox>
+            </Flex>
+          </Skeleton>
+          <Flex w="50%" />
+        </Flex>
+        <Flex my="1rem" gap="32px">
+          <Button
+            variant="primary"
+            size="large"
+            onClick={handleSaveSettings}
+            isDisabled={!loaded || hasNoChanges}
+          >
+            Save settings
+          </Button>
+        </Flex>
       </Flex>
       <Box>
         <DetailsPanel>

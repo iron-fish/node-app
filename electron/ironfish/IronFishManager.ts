@@ -167,7 +167,7 @@ export class IronFishManager implements IIronfishManager {
     })
 
     if (!this.sdk.internal.get('telemetryNodeId')) {
-      this.sdk.internal.set('telemetryNodeId', uuid())
+      this.sdk.internal.set('telemetryNodeId', `node-app-${uuid()}`)
       await this.sdk.internal.save()
     }
   }
@@ -180,6 +180,12 @@ export class IronFishManager implements IIronfishManager {
       privateIdentity: privateIdentity,
       autoSeed: true,
     })
+
+    const isTelemetryEnabled = this.node.config.isSet('enableTelemetry')
+    if (!isTelemetryEnabled) {
+      this.node.config.set('enableTelemetry', true)
+      this.node.config.save()
+    }
 
     await this.checkForMigrations()
 
@@ -254,6 +260,15 @@ export class IronFishManager implements IIronfishManager {
       this.changeInitStatus(IronFishInitStatus.ERROR)
       log.error(e)
     }
+  }
+
+  async isFirstRun(): Promise<boolean> {
+    const isFirstRun = this.sdk.internal.get('isFirstRun')
+    if (isFirstRun) {
+      this.sdk.internal.set('isFirstRun', false)
+      this.sdk.internal.save()
+    }
+    return isFirstRun
   }
 
   async nodeStatus(): Promise<NodeStatusResponse> {

@@ -86,6 +86,10 @@ class DemoDataManager implements IIronfishManager {
     )
   }
 
+  async isFirstRun(): Promise<boolean> {
+    return true
+  }
+
   nodeStatus(): Promise<NodeStatusResponse> {
     return this.node.status()
   }

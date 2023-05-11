@@ -163,7 +163,7 @@ class DemoUpdateManager implements IUpdateManager {
     setTimeout(() => {
       this.status = {
         ...this.status,
-        hasUpdates: true,
+        hasUpdates: false, //set to true to check how modal window looks
         update: {
           name: 'v1.1.8',
           notes: 'just note',

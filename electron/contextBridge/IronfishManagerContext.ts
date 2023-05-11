@@ -18,6 +18,8 @@ class IronfishManagerContext implements IIronfishManager {
 
   initialize = () =>
     ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.INITIALIZE)
+  isFirstRun = () =>
+    ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.IS_FIRST_RUN)
   hasAnyAccount = () => {
     return ipcRenderer.invoke(
       'ironfish-manager',
