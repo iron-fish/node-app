@@ -9,13 +9,13 @@ import {
 } from 'react'
 import EventType from 'Types/EventType'
 import {
-  ProgressStatus,
-  ProgressType,
+  SnapshotProgressStatus,
+  SnapshotProgressType,
   SnapshotManifest,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 
 export interface SnapshotProviderProps {
-  status: Omit<ProgressType, 'statistic'>
+  status: Omit<SnapshotProgressType, 'statistic'>
   checkPath: (
     manifest: SnapshotManifest,
     path?: string
@@ -27,7 +27,7 @@ export interface SnapshotProviderProps {
 
 const SnapshotContext = createContext<SnapshotProviderProps>({
   status: {
-    status: ProgressStatus.NOT_STARTED,
+    status: SnapshotProgressStatus.NOT_STARTED,
     current: 0,
     estimate: 0,
     hasError: false,
@@ -41,7 +41,8 @@ const SnapshotContext = createContext<SnapshotProviderProps>({
 })
 
 const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [status, setStatus] = useState<Omit<ProgressType, 'statistic'>>(null)
+  const [status, setStatus] =
+    useState<Omit<SnapshotProgressType, 'statistic'>>(null)
 
   const loadStatus = () => {
     window.IronfishManager.snapshot.status().then(setStatus)
@@ -68,11 +69,11 @@ const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
       return
     }
 
-    if (status.status === ProgressStatus.DOWNLOADED) {
+    if (status.status === SnapshotProgressStatus.DOWNLOADED) {
       window.IronfishManager.snapshot.apply()
     }
 
-    if (status.status === ProgressStatus.COMPLETED) {
+    if (status.status === SnapshotProgressStatus.COMPLETED) {
       window.IronfishManager.initialize()
       window.IronfishManager.snapshot.reset()
     }
