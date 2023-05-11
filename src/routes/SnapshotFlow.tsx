@@ -2,8 +2,8 @@ import { FC, ReactNode, useEffect, useState } from 'react'
 import { Flex, Box, Progress, chakra, Steps, Step } from '@ironfish/ui-kit'
 import sizeFormat from 'byte-size'
 import {
-  ProgressStatus,
-  ProgressType,
+  SnapshotProgressStatus,
+  SnapshotProgressType,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { formatRemainingTime } from 'Utils/remainingTimeFormat'
 import EventType from 'Types/EventType'
@@ -16,18 +16,18 @@ enum STEPS {
   COMPLETED,
 }
 
-const getActiveStep = (status: ProgressStatus): number => {
+const getActiveStep = (status: SnapshotProgressStatus): number => {
   switch (status) {
-    case ProgressStatus.NOT_STARTED:
-    case ProgressStatus.DOWLOADING:
+    case SnapshotProgressStatus.NOT_STARTED:
+    case SnapshotProgressStatus.DOWNLOADING:
       return STEPS.DOWNLOADING
-    case ProgressStatus.CLEARING_CHAIN_DB:
+    case SnapshotProgressStatus.CLEARING_CHAIN_DB:
       return STEPS.PREPARING_DB
-    case ProgressStatus.UNARHIVING:
+    case SnapshotProgressStatus.UNARHIVING:
       return STEPS.UPDATING_DB
-    case ProgressStatus.CLEARING_TEMP_DATA:
+    case SnapshotProgressStatus.CLEARING_TEMP_DATA:
       return STEPS.CLEARING_TEMP
-    case ProgressStatus.COMPLETED:
+    case SnapshotProgressStatus.COMPLETED:
       return STEPS.COMPLETED
     default:
       return STEPS.DOWNLOADING
@@ -43,7 +43,7 @@ const renderCount = (current: number, total: number) => {
 }
 
 const StepProgress: FC<{
-  status: Omit<ProgressType, 'statistic'> | null
+  status: Omit<SnapshotProgressType, 'statistic'> | null
   label?: ReactNode
 }> = ({ status }) => (
   <Flex direction="column" m="4rem" alignItems="center" justifyContent="center">
@@ -67,8 +67,8 @@ const StepProgress: FC<{
         isIndeterminate={
           !status ||
           !status.total ||
-          status?.status === ProgressStatus.NOT_STARTED ||
-          status?.status === ProgressStatus.COMPLETED
+          status?.status === SnapshotProgressStatus.NOT_STARTED ||
+          status?.status === SnapshotProgressStatus.COMPLETED
         }
       />
     </Box>
@@ -100,7 +100,7 @@ const steps = [
 ]
 
 const SnapshotFlow: FC = () => {
-  const [status, setStatus] = useState<Omit<ProgressType, 'statistic'> | null>(
+  const [status, setStatus] = useState<Omit<SnapshotProgressType, 'statistic'> | null>(
     null
   )
 
@@ -110,7 +110,7 @@ const SnapshotFlow: FC = () => {
   }, [])
 
   useEffect(() => {
-    if (status?.status === ProgressStatus.COMPLETED) {
+    if (status?.status === SnapshotProgressStatus.COMPLETED) {
       window.IronfishManager.start()
     }
   }, [status?.status])

@@ -8,8 +8,8 @@ import tar from 'tar'
 import { IronfishNode, Meter, VERSION_DATABASE_CHAIN } from '@ironfish/sdk'
 import {
   IIronfishSnapshotManager,
-  ProgressStatus,
-  ProgressType,
+  SnapshotProgressStatus,
+  SnapshotProgressType,
   SnapshotManifest,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import AbstractManager from './AbstractManager'
@@ -22,14 +22,14 @@ class SnapshotManager
   extends AbstractManager
   implements IIronfishSnapshotManager
 {
-  private progress: ProgressType
+  private progress: SnapshotProgressType
   private filePath: string
   private pathToSave: string
 
   constructor(node: IronfishNode) {
     super(node)
     this.onStatusChange({
-      status: ProgressStatus.NOT_STARTED,
+      status: SnapshotProgressStatus.NOT_STARTED,
       current: 0,
       total: 0,
       estimate: 0,
@@ -38,7 +38,7 @@ class SnapshotManager
     })
   }
 
-  private onStatusChange(diff: Partial<ProgressType>) {
+  private onStatusChange(diff: Partial<SnapshotProgressType>) {
     this.progress = {
       ...this.progress,
       ...diff,
@@ -140,7 +140,7 @@ class SnapshotManager
       .then(() => this.clearTemporaryFiles())
       .then(() => {
         this.onStatusChange({
-          status: ProgressStatus.COMPLETED,
+          status: SnapshotProgressStatus.COMPLETED,
         })
       })
       .catch(e => {
@@ -149,12 +149,12 @@ class SnapshotManager
   }
 
   async retry(): Promise<void> {
-    if (this.progress.status === ProgressStatus.NOT_STARTED) {
+    if (this.progress.status === SnapshotProgressStatus.NOT_STARTED) {
       return Promise.reject('Nothing to retry.')
     }
     if (
       !this.progress.hasError &&
-      this.progress.status > ProgressStatus.NOT_STARTED
+      this.progress.status > SnapshotProgressStatus.NOT_STARTED
     ) {
       return Promise.reject('Flow already in progress')
     }
@@ -164,7 +164,7 @@ class SnapshotManager
       hasError: false,
     })
 
-    if (this.progress.status < ProgressStatus.DOWNLOADED) {
+    if (this.progress.status < SnapshotProgressStatus.DOWNLOADED) {
       const manifest = await this.manifest()
       this.download(manifest)
     } else {
@@ -177,7 +177,7 @@ class SnapshotManager
       current: 0,
       total: manifest.file_size,
       statistic: new Meter(),
-      status: ProgressStatus.DOWLOADING,
+      status: SnapshotProgressStatus.DOWNLOADING,
       estimate: Number.MAX_VALUE,
       hasError: false,
     })
@@ -272,7 +272,7 @@ class SnapshotManager
     }
 
     this.onStatusChange({
-      status: ProgressStatus.DOWNLOADED,
+      status: SnapshotProgressStatus.DOWNLOADED,
     })
   }
 
@@ -281,7 +281,7 @@ class SnapshotManager
       current: 0,
       total: 0,
       statistic: new Meter(),
-      status: ProgressStatus.UNARHIVING,
+      status: SnapshotProgressStatus.UNARHIVING,
       estimate: 0,
       hasError: false,
     })
@@ -343,7 +343,7 @@ class SnapshotManager
       current: 0,
       total: 0,
       statistic: new Meter(),
-      status: ProgressStatus.CLEARING_CHAIN_DB,
+      status: SnapshotProgressStatus.CLEARING_CHAIN_DB,
       estimate: 0,
       hasError: false,
     })
@@ -388,7 +388,7 @@ class SnapshotManager
       current: 0,
       total: 1,
       statistic: new Meter(),
-      status: ProgressStatus.CLEARING_TEMP_DATA,
+      status: SnapshotProgressStatus.CLEARING_TEMP_DATA,
       estimate: Number.MAX_VALUE,
       hasError: false,
     })
@@ -417,7 +417,7 @@ class SnapshotManager
     this.progress.statistic.stop()
   }
 
-  status(): Promise<Omit<ProgressType, 'statistic'>> {
+  status(): Promise<Omit<SnapshotProgressType, 'statistic'>> {
     return Promise.resolve({
       status: this.progress?.status,
       current: this.progress?.current,
@@ -430,7 +430,7 @@ class SnapshotManager
 
   async reset(): Promise<void> {
     this.onStatusChange({
-      status: ProgressStatus.NOT_STARTED,
+      status: SnapshotProgressStatus.NOT_STARTED,
       current: 0,
       total: 0,
       estimate: 0,

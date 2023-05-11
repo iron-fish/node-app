@@ -18,37 +18,37 @@ import {
 } from '@ironfish/ui-kit'
 import sizeFormat from 'byte-size'
 import { useSnapshotStatus } from 'Providers/SnapshotProvider'
-import { ProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import { SnapshotProgressStatus } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { formatRemainingTime } from 'Utils/remainingTimeFormat'
 
-const getProgressStatusDesc = (status: ProgressStatus) => {
+const getProgressStatusDesc = (status: SnapshotProgressStatus) => {
   switch (status) {
-    case ProgressStatus.DOWLOADING:
+    case SnapshotProgressStatus.DOWNLOADING:
       return 'Downloading...'
-    case ProgressStatus.DOWNLOADED:
+    case SnapshotProgressStatus.DOWNLOADED:
       return 'Preparing...'
-    case ProgressStatus.CLEARING_CHAIN_DB:
+    case SnapshotProgressStatus.CLEARING_CHAIN_DB:
       return 'Clearing Database...'
-    case ProgressStatus.CLEARING_TEMP_DATA:
+    case SnapshotProgressStatus.CLEARING_TEMP_DATA:
       return 'Clearing temp files...'
-    case ProgressStatus.UNARHIVING:
+    case SnapshotProgressStatus.UNARHIVING:
       return 'Unarchiving...'
     default:
       return ''
   }
 }
-const getContent = (status: ProgressStatus) => {
+const getContent = (status: SnapshotProgressStatus) => {
   switch (status) {
-    case ProgressStatus.DOWLOADING:
-    case ProgressStatus.DOWNLOADED:
+    case SnapshotProgressStatus.DOWNLOADING:
+    case SnapshotProgressStatus.DOWNLOADED:
       return {
         title: 'Downloading Snapshot',
         description:
           'Downloading snapshot is the fastest way to update your chain database.',
       }
-    case ProgressStatus.CLEARING_CHAIN_DB:
-    case ProgressStatus.CLEARING_TEMP_DATA:
-    case ProgressStatus.UNARHIVING:
+    case SnapshotProgressStatus.CLEARING_CHAIN_DB:
+    case SnapshotProgressStatus.CLEARING_TEMP_DATA:
+    case SnapshotProgressStatus.UNARHIVING:
       return {
         title: 'Updating Chain Database',
         description:
@@ -64,8 +64,8 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
   const [loading, setLoading] = useState(false)
   const isApplyingInProgress = useMemo(
     () =>
-      status?.status > ProgressStatus.DOWNLOADED &&
-      status?.status < ProgressStatus.COMPLETED,
+      status?.status > SnapshotProgressStatus.DOWNLOADED &&
+      status?.status < SnapshotProgressStatus.COMPLETED,
     [status?.status]
   )
   const content = useMemo(() => getContent(status?.status), [status?.status])
@@ -73,9 +73,9 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
     () =>
       !status ||
       !status.total ||
-      status?.status === ProgressStatus.NOT_STARTED ||
-      status?.status === ProgressStatus.DOWNLOADED ||
-      status?.status === ProgressStatus.COMPLETED,
+      status?.status === SnapshotProgressStatus.NOT_STARTED ||
+      status?.status === SnapshotProgressStatus.DOWNLOADED ||
+      status?.status === SnapshotProgressStatus.COMPLETED,
     [status?.total, status?.status]
   )
 
@@ -86,8 +86,8 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
         id="snapshot-status-modal"
         isOpen={isApplyingInProgress || status?.hasError ? true : props.isOpen}
         useInert={
-          status?.status > ProgressStatus.DOWNLOADED &&
-          status?.status < ProgressStatus.COMPLETED
+          status?.status > SnapshotProgressStatus.DOWNLOADED &&
+          status?.status < SnapshotProgressStatus.COMPLETED
         }
         onClose={() => {
           if (status?.hasError) {
