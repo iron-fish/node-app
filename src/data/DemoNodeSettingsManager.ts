@@ -8,6 +8,7 @@ let DEMO_NODE_CONFIG: Partial<ConfigOptions> = {
   minPeers: -1,
   maxPeers: 50,
   blocksPerMessage: 5,
+  enableTelemetry: true,
 }
 
 let DEMO_NODE_CONFIG_TMP: Partial<ConfigOptions> = {}

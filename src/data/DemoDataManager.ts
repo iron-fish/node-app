@@ -17,6 +17,7 @@ import { INodeSettingsManager } from 'Types/IronfishManager/INodeSettingsManager
 import EventType from 'Types/EventType'
 
 class DemoDataManager implements IIronfishManager {
+  private internalConfig = { isFirstRun: true }
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   accounts: IIronfishAccountManager
   assets: IIronfishAssetManager
@@ -87,7 +88,11 @@ class DemoDataManager implements IIronfishManager {
   }
 
   async isFirstRun(): Promise<boolean> {
-    return true
+    const isFirstRun = this.internalConfig.isFirstRun
+    if (isFirstRun) {
+      this.internalConfig.isFirstRun = false
+    }
+    return isFirstRun
   }
 
   nodeStatus(): Promise<NodeStatusResponse> {
