@@ -13,7 +13,7 @@ import MiningStatus from './MiningStatus'
 import SnapshotRequirement from './SnapshotRequirement'
 import SnapshotStatus from './SnapshotStatus'
 import { StatusItem } from './StatusItem'
-import WalletSyncStatus from './WalletSyncStatus'
+import NodeSyncStatus from './NodeSyncStatus'
 
 const ActiveStatus: FC<FlexProps> = props => {
   const { synced, data, requiredSnapshot, sync } = useDataSync()
@@ -68,7 +68,7 @@ const ActiveStatus: FC<FlexProps> = props => {
               </chakra.h6>
             )
           ) : (
-            <WalletSyncStatus data={data} synced={synced} sync={sync} />
+            <NodeSyncStatus data={data} synced={synced} sync={sync} />
           )
         }
       </StatusItem>
