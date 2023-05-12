@@ -138,6 +138,8 @@ export class IronFishManager implements IIronfishManager {
     } catch (error) {
       if (error instanceof DatabaseVersionError) {
         this.sdk.config.setOverride('databaseMigrate', true)
+      } else {
+        log.error(error)
       }
     }
   }
@@ -190,6 +192,8 @@ export class IronFishManager implements IIronfishManager {
         log.log('----------- resetting chain ----------------')
         await this.resetChain()
         await NodeUtils.waitForOpen(this.node)
+      } else {
+        log.error(error)
       }
     }
 

@@ -25,6 +25,13 @@ if (require('electron-squirrel-startup')) {
   app.quit()
 }
 
+process.on('uncaughtException', e => {
+  log.error(e)
+})
+process.on('unhandledRejection', e => {
+  log.error(e)
+})
+
 let mainWindow: BrowserWindow
 if (process.env.MODE !== 'demo') {
   UpdateManager.initialize()
@@ -74,8 +81,11 @@ ipcMain.handle(
     try {
       result = await UpdateManager[action](...args)
     } catch (error) {
-      // eslint-disable-next-line no-console
-      log.error(error)
+      if (error.isAxiosError) {
+        log.error(error?.code, '|', error?.config?.url, '|', error?.message)
+      } else {
+        log.error(error)
+      }
     }
 
     return result
@@ -87,14 +97,20 @@ ipcMain.handle('theme-mode-change', (e, mode: 'light' | 'dark' | 'system') => {
 })
 
 ipcMain.handle('dialog:openDirectory', async () => {
-  const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
-    properties: ['openDirectory'],
-  })
-  if (canceled) {
-    return
-  } else {
-    return filePaths[0]
+  try {
+    const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+      properties: ['openDirectory'],
+    })
+    if (canceled) {
+      return
+    } else {
+      return filePaths[0]
+    }
+  } catch (e) {
+    log.error(e)
   }
+
+  return
 })
 
 // This method will be called when Electron has finished

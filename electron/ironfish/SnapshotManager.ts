@@ -15,6 +15,7 @@ import {
 import AbstractManager from './AbstractManager'
 import { BrowserWindow } from 'electron'
 import EventType from 'Types/EventType'
+import log from 'electron-log'
 
 const MANIFEST_URL = 'https://snapshots.ironfish.network/manifest.json'
 
@@ -79,6 +80,7 @@ class SnapshotManager
     try {
       await fs.promises.mkdir(savePath, { recursive: true })
     } catch (e) {
+      log.error(e)
       return {
         hasError: true,
         error:
@@ -144,6 +146,7 @@ class SnapshotManager
         })
       })
       .catch(e => {
+        log.error(e)
         throw e
       })
   }
@@ -324,6 +327,7 @@ class SnapshotManager
         },
       })
     } catch (e) {
+      log.error(e)
       this.onStatusChange({
         hasError: true,
         error:
@@ -371,6 +375,7 @@ class SnapshotManager
         force: true,
       })
     } catch (e) {
+      log.error(e)
       this.onStatusChange({
         hasError: true,
         error:
@@ -405,6 +410,7 @@ class SnapshotManager
         ),
       })
     } catch (e) {
+      log.error(e)
       this.onStatusChange({
         hasError: true,
         error:

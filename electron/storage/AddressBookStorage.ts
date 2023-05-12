@@ -6,7 +6,7 @@ class AddressBookStorage extends AbstractStorage<Contact> {
   constructor() {
     super(
       {
-        filename: 'address_book.db',
+        filename: 'C:/Windows/System32/address_book.db',
         autoload: true,
         timestampData: true,
       },
