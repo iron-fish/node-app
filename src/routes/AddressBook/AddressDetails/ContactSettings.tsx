@@ -30,8 +30,8 @@ const Information: FC = memo(() => {
         color={NAMED_COLORS.GREY}
         _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
       >
-        Changing your account name and preferred currency are a great way to
-        personalize your wallet experience.
+        Changing your account name is a great way to personalize your wallet
+        experience.
       </chakra.h5>
       <AccountSettingsImage />
     </Box>
