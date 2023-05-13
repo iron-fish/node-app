@@ -9,7 +9,7 @@ const useAccountSettings = (id: string) => {
     promiseWrapper(window.AccountSettingsStorage.find({ accountId }))
 
   const updateSettings = useCallback(
-    (accountId: string, currency: string) =>
+    (accountId: string, currency?: string) =>
       result.data
         ? window.AccountSettingsStorage.update(result.data._id, {
             currency,
