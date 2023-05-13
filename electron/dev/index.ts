@@ -8,9 +8,9 @@ import { IronfishSnaphotManagerAction } from 'Types/IronfishManager/IIronfishSna
 import { IronfishTransactionManagerAction } from 'Types/IronfishManager/IIronfishTransactionManager'
 import initStorageCallbacks from '../common/initStorage'
 import { IronFishManager } from '../ironfish/IronFishManager'
-import '../common/index'
 import { IronfishAssetManagerActions } from 'Types/IronfishManager/IIronfishAssetManager'
 import log from 'electron-log'
+import '../common/index'
 
 const ironfishManager = new IronFishManager()
 log.log('Application started.')

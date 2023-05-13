@@ -1,12 +1,13 @@
 import AbstractStorage from './AbstractStorage'
 import Contact from 'Types/Contact'
 import SortType from 'Types/SortType'
+import getAppHomeFolder from '../utils/getAppHomeFolder'
 
 class AddressBookStorage extends AbstractStorage<Contact> {
   constructor() {
     super(
       {
-        filename: 'address_book.db',
+        filename: `${getAppHomeFolder()}/address_book.db`,
         autoload: true,
         timestampData: true,
       },
