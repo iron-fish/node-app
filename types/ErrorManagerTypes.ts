@@ -7,10 +7,7 @@ export enum ErrorManagerActions {
 interface IErrorManager {
   addError: (error: Error) => Promise<void>
   getErrors: () => Promise<Error[]>
-  processError: (
-    errorIndex: number,
-    closeOnLastProcessed: boolean
-  ) => Promise<Error[]>
+  processError: (closeOnLastProcessed?: boolean) => Promise<Error[]>
 }
 
 export default IErrorManager

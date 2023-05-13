@@ -109,7 +109,7 @@ const Initializing: FC = () => {
   }, [initStatus, hasAnyAccount, hasErrors])
 
   const handleProcessError = () =>
-    window.ErrorManager.processError(0, true).then(setErrors)
+    window.ErrorManager.processError().then(setErrors)
 
   if (
     initStatus >= IronFishInitStatus.INITIALIZED &&
@@ -159,7 +159,7 @@ const Initializing: FC = () => {
             >
               <chakra.h2 mb="1rem">Error</chakra.h2>
               <chakra.h4 color={'#7E7400'} mb="1.5rem">
-                {errors[0].message}
+                {errors.at(-1).message}
               </chakra.h4>
               <Flex>
                 <Button

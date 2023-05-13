@@ -1,7 +1,8 @@
 import { app } from 'electron'
 import parsers from './parsers'
+import IErrorManager from 'Types/ErrorManagerTypes'
 
-class ErrorManager {
+class ErrorManager implements IErrorManager {
   private errors: Error[] = []
 
   private parseError(error: Error) {
@@ -14,16 +15,16 @@ class ErrorManager {
     return error
   }
 
-  addError(error: Error) {
+  async addError(error: Error): Promise<void> {
     this.errors.push(this.parseError(error))
   }
 
-  getErrors(): Error[] {
+  async getErrors(): Promise<Error[]> {
     return this.errors
   }
 
-  processError(index: number, closeOnLastProcessed = false) {
-    this.errors.splice(index, 1)
+  async processError(closeOnLastProcessed = true): Promise<Error[]> {
+    this.errors.pop()
     if (closeOnLastProcessed && this.errors.length === 0) {
       app.quit()
     }

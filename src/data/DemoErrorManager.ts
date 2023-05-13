@@ -22,11 +22,8 @@ class DemoErrorManager implements IErrorManager {
     return this.errors
   }
 
-  async processError(
-    index: number,
-    closeOnLastProcessed = false
-  ): Promise<Error[]> {
-    this.errors.splice(index, 1)
+  async processError(closeOnLastProcessed = false): Promise<Error[]> {
+    this.errors.pop()
     return [...this.errors]
   }
 }

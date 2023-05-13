@@ -8,11 +8,10 @@ class ErrorManagerContext implements IErrorManager {
   getErrors = () =>
     ipcRenderer.invoke('error-manager', ErrorManagerActions.GET_ERRORS)
 
-  processError = (errorIndex: number, closeOnLastProcessed: boolean) =>
+  processError = (closeOnLastProcessed: boolean) =>
     ipcRenderer.invoke(
       'error-manager',
       ErrorManagerActions.PROCESS_ERROR,
-      errorIndex,
       closeOnLastProcessed
     )
 }

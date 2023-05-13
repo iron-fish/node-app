@@ -8,7 +8,7 @@ class AccountSettingsStorage extends AbstractStorage<AccountSettings> {
   constructor() {
     super(
       {
-        filename: `storage/${ACCOUNTS_SETTINGS_STORAGE_NAME}`,
+        filename: ACCOUNTS_SETTINGS_STORAGE_NAME,
         autoload: true,
         timestampData: true,
       },

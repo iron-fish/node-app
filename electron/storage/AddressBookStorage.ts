@@ -8,7 +8,7 @@ class AddressBookStorage extends AbstractStorage<Contact> {
   constructor() {
     super(
       {
-        filename: `storage/${ADDRESS_BOOK_STORAGE_NAME}`,
+        filename: ADDRESS_BOOK_STORAGE_NAME,
         autoload: true,
         timestampData: true,
       },
