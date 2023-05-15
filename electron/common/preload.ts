@@ -5,8 +5,8 @@ import {
   AddressBookStorage,
 } from '../contextBridge/StorageContext'
 import UpdateManagerContext from '../contextBridge/UpdateManagerContext'
+import ErrorManagerContext from '../contextBridge/ErrorManagerContext'
 import EventType from 'Types/EventType'
-import '../common/preload'
 
 contextBridge.exposeInMainWorld(
   'setElectronThemeMode',
@@ -36,3 +36,4 @@ contextBridge.exposeInMainWorld(
 )
 
 contextBridge.exposeInMainWorld('UpdateManager', UpdateManagerContext)
+contextBridge.exposeInMainWorld('ErrorManager', ErrorManagerContext)
