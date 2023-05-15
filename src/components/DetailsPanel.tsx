@@ -9,8 +9,9 @@ import {
   DrawerContent,
   DrawerCloseButton,
   NAMED_COLORS,
+  useBreakpointValue,
 } from '@ironfish/ui-kit'
-import { FC, useRef, ReactNode } from 'react'
+import { FC, useRef, ReactNode, useEffect } from 'react'
 import InfoIcon from 'Svgx/Info'
 import CloseIcon from 'Svgx/CloseIcon'
 import { useDataSync } from 'Providers/DataSyncProvider'
@@ -23,6 +24,12 @@ const DetailsPanel: FC<DetailsPanelProps> = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   const { requiredSnapshot } = useDataSync()
+  const shouldBeVisible = useBreakpointValue({ base: true, md1: false })
+
+  useEffect(() => {
+    !shouldBeVisible && onClose()
+  }, [shouldBeVisible])
+
   return (
     <>
       <Box

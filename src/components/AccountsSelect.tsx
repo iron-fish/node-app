@@ -11,6 +11,7 @@ interface AccountsSelectProps extends FlexProps {
   label: string
   onSelectOption?: (account: CutAccount) => void
   showBalance?: boolean
+  watchBalance?: boolean
 }
 
 const getAccountOptions = (
@@ -34,9 +35,19 @@ const AccountsSelect: FC<AccountsSelectProps> = ({
   accountId,
   onSelectOption,
   showBalance = true,
+  watchBalance = false,
   ...props
 }) => {
-  const [{ data }] = useAccounts()
+  const [{ data, loaded }, reloadAccounts] = useAccounts()
+
+  useEffect(() => {
+    let timeout: NodeJS.Timer
+    if (loaded && watchBalance) {
+      timeout = setInterval(reloadAccounts, 5000)
+    }
+
+    return () => timeout && clearInterval(timeout)
+  }, [loaded])
 
   const options = useMemo(
     () => getAccountOptions(data, showBalance),

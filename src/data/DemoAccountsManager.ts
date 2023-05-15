@@ -76,12 +76,14 @@ export const ACCOUNT_BALANCES: Record<
     pending: bigint
     unconfirmed: bigint
     confirmed: bigint
+    available: bigint
     asset: Asset
   }[]
 > = {
   jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8: [
     {
       confirmed: BigInt(12364),
+      available: BigInt(12364),
       unconfirmed: BigInt(327),
       pending: BigInt(1234),
       pendingCount: 12,
@@ -90,6 +92,7 @@ export const ACCOUNT_BALANCES: Record<
     },
     {
       confirmed: BigInt(12366),
+      available: BigInt(12366),
       unconfirmed: BigInt(327),
       pending: BigInt(1234),
       pendingCount: 12,
@@ -98,6 +101,7 @@ export const ACCOUNT_BALANCES: Record<
     },
     {
       confirmed: BigInt(12367),
+      available: BigInt(12367),
       unconfirmed: BigInt(327),
       pending: BigInt(1234),
       pendingCount: 12,
@@ -108,6 +112,7 @@ export const ACCOUNT_BALANCES: Record<
   H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6: [
     {
       confirmed: BigInt(8481),
+      available: BigInt(8481),
       unconfirmed: BigInt(164),
       pending: BigInt(874),
       pendingCount: 8,
@@ -116,6 +121,7 @@ export const ACCOUNT_BALANCES: Record<
     },
     {
       confirmed: BigInt(8481),
+      available: BigInt(8481),
       unconfirmed: BigInt(164),
       pending: BigInt(874),
       pendingCount: 8,
@@ -124,6 +130,7 @@ export const ACCOUNT_BALANCES: Record<
     },
     {
       confirmed: BigInt(8481),
+      available: BigInt(8481),
       unconfirmed: BigInt(164),
       pending: BigInt(874),
       pendingCount: 8,
@@ -134,6 +141,7 @@ export const ACCOUNT_BALANCES: Record<
   q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7: [
     {
       confirmed: BigInt(122520002254),
+      available: BigInt(122520002254),
       unconfirmed: BigInt(164),
       pending: BigInt(2200000022310),
       pendingCount: 8,
@@ -142,6 +150,7 @@ export const ACCOUNT_BALANCES: Record<
     },
     {
       confirmed: BigInt(12254),
+      available: BigInt(12254),
       unconfirmed: BigInt(164),
       pending: BigInt(2200000022310),
       pendingCount: 8,
@@ -150,6 +159,7 @@ export const ACCOUNT_BALANCES: Record<
     },
     {
       confirmed: BigInt(122224),
+      available: BigInt(0),
       unconfirmed: BigInt(164),
       pending: BigInt(2200000022310),
       pendingCount: 8,
@@ -158,6 +168,7 @@ export const ACCOUNT_BALANCES: Record<
     },
     {
       confirmed: BigInt(1222254),
+      available: BigInt(0),
       unconfirmed: BigInt(164),
       pending: BigInt(2200000022310),
       pendingCount: 8,
@@ -166,6 +177,7 @@ export const ACCOUNT_BALANCES: Record<
     },
     {
       confirmed: BigInt(125000254),
+      available: BigInt(125000254),
       unconfirmed: BigInt(164),
       pending: BigInt(2200000022310),
       pendingCount: 8,
@@ -238,6 +250,7 @@ class DemoAccountsManager implements IIronfishAccountManager {
         })
         ACCOUNT_BALANCES[account.id] = [
           {
+            available: BigInt(0),
             confirmed: BigInt(0),
             unconfirmed: BigInt(0),
             pending: BigInt(0),
@@ -329,6 +342,7 @@ class DemoAccountsManager implements IIronfishAccountManager {
         ACCOUNT_BALANCES[newAccount.id] = [
           {
             confirmed: BigInt(0),
+            available: BigInt(0),
             unconfirmed: BigInt(0),
             pending: BigInt(0),
             pendingCount: Math.ceil(Math.random() * 10),

@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { DataSyncContextProps } from 'Providers/DataSyncProvider'
 import { chakra } from '@ironfish/ui-kit'
 
-const getWalletSyncStatus = (
+const getNodeSyncStatus = (
   status: 'stopped' | 'idle' | 'stopping' | 'syncing',
   progress: number,
   peerNetworkConnected: boolean
@@ -29,7 +29,7 @@ const getWalletSyncStatus = (
   }
 }
 
-const DELIMETERS = [
+const DELIMITERS = [
   {
     unit: 's',
     value: 60,
@@ -53,11 +53,11 @@ const renderTime = (time: number) => {
   let index = 0
   while (remaining > 0) {
     result.push(
-      `${Math.floor(remaining % DELIMETERS[index].value)}${
-        DELIMETERS[index].unit
+      `${Math.floor(remaining % DELIMITERS[index].value)}${
+        DELIMITERS[index].unit
       }`
     )
-    remaining = Math.floor(remaining / DELIMETERS[index].value)
+    remaining = Math.floor(remaining / DELIMITERS[index].value)
 
     if (index === 2 && remaining > 0) {
       result.push(`${remaining}d`)
@@ -70,11 +70,11 @@ const renderTime = (time: number) => {
   return result.reverse().join(' ')
 }
 
-const WalletSyncStatus: FC<DataSyncContextProps> = ({ data, synced }) => (
+const NodeSyncStatus: FC<DataSyncContextProps> = ({ data, synced }) => (
   <>
     <chakra.h5 color="inherit">
-      Wallet Status:{' '}
-      {getWalletSyncStatus(
+      Node Status:{' '}
+      {getNodeSyncStatus(
         data?.blockSyncer.status,
         data?.blockSyncer?.syncing?.progress,
         data?.peerNetwork?.isReady && data?.peerNetwork?.peers > 0
@@ -105,4 +105,4 @@ const WalletSyncStatus: FC<DataSyncContextProps> = ({ data, synced }) => (
   </>
 )
 
-export default WalletSyncStatus
+export default NodeSyncStatus
