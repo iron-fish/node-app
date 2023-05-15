@@ -88,6 +88,8 @@ class AccountManager
     let defaultBalance: AccountBalance = {
       unconfirmed: BigInt(0),
       confirmed: BigInt(0),
+      available: BigInt(0),
+      pending: BigInt(0),
       unconfirmedCount: 0,
       asset: await this.assetManager.get(NativeAsset.nativeId()),
     }
