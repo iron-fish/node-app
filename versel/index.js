@@ -6,6 +6,7 @@ window.IronfishManager = demo.IronFishManager
 window.AddressBookStorage = demo.AddressBookStorage
 window.AccountSettingsStorage = demo.AccountSettingsStorage
 window.UpdateManager = demo.UpdateManager
+window.ErrorManager = demo.ErrorManager
 window.setElectronThemeMode = require('lodash/noop')
 window.subscribeOn = (type, callback) => {
   document.addEventListener(type, e => {

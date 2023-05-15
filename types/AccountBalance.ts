@@ -4,6 +4,8 @@ interface AccountBalance {
   unconfirmedCount: number
   unconfirmed: bigint
   confirmed: bigint
+  available: bigint
+  pending: bigint
   asset: Asset
 }
 
