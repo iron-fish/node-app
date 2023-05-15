@@ -24,6 +24,7 @@ const AddContactModal: FC<AddContactModalProps> = ({
   return (
     <ModalWindow
       {...modalProps}
+      closeOnOverlayClick={true}
       onClose={() => {
         setName('')
         setAddress('')
