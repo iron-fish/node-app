@@ -7,6 +7,7 @@ import {
 import UpdateManagerContext from '../contextBridge/UpdateManagerContext'
 import EventType from 'Types/EventType'
 import '../common/preload'
+import ErrorManagerContext from '../contextBridge/ErrorManagerContext'
 
 contextBridge.exposeInMainWorld(
   'setElectronThemeMode',
@@ -36,3 +37,5 @@ contextBridge.exposeInMainWorld(
 )
 
 contextBridge.exposeInMainWorld('UpdateManager', UpdateManagerContext)
+
+contextBridge.exposeInMainWorld('ErrorManager', ErrorManagerContext)

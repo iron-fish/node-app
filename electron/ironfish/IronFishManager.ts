@@ -190,6 +190,8 @@ export class IronFishManager implements IIronfishManager {
         log.log('----------- resetting chain ----------------')
         await this.resetChain()
         await NodeUtils.waitForOpen(this.node)
+      } else {
+        this.changeInitStatus(IronFishInitStatus.ERROR)
       }
     }
 
@@ -255,7 +257,7 @@ export class IronFishManager implements IIronfishManager {
 
   nodeStatus(): Promise<NodeStatusResponse> {
     if (
-      this.initStatus < IronFishInitStatus.INITIALIZED ||
+      this.initStatus < IronFishInitStatus.STARTED ||
       this.initStatus === IronFishInitStatus.ERROR
     ) {
       return Promise.resolve(null)
