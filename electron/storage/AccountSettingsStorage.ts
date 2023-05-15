@@ -1,12 +1,13 @@
 import AbstractStorage from './AbstractStorage'
 import AccountSettings from 'Types/AccountSettings'
 import SortType from 'Types/SortType'
+import { app } from 'electron'
 
 class AccountSettingsStorage extends AbstractStorage<AccountSettings> {
   constructor() {
     super(
       {
-        filename: 'accounts_settings.db',
+        filename: `${app.getPath('userData')}/data/accounts_settings.db`,
         autoload: true,
         timestampData: true,
       },
