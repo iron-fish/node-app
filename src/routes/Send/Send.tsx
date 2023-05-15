@@ -9,9 +9,9 @@ import {
   TextField,
   Button,
   Icon,
-  SelectField,
   NumberInput,
   NumberInputField,
+  Autocomplete,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
@@ -312,12 +312,13 @@ const Send: FC = () => {
               containerProps={{ mb: '2rem' }}
             />
             <Flex mb="2rem" gap="2rem">
-              <SelectField
+              <Autocomplete
                 width="50%"
                 label="Estimated Fee $IRON"
                 value={selectedFee}
                 options={feeOptions}
                 onSelectOption={selected => setSelectedFee(selected)}
+                emptyOption="Select receiver or wait for pending transactions"
               />
               <TextField
                 w="50%"
