@@ -110,7 +110,7 @@ const OverviewBalance: FC<OverviewBalanceProps> = ({ account }) => {
         </Box>
         <Box mb="0.5rem">
           <chakra.h2>
-            {formatOreToTronWithLanguage(balance?.unconfirmed || BigInt(0))}
+            {formatOreToTronWithLanguage(balance?.pending || BigInt(0))}
           </chakra.h2>
         </Box>
       </Box>
