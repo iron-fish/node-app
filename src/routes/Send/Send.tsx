@@ -318,7 +318,7 @@ const Send: FC = () => {
                 value={selectedFee}
                 options={feeOptions}
                 onSelectOption={selected => setSelectedFee(selected)}
-                emptyOption="Select receiver"
+                emptyOption="Select receiver or wait for pending transactions"
               />
               <TextField
                 w="50%"
