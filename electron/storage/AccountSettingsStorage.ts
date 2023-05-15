@@ -1,6 +1,7 @@
 import AbstractStorage from './AbstractStorage'
 import AccountSettings from 'Types/AccountSettings'
 import SortType from 'Types/SortType'
+import getAppHomeFolder from '../utils/getAppHomeFolder'
 
 export const ACCOUNTS_SETTINGS_STORAGE_NAME = 'accounts_settings.db'
 
@@ -8,7 +9,7 @@ class AccountSettingsStorage extends AbstractStorage<AccountSettings> {
   constructor() {
     super(
       {
-        filename: ACCOUNTS_SETTINGS_STORAGE_NAME,
+        filename: `${getAppHomeFolder()}/${ACCOUNTS_SETTINGS_STORAGE_NAME}`,
         autoload: true,
         timestampData: true,
       },
