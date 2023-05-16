@@ -102,6 +102,10 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
               )}
             </Flex>
           }
+          toolTipProps={{
+            label: 'Make sure no one could copy your phrase',
+            placement: 'top',
+          }}
           loaded={!showPhrase || loaded}
           value={phrase || []}
           placeholder={''}

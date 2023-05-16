@@ -179,6 +179,10 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
         visible={true}
         isReadOnly={false}
         onChange={newWords => setPhrase(newWords)}
+        toolTipProps={{
+          label: 'Paste your mnemonic phrase to import account',
+          placement: 'top',
+        }}
       />
       <Box>
         <Button

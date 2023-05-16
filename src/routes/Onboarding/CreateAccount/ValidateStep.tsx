@@ -69,6 +69,11 @@ const ValidateStep: FC<StepProps> = ({
         isReadOnly={false}
         isInvalid={error.isInvalid}
         isInvalidInputs={error.isInvalidInputs}
+        toolTipProps={{
+          label:
+            'Repeat your mnemonic phrase and make sure that its stored in safe place',
+          placement: 'top',
+        }}
         onBlur={event => {
           if (event.currentTarget.contains(event.relatedTarget)) {
             return

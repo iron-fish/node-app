@@ -68,6 +68,11 @@ const CreateStep: FC<StepProps> = ({
         isReadOnly={true}
         visible={true}
         mb="1rem"
+        toolTipProps={{
+          label:
+            'Write down Secret Recovery Phrase and keep it safe from other people.',
+          placement: 'top',
+        }}
         wordsAmount={24}
       />
       <Box>
