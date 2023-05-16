@@ -4,6 +4,7 @@ export interface Note {
   value: bigint
   memo: string
   sender: string
+  owner: string
   asset: Asset
 }
 

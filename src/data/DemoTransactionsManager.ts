@@ -31,6 +31,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         memo: 'For my friend',
         sender:
           'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+        owner:
+          'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
         asset: DEFAULT_ASSET,
       },
     ],
@@ -40,12 +42,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         memo: 'dziakyi',
         sender:
           'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
-        asset: DEFAULT_ASSET,
-      },
-      {
-        value: BigInt(10000),
-        memo: 'to you',
-        sender:
+        owner:
           'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
         asset: DEFAULT_ASSET,
       },
@@ -53,6 +50,17 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         value: BigInt(10000),
         memo: 'to you',
         sender:
+          'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+        owner:
+          'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+        asset: DEFAULT_ASSET,
+      },
+      {
+        value: BigInt(10000),
+        memo: 'to you',
+        sender:
+          'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+        owner:
           'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
         asset: DEFAULT_ASSET,
       },
@@ -95,6 +103,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         memo: 'thanks',
         sender:
           'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
+        owner:
+          'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
         asset: DEFAULT_ASSET,
       },
       {
@@ -102,6 +112,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         value: BigInt(1000000),
         memo: 'asset to you',
         sender:
+          'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
+        owner:
           'hCXJwl8cB-pk3sqnxp5op_dgVMWce2vYdr6PT7bdN03gKLt6fWJd2Mxks-vWbhC7',
       },
     ],
@@ -131,6 +143,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         value: BigInt(100000),
         memo: 'welcome message',
         sender:
+          'sbVxDJmJHGSKCfom0i33HRPFQvRY4t55ZVSSUwPuhRZcbIvJ0ou4hPHKv3HtGmOi',
+        owner:
           'sbVxDJmJHGSKCfom0i33HRPFQvRY4t55ZVSSUwPuhRZcbIvJ0ou4hPHKv3HtGmOi',
         asset: DEFAULT_ASSET,
       },
@@ -171,6 +185,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         memo: 'Experimental',
         sender:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        owner:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
       },
       {
         value: BigInt(8256000000),
@@ -178,12 +194,16 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         memo: 'My demo asset',
         sender:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        owner:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
       },
       {
         value: BigInt(9673000000),
         asset: DEMO_ASSETS[2],
         memo: 'My test asset',
         sender:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        owner:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
       },
     ],
@@ -193,6 +213,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         memo: 'aloha',
         sender:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        owner:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
         asset: DEFAULT_ASSET,
       },
       {
@@ -200,12 +222,16 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         memo: 'demo asset for you',
         sender:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        owner:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
         asset: DEMO_ASSETS[1],
       },
       {
         value: BigInt(297000000),
         memo: 'test asset for you',
         sender:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        owner:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
         asset: DEMO_ASSETS[2],
       },
@@ -242,6 +268,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         memo: 'Have A GOOD DAY',
         sender:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        owner:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
         asset: DEFAULT_ASSET,
       },
     ],
@@ -250,6 +278,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         value: BigInt(100000),
         memo: 'Have A GOOD DAY',
         sender:
+          'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
+        owner:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
         asset: DEFAULT_ASSET,
       },
@@ -286,6 +316,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         value: BigInt(100000),
         memo: 'TASTY',
         sender:
+          'OOlgJpCs_om-pVc7vhew3R58cfI5N0Stn4KKZNOVmx2tSN-2wHZTMqFqtL9ackOV',
+        owner:
           'OOlgJpCs_om-pVc7vhew3R58cfI5N0Stn4KKZNOVmx2tSN-2wHZTMqFqtL9ackOV',
         asset: DEFAULT_ASSET,
       },
@@ -422,6 +454,7 @@ class DemoTransactionsManager implements IIronfishTransactionManager {
               value: ACCOUNT_BALANCES[accountId][0]?.confirmed || BigInt(0),
               memo: memo,
               sender: publicAddress,
+              owner: accountId,
               asset: DEFAULT_ASSET,
             },
           ],
@@ -430,6 +463,7 @@ class DemoTransactionsManager implements IIronfishTransactionManager {
               value: amount,
               memo: memo,
               sender: accountId,
+              owner: publicAddress,
               asset: DEFAULT_ASSET,
             },
           ],

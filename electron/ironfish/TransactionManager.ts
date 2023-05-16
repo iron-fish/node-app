@@ -3,11 +3,11 @@ import { DecryptedNoteValue } from '@ironfish/sdk/build/src/wallet/walletdb/decr
 import {
   Account,
   IronfishNode,
-  Note,
   RawTransaction,
   TransactionType,
 } from '@ironfish/sdk'
 import { TransactionValue } from '@ironfish/sdk/build/src/wallet/walletdb/transactionValue'
+import { getAccountDecryptedNotes } from '@ironfish/sdk/build/src/rpc/routes/wallet/utils'
 import { sizeVarBytes } from 'bufio'
 import {
   IIronfishTransactionManager,
@@ -56,35 +56,22 @@ class TransactionManager
       spends.push(spend)
     }
 
-    const notesByAccount = await this.node.wallet.decryptNotes(
-      transaction.transaction,
-      null,
-      true,
-      [account]
+    const notes = await getAccountDecryptedNotes(
+      this.node,
+      account,
+      transaction
     )
-    const notes = notesByAccount.get(account.id) ?? []
 
-    const serializedNotes = []
-    for await (const decryptedNote of notes) {
-      const noteHash = decryptedNote.hash
-      const decryptedNoteForOwner = await account.getDecryptedNote(noteHash)
-
-      const isOwner = !!decryptedNoteForOwner
-      const note = decryptedNoteForOwner
-        ? decryptedNoteForOwner.note
-        : new Note(decryptedNote.serializedNote)
-
-      const asset = await this.assetManager.get(note.assetId())
-
-      serializedNotes.push({
-        isOwner,
-        value: note.value(),
-        memo: note.memo(),
-        owner: note.owner(),
-        asset,
-        sender: note.sender(),
+    const serializedNotes = await Promise.all(
+      notes.map(async note => {
+        const asset = await this.assetManager.get(note.assetId)
+        return {
+          ...note,
+          value: BigInt(note.value),
+          asset,
+        }
       })
-    }
+    )
 
     const assetAmounts: Amount[] = []
     const feePaid = transaction.transaction.fee()
@@ -124,6 +111,7 @@ class TransactionManager
           memo: n.note.memo(),
           sender: n.note.sender(),
           asset: await this.assetManager.get(n.note.assetId()),
+          owner: n.note.owner(),
         }))
       ),
       outputs: serializedNotes,
@@ -254,35 +242,40 @@ class TransactionManager
 
   async findByAddress(address: string, searchTerm?: string, sort?: SortType) {
     const transactions: Transaction[] = []
-    const accounts: Account[] = this.node.wallet.listAccounts()
+    let accounts: Account[] = this.node.wallet.listAccounts()
+    const accountIndex = accounts.findIndex(
+      account => account.publicAddress === address
+    )
+    //check transactions of account first is its exists in list
+    if (accountIndex !== -1) {
+      const existingAccount = accounts.splice(accountIndex, 1)
+      accounts = [...existingAccount, ...accounts]
+    }
 
     for (const account of accounts) {
       const head = await account.getHead()
       for await (const transaction of account.getTransactions()) {
-        let creatorNote
-        for await (const spend of transaction?.transaction?.spends) {
-          const noteHash = await account.getNoteHash(spend.nullifier)
-
-          if (noteHash) {
-            const decryptedNote = await account.getDecryptedNote(noteHash)
-            creatorNote = decryptedNote
-            break
-          }
-        }
-        const notes = transaction
-          ? await account.getTransactionNotes(transaction.transaction)
-          : []
+        //in case account in accounts list is in contacts list and transaction sent from another account in list
         if (
-          creatorNote?.note.sender() === address ||
-          notes.find(n => n.note.sender() === address)
-        ) {
-          transactions.push(
-            await this.resolveTransactionFields(
-              account,
-              head.sequence,
-              transaction
-            )
+          transactions.find(
+            st => st.hash === transaction.transaction.hash().toString('hex')
           )
+        ) {
+          continue
+        }
+        const serializedTransaction = await this.resolveTransactionFields(
+          account,
+          head.sequence,
+          transaction
+        )
+
+        if (
+          serializedTransaction.from === address ||
+          serializedTransaction.outputs.find(
+            note => note.sender === address || note.owner === address
+          )
+        ) {
+          transactions.push(serializedTransaction)
         }
       }
     }
