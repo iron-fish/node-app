@@ -15,7 +15,6 @@ import Contact from 'Types/Contact'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from 'Routes/data'
 import usePublicAddressValidator from 'Hooks/accounts/usePublicAddressValidator'
-import WarningMessage from 'Components/WarningMessage'
 
 const Information: FC = memo(() => {
   return (
@@ -79,19 +78,25 @@ const ContactSettings: FC<ContactSettingsProps> = ({
             onChange: e => setName(e.target.value),
           }}
         />
-        <TextField
-          label="Address"
-          value={address}
-          InputProps={{
-            onChange: e => setAddress(e.target.value),
-          }}
-        />
-        <WarningMessage
-          message="Public address is incorrect"
-          isVisible={!isValidAccount}
-          style="danger"
-          mt="-1rem"
-        />
+        <Box>
+          <TextField
+            label="Address"
+            value={address}
+            InputProps={{
+              onChange: e => setAddress(e.target.value),
+            }}
+            sx={{
+              ...(!isValidAccount && {
+                borderColor: `${NAMED_COLORS.RED} !important`,
+              }),
+            }}
+          />
+          {!isValidAccount && (
+            <chakra.h5 mt="1rem" color={NAMED_COLORS.RED}>
+              Public address is incorrect
+            </chakra.h5>
+          )}
+        </Box>
         <Flex>
           <Button
             p="2rem"

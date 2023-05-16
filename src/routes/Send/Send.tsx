@@ -272,7 +272,6 @@ const Send: FC = () => {
               mt="-1rem"
               mb="1rem"
             />
-
             <AccountsSelect
               label="From Account"
               mb="2rem"
