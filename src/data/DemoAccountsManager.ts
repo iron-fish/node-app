@@ -386,6 +386,10 @@ class DemoAccountsManager implements IIronfishAccountManager {
     return this.import(account)
   }
 
+  async isValidPublicAddress(address: string): Promise<boolean> {
+    return address.length === 64
+  }
+
   list(searchTerm?: string, sort?: SortType): Promise<CutAccount[]> {
     return new Promise(resolve =>
       setTimeout(() => {

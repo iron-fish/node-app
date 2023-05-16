@@ -1,4 +1,4 @@
-import { FC, memo, useState, useEffect } from 'react'
+import { FC, memo, useState, useEffect, useDeferredValue } from 'react'
 import {
   Flex,
   chakra,
@@ -14,12 +14,8 @@ import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 import Contact from 'Types/Contact'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from 'Routes/data'
-
-interface ContactSettingsProps {
-  contact: Contact
-  onUpdate?: (name: string, address: string) => Promise<void>
-  onDelete?: (identity: string) => Promise<void>
-}
+import usePublicAddressValidator from 'Hooks/accounts/usePublicAddressValidator'
+import WarningMessage from 'Components/WarningMessage'
 
 const Information: FC = memo(() => {
   return (
@@ -38,6 +34,12 @@ const Information: FC = memo(() => {
   )
 })
 
+interface ContactSettingsProps {
+  contact: Contact
+  onUpdate?: (name: string, address: string) => Promise<void>
+  onDelete?: (identity: string) => Promise<void>
+}
+
 const ContactSettings: FC<ContactSettingsProps> = ({
   contact,
   onUpdate,
@@ -45,7 +47,9 @@ const ContactSettings: FC<ContactSettingsProps> = ({
 }) => {
   const [name, setName] = useState('')
   const [address, setAddress] = useState('')
+  const deferredAddress = useDeferredValue(address)
   const navigate = useNavigate()
+  const { data: isValidAccount } = usePublicAddressValidator(deferredAddress)
   const toast = useIronToast({
     containerStyle: {
       mb: '1rem',
@@ -60,7 +64,9 @@ const ContactSettings: FC<ContactSettingsProps> = ({
   }, [JSON.stringify(contact)])
 
   const checkChanges: () => boolean = () => {
-    return name !== contact?.name || address !== contact?.address
+    return (
+      (name !== contact?.name || address !== contact?.address) && isValidAccount
+    )
   }
 
   return (
@@ -80,13 +86,19 @@ const ContactSettings: FC<ContactSettingsProps> = ({
             onChange: e => setAddress(e.target.value),
           }}
         />
+        <WarningMessage
+          message="Public address is incorrect"
+          isVisible={!isValidAccount}
+          style="danger"
+          mt="-1rem"
+        />
         <Flex>
           <Button
             p="2rem"
             borderRadius="4.5rem"
             variant="primary"
             mr="2rem"
-            disabled={!checkChanges()}
+            isDisabled={!checkChanges()}
             onClick={() =>
               onUpdate(name, address).then(() =>
                 toast({ title: 'Contact Details Updated' })

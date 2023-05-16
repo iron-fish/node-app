@@ -1,8 +1,9 @@
 import { FC } from 'react'
-import { Flex, chakra, FlexProps } from '@ironfish/ui-kit'
+import { FlexProps } from '@ironfish/ui-kit'
 import { useDataSync } from 'Providers/DataSyncProvider'
+import WarningMessage from './WarningMessage'
 
-interface SyncWarningMessageProps extends FlexProps {
+interface SyncWarningMessageProps extends Omit<FlexProps, 'style'> {
   message?: string
 }
 
@@ -12,30 +13,7 @@ const SyncWarningMessage: FC<SyncWarningMessageProps> = ({
 }) => {
   const { synced } = useDataSync()
 
-  return (
-    <Flex
-      display={synced ? 'none' : 'flex'}
-      borderRadius="0.3125rem"
-      bg={'#FFF9BC'}
-      _dark={{
-        bg: '#444123',
-      }}
-      height="4.3125rem"
-      justifyContent="center"
-      alignItems="center"
-      px="1rem"
-      {...rest}
-    >
-      <chakra.h4
-        color={'#7E7400'}
-        _dark={{
-          color: '#FFF9BC',
-        }}
-      >
-        {message}
-      </chakra.h4>
-    </Flex>
-  )
+  return <WarningMessage message={message} isVisible={synced} {...rest} />
 }
 
 export default SyncWarningMessage
