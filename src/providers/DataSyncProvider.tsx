@@ -53,6 +53,10 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const loadStatus = () =>
     window.IronfishManager.nodeStatus()
       .then(nextStatus => {
+        if (!nextStatus) {
+          return
+        }
+
         setNodeStatus(prevStatus => {
           let nextTotalSequences = nextStatus.blockchain.totalSequences
           if (
