@@ -15,6 +15,7 @@ import Contact from 'Types/Contact'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from 'Routes/data'
 import usePublicAddressValidator from 'Hooks/accounts/usePublicAddressValidator'
+import TextFieldErrorMessage from 'Components/TextFieldErrorMessage'
 
 const Information: FC = memo(() => {
   return (
@@ -48,7 +49,7 @@ const ContactSettings: FC<ContactSettingsProps> = ({
   const [address, setAddress] = useState('')
   const deferredAddress = useDeferredValue(address)
   const navigate = useNavigate()
-  const { data: isValidAccount } = usePublicAddressValidator(deferredAddress)
+  const isValidAccount = usePublicAddressValidator(deferredAddress)
   const toast = useIronToast({
     containerStyle: {
       mb: '1rem',
@@ -64,7 +65,10 @@ const ContactSettings: FC<ContactSettingsProps> = ({
 
   const checkChanges: () => boolean = () => {
     return (
-      (name !== contact?.name || address !== contact?.address) && isValidAccount
+      (name !== contact?.name || address !== contact?.address) &&
+      isValidAccount &&
+      address.length !== 0 &&
+      name.length !== 0
     )
   }
 
@@ -91,11 +95,10 @@ const ContactSettings: FC<ContactSettingsProps> = ({
               }),
             }}
           />
-          {!isValidAccount && (
-            <chakra.h5 mt="1rem" color={NAMED_COLORS.RED}>
-              Public address is incorrect
-            </chakra.h5>
-          )}
+          <TextFieldErrorMessage
+            message="Invalid public address"
+            showError={!isValidAccount}
+          />
         </Box>
         <Flex>
           <Button

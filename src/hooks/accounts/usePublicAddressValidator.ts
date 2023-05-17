@@ -1,19 +1,23 @@
-import { useEffect } from 'react'
-import useAsyncDataWrapper from '../useAsyncDataWrapper'
+import { useEffect, useState } from 'react'
+
+const PUBLIC_ADDRESS_LENGTH = 64
 
 const usePublicAddressValidator = (publicAddress: string) => {
-  const [result, promiseWrapper] = useAsyncDataWrapper<boolean>()
+  const [isValid, setValid] = useState(false)
 
-  const validateAddress = (address: string) =>
-    promiseWrapper(
-      window.IronfishManager.accounts.isValidPublicAddress(address)
-    )
+  const validateAddress = (address: string) => {
+    publicAddress && publicAddress.length === PUBLIC_ADDRESS_LENGTH
+      ? window.IronfishManager.accounts
+          .isValidPublicAddress(address)
+          .then(setValid)
+      : setValid(false)
+  }
 
   useEffect(() => {
-    publicAddress && validateAddress(publicAddress)
+    validateAddress(publicAddress)
   }, [publicAddress])
 
-  return result
+  return isValid
 }
 
 export default usePublicAddressValidator

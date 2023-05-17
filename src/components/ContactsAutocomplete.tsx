@@ -1,12 +1,4 @@
-import {
-  FC,
-  useMemo,
-  useEffect,
-  useState,
-  ReactNode,
-  useRef,
-  useDeferredValue,
-} from 'react'
+import { FC, useMemo, useEffect, useState, ReactNode, useRef } from 'react'
 import {
   Autocomplete,
   FlexProps,
@@ -14,12 +6,15 @@ import {
   chakra,
   Box,
   BoxProps,
+  useDebounce,
 } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 
 import useAddressBook from 'Hooks/addressBook/useAddressBook'
 import Contact from 'Types/Contact'
 import { truncateHash } from 'Utils/hash'
+import usePublicAddressValidator from 'Hooks/accounts/usePublicAddressValidator'
+import TextFieldErrorMessage from './TextFieldErrorMessage'
 
 interface ContactsAutocompleteProps extends FlexProps {
   contactId?: string
@@ -42,9 +37,6 @@ const getContactOptions = (contacts: Contact[] = []) =>
     helperText: truncateHash(contact.address, 2, 4),
     value: contact,
   }))
-
-const isValidPublicAddress = (address: string) =>
-  address ? address?.length === 64 : true
 
 const getSelectedOption = (
   options: ContactOption[] = [],
@@ -95,10 +87,11 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
   ...rest
 }) => {
   const [$searchTerm, $setSearchTerm] = useState('')
-  const [$isValidAddress, setIsValidAddress] = useState(true)
-  const $search = useDeferredValue($searchTerm)
+  const $search = useDebounce($searchTerm, 500)
   const [{ data: contacts = [], loaded: contactsLoaded }, , reloadContacts] =
     useAddressBook($search)
+
+  const isValidAccount = usePublicAddressValidator($search)
 
   const startOptions = useRef([])
 
@@ -134,13 +127,11 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
         options={options.length === 0 ? startOptions.current : options}
         value={getSelectedOption(options, address || $searchTerm, freeInput)}
         onSelectOption={option => {
-          setIsValidAddress(isValidPublicAddress(option.value.address))
           onSelectOption(option.value)
         }}
         filterOption={getOptionsFilter(options, $searchTerm)}
         onClose={() => {
           if (freeInput && options.length === 0) {
-            setIsValidAddress(isValidPublicAddress($searchTerm))
             onSelectOption({
               _id: $searchTerm,
               address: $searchTerm,
@@ -152,24 +143,29 @@ const ContactsAutocomplete: FC<ContactsAutocompleteProps> = ({
         onClear={() => {
           onSelectOption(null)
           $setSearchTerm('')
-          setIsValidAddress(true)
         }}
         InputProps={{
           placeholder: 'Input Text',
-          onChange: e => $setSearchTerm(e.target.value),
+          onChange: e => {
+            const search = e.target.value
+            if (!search) {
+              onSelectOption(null)
+            }
+            $setSearchTerm(search)
+          },
         }}
         sx={{
-          ...(!$isValidAddress && {
-            borderColor: `${NAMED_COLORS.RED} !important`,
-          }),
+          ...($search &&
+            !isValidAccount && {
+              borderColor: `${NAMED_COLORS.RED} !important`,
+            }),
         }}
         {...rest}
       />
-      {!$isValidAddress && (
-        <chakra.h5 mt="1rem" color={NAMED_COLORS.RED}>
-          Invalid address. Recipient addresses are 64 characters long
-        </chakra.h5>
-      )}
+      <TextFieldErrorMessage
+        message="Invalid public address"
+        showError={$search && !isValidAccount}
+      />
     </Box>
   )
 }
