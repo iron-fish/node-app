@@ -15,6 +15,7 @@ import { FC, useState, useEffect, memo, useMemo } from 'react'
 import pick from 'lodash/pick'
 import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
+import NodeWorkersSelect from './NodeWorkersSelect'
 
 const Information: FC = memo(() => {
   return (
@@ -130,7 +131,13 @@ const NodeSettings: FC = () => {
             />
           </Skeleton>
           <Skeleton variant="ironFish" isLoaded={!!data}>
-            <TextField
+            <NodeWorkersSelect
+              value={nodeSettings?.nodeWorkers?.toString()}
+              onSelectOption={selected =>
+                updateSettingValue('nodeWorkers', selected.value)
+              }
+            />
+            {/* <TextField
               label="Node workers"
               value={nodeSettings?.nodeWorkers?.toString()}
               InputProps={{
@@ -138,7 +145,7 @@ const NodeSettings: FC = () => {
                 onChange: e =>
                   updateSettingValue('nodeWorkers', e.target.value),
               }}
-            />
+            /> */}
           </Skeleton>
           <Skeleton variant="ironFish" isLoaded={!!data}>
             <TextField

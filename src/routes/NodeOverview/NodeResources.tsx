@@ -9,6 +9,7 @@ import {
 } from '@ironfish/ui-kit'
 import { FileUtils } from '@ironfish/sdk/build/src/utils/file'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
+import useNodeStatus from 'Hooks/node/useNodeStatus'
 
 interface NodeResourceProps {
   label: ReactNode
@@ -26,12 +27,8 @@ const NodeResource: FC<NodeResourceProps> = ({ label, value }) => (
   </Stat>
 )
 
-interface NodeResourcesProps {
-  data: NodeStatusResponse
-  loaded: boolean
-}
-
-const NodeResources: FC<NodeResourcesProps> = ({ data, loaded }) => {
+const NodeResources: FC<{ pauseTracking: boolean }> = ({ pauseTracking }) => {
+  const { loaded, data, error } = useNodeStatus(pauseTracking)
   const heapTotal = FileUtils.formatMemorySize(data?.memory.heapTotal)
   const heapUsed = FileUtils.formatMemorySize(data?.memory.heapUsed)
   const heapMax = FileUtils.formatMemorySize(data?.memory.heapMax)
