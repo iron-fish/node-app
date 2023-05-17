@@ -8,6 +8,7 @@ import {
   Link,
   ModalProps,
   useIronToast,
+  useDisclosure,
 } from '@ironfish/ui-kit'
 // import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 // import useAccountSettings from 'Hooks/accounts/useAccountSettings'
@@ -144,22 +145,21 @@ const RemoveAccountButton: FC<RemoveAccountButtonProps> = ({
   account,
   onDelete,
 }) => {
-  const [openRemoveAccountModal, setOpenRemoveAccountModal] =
-    useState<boolean>(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
-      <Link alignSelf="center" onClick={() => setOpenRemoveAccountModal(true)}>
+      <Link alignSelf="center" onClick={onOpen}>
         <chakra.h4>Delete Account</chakra.h4>
       </Link>
       <RemoveAccountModal
         account={account}
         onDelete={() => {
           onDelete()
-          setOpenRemoveAccountModal(false)
+          onClose()
         }}
-        isOpen={openRemoveAccountModal}
-        onClose={() => setOpenRemoveAccountModal(false)}
+        isOpen={isOpen}
+        onClose={onClose}
       />
     </>
   )
