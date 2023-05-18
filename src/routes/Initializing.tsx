@@ -1,10 +1,11 @@
-import { Flex, Box, Steps, Step } from '@ironfish/ui-kit'
-import { FC, useEffect, useState } from 'react'
+import { Flex, Box, Steps, Step, chakra, Button } from '@ironfish/ui-kit'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import IronFishLogo from 'Svgx/IronFishLogo'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import ROUTES from './data'
 import EventType from 'Types/EventType'
+import ModalWindow from 'Components/ModalWindow'
 
 enum STEPS {
   INITIALIZATION,
@@ -49,6 +50,7 @@ const getInitializationStatusDesc = (
 const Initializing: FC = () => {
   const [initStatus, setInitStatus] = useState<IronFishInitStatus | null>(null)
   const [hasAnyAccount, setHasAnyAccount] = useState<boolean | null>(null)
+  const [errors, setErrors] = useState(null)
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -66,12 +68,25 @@ const Initializing: FC = () => {
   }
 
   useEffect(() => {
+    window.ErrorManager.getErrors().then(setErrors)
+  }, [])
+
+  const hasErrors = useMemo(
+    () => initStatus === IronFishInitStatus.ERROR || !!errors?.length,
+    [initStatus, errors]
+  )
+
+  useEffect(() => {
     loadInitStatus()
     subscribeOnEvents()
   }, [])
 
   useEffect(() => {
     if (initStatus === null) {
+      return
+    }
+
+    if (hasErrors) {
       return
     }
 
@@ -91,7 +106,10 @@ const Initializing: FC = () => {
     if (initStatus === IronFishInitStatus.INITIALIZED && hasAnyAccount) {
       window.IronfishManager.start()
     }
-  }, [initStatus, hasAnyAccount])
+  }, [initStatus, hasAnyAccount, hasErrors])
+
+  const handleProcessError = () =>
+    window.ErrorManager.processError().then(setErrors)
 
   if (
     initStatus >= IronFishInitStatus.INITIALIZED &&
@@ -118,9 +136,10 @@ const Initializing: FC = () => {
 
   return (
     <>
-      {(initStatus === IronFishInitStatus.INITIALIZED &&
+      {!hasErrors &&
+      ((initStatus === IronFishInitStatus.INITIALIZED &&
         hasAnyAccount === false) ||
-      initStatus >= IronFishInitStatus.STARTED ? (
+        initStatus >= IronFishInitStatus.STARTED) ? (
         <Outlet />
       ) : (
         <Flex
@@ -131,8 +150,27 @@ const Initializing: FC = () => {
           justifyContent="center"
         >
           <Box mb="4rem">
-            <IronFishLogo height="4rem" isAnimated />
+            <IronFishLogo height="4rem" isAnimated={!hasErrors} />
           </Box>
+          {!!errors?.length && (
+            <ModalWindow
+              isOpen={!!errors?.length}
+              onClose={() => handleProcessError()}
+            >
+              <chakra.h2 mb="1rem">Error</chakra.h2>
+              <chakra.h4 mb="1.5rem">{errors.at(-1).message}</chakra.h4>
+              <Flex>
+                <Button
+                  variant="primary"
+                  size="medium"
+                  mr="1.5rem"
+                  onClick={() => handleProcessError()}
+                >
+                  Ok
+                </Button>
+              </Flex>
+            </ModalWindow>
+          )}
           {/* <Box w="100%" maxWidth="65.5rem">
             <Steps activeStep={currentStep}>
               <Step

@@ -194,6 +194,7 @@ export class IronFishManager implements IIronfishManager {
         await NodeUtils.waitForOpen(this.node)
       } else {
         log.error(error)
+        this.changeInitStatus(IronFishInitStatus.ERROR)
       }
     }
 
@@ -259,7 +260,7 @@ export class IronFishManager implements IIronfishManager {
 
   nodeStatus(): Promise<NodeStatusResponse> {
     if (
-      this.initStatus < IronFishInitStatus.INITIALIZED ||
+      this.initStatus < IronFishInitStatus.STARTED ||
       this.initStatus === IronFishInitStatus.ERROR
     ) {
       return Promise.resolve(null)
@@ -336,8 +337,6 @@ export class IronFishManager implements IIronfishManager {
     this.nodeSettings.setValues(values)
     await this.nodeSettings.save()
     await this.stop()
-    await this.initializeNode()
-    return this.start()
   }
 
   async start(): Promise<void> {
@@ -374,6 +373,7 @@ export class IronFishManager implements IIronfishManager {
   async stop(changeStatus = true): Promise<void> {
     await this.node?.shutdown()
     await this.node?.closeDB()
+    await this.node.waitForShutdown()
 
     if (changeStatus) {
       this.changeInitStatus(IronFishInitStatus.NOT_STARTED)

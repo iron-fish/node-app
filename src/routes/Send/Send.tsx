@@ -9,10 +9,9 @@ import {
   TextField,
   Button,
   Icon,
-  SelectField,
   NumberInput,
   NumberInputField,
-  useIronToast,
+  Autocomplete,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
@@ -110,8 +109,10 @@ const SendButton: FC<SendButtonProps> = ({ setStart, hasValidData }) => {
   )
 }
 
-const parseErrorMessage = (errorMessage: string) =>
-  errorMessage.substring(errorMessage.indexOf('Error:') + 6)
+const NOT_ENOUGH_FUNDS =
+  'This account does not have enough funds for this transaction'
+const HAS_PENDING_TRANSACTIONS =
+  'Please wait for any pending transactions to be confirmed'
 
 const Send: FC = () => {
   const location = useLocation()
@@ -123,6 +124,7 @@ const Send: FC = () => {
   const [txnMemo, setTxnMemo] = useState('')
   const [startSendFlow, setStart] = useState(false)
   const [selectedFee, setSelectedFee] = useState<OptionType>()
+  const [error, setError] = useState('')
   const {
     data: fees,
     loaded: feeCalculated,
@@ -133,17 +135,6 @@ const Send: FC = () => {
     memo: txnMemo,
     assetId: balance?.asset.id,
   })
-  const toast = useIronToast({
-    containerStyle: {
-      mb: '1rem',
-    },
-  })
-
-  useEffect(() => {
-    if (feeError?.message) {
-      toast({ title: parseErrorMessage(feeError.message), status: 'error' })
-    }
-  }, [feeError])
 
   const feeOptions = Object.entries(fees || {}).map(([key, value]) =>
     getEstimatedFeeOption(key, value)
@@ -167,14 +158,20 @@ const Send: FC = () => {
     }
   }, [feeCalculated])
 
-  const hasEnoughIron = useMemo(() => {
+  useEffect(() => {
+    if (balance?.available === BigInt(0)) {
+      return setError(HAS_PENDING_TRANSACTIONS)
+    }
     if (balance?.confirmed === BigInt(0)) {
-      return false
+      return setError(NOT_ENOUGH_FUNDS)
     }
     const fee = selectedFee?.value || BigInt(0)
     const ironAmount = decodeIron(amount || 0)
-    return balance?.confirmed >= ironAmount + fee
-  }, [balance?.confirmed, amount, selectedFee?.value])
+    if (balance?.confirmed < ironAmount + fee) {
+      return setError(NOT_ENOUGH_FUNDS)
+    }
+    setError('')
+  }, [balance?.available, balance?.confirmed, amount, selectedFee?.value])
 
   const hasInvalidData = useMemo(() => {
     return !(
@@ -182,9 +179,9 @@ const Send: FC = () => {
       account &&
       contact &&
       Number(amount) &&
-      hasEnoughIron
+      !error
     )
-  }, [selectedFee?.value, account, contact, hasEnoughIron, amount])
+  }, [selectedFee?.value, account, contact, error, amount])
 
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
@@ -234,7 +231,7 @@ const Send: FC = () => {
                     }
                     decodeIron(valueString)
                     setAmount(valueString)
-                  } catch (error) {
+                  } catch (err) {
                     return
                   }
                 }}
@@ -267,7 +264,7 @@ const Send: FC = () => {
             {/* <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5> */}
           </Flex>
           <Box mr="-0.25rem">
-            {!hasEnoughIron && (
+            {error && (
               <Flex
                 w="100%"
                 borderRadius="0.3125rem"
@@ -281,9 +278,7 @@ const Send: FC = () => {
                 alignItems="center"
                 justifyContent="center"
               >
-                <chakra.h4 color={NAMED_COLORS.RED}>
-                  This account does not have enough funds for this transaction
-                </chakra.h4>
+                <chakra.h4 color={NAMED_COLORS.RED}>{error}</chakra.h4>
               </Flex>
             )}
             <AccountsSelect
@@ -292,6 +287,7 @@ const Send: FC = () => {
               accountId={account?.id || state?.accountId}
               onSelectOption={setAccount}
               showBalance={false}
+              watchBalance={true}
             />
             <AccountAssetsSelect
               mb="2rem"
@@ -316,12 +312,13 @@ const Send: FC = () => {
               containerProps={{ mb: '2rem' }}
             />
             <Flex mb="2rem" gap="2rem">
-              <SelectField
+              <Autocomplete
                 width="50%"
                 label="Estimated Fee $IRON"
                 value={selectedFee}
                 options={feeOptions}
                 onSelectOption={selected => setSelectedFee(selected)}
+                emptyOption="Select receiver or wait for pending transactions"
               />
               <TextField
                 w="50%"

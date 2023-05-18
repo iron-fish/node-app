@@ -1,5 +1,6 @@
 import AccountSettings from 'Types/AccountSettings'
 import Contact from 'Types/Contact'
+import IErrorManager from 'Types/ErrorManagerTypes'
 import EventType from 'Types/EventType'
 import IIronfishManager from 'Types/IronfishManager/IIronfishManager'
 import IStorage from 'Types/IStorage'
@@ -14,5 +15,6 @@ declare global {
     subscribeOn: (type: EventType, callback: (...args: any[]) => void) => void
     IronfishManager: IIronfishManager
     UpdateManager: IUpdateManager
+    ErrorManager: IErrorManager
   }
 }
