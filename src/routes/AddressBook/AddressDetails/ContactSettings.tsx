@@ -57,8 +57,8 @@ const RemoveContactButton: FC<RemoveContactButtonProps> = ({
         <h4>Delete Contact</h4>
       </Link>
       <ModalWindow isOpen={isOpen} onClose={onClose}>
-        <chakra.h2 mb="16px">Remove Contact</chakra.h2>
-        <chakra.h4 mb="32px">
+        <chakra.h2 mb="1rem">Remove Contact</chakra.h2>
+        <chakra.h4 mb="2rem">
           You’re about to remove contact “{contact?.name}” from address book.
         </chakra.h4>
         <Flex>
