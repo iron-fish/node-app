@@ -71,11 +71,13 @@ class AccountManagerContext implements IIronfishAccountManager {
       account
     )
   }
-  export = (id: string) => {
+  export = (id: string, encode?: boolean, viewOnly?: boolean) => {
     return ipcRenderer.invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.EXPORT,
-      id
+      id,
+      encode,
+      viewOnly
     )
   }
   balance = (id: string, assetId?: string) => {
