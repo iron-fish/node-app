@@ -5,6 +5,7 @@ import {
   FormLabel,
   Button,
   useDisclosure,
+  NAMED_COLORS,
 } from '@ironfish/ui-kit'
 import useNodeSettings from 'Hooks/node/useNodeSettings'
 import ModalWindow from 'Components/ModalWindow'
@@ -33,8 +34,16 @@ const FirstRunTelemetryModal = () => {
     <ModalWindow isOpen={isOpen} onClose={onClose}>
       <chakra.h2 mb="1rem">Telemetry</chakra.h2>
       <chakra.h4 mb="1.5rem">
-        In order to improve Iron Fish we collecting telemetry you can disable it
-        now or late in node setting.
+        We'd like to collect your{' '}
+        <Button
+          variant="link"
+          color={NAMED_COLORS.LIGHT_BLUE}
+          onClick={() => window.open('https://stats.ironfish.network/?orgId=1')}
+        >
+          telemetry
+        </Button>{' '}
+        in order to continually improve your experience. You can enable or
+        disable this at any time in the node settings page.
       </chakra.h4>
       <FormControl mb="1.5rem" display="flex" alignItems="center">
         <SwitchToggle
@@ -44,7 +53,7 @@ const FirstRunTelemetryModal = () => {
           mr="1rem"
         />
         <FormLabel htmlFor="toggle-telemetry" mb="0">
-          {enableTelemetry ? 'Disable telemetry' : 'Enable telemetry'}
+          {enableTelemetry ? 'Telemetry disabled' : 'Telemetry enabled'}
         </FormLabel>
       </FormControl>
       <Button
@@ -58,7 +67,7 @@ const FirstRunTelemetryModal = () => {
           onClose()
         }}
       >
-        <chakra.h4>Confirm</chakra.h4>
+        <chakra.h4>Continue</chakra.h4>
       </Button>
     </ModalWindow>
   )

@@ -9,7 +9,8 @@ import {
   Box,
   NAMED_COLORS,
   Grid,
-  Checkbox,
+  FormControl,
+  FormLabel,
 } from '@ironfish/ui-kit'
 import useNodeSettings from 'Hooks/node/useNodeSettings'
 import { FC, useState, useEffect, memo, useMemo } from 'react'
@@ -17,6 +18,7 @@ import pick from 'lodash/pick'
 import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 import NodeWorkersSelect from './NodeWorkersSelect'
+import SwitchToggle from 'Components/SwitchToggle'
 
 const Information: FC = memo(() => {
   return (
@@ -188,15 +190,22 @@ const NodeSettings: FC = () => {
               >
                 Telemetry
               </chakra.h6>
-              <Checkbox
-                pl="0.25rem"
-                isChecked={nodeSettings?.enableTelemetry}
-                onChange={e =>
-                  updateSettingValue('enableTelemetry', e.target.checked)
-                }
-              >
-                Collect telemetry
-              </Checkbox>
+              <FormControl display="flex" alignItems="center">
+                <SwitchToggle
+                  size="md"
+                  id="toggle-telemetry"
+                  isChecked={nodeSettings?.enableTelemetry}
+                  onChange={e =>
+                    updateSettingValue('enableTelemetry', e.target.checked)
+                  }
+                  mr="0.5rem"
+                />
+                <FormLabel htmlFor="toggle-telemetry" mb="0">
+                  {nodeSettings?.enableTelemetry
+                    ? 'Telemetry disabled'
+                    : 'Telemetry enabled'}
+                </FormLabel>
+              </FormControl>
             </Flex>
           </Skeleton>
           <Flex w="50%" />
