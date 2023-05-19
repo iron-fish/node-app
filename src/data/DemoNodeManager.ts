@@ -44,6 +44,7 @@ export const STATUS: NodeStatusResponse = {
     inboundTraffic: Math.random() * 100,
     outboundTraffic: Math.random() * 100,
   },
+  accounts: [{ sequence: '0' }],
 }
 
 const PEERS: Peer[] = Array(23)
