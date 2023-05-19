@@ -65,6 +65,7 @@ const Initializing: FC = () => {
     window.subscribeOn(EventType.ACCOUNTS_CHANGE, count =>
       setHasAnyAccount(count > 0)
     )
+    window.subscribeOn(EventType.CRITICAL_ERROR, setErrors)
   }
 
   useEffect(() => {
@@ -111,6 +112,8 @@ const Initializing: FC = () => {
   const handleProcessError = () =>
     window.ErrorManager.processError().then(setErrors)
 
+  const handleDump = () => window.IronfishManager.dump()
+
   if (
     initStatus >= IronFishInitStatus.INITIALIZED &&
     hasAnyAccount === false &&
@@ -133,6 +136,9 @@ const Initializing: FC = () => {
   }
 
   // const currentStep = getActiveStep(initStatus)
+
+  console.log('hasErrors', hasErrors)
+  console.log('initStatus', initStatus)
 
   return (
     <>
@@ -168,6 +174,16 @@ const Initializing: FC = () => {
                 >
                   Ok
                 </Button>
+                {initStatus >= IronFishInitStatus.INITIALIZED && (
+                  <Button
+                    variant="primary"
+                    size="medium"
+                    mr="1.5rem"
+                    onClick={() => handleDump()}
+                  >
+                    Dump
+                  </Button>
+                )}
               </Flex>
             </ModalWindow>
           )}

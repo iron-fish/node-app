@@ -9,7 +9,7 @@ class AccountSettingsStorage extends AbstractStorage<AccountSettings> {
   constructor() {
     super(
       {
-        filename: `${getAppHomeFolder()}/${ACCOUNTS_SETTINGS_STORAGE_NAME}`,
+        filename: getAppHomeFolder('/', ACCOUNTS_SETTINGS_STORAGE_NAME),
         autoload: true,
         timestampData: true,
       },

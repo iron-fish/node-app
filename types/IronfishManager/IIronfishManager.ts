@@ -12,6 +12,7 @@ import { IIronfishSnapshotManager } from './IIronfishSnapshotManager'
 export enum IronfishManagerAction {
   CHAIN_PROGRESS = 'chainProgress',
   DOWNLOAD_SNAPSHOT = 'downloadChainSnapshot',
+  DUMP = 'dump',
   GET_NODE_CONFIG = 'getNodeConfig',
   HAS_ANY_ACCOUNT = 'hasAnyAccount',
   INITIALIZE = 'initialize',
@@ -34,6 +35,7 @@ export interface IIronfishManager {
 
   chainProgress: () => Promise<number>
   downloadChainSnapshot: (path?: string) => Promise<void>
+  dump: () => Promise<boolean>
   getNodeConfig: () => Promise<Partial<ConfigOptions>>
   hasAnyAccount: () => Promise<boolean>
   initialize: () => Promise<void>

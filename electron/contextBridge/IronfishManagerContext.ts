@@ -59,6 +59,9 @@ class IronfishManagerContext implements IIronfishManager {
       path
     )
   }
+  dump = () => {
+    return ipcRenderer.invoke('ironfish-manager', IronfishManagerAction.DUMP)
+  }
   nodeStatus = () => {
     return ipcRenderer.invoke(
       'ironfish-manager',

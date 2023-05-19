@@ -58,6 +58,10 @@ class DemoDataManager implements IIronfishManager {
     )
   }
 
+  async dump(): Promise<boolean> {
+    return true
+  }
+
   async getNodeConfig(): Promise<Partial<ConfigOptions>> {
     return this.nodeSettings.getConfig()
   }

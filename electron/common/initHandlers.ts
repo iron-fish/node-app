@@ -111,18 +111,16 @@ ipcMain.handle(
     try {
       result = await UpdateManager[action](...args)
     } catch (error) {
-      // eslint-disable-next-line no-console
-      log.error(error)
+      if (error.isAxiosError) {
+        log.error(error?.code, '|', error?.config?.url, '|', error?.message)
+      } else {
+        log.error(error)
+      }
     }
 
     return result
   }
 )
-
-process.on('uncaughtException', err => {
-  errorManager.addError(err)
-  log.error(err)
-})
 
 ipcMain.handle(
   'error-manager',
@@ -138,6 +136,16 @@ ipcMain.handle(
     return result
   }
 )
+
+log.errorHandler.startCatching({
+  showDialog: false,
+  onError({ error, versions }) {
+    errorManager.addError(error)
+    log.error('Version Info:', versions)
+    log.error('Process Type:', processType)
+    log.error(error)
+  },
+})
 
 process.on('exit', shutdownNode)
 process.on('SIGINT', shutdownNode)

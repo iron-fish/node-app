@@ -10,12 +10,13 @@ import {
   ConfigOptions,
   getPackageFrom,
   DatabaseVersionError,
+  Peer as SDKPeer,
+  GetWorkersStatusResponse,
 } from '@ironfish/sdk'
 import geoip from 'geoip-lite'
 import log from 'electron-log'
 import fsAsync from 'fs/promises'
 import dns from 'dns/promises'
-import { BrowserWindow } from 'electron'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
@@ -30,6 +31,8 @@ import SnapshotManager from './SnapshotManager'
 import { createAppLogger } from '../utils/AppLogger'
 import EventType from 'Types/EventType'
 import { ERROR_MESSAGES } from '../utils/constants'
+import sendMessageToRender from '../utils/sendMessageToRender'
+import { WorkerMessageType } from '@ironfish/sdk/build/src/workerPool/tasks/workerMessage'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -44,17 +47,13 @@ export class IronFishManager implements IIronfishManager {
   private changeInitStatus(initStatus: IronFishInitStatus) {
     if (this.initStatus !== initStatus) {
       this.initStatus = initStatus
-      BrowserWindow.getAllWindows().forEach(window => {
-        window.webContents.send(EventType.INIT_STATUS_CHANGE, initStatus)
-      })
+      sendMessageToRender(EventType.INIT_STATUS_CHANGE, initStatus)
     }
   }
 
   private initEventListeners() {
-    this.node.peerNetwork.peerManager.onConnectedPeersChanged.on(() => {
-      BrowserWindow.getAllWindows().forEach(async window => {
-        window.webContents.send(EventType.PEERS_CHANGE, await this.getPeers())
-      })
+    this.node.peerNetwork.peerManager.onConnectedPeersChanged.on(async () => {
+      sendMessageToRender(EventType.PEERS_CHANGE, await this.getPeers())
     })
 
     this.accounts.initEventListeners()
@@ -253,8 +252,8 @@ export class IronFishManager implements IIronfishManager {
       await this.initializeSdk()
       await this.initializeNode()
     } catch (e) {
-      this.changeInitStatus(IronFishInitStatus.ERROR)
       log.error(e)
+      this.changeInitStatus(IronFishInitStatus.ERROR)
     }
   }
 
@@ -386,5 +385,79 @@ export class IronFishManager implements IIronfishManager {
 
   async sync(): Promise<void> {
     await this.node.syncer.peerNetwork.start()
+  }
+
+  async dump(): Promise<boolean> {
+    let succeed = false
+    log.error('------------Iron Fish Manager Dump Start------------')
+    if (this.node) {
+      const nodeStatus = await this.nodeStatus()
+      const config = await this.getNodeConfig()
+      const memPool = {
+        size: this.node.memPool.count(),
+        sizeBytes: this.node.memPool.sizeBytes(),
+        maxSizeBytes: this.node.memPool.maxSizeBytes,
+        headSequence: this.node.memPool.head?.sequence || 0,
+        evictions: this.node.metrics.memPoolEvictions.value,
+        recentlyEvictedCache: this.node.memPool.recentlyEvictedCacheStats(),
+      }
+      const result: GetWorkersStatusResponse['jobs'] = []
+
+      for (const type of this.node.workerPool.stats.keys()) {
+        if (
+          type === WorkerMessageType.JobAborted ||
+          type === WorkerMessageType.Sleep
+        ) {
+          continue
+        }
+
+        const job = this.node.workerPool.stats.get(type)
+
+        if (job) {
+          result.push({ name: WorkerMessageType[type], ...job })
+        }
+      }
+      const workersStatus = {
+        started: this.node.workerPool.started,
+        workers: this.node.workerPool.workers.length,
+        executing: this.node.workerPool.executing,
+        queued: this.node.workerPool.queued,
+        capacity: this.node.workerPool.capacity,
+        change: MathUtils.round(this.node.workerPool.change?.rate5s ?? 0, 2),
+        speed: MathUtils.round(this.node.workerPool.speed?.rate5s ?? 0, 2),
+        jobs: result,
+      }
+
+      let peers: {
+        identity: string
+        status: SDKPeer['state']['type']
+        address: string
+      }[] = []
+      if (this.node.peerNetwork?.peerManager?.peers) {
+        peers = this.node.peerNetwork.peerManager.peers.map(
+          ({ state: { type, identity }, address }) => ({
+            identity,
+            status: type,
+            address,
+          })
+        )
+      }
+
+      log.error('Node status: ')
+      log.error(nodeStatus)
+      log.error('Node config: ')
+      log.error(config)
+      log.error('Node memPool status: ')
+      log.error(memPool)
+      log.error('Node peers Status: ')
+      log.error(peers)
+      log.error('Node peers workersStatus: ')
+      log.error(workersStatus)
+      succeed = true
+    } else {
+      log.error('Node was not initialized')
+    }
+    log.error('------------Iron Fish Manager Dump End------------')
+    return succeed
   }
 }
