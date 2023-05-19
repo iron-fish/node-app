@@ -136,10 +136,6 @@ const Initializing: FC = () => {
   }
 
   // const currentStep = getActiveStep(initStatus)
-
-  console.log('hasErrors', hasErrors)
-  console.log('initStatus', initStatus)
-
   return (
     <>
       {!hasErrors &&
