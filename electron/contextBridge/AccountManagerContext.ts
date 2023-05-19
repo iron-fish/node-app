@@ -71,6 +71,13 @@ class AccountManagerContext implements IIronfishAccountManager {
       account
     )
   }
+  isValidPublicAddress = (address: string) => {
+    return ipcRenderer.invoke(
+      'ironfish-manager-accounts',
+      IronfishAccountManagerAction.IS_VALID_PUBLIC_ADDRESS,
+      address
+    )
+  }
   export = (id: string, encode?: boolean, viewOnly?: boolean) => {
     return ipcRenderer.invoke(
       'ironfish-manager-accounts',
