@@ -53,7 +53,7 @@ const FirstRunTelemetryModal = () => {
           mr="1rem"
         />
         <FormLabel htmlFor="toggle-telemetry" mb="0">
-          {enableTelemetry ? 'Telemetry disabled' : 'Telemetry enabled'}
+          {enableTelemetry ? 'Telemetry enabled' : 'Telemetry disabled'}
         </FormLabel>
       </FormControl>
       <Button

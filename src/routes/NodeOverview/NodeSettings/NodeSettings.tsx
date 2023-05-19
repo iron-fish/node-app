@@ -202,8 +202,8 @@ const NodeSettings: FC = () => {
                 />
                 <FormLabel htmlFor="toggle-telemetry" mb="0">
                   {nodeSettings?.enableTelemetry
-                    ? 'Telemetry disabled'
-                    : 'Telemetry enabled'}
+                    ? 'Telemetry enabled'
+                    : 'Telemetry disabled'}
                 </FormLabel>
               </FormControl>
             </Flex>
