@@ -104,7 +104,6 @@ export const StatusItem: FC<StatusItemProps> = ({
   ...props
 }) => {
   const small = useBreakpointValue({ base: true, sm: false })
-
   return (
     <Tooltip
       label={
