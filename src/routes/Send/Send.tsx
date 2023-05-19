@@ -262,7 +262,11 @@ const Send: FC = () => {
                 {balance?.asset.name || '$IRON'}
               </InputRightAddon>
             </InputGroup>
-            {/* <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5> */}
+            <chakra.h5>{`Account Balance: ${
+              balance?.confirmed
+                ? formatOreToTronWithLanguage(balance.confirmed)
+                : 0
+            }`}</chakra.h5>
           </Flex>
           <Box mr="-0.25rem">
             <WarningMessage
@@ -272,14 +276,25 @@ const Send: FC = () => {
               mt="-1rem"
               mb="1rem"
             />
-            <AccountsSelect
-              label="From Account"
-              mb="2rem"
-              accountId={account?.id || state?.accountId}
-              onSelectOption={setAccount}
-              showBalance={false}
-              watchBalance={true}
-            />
+            <Box
+              sx={{
+                '.select-field__value-text.select-field__value-text': {
+                  color: 'inherit',
+                },
+                '.option-text.option-text': {
+                  color: 'inherit',
+                },
+              }}
+            >
+              <AccountsSelect
+                label="From Account"
+                mb="2rem"
+                accountId={account?.id || state?.accountId}
+                onSelectOption={setAccount}
+                showBalance={false}
+                watchBalance={true}
+              />
+            </Box>
             <AccountAssetsSelect
               mb="2rem"
               label="Asset"
