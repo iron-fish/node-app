@@ -16,6 +16,7 @@ export enum IronfishAccountManagerAction {
   IMPORT = 'import',
   IMPORT_BY_ENCODED_KEY = 'importByEncodedKey',
   IMPORT_BY_MNEMONIC = 'importByMnemonic',
+  IS_VALID_PUBLIC_ADDRESS = 'isValidPublicAddress',
   LIST = 'list',
   PREPARE_ACCOUNT = 'prepareAccount',
   SUBMIT_ACCOUNT = 'submitAccount',
@@ -35,6 +36,7 @@ export interface IIronfishAccountManager {
   import: (account: Omit<AccountValue, 'rescan'>) => Promise<AccountValue>
   importByEncodedKey: (data: string) => Promise<AccountValue>
   importByMnemonic: (name: string, mnemonic: string) => Promise<AccountValue>
+  isValidPublicAddress: (address: string) => Promise<boolean>
   list: (search?: string, sort?: SortType) => Promise<CutAccount[]>
   prepareAccount: () => Promise<AccountCreateParams>
   submitAccount: (createParams: AccountValue) => Promise<Account>

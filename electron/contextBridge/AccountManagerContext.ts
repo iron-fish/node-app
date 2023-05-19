@@ -71,11 +71,20 @@ class AccountManagerContext implements IIronfishAccountManager {
       account
     )
   }
-  export = (id: string) => {
+  isValidPublicAddress = (address: string) => {
+    return ipcRenderer.invoke(
+      'ironfish-manager-accounts',
+      IronfishAccountManagerAction.IS_VALID_PUBLIC_ADDRESS,
+      address
+    )
+  }
+  export = (id: string, encode?: boolean, viewOnly?: boolean) => {
     return ipcRenderer.invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.EXPORT,
-      id
+      id,
+      encode,
+      viewOnly
     )
   }
   balance = (id: string, assetId?: string) => {

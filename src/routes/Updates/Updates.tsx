@@ -13,6 +13,7 @@ import { ROUTES } from '..'
 import { useReleaseNotesProvider } from 'Providers/ReleaseNotesProvider'
 import { ReleaseNote, UpdateMonthVersion } from 'Types/IUpdateManager'
 import { useDataSync } from 'Providers/DataSyncProvider'
+import EmptyOverview from 'Components/EmptyOverview'
 
 interface ReleaseNoteProps {
   note: ReleaseNote
@@ -90,10 +91,10 @@ const UpdateList: FC = () => {
   const [intersectionId, setIntersectionId] = useState(null)
   const { data, loaded } = useReleaseNotesProvider()
 
-  const monthRange: UpdateMonthVersion[] = useMemo(() => {
-    const month = data?.metadata?.month_range || new Array(12).fill({})
-    return month
-  }, [data?.metadata])
+  const monthRange: UpdateMonthVersion[] = useMemo(
+    () => data?.metadata?.month_range || [],
+    [data?.metadata]
+  )
 
   const tags = useMemo(
     () => monthRange?.map(item => item?.version),
@@ -109,110 +110,129 @@ const UpdateList: FC = () => {
     [tags]
   )
 
+  if (loaded && !data?.data) {
+    return (
+      <EmptyOverview
+        alignItems="center"
+        h="calc(100vh - 18.75rem)"
+        header="No updates available"
+      />
+    )
+  }
+
   return (
     <Flex justifyContent="space-between">
       <Flex direction="column" w="calc(100% - 13rem)">
-        {(data?.data || new Array(3).fill(null))?.map((note, index) => {
-          return note ? (
-            <ReleaseNoteItem
-              key={note.version}
-              note={note}
-              setIntersectionId={handleVisibleTagChange}
-            />
-          ) : (
-            <Skeleton
-              key={index}
-              variant="ironFish"
-              my="1rem"
-              w="100%"
-              h="200px"
-              isLoaded={loaded}
-            />
-          )
-        })}
-      </Flex>
-      <Flex
-        direction="column"
-        w="7rem"
-        position="fixed"
-        top="11.75rem"
-        right="4rem"
-      >
-        <Box mb="1.25rem" letterSpacing="0.01rem">
-          <b>RELEASES</b>
-        </Box>
-        {monthRange.map(({ month, version }, index) =>
-          month && version ? (
-            <Link
-              key={`${month}-${version}`}
-              mb="1.25rem"
-              color={
-                intersectionId === version
-                  ? NAMED_COLORS.BLACK
-                  : NAMED_COLORS.GREY
-              }
-              _dark={{
-                color:
-                  intersectionId === version
-                    ? NAMED_COLORS.WHITE
-                    : NAMED_COLORS.PALE_GREY,
-              }}
-              onClick={() => {
-                const element = document.getElementById(version)
-                if (element) {
-                  element.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                  })
-                }
-              }}
-            >
-              {month}
-            </Link>
-          ) : (
-            <Skeleton
-              key={index}
-              variant="ironFish"
-              w="100%"
-              h="1.5rem"
-              mb="1rem"
-              isLoaded={loaded}
-            />
-          )
+        {((loaded && data.data) || new Array(3).fill(null))?.map(
+          (note, index) => {
+            return note ? (
+              <ReleaseNoteItem
+                key={note.version}
+                note={note}
+                setIntersectionId={handleVisibleTagChange}
+              />
+            ) : (
+              <Skeleton
+                key={index}
+                variant="ironFish"
+                my="1rem"
+                w="100%"
+                h="200px"
+                isLoaded={loaded}
+              />
+            )
+          }
         )}
       </Flex>
+      {!!monthRange.length && (
+        <Flex
+          direction="column"
+          w="7rem"
+          position="fixed"
+          top="11.75rem"
+          right="4rem"
+        >
+          <Box mb="1.25rem" letterSpacing="0.01rem">
+            <b>RELEASES</b>
+          </Box>
+          {monthRange.map(({ month, version }, index) =>
+            month && version ? (
+              <Link
+                key={`${month}-${version}`}
+                mb="1.25rem"
+                color={
+                  intersectionId === version
+                    ? NAMED_COLORS.BLACK
+                    : NAMED_COLORS.GREY
+                }
+                _dark={{
+                  color:
+                    intersectionId === version
+                      ? NAMED_COLORS.WHITE
+                      : NAMED_COLORS.PALE_GREY,
+                }}
+                onClick={() => {
+                  const element = document.getElementById(version)
+                  if (element) {
+                    element.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'center',
+                    })
+                  }
+                }}
+              >
+                {month}
+              </Link>
+            ) : (
+              <Skeleton
+                key={index}
+                variant="ironFish"
+                w="100%"
+                h="1.5rem"
+                mb="1rem"
+                isLoaded={loaded}
+              />
+            )
+          )}
+        </Flex>
+      )}
+    </Flex>
+  )
+}
+
+const VersionBadge = () => {
+  const {
+    updates: { status },
+  } = useDataSync()
+  return (
+    <Flex
+      ml="0.5rem"
+      h="2rem"
+      bg={NAMED_COLORS.LIGHTER_GREY}
+      color={NAMED_COLORS.GREY}
+      _dark={{
+        bg: NAMED_COLORS.DARK_GREY,
+        color: NAMED_COLORS.PALE_GREY,
+      }}
+      alignItems="center"
+      justifyContent="center"
+      borderRadius="0.25rem"
+    >
+      <chakra.h5 my="0.25rem" mx="1rem">
+        Version {status?.version}
+      </chakra.h5>
     </Flex>
   )
 }
 
 const Updates: FC = () => {
-  const {
-    updates: { status },
-  } = useDataSync()
-
   return (
     <Box w="100%">
       <Flex alignItems="center" h="4rem">
         <Box mr="1rem">
           <chakra.h2>Updates</chakra.h2>
         </Box>
-        <Flex
-          ml="0.5rem"
-          h="2rem"
-          bg={NAMED_COLORS.LIGHTER_GREY}
-          color={NAMED_COLORS.GREY}
-          _dark={{
-            bg: NAMED_COLORS.DARK_GREY,
-            color: NAMED_COLORS.PALE_GREY,
-          }}
-          alignItems="center"
-          justifyContent="center"
-          borderRadius="0.25rem"
-        >
-          <chakra.h5 my="0.25rem" mx="1rem">
-            Version {status?.version}
-          </chakra.h5>
-        </Flex>
+        <VersionBadge />
       </Flex>
       <UpdateList />
     </Box>

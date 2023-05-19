@@ -257,14 +257,13 @@ export class IronFishManager implements IIronfishManager {
     }
   }
 
-  nodeStatus(): Promise<NodeStatusResponse> {
+  async nodeStatus(): Promise<NodeStatusResponse> {
     if (
       this.initStatus < IronFishInitStatus.STARTED ||
       this.initStatus === IronFishInitStatus.ERROR
     ) {
       return Promise.resolve(null)
     }
-
     let totalSequences = 0
     const peers = this.node.peerNetwork.peerManager
       .getConnectedPeers()
@@ -273,6 +272,10 @@ export class IronFishManager implements IIronfishManager {
     if (peers.length > 0) {
       totalSequences = peers[0].sequence
     }
+    const client = await this.sdk.connectRpc()
+    const accounts = (await client.wallet.getAccountsStatus({})).content
+      .accounts
+
     const status = {
       node: {
         status: this.node.started
@@ -324,6 +327,7 @@ export class IronFishManager implements IIronfishManager {
         headTimestamp: this.node.chain.head.timestamp.getTime(),
         newBlockSpeed: this.node.metrics.chain_newBlock.avg,
       },
+      accounts: accounts,
     }
     return Promise.resolve(status)
   }

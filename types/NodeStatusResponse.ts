@@ -44,6 +44,13 @@ export type NodeStatusResponse = Partial<{
       ours: string
     }>
   }>
+  accounts: Partial<{
+    name: string
+    id: string
+    headHash: string
+    headInChain: boolean
+    sequence: string | number
+  }>[]
 }>
 
 export default NodeStatusResponse

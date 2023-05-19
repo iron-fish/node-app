@@ -1,40 +1,24 @@
 import { FC } from 'react'
-import { Flex, chakra, FlexProps } from '@ironfish/ui-kit'
+import { FlexProps } from '@ironfish/ui-kit'
 import { useDataSync } from 'Providers/DataSyncProvider'
+import WarningMessage from './WarningMessage'
 
-interface SyncWarningMessageProps extends FlexProps {
+interface SyncWarningMessageProps extends Omit<FlexProps, 'style'> {
   message?: string
 }
 
 const SyncWarningMessage: FC<SyncWarningMessageProps> = ({
-  message = 'Your account balance might not be accurate while you’re syncing to the blockchain',
+  message = 'Your account balance might not be accurate while you’re syncing',
   ...rest
 }) => {
-  const { synced } = useDataSync()
+  const { synced, accountsSynced } = useDataSync()
 
   return (
-    <Flex
-      display={synced ? 'none' : 'flex'}
-      borderRadius="0.3125rem"
-      bg={'#FFF9BC'}
-      _dark={{
-        bg: '#444123',
-      }}
-      height="4.3125rem"
-      justifyContent="center"
-      alignItems="center"
-      px="1rem"
+    <WarningMessage
+      message={message}
+      isVisible={synced && accountsSynced}
       {...rest}
-    >
-      <chakra.h4
-        color={'#7E7400'}
-        _dark={{
-          color: '#FFF9BC',
-        }}
-      >
-        {message}
-      </chakra.h4>
-    </Flex>
+    />
   )
 }
 

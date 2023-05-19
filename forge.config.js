@@ -13,7 +13,8 @@ const COMMON_CONFIG = {
       name: '@electron-forge/maker-squirrel',
       config: {
         // An URL to an ICO file to use as the application icon (displayed in Control Panel > Programs and Features).
-        // iconUrl: 'https://url/to/icon.ico',
+        iconUrl:
+          'https://github.com/iron-fish/node-app/raw/master/electron/icons/icon.ico',
         setupIcon: resolve('./electron/icons/icon.ico'),
       },
     },

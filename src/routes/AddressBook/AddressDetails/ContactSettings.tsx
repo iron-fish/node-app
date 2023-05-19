@@ -1,4 +1,4 @@
-import { FC, memo, useState, useEffect } from 'react'
+import { FC, memo, useState, useEffect, useDeferredValue } from 'react'
 import {
   Flex,
   chakra,
@@ -15,13 +15,9 @@ import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 import Contact from 'Types/Contact'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from 'Routes/data'
+import usePublicAddressValidator from 'Hooks/accounts/usePublicAddressValidator'
+import TextFieldErrorMessage from 'Components/TextFieldErrorMessage'
 import ModalWindow from 'Components/ModalWindow'
-
-interface ContactSettingsProps {
-  contact: Contact
-  onUpdate?: (name: string, address: string) => Promise<void>
-  onDelete?: (identity: string) => Promise<void>
-}
 
 const Information: FC = memo(() => {
   return (
@@ -83,6 +79,12 @@ const RemoveContactButton: FC<RemoveContactButtonProps> = ({
   )
 }
 
+interface ContactSettingsProps {
+  contact: Contact
+  onUpdate?: (name: string, address: string) => Promise<void>
+  onDelete?: (identity: string) => Promise<void>
+}
+
 const ContactSettings: FC<ContactSettingsProps> = ({
   contact,
   onUpdate,
@@ -90,7 +92,9 @@ const ContactSettings: FC<ContactSettingsProps> = ({
 }) => {
   const [name, setName] = useState('')
   const [address, setAddress] = useState('')
+  const deferredAddress = useDeferredValue(address)
   const navigate = useNavigate()
+  const isValidAccount = usePublicAddressValidator(deferredAddress)
   const toast = useIronToast({
     containerStyle: {
       mb: '1rem',
@@ -111,7 +115,12 @@ const ContactSettings: FC<ContactSettingsProps> = ({
     })
 
   const checkChanges: () => boolean = () => {
-    return name !== contact?.name || address !== contact?.address
+    return (
+      (name !== contact?.name || address !== contact?.address) &&
+      isValidAccount &&
+      address.length !== 0 &&
+      name.length !== 0
+    )
   }
 
   return (
@@ -124,20 +133,31 @@ const ContactSettings: FC<ContactSettingsProps> = ({
             onChange: e => setName(e.target.value),
           }}
         />
-        <TextField
-          label="Address"
-          value={address}
-          InputProps={{
-            onChange: e => setAddress(e.target.value),
-          }}
-        />
+        <Box>
+          <TextField
+            label="Address"
+            value={address}
+            InputProps={{
+              onChange: e => setAddress(e.target.value),
+            }}
+            sx={{
+              ...(!isValidAccount && {
+                borderColor: `${NAMED_COLORS.RED} !important`,
+              }),
+            }}
+          />
+          <TextFieldErrorMessage
+            message="Invalid public address"
+            showError={!isValidAccount}
+          />
+        </Box>
         <Flex>
           <Button
             p="2rem"
             borderRadius="4.5rem"
             variant="primary"
             mr="2rem"
-            disabled={!checkChanges()}
+            isDisabled={!checkChanges()}
             onClick={() =>
               onUpdate(name, address).then(() =>
                 toast({ title: 'Contact Details Updated' })

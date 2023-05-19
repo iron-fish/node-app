@@ -12,7 +12,8 @@ const useImportAccount = () => {
     []
   )
   const importAccountByFile = useCallback(
-    (account: Account) => window.IronfishManager.accounts.import(account),
+    (account: Account) =>
+      window.IronfishManager.accounts.import({ ...account, createdAt: null }),
     []
   )
 

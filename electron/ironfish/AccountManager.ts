@@ -5,6 +5,7 @@ import {
   IronfishNode,
   Bech32m,
   JSONUtils,
+  isValidPublicAddress,
 } from '@ironfish/sdk'
 import { v4 as uuid } from 'uuid'
 import {
@@ -226,6 +227,10 @@ class AccountManager
     }
 
     return this.import(accountData)
+  }
+
+  async isValidPublicAddress(address: string): Promise<boolean> {
+    return isValidPublicAddress(address)
   }
 
   async list(searchTerm?: string, sort?: SortType): Promise<CutAccount[]> {
