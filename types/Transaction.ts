@@ -6,6 +6,7 @@ export interface Note {
   sender: string
   owner: string
   asset: Asset
+  owner: string
 }
 
 export interface Spend {

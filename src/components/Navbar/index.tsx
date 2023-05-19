@@ -28,35 +28,30 @@ import useUpdatesCount from 'Hooks/updates/useUpdatesCount'
 
 const primaryNavItems: NavItemProps[] = [
   {
-    hotkey: 'A',
     to: ROUTES.ACCOUNTS,
     label: 'Privacy Accounts',
     icon: IconHome,
     aliases: [ROUTES.ACCOUNT, ROUTES.TRANSACTION],
   },
   {
-    hotkey: 'S',
     to: ROUTES.SEND,
     label: 'Send',
     icon: IconSend,
     aliases: [],
   },
   {
-    hotkey: 'R',
     to: ROUTES.RECEIVE,
     label: 'Receive',
     icon: IconReceive,
     aliases: [],
   },
   {
-    hotkey: 'B',
     to: ROUTES.ADDRESS_BOOK,
     label: 'Address Book',
     icon: IconAddressBook,
     aliases: [ROUTES.ADDRESS_BOOK_DETAILS],
   },
   {
-    hotkey: 'N',
     to: ROUTES.NODE,
     label: 'Your Node',
     icon: IconNode,

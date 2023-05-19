@@ -32,7 +32,7 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         sender:
           'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
         owner:
-          'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
+          'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
         asset: DEFAULT_ASSET,
       },
     ],
@@ -63,6 +63,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         owner:
           'EuERI13A6py2GYSdcx4OA96X0DL8uSLh5VnqpTqwCGVmgn40GWutuMegDKfI53Zk',
         asset: DEFAULT_ASSET,
+        owner:
+          'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
       },
     ],
     spends: [
@@ -147,6 +149,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         owner:
           'sbVxDJmJHGSKCfom0i33HRPFQvRY4t55ZVSSUwPuhRZcbIvJ0ou4hPHKv3HtGmOi',
         asset: DEFAULT_ASSET,
+        owner:
+          'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
       },
     ],
     spends: [],
@@ -216,6 +220,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         owner:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
         asset: DEFAULT_ASSET,
+        owner:
+          'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
       },
       {
         value: BigInt(154000000),
@@ -225,6 +231,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         owner:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
         asset: DEMO_ASSETS[1],
+        owner:
+          'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
       },
       {
         value: BigInt(297000000),
@@ -234,6 +242,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         owner:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
         asset: DEMO_ASSETS[2],
+        owner:
+          'R3R4wctME31FBxi8HKo3PDhSYXMkknX_vPAe6gY7eC1gUZww6O9Bif2swAxj8sE6',
       },
     ],
     spends: [
@@ -271,6 +281,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         owner:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
         asset: DEFAULT_ASSET,
+        owner:
+          '7C5NxoCyjt86wtEEHEF1d60omCsaH9tFO6Tf6Rn0jqowxowgbBtCoapcSxn0jrXN',
       },
     ],
     outputs: [
@@ -282,6 +294,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         owner:
           'pjqETg9UDzCmE9QSuWwrNO80NC9GNYtLWwyHhw0slynI1lRi9NS3BX_sD8yWtk7D',
         asset: DEFAULT_ASSET,
+        owner:
+          '7C5NxoCyjt86wtEEHEF1d60omCsaH9tFO6Tf6Rn0jqowxowgbBtCoapcSxn0jrXN',
       },
     ],
     spends: [
@@ -320,6 +334,8 @@ const DEMO_TRANSACTIONS: Transaction[] = [
         owner:
           'OOlgJpCs_om-pVc7vhew3R58cfI5N0Stn4KKZNOVmx2tSN-2wHZTMqFqtL9ackOV',
         asset: DEFAULT_ASSET,
+        owner:
+          '7C5NxoCyjt86wtEEHEF1d60omCsaH9tFO6Tf6Rn0jqowxowgbBtCoapcSxn0jrXN',
       },
     ],
     spends: [],
@@ -456,6 +472,7 @@ class DemoTransactionsManager implements IIronfishTransactionManager {
               sender: publicAddress,
               owner: accountId,
               asset: DEFAULT_ASSET,
+              owner: publicAddress,
             },
           ],
           outputs: [
@@ -465,6 +482,7 @@ class DemoTransactionsManager implements IIronfishTransactionManager {
               sender: accountId,
               owner: publicAddress,
               asset: DEFAULT_ASSET,
+              owner: publicAddress,
             },
           ],
           spends: [],
