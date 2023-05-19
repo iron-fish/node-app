@@ -1,21 +1,19 @@
 import IErrorManager from 'Types/ErrorManagerTypes'
+import EventType from 'Types/EventType'
 
 class DemoErrorManager implements IErrorManager {
   private errors: Error[] = []
 
   constructor() {
-    this.errors = [
-      new Error(
-        "Can't create/find storage for local account details, please check write permissions for app installation directory"
-      ),
-      new Error(
-        "Can't create/find local storage for address book, please check write permissions for app installation directory"
-      ),
-    ]
+    this.errors = []
   }
 
   async addError(error: Error): Promise<void> {
     this.errors.push(error)
+    const event = new CustomEvent(EventType.CRITICAL_ERROR, {
+      detail: [...this.errors],
+    })
+    document.dispatchEvent(event)
   }
 
   async getErrors(): Promise<Error[]> {

@@ -107,5 +107,13 @@ app.on('activate', () => {
   }
 })
 
+if (process.env.TEST_ERROR) {
+  setTimeout(() => {
+    throw new Error(
+      'Test error in main process for modal view and dumping data'
+    )
+  }, 30000)
+}
+
 app.setPath('crashDumps', getAppHomeFolder('crashes'))
 crashReporter.start({ uploadToServer: false })

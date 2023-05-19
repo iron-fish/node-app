@@ -24,4 +24,8 @@ window.selectFolder = () => {
   })
 }
 
+setTimeout(() => {
+  window.ErrorManager.addError(new Error('Demo error to test error handling'))
+}, 30000)
+
 require('../src/init')
