@@ -1,4 +1,8 @@
-import { AccountValue } from '@ironfish/sdk'
+import {
+  AccountValue,
+  CreateAccountResponse,
+  ImportResponse,
+} from '@ironfish/sdk'
 import AccountCreateParams from 'Types/AccountCreateParams'
 import Account from '../Account'
 import AccountBalance from '../AccountBalance'
@@ -28,7 +32,6 @@ export interface IIronfishAccountManager {
     default: AccountBalance
     assets: AccountBalance[]
   }>
-  create: (name: string) => Promise<Account>
   delete: (name: string) => Promise<void>
   export: (id: string, encoded?: boolean, viewOnly?: boolean) => Promise<string>
   get: (id: string) => Promise<Account>
@@ -39,5 +42,5 @@ export interface IIronfishAccountManager {
   isValidPublicAddress: (address: string) => Promise<boolean>
   list: (search?: string, sort?: SortType) => Promise<CutAccount[]>
   prepareAccount: () => Promise<AccountCreateParams>
-  submitAccount: (createParams: AccountValue) => Promise<Account>
+  submitAccount: (createParams: AccountValue) => Promise<ImportResponse>
 }

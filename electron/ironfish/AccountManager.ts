@@ -6,6 +6,8 @@ import {
   Bech32m,
   JSONUtils,
   isValidPublicAddress,
+  IronfishSdk,
+  ImportResponse,
 } from '@ironfish/sdk'
 import { v4 as uuid } from 'uuid'
 import {
@@ -35,10 +37,16 @@ class AccountManager
   implements IIronfishAccountManager
 {
   private assetManager: AssetManager
+  private sdk: IronfishSdk
 
-  constructor(node: IronfishNode, assetManager: AssetManager) {
+  constructor(
+    node: IronfishNode,
+    assetManager: AssetManager,
+    sdk: IronfishSdk
+  ) {
     super(node)
     this.assetManager = assetManager
+    this.sdk = sdk
   }
 
   initEventListeners(): void {
@@ -121,13 +129,6 @@ class AccountManager
       default: defaultBalance,
       assets: assetBalances,
     }
-  }
-
-  async create(name: string): Promise<WalletAccount> {
-    return this.node.wallet.createAccount(name).then(account => {
-      this.onAccountCountChange()
-      return account.serialize()
-    })
   }
 
   async delete(name: string): Promise<void> {
@@ -289,10 +290,21 @@ class AccountManager
     }
   }
 
-  async submitAccount(createParams: AccountValue): Promise<WalletAccount> {
-    const newAccount = await this.node.wallet.importAccount(createParams)
-
-    return newAccount.serialize()
+  async submitAccount(createParams: AccountValue): Promise<ImportResponse> {
+    const client = await this.sdk.connectRpc()
+    const result = await client.wallet.importAccount({
+      account: {
+        ...createParams,
+        createdAt: createParams.createdAt
+          ? {
+              hash: createParams.createdAt.hash.toString('hex'),
+              sequence: createParams.createdAt.sequence,
+            }
+          : null,
+      },
+      rescan: !!createParams.createdAt,
+    })
+    return result.content
   }
 }
 
