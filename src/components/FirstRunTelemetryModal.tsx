@@ -34,16 +34,17 @@ const FirstRunTelemetryModal = () => {
     <ModalWindow isOpen={isOpen} onClose={onClose}>
       <chakra.h2 mb="1rem">Telemetry</chakra.h2>
       <chakra.h4 mb="1.5rem">
-        We'd like to collect your{' '}
+        We'd like to collect{' '}
         <Button
           variant="link"
           color={NAMED_COLORS.LIGHT_BLUE}
           onClick={() => window.open('https://stats.ironfish.network/?orgId=1')}
         >
-          telemetry
+          telemetry data
         </Button>{' '}
-        in order to continually improve your experience. You can enable or
-        disable this at any time in the node settings page.
+        in order to continually improve your experience. This data includes node
+        performance, block information, and other health metrics. You can enable
+        or disable this at any time in the node settings page.
       </chakra.h4>
       <FormControl mb="1.5rem" display="flex" alignItems="center">
         <SwitchToggle
