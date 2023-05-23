@@ -163,6 +163,7 @@ export class IronFishManager implements IIronfishManager {
     this.sdk = await IronfishSdk.init({
       pkg: getPackageFrom(pkg),
       logger: createAppLogger(),
+      dataDir: process.env.IRONFISH_DATA_DIR || undefined,
     })
 
     if (!this.sdk.internal.get('telemetryNodeId')) {
