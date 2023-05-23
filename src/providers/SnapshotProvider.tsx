@@ -74,7 +74,6 @@ const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
 
     if (status.status === SnapshotProgressStatus.COMPLETED) {
-      window.IronfishManager.initialize()
       window.IronfishManager.snapshot.reset()
     }
   }, [status?.status])

@@ -13,7 +13,7 @@ import {
   SnapshotManifest,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import AbstractManager from './AbstractManager'
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, app } from 'electron'
 import EventType from 'Types/EventType'
 
 const MANIFEST_URL = 'https://snapshots.ironfish.network/manifest.json'
@@ -437,6 +437,8 @@ class SnapshotManager
       statistic: null,
       hasError: false,
     })
+    app.relaunch()
+    app.exit()
   }
 }
 
