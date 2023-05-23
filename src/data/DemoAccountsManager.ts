@@ -1,4 +1,4 @@
-import { AccountValue, CreateAccountResponse } from '@ironfish/sdk'
+import { AccountValue } from '@ironfish/sdk'
 import { nanoid } from 'nanoid'
 import randomWords from 'random-words'
 import AccountBalance from 'Types/AccountBalance'
@@ -225,7 +225,7 @@ class DemoAccountsManager implements IIronfishAccountManager {
     })
   }
 
-  create(name: string): Promise<CreateAccountResponse> {
+  create(name: string): Promise<AccountValue> {
     return new Promise(resolve => {
       setTimeout(() => {
         if (DEMO_ACCOUNTS.find(account => name === account.name)) {
@@ -260,7 +260,7 @@ class DemoAccountsManager implements IIronfishAccountManager {
           },
         ]
         this.onAccountCountChange()
-        resolve({ ...account, isDefaultAccount: false })
+        resolve(account)
       }, 500)
     })
   }
@@ -442,9 +442,7 @@ class DemoAccountsManager implements IIronfishAccountManager {
     }
   }
 
-  async submitAccount(
-    createParams: AccountValue
-  ): Promise<CreateAccountResponse> {
+  async submitAccount(createParams: AccountValue): Promise<Account> {
     return this.create(createParams.name)
   }
 }
