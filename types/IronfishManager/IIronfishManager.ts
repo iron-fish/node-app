@@ -35,7 +35,7 @@ export interface IIronfishManager {
 
   chainProgress: () => Promise<number>
   downloadChainSnapshot: (path?: string) => Promise<void>
-  dump: () => Promise<boolean>
+  dump: () => Promise<string>
   getNodeConfig: () => Promise<Partial<ConfigOptions>>
   hasAnyAccount: () => Promise<boolean>
   initialize: () => Promise<void>

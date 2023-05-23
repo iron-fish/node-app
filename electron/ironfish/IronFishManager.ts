@@ -391,22 +391,17 @@ export class IronFishManager implements IIronfishManager {
     await this.node.syncer.peerNetwork.start()
   }
 
-  async dump(): Promise<boolean> {
-    let succeed = false
-    log.error('------------Iron Fish Manager Dump Start------------')
+  async dump(): Promise<string> {
+    let logDump = `=====================================================
+=========== Iron Fish Node App Crash Dump ===========
+=====================================================
+`
+
     if (this.node) {
       const nodeStatus = await this.nodeStatus()
       const config = await this.getNodeConfig()
-      const memPool = {
-        size: this.node.memPool.count(),
-        sizeBytes: this.node.memPool.sizeBytes(),
-        maxSizeBytes: this.node.memPool.maxSizeBytes,
-        headSequence: this.node.memPool.head?.sequence || 0,
-        evictions: this.node.metrics.memPoolEvictions.value,
-        recentlyEvictedCache: this.node.memPool.recentlyEvictedCacheStats(),
-      }
-      const result: GetWorkersStatusResponse['jobs'] = []
-
+      
+      let jobs = ''
       for (const type of this.node.workerPool.stats.keys()) {
         if (
           type === WorkerMessageType.JobAborted ||
@@ -418,50 +413,65 @@ export class IronFishManager implements IIronfishManager {
         const job = this.node.workerPool.stats.get(type)
 
         if (job) {
-          result.push({ name: WorkerMessageType[type], ...job })
+          const name = WorkerMessageType[type]
+          jobs += `${name.padEnd(20)}(complete=${job.complete},error=${job.error},execute=${job.execute},queued=${job.queue})\n`
         }
       }
-      const workersStatus = {
-        started: this.node.workerPool.started,
-        workers: this.node.workerPool.workers.length,
-        executing: this.node.workerPool.executing,
-        queued: this.node.workerPool.queued,
-        capacity: this.node.workerPool.capacity,
-        change: MathUtils.round(this.node.workerPool.change?.rate5s ?? 0, 2),
-        speed: MathUtils.round(this.node.workerPool.speed?.rate5s ?? 0, 2),
-        jobs: result,
-      }
 
-      let peers: {
-        identity: string
-        status: SDKPeer['state']['type']
-        address: string
-      }[] = []
-      if (this.node.peerNetwork?.peerManager?.peers) {
-        peers = this.node.peerNetwork.peerManager.peers.map(
-          ({ state: { type, identity }, address }) => ({
-            identity,
-            status: type,
-            address,
-          })
-        )
-      }
+      logDump += `
+Node
+-----------------------------------------------------
+Status:             ${nodeStatus?.node.status}
 
-      log.error('Node status: ')
-      log.error(nodeStatus)
-      log.error('Node config: ')
-      log.error(config)
-      log.error('Node memPool status: ')
-      log.error(memPool)
-      log.error('Node peers Status: ')
-      log.error(peers)
-      log.error('Node peers workersStatus: ')
-      log.error(workersStatus)
-      succeed = true
+CPU
+-----------------------------------------------------
+Cores:              ${nodeStatus?.cpu.cores}
+Current:            ${nodeStatus?.cpu.percentCurrent.toFixed(1)}%
+Rolling Avg:        ${nodeStatus?.cpu.percentRollingAvg.toFixed(1)}%
+
+Mempool
+-----------------------------------------------------
+Transactions:       ${this.node.memPool.count()}
+Size (bytes):       ${this.node.memPool.sizeBytes()}
+Max Size (bytes):   ${this.node.memPool.maxSizeBytes}
+Head Sequence:      ${this.node.memPool.head?.sequence || 0}
+Evictions:          ${this.node.metrics.memPoolEvictions.value}
+Recently Evicted:   ${this.node.memPool.recentlyEvictedCacheStats().size}
+
+Peer Network
+-----------------------------------------------------
+Peers:              ${nodeStatus?.peerNetwork.peers}
+Ready:              ${nodeStatus?.peerNetwork.isReady}
+Inbound Traffic:    ${nodeStatus?.peerNetwork.inboundTraffic.toFixed(1)}
+Outbound Traffic:   ${nodeStatus?.peerNetwork.outboundTraffic.toFixed(1)}
+
+Workers
+-----------------------------------------------------
+Started:            ${this.node.workerPool.started}
+Workers:            ${this.node.workerPool.workers.length}
+Executing:          ${this.node.workerPool.executing}
+Queued:             ${this.node.workerPool.queued}
+Capacity:           ${this.node.workerPool.capacity}
+Change:             ${MathUtils.round(this.node.workerPool.change?.rate5s ?? 0, 2)}
+Speed:              ${MathUtils.round(this.node.workerPool.speed?.rate5s ?? 0, 2)}
+
+Jobs
+-----------------------------------------------------
+${jobs}
+Config
+-----------------------------------------------------
+${JSON.stringify(config, null, 2)}
+`
     } else {
-      log.error('Node was not initialized')
+      logDump += 'Node was not initialized\n'
     }
-    log.error('------------Iron Fish Manager Dump End------------')
-    return succeed
+
+    logDump += '============ Iron Fish Node App Dump End ============'
+
+    for (const line of logDump.split('\n')) {
+      log.error(line)
+    }
+
+    return logDump
   }
 }
