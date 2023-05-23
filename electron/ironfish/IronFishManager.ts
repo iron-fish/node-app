@@ -202,7 +202,7 @@ export class IronFishManager implements IIronfishManager {
     await this.node.internal.save()
 
     this.assets = new AssetManager(this.node)
-    this.accounts = new AccountManager(this.node, this.assets, this.sdk)
+    this.accounts = new AccountManager(this.node, this.assets)
     this.transactions = new TransactionManager(this.node, this.assets)
     this.nodeSettings = new NodeSettingsManager(this.node)
     this.snapshot = new SnapshotManager(this.node)
