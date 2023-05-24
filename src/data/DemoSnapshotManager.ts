@@ -46,6 +46,10 @@ class DemoSnapshotManager implements IIronfishSnapshotManager {
     return Promise.resolve()
   }
 
+  decline() {
+    return Promise.resolve()
+  }
+
   retry() {
     this.onStatusChange({
       hasError: false,

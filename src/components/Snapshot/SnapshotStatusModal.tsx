@@ -62,6 +62,12 @@ const getContent = (status: SnapshotProgressStatus) => {
 const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
   const { status, retry, reset } = useSnapshotStatus()
   const [loading, setLoading] = useState(false)
+  const isDownloadingInProgress = useMemo(
+    () =>
+      status?.status > SnapshotProgressStatus.NOT_STARTED &&
+      status?.status < SnapshotProgressStatus.DOWNLOADED,
+    [status?.status]
+  )
   const isApplyingInProgress = useMemo(
     () =>
       status?.status > SnapshotProgressStatus.DOWNLOADED &&
@@ -75,7 +81,8 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
       !status.total ||
       status?.status === SnapshotProgressStatus.NOT_STARTED ||
       status?.status === SnapshotProgressStatus.DOWNLOADED ||
-      status?.status === SnapshotProgressStatus.COMPLETED,
+      status?.status === SnapshotProgressStatus.COMPLETED ||
+      status?.status === SnapshotProgressStatus.DECLINED,
     [status?.total, status?.status]
   )
 
@@ -84,11 +91,12 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
       <Modal
         {...props}
         id="snapshot-status-modal"
-        isOpen={isApplyingInProgress || status?.hasError ? true : props.isOpen}
-        useInert={
-          status?.status > SnapshotProgressStatus.DOWNLOADED &&
+        isOpen={
+          status?.status > SnapshotProgressStatus.NOT_STARTED &&
           status?.status < SnapshotProgressStatus.COMPLETED
         }
+        useInert={status?.status < SnapshotProgressStatus.COMPLETED}
+        closeOnOverlayClick={false}
         onClose={() => {
           if (status?.hasError) {
             retry().finally(() => props?.onClose())
@@ -103,7 +111,11 @@ const SnapshotStatusModal: FC<Omit<ModalProps, 'children'>> = props => {
             <chakra.h2>{content.title}</chakra.h2>
           </ModalHeader>
           <ModalCloseButton
-            display={isApplyingInProgress ? 'none' : undefined}
+            display={
+              isApplyingInProgress || isDownloadingInProgress
+                ? 'none'
+                : undefined
+            }
             color={NAMED_COLORS.GREY}
             borderRadius="50%"
             borderColor={NAMED_COLORS.LIGHT_GREY}
