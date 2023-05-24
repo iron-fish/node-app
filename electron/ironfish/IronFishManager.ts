@@ -271,9 +271,33 @@ export class IronFishManager implements IIronfishManager {
     if (peers.length > 0) {
       totalSequences = peers[0].sequence
     }
-    const client = await this.sdk.connectRpc()
-    const accounts = (await client.wallet.getAccountsStatus({})).content
-      .accounts
+    const headHashes = new Map<string, Buffer | null>()
+    // sometimes walletdb isn't open
+    try {
+      for await (const {
+        accountId,
+        head,
+      } of this.node.wallet.walletDb.loadHeads()) {
+        headHashes.set(accountId, head?.hash ?? null)
+      }
+    } catch (e) {}
+
+    const accountsInfo = []
+    for (const account of this.node.wallet.listAccounts()) {
+      const headHash = headHashes.get(account.id)
+      const blockHeader = headHash
+        ? await this.node.chain.getHeader(headHash)
+        : null
+      const headInChain = !!blockHeader
+      const headSequence = blockHeader?.sequence || 'NULL'
+      accountsInfo.push({
+        name: account.name,
+        id: account.id,
+        headHash: headHash ? headHash.toString('hex') : 'NULL',
+        headInChain: headInChain,
+        sequence: headSequence,
+      })
+    }
 
     const status = {
       node: {
@@ -326,7 +350,7 @@ export class IronFishManager implements IIronfishManager {
         headTimestamp: this.node.chain.head.timestamp.getTime(),
         newBlockSpeed: this.node.metrics.chain_newBlock.avg,
       },
-      accounts: accounts,
+      accounts: accountsInfo,
     }
     return Promise.resolve(status)
   }
