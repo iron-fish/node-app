@@ -400,7 +400,7 @@ export class IronFishManager implements IIronfishManager {
     if (this.node) {
       const nodeStatus = await this.nodeStatus()
       const config = await this.getNodeConfig()
-      
+
       let jobs = ''
       for (const type of this.node.workerPool.stats.keys()) {
         if (
@@ -414,7 +414,9 @@ export class IronFishManager implements IIronfishManager {
 
         if (job) {
           const name = WorkerMessageType[type]
-          jobs += `${name.padEnd(20)}(complete=${job.complete},error=${job.error},execute=${job.execute},queued=${job.queue})\n`
+          jobs += `${name.padEnd(20)}(complete=${job.complete},error=${
+            job.error
+          },execute=${job.execute},queued=${job.queue})\n`
         }
       }
 
@@ -452,8 +454,14 @@ Workers:            ${this.node.workerPool.workers.length}
 Executing:          ${this.node.workerPool.executing}
 Queued:             ${this.node.workerPool.queued}
 Capacity:           ${this.node.workerPool.capacity}
-Change:             ${MathUtils.round(this.node.workerPool.change?.rate5s ?? 0, 2)}
-Speed:              ${MathUtils.round(this.node.workerPool.speed?.rate5s ?? 0, 2)}
+Change:             ${MathUtils.round(
+        this.node.workerPool.change?.rate5s ?? 0,
+        2
+      )}
+Speed:              ${MathUtils.round(
+        this.node.workerPool.speed?.rate5s ?? 0,
+        2
+      )}
 
 Jobs
 -----------------------------------------------------

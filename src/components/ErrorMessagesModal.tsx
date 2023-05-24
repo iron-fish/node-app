@@ -1,4 +1,14 @@
-import { Button, CheckIcon, Flex, Spinner, chakra, Input, Textarea, CopyValueToClipboard, NAMED_COLORS } from '@ironfish/ui-kit'
+import {
+  Button,
+  CheckIcon,
+  Flex,
+  Spinner,
+  chakra,
+  Input,
+  Textarea,
+  CopyValueToClipboard,
+  NAMED_COLORS,
+} from '@ironfish/ui-kit'
 import ModalWindow from './ModalWindow'
 import { FC, useEffect, useState } from 'react'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
@@ -17,10 +27,15 @@ const NodeErrorMessagesModal: FC<NodeErrorMessagesModal> = ({
   processError,
 }) => {
   const [collectingDump, setCollectingDump] = useState(false)
-  const [collectedDump, setCollectedDump] = useState<string | undefined>(undefined)
+  const [collectedDump, setCollectedDump] = useState<string | undefined>(
+    undefined
+  )
 
   useEffect(() => {
-    if (nodeStatus >= IronFishInitStatus.INITIALIZED && collectedDump === undefined) {
+    if (
+      nodeStatus >= IronFishInitStatus.INITIALIZED &&
+      collectedDump === undefined
+    ) {
       setCollectingDump(true)
       collectDump().then(collected => {
         setCollectedDump(collected)
@@ -34,12 +49,8 @@ const NodeErrorMessagesModal: FC<NodeErrorMessagesModal> = ({
       <ModalWindow isOpen={!!errors?.length} onClose={() => processError()}>
         <chakra.h2 mb="1rem">Node App Error</chakra.h2>
         <chakra.h4>The application encountered an exception:</chakra.h4>
-        <chakra.h4 mb="2rem">
-          {errors.at(-1).message}
-        </chakra.h4>
-        <Flex
-          mb="0.5rem"
-        >
+        <chakra.h4 mb="2rem">{errors.at(-1).message}</chakra.h4>
+        <Flex mb="0.5rem">
           <chakra.h5 mr="8px">Configuration and Crash Details</chakra.h5>
           <CopyValueToClipboard
             label=""
@@ -52,7 +63,7 @@ const NodeErrorMessagesModal: FC<NodeErrorMessagesModal> = ({
           />
         </Flex>
         {collectingDump && <Spinner />}
-        {!collectingDump && collectedDump !== undefined &&
+        {!collectingDump && collectedDump !== undefined && (
           <Textarea
             isReadOnly
             value={collectedDump}
@@ -62,7 +73,7 @@ const NodeErrorMessagesModal: FC<NodeErrorMessagesModal> = ({
             height="120px"
             fontFamily="monospace"
           />
-        }
+        )}
         <Button
           variant="primary"
           size="medium"

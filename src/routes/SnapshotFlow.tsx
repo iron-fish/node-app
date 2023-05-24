@@ -100,9 +100,10 @@ const steps = [
 ]
 
 const SnapshotFlow: FC = () => {
-  const [status, setStatus] = useState<Omit<SnapshotProgressType, 'statistic'> | null>(
-    null
-  )
+  const [status, setStatus] = useState<Omit<
+    SnapshotProgressType,
+    'statistic'
+  > | null>(null)
 
   useEffect(() => {
     window.IronfishManager.snapshot.status().then(setStatus)
