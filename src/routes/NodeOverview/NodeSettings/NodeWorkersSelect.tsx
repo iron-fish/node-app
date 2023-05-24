@@ -66,6 +66,7 @@ const NodeWorkersSelect: FC<NodeWorkersSelectProps> = ({
           options={selectOptions}
           label="Node workers"
           renderOption={option => <Option label={option.label} />}
+          maxMenuHeight={220}
         />
       </Box>
     </Tooltip>

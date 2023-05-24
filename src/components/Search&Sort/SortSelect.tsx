@@ -4,9 +4,9 @@ import {
   SelectField,
   useBreakpointValue,
   Flex,
+  ArrowUpArrowDownIcon,
 } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
-import ArrowUpArrowDownIcon from '@ironfish/ui-kit/dist/svgx/arrow-up-arrow-down-icon'
 
 //TODO: Need add export of type in ui-kit lib
 export interface SelectFieldProps extends FlexProps {

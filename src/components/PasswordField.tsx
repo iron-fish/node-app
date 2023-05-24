@@ -5,9 +5,8 @@ import {
   InputProps as InputPropsType,
   StyleProps,
   TextField,
+  IconBlinkingEye,
 } from '@ironfish/ui-kit'
-import IconBlinkingEye from '@ironfish/ui-kit/dist/svgx/icon-blinkingEye'
-import IconInfo from '@ironfish/ui-kit/dist/svgx/icon-info'
 import debounce from 'lodash/debounce'
 
 interface PasswordFieldProps extends StyleProps {

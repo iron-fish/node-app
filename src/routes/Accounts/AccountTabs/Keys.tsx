@@ -8,12 +8,12 @@ import {
   MnemonicView,
   CopyToClipboardButton,
   SelectField,
+  DownloadIcon,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState } from 'react'
 import AccountKeysImage from 'Svgx/AccountKeysImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
-import DownloadIcon from '@ironfish/ui-kit/dist/svgx/download-icon'
 import Account from 'Types/Account'
 import useMnemonicPhrase from 'Hooks/accounts/useMnemonicPhrase'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'

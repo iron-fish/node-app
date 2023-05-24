@@ -9,8 +9,8 @@ import {
   CopyValueToClipboard,
   useBreakpointValue,
   useIronToast,
+  IconAdd,
 } from '@ironfish/ui-kit'
-import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SendIcon from 'Svgx/send'
 import HexFishCircle from 'Components/HexFishCircle'
 import { truncateHash } from 'Utils/hash'

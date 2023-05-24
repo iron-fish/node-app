@@ -99,5 +99,8 @@ typings/
 out/
 dist/
 
+# signing certificates
+.certs
+
 #vscode
 .vscode/
