@@ -17,7 +17,7 @@ const DataPreviewLine: FC<DataPreviewLineProps> = ({
     pb="1rem"
     {...props}
   >
-    <chakra.h5 w="100%" color={NAMED_COLORS.GREY}>
+    <chakra.h5 flexGrow={1} color={NAMED_COLORS.GREY}>
       {title}
     </chakra.h5>
     {value}

@@ -61,7 +61,20 @@ const ConfirmStep: FC<StepProps> = ({
       <ModalBody p={0}>
         <chakra.h2 mb="2rem">Confirm Transaction Details</chakra.h2>
         <VStack spacing="1rem" w="100%">
-          <DataPreviewLine title="From:" value={from.name} w="100%" />
+          <DataPreviewLine
+            title="From:"
+            value={
+              <chakra.div
+                whiteSpace="nowrap"
+                overflow="hidden"
+                textOverflow="ellipsis"
+                ml="1rem"
+              >
+                {from.name}
+              </chakra.div>
+            }
+            w="100%"
+          />
           <DataPreviewLine
             title="To:"
             value={
@@ -80,8 +93,8 @@ const ConfirmStep: FC<StepProps> = ({
                     </chakra.h4>
                   )}
                   <chakra.h5
-                    pl="4rem"
-                    color={NAMED_COLORS.GREY}
+                    pl="1rem"
+                    // color={NAMED_COLORS.GREY}
                     whiteSpace="nowrap"
                     overflow="hidden"
                   >
