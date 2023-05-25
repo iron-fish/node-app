@@ -222,6 +222,7 @@ const Send: FC = () => {
 
                 if (valueString === '.') {
                   setAmount('0.')
+                  return
                 }
 
                 try {
