@@ -15,9 +15,16 @@ import useUpdates from 'Hooks/updates/useUpdates'
 import { UpdateStatus } from 'Types/IUpdateManager'
 import useSnapshotManifest from 'Hooks/snapshot/useSnapshotManifest'
 
+type NodeStatus = Required<
+  Pick<
+    NodeStatusResponse,
+    'blockSyncer' | 'blockchain' | 'peerNetwork' | 'accounts'
+  >
+>
 export interface DataSyncContextProps {
-  data?: NodeStatusResponse | undefined
+  data?: NodeStatus | undefined
   synced?: boolean
+  accountsSynced?: boolean
   requiredSnapshot?: boolean
   error?: unknown
   sync: {
@@ -44,7 +51,8 @@ const DataSyncContext = createContext<DataSyncContextProps>({
 
 const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [synced, setSynced] = useState<boolean>(false)
-  const [status, setNodeStatus] = useState<NodeStatusResponse | undefined>()
+  const [accountsSynced, setAccountsSynced] = useState<boolean>(false)
+  const [status, setNodeStatus] = useState<NodeStatus | undefined>()
   const [error, setError] = useState()
   const { status: snapshotStatus } = useSnapshotStatus()
   const updates = useUpdates()
@@ -75,6 +83,7 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
               isReady: nextStatus.peerNetwork?.isReady,
               peers: nextStatus.peerNetwork?.peers || 0,
             },
+            accounts: nextStatus.accounts,
           }
         })
       })
@@ -124,6 +133,11 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
         status?.peerNetwork?.isReady &&
         status?.peerNetwork?.peers > 0
     )
+    setAccountsSynced(
+      status?.accounts.every(
+        account => Number(account.sequence) > Number(status.blockchain.head) - 2
+      )
+    )
 
     const interval = setInterval(
       () => {
@@ -139,15 +153,17 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
     return () => clearInterval(interval)
   }, [
     status?.blockchain?.synced,
+    status?.accounts,
     status?.blockSyncer?.syncing?.progress,
     status?.peerNetwork?.isReady,
     status?.peerNetwork?.peers > 0,
     isSnapshotRequired,
   ])
 
-  const value = useMemo(() => {
+  const value = useMemo<DataSyncContextProps>(() => {
     return {
       synced,
+      accountsSynced,
       data: status,
       error,
       requiredSnapshot:
@@ -158,9 +174,10 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
         stop: stopSyncing,
       },
       updates,
-    } as DataSyncContextProps
+    }
   }, [
     synced,
+    accountsSynced,
     JSON.stringify(status),
     JSON.stringify(snapshotStatus),
     JSON.stringify(updates.status),

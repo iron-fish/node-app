@@ -24,11 +24,33 @@ import ROUTES from 'Routes/data'
 import { useDataSync } from 'Providers/DataSyncProvider'
 import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 
+const SendButton = ({ address }: { address: string }) => {
+  const navigate = useNavigate()
+  const { synced } = useDataSync()
+  return (
+    <Button
+      leftIcon={
+        <Icon height={8}>
+          <SendIcon />
+        </Icon>
+      }
+      ml="2rem"
+      variant="primary"
+      size="small"
+      onClick={() => {
+        navigate(ROUTES.SEND, { state: { address } })
+      }}
+      isDisabled={!synced}
+      disabled={!synced}
+    >
+      Send
+    </Button>
+  )
+}
+
 const AddressDetails = () => {
   const { identity } = useParams()
-  const navigate = useNavigate()
   const [{ data: contact }, updateContact, deleteContact] = useContact(identity)
-  const { synced } = useDataSync()
 
   return (
     <Flex width="100%" height="100%" direction="column">
@@ -64,23 +86,7 @@ const AddressDetails = () => {
           copyTooltipText="Copy to clipboard"
           copiedTooltipText="Copied"
         />
-        <Button
-          leftIcon={
-            <Icon height={8}>
-              <SendIcon />
-            </Icon>
-          }
-          ml="2rem"
-          variant="primary"
-          size="small"
-          onClick={() => {
-            navigate(ROUTES.SEND, { state: { address: contact?.address } })
-          }}
-          isDisabled={!synced}
-          disabled={!synced}
-        >
-          Send
-        </Button>
+        <SendButton address={contact?.address} />
       </Flex>
       <Tabs>
         <TabList>

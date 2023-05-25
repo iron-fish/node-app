@@ -5,6 +5,7 @@ import {
   IronfishNode,
   Bech32m,
   JSONUtils,
+  isValidPublicAddress,
 } from '@ironfish/sdk'
 import { v4 as uuid } from 'uuid'
 import {
@@ -230,6 +231,10 @@ class AccountManager
     return this.import(accountData)
   }
 
+  async isValidPublicAddress(address: string): Promise<boolean> {
+    return isValidPublicAddress(address)
+  }
+
   async list(searchTerm?: string, sort?: SortType): Promise<CutAccount[]> {
     const search = searchTerm?.toLowerCase()
     const accounts = this.node.wallet.listAccounts()
@@ -266,7 +271,13 @@ class AccountManager
 
   async prepareAccount(): Promise<AccountCreateParams> {
     const key = generateKey()
-
+    const createdAt =
+      this.node.chain.head.sequence > 1
+        ? {
+            sequence: this.node.chain.head.sequence,
+            hash: this.node.chain.head.hash,
+          }
+        : null
     return {
       version: ACCOUNT_SCHEMA_VERSION,
       id: uuid(),
@@ -276,7 +287,7 @@ class AccountManager
       publicAddress: key.publicAddress,
       spendingKey: key.spendingKey,
       viewKey: key.viewKey,
-      createdAt: null,
+      createdAt,
       mnemonicPhrase: spendingKeyToWords(
         key.spendingKey,
         LanguageCode.English
@@ -285,7 +296,16 @@ class AccountManager
   }
 
   async submitAccount(createParams: AccountValue): Promise<WalletAccount> {
-    const newAccount = await this.node.wallet.importAccount(createParams)
+    const create = createParams.createdAt
+      ? {
+          ...createParams,
+          createdAt: {
+            sequence: createParams.createdAt.sequence,
+            hash: Buffer.from(createParams.createdAt.hash),
+          },
+        }
+      : createParams
+    const newAccount = await this.node.wallet.importAccount(create)
 
     return newAccount.serialize()
   }

@@ -35,6 +35,7 @@ import SyncWarningMessage from 'Components/SyncWarningMessage'
 import capitalize from 'lodash/capitalize'
 import AccountAssetsSelect from 'Components/AccountAssetsSelect'
 import AccountBalance from 'Types/AccountBalance'
+import WarningMessage from 'Components/WarningMessage'
 
 const Information: FC = memo(() => {
   return (
@@ -264,23 +265,13 @@ const Send: FC = () => {
             {/* <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5> */}
           </Flex>
           <Box mr="-0.25rem">
-            {error && (
-              <Flex
-                w="100%"
-                borderRadius="0.3125rem"
-                bg={'#FFEDE8'}
-                _dark={{
-                  bg: '#3E251B',
-                }}
-                h="4.3125rem"
-                mt="-1rem"
-                mb="1rem"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <chakra.h4 color={NAMED_COLORS.RED}>{error}</chakra.h4>
-              </Flex>
-            )}
+            <WarningMessage
+              message={error}
+              isVisible={!!error}
+              style="danger"
+              mt="-1rem"
+              mb="1rem"
+            />
             <AccountsSelect
               label="From Account"
               mb="2rem"

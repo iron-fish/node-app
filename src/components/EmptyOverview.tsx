@@ -1,10 +1,10 @@
 import { FC, ReactNode } from 'react'
-import { Flex, VStack, chakra, NAMED_COLORS } from '@ironfish/ui-kit'
+import { Flex, VStack, chakra, NAMED_COLORS, FlexProps } from '@ironfish/ui-kit'
 import EmptyOverviewImage from 'Svgx/EmptyOverviewImage'
 
-interface EmptyOverviewProps {
-  header: ReactNode
-  description: ReactNode
+interface EmptyOverviewProps extends FlexProps {
+  header?: ReactNode
+  description?: ReactNode
 }
 
 const EmptyOverview: FC<EmptyOverviewProps> = ({

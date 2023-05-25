@@ -163,6 +163,7 @@ export class IronFishManager implements IIronfishManager {
     this.sdk = await IronfishSdk.init({
       pkg: getPackageFrom(pkg),
       logger: createAppLogger(),
+      dataDir: process.env.IRONFISH_DATA_DIR || undefined,
     })
 
     if (!this.sdk.internal.get('telemetryNodeId')) {
@@ -255,14 +256,13 @@ export class IronFishManager implements IIronfishManager {
     }
   }
 
-  nodeStatus(): Promise<NodeStatusResponse> {
+  async nodeStatus(): Promise<NodeStatusResponse> {
     if (
       this.initStatus < IronFishInitStatus.STARTED ||
       this.initStatus === IronFishInitStatus.ERROR
     ) {
       return Promise.resolve(null)
     }
-
     let totalSequences = 0
     const peers = this.node.peerNetwork.peerManager
       .getConnectedPeers()
@@ -271,6 +271,34 @@ export class IronFishManager implements IIronfishManager {
     if (peers.length > 0) {
       totalSequences = peers[0].sequence
     }
+    const headHashes = new Map<string, Buffer | null>()
+    // sometimes walletdb isn't open
+    try {
+      for await (const {
+        accountId,
+        head,
+      } of this.node.wallet.walletDb.loadHeads()) {
+        headHashes.set(accountId, head?.hash ?? null)
+      }
+    } catch (e) {}
+
+    const accountsInfo = []
+    for (const account of this.node.wallet.listAccounts()) {
+      const headHash = headHashes.get(account.id)
+      const blockHeader = headHash
+        ? await this.node.chain.getHeader(headHash)
+        : null
+      const headInChain = !!blockHeader
+      const headSequence = blockHeader?.sequence || 'NULL'
+      accountsInfo.push({
+        name: account.name,
+        id: account.id,
+        headHash: headHash ? headHash.toString('hex') : 'NULL',
+        headInChain: headInChain,
+        sequence: headSequence,
+      })
+    }
+
     const status = {
       node: {
         status: this.node.started
@@ -322,6 +350,7 @@ export class IronFishManager implements IIronfishManager {
         headTimestamp: this.node.chain.head.timestamp.getTime(),
         newBlockSpeed: this.node.metrics.chain_newBlock.avg,
       },
+      accounts: accountsInfo,
     }
     return Promise.resolve(status)
   }

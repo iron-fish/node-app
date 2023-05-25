@@ -5,8 +5,11 @@ import {
   NAMED_COLORS,
   TextField,
   Button,
+  useDebounce,
 } from '@ironfish/ui-kit'
 import ModalWindow from 'Components/ModalWindow'
+import usePublicAddressValidator from 'Hooks/accounts/usePublicAddressValidator'
+import TextFieldErrorMessage from 'Components/TextFieldErrorMessage'
 
 interface AddContactModalProps extends Omit<ModalProps, 'children'> {
   presetAddress?: string
@@ -20,6 +23,8 @@ const AddContactModal: FC<AddContactModalProps> = ({
 }) => {
   const [name, setName] = useState<string>('')
   const [address, setAddress] = useState<string>('')
+  const debouncedAddress = useDebounce(address, 300)
+  const isValidAccount = usePublicAddressValidator(debouncedAddress)
 
   return (
     <ModalWindow
@@ -48,20 +53,27 @@ const AddContactModal: FC<AddContactModalProps> = ({
         label="Address"
         my="1rem"
         value={presetAddress || address}
-        sx={
-          presetAddress
-            ? {
-                borderColor: NAMED_COLORS.LIGHTER_GREY,
-                _hover: {
-                  borderColor: NAMED_COLORS.LIGHTER_GREY,
-                },
-              }
-            : {}
-        }
+        sx={{
+          ...(debouncedAddress &&
+            !isValidAccount &&
+            !presetAddress && {
+              borderColor: `${NAMED_COLORS.RED} !important`,
+            }),
+          ...(presetAddress && {
+            borderColor: NAMED_COLORS.LIGHTER_GREY,
+            _hover: {
+              borderColor: NAMED_COLORS.LIGHTER_GREY,
+            },
+          }),
+        }}
         InputProps={{
           onChange: e => setAddress(e.target.value),
           isDisabled: !!presetAddress,
         }}
+      />
+      <TextFieldErrorMessage
+        message="Invalid public address"
+        showError={debouncedAddress && !isValidAccount}
       />
       <Button
         variant="primary"
@@ -72,7 +84,7 @@ const AddContactModal: FC<AddContactModalProps> = ({
           setName('')
           setAddress('')
         }}
-        isDisabled={!name || (!presetAddress && !address)}
+        isDisabled={!name || (!presetAddress && !address) || !isValidAccount}
       >
         <chakra.h4>Add Contact</chakra.h4>
       </Button>
