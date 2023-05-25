@@ -8,15 +8,15 @@ import {
   TextField,
   FieldGroup,
   Tooltip,
+  IconCopy,
+  CheckIcon,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import DetailsPanel from 'Components/DetailsPanel'
 import ReceiveIronImage from 'Svgx/ReceiveIronImage'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
-import IconCopy from '@ironfish/ui-kit/dist/svgx/icon-copy'
 import LocationStateProps from 'Types/LocationState'
 import AccountsSelect from 'Components/AccountsSelect'
-import IconCheck from '@ironfish/ui-kit/dist/svgx/icon-check'
 import CutAccount from 'Types/CutAccount'
 
 const Information: FC = memo(() => {
@@ -102,7 +102,7 @@ const ViewField: FC<ViewFieldProps> = ({
         >
           <Flex align="center">
             <chakra.h4 mr="8px">{buttonText}</chakra.h4>
-            {$copied ? <IconCheck color="green" /> : <IconCopy />}
+            {$copied ? <CheckIcon color="green" /> : <IconCopy />}
           </Flex>
         </Tooltip>
       </Button>

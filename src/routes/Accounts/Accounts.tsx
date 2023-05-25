@@ -8,8 +8,8 @@ import {
   useBreakpointValue,
   ButtonsGroup,
   Skeleton,
+  IconAdd,
 } from '@ironfish/ui-kit'
-import IconAdd from '@ironfish/ui-kit/dist/svgx/icon-add'
 import SearchSortField from 'Components/Search&Sort'
 import useAccounts from 'Hooks/accounts/useAccounts'
 import AccountPreview from 'Routes/Accounts/AccountPreview'

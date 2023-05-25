@@ -16,6 +16,7 @@ import {
 import NodeOverviewImage from 'Svgx/NodeOverviewImage'
 import { FileUtils } from '@ironfish/sdk/build/src/utils/file'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
+import useNodeStatus from 'Hooks/node/useNodeStatus'
 
 interface NodeStatProps {
   isLoaded: boolean
@@ -43,11 +44,12 @@ const NodeStat: FC<NodeStatProps> = ({ isLoaded, label, value }) => (
 )
 
 interface NodeStatusProps extends BoxProps {
-  data: NodeStatusResponse
-  loaded: boolean
+  pauseTracking: boolean
 }
 
-const NodeStatus: FC<NodeStatusProps> = ({ data, loaded, ...props }) => {
+const NodeStatus: FC<NodeStatusProps> = ({ pauseTracking, ...props }) => {
+  const { loaded, data, error } = useNodeStatus(pauseTracking)
+
   return (
     <Box
       p="4rem"

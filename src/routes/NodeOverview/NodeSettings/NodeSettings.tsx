@@ -8,12 +8,14 @@ import {
   useIronToast,
   Box,
   NAMED_COLORS,
+  Grid,
 } from '@ironfish/ui-kit'
 import useNodeSettings from 'Hooks/node/useNodeSettings'
 import { FC, useState, useEffect, memo, useMemo } from 'react'
 import pick from 'lodash/pick'
 import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
+import NodeWorkersSelect from './NodeWorkersSelect'
 
 const Information: FC = memo(() => {
   return (
@@ -82,9 +84,14 @@ const NodeSettings: FC = () => {
 
   return (
     <Flex>
-      <Flex direction="column" w="37.25rem">
-        <Flex gap="2rem">
-          <Skeleton w="50%" my="1rem" variant="ironFish" isLoaded={!!data}>
+      <Flex display="column">
+        <Grid
+          w="37.25rem"
+          templateColumns="repeat(2, 1fr)"
+          gridAutoRows={'auto'}
+          gap="2rem"
+        >
+          <Skeleton variant="ironFish" isLoaded={!!data}>
             <TextField
               label="Node name"
               value={nodeSettings?.nodeName}
@@ -93,7 +100,7 @@ const NodeSettings: FC = () => {
               }}
             />
           </Skeleton>
-          <Skeleton w="50%" my="1rem" variant="ironFish" isLoaded={!!data}>
+          <Skeleton variant="ironFish" isLoaded={!!data}>
             <TextField
               label="Block graffiti"
               value={nodeSettings?.blockGraffiti}
@@ -103,32 +110,34 @@ const NodeSettings: FC = () => {
               }}
             />
           </Skeleton>
-        </Flex>
-        <Skeleton my="1rem" variant="ironFish" isLoaded={!!data}>
-          <Flex gap="2rem">
+          <Skeleton variant="ironFish" isLoaded={!!data}>
             <TextField
               label="Min Peers"
-              w="50%"
               value={nodeSettings?.minPeers?.toString()}
               InputProps={{
                 type: 'number',
                 onChange: e => updateSettingValue('minPeers', e.target.value),
               }}
             />
+          </Skeleton>
+          <Skeleton variant="ironFish" isLoaded={!!data}>
             <TextField
               label="Max peers"
-              w="50%"
               value={nodeSettings?.maxPeers?.toString()}
               InputProps={{
                 type: 'number',
                 onChange: e => updateSettingValue('maxPeers', e.target.value),
               }}
             />
-          </Flex>
-        </Skeleton>
-        <Flex gap="2rem">
-          <Skeleton w="50%" my="1rem" variant="ironFish" isLoaded={!!data}>
-            <TextField
+          </Skeleton>
+          <Skeleton variant="ironFish" isLoaded={!!data}>
+            <NodeWorkersSelect
+              value={nodeSettings?.nodeWorkers?.toString()}
+              onSelectOption={selected =>
+                updateSettingValue('nodeWorkers', selected.value)
+              }
+            />
+            {/* <TextField
               label="Node workers"
               value={nodeSettings?.nodeWorkers?.toString()}
               InputProps={{
@@ -136,9 +145,9 @@ const NodeSettings: FC = () => {
                 onChange: e =>
                   updateSettingValue('nodeWorkers', e.target.value),
               }}
-            />
+            /> */}
           </Skeleton>
-          <Skeleton w="50%" variant="ironFish" my="1rem" isLoaded={!!data}>
+          <Skeleton variant="ironFish" isLoaded={!!data}>
             <TextField
               label="Blocks Per Message"
               value={nodeSettings?.blocksPerMessage?.toString()}
@@ -149,17 +158,16 @@ const NodeSettings: FC = () => {
               }}
             />
           </Skeleton>
-        </Flex>
-        <Flex my="1rem" gap="32px">
-          <Button
-            variant="primary"
-            size="large"
-            onClick={handleSaveSettings}
-            isDisabled={!loaded || hasNoChanges}
-          >
-            Save settings
-          </Button>
-        </Flex>
+        </Grid>
+        <Button
+          mt="2rem"
+          variant="primary"
+          size="large"
+          onClick={handleSaveSettings}
+          isDisabled={!loaded || hasNoChanges}
+        >
+          Save settings
+        </Button>
       </Flex>
       <Box>
         <DetailsPanel>

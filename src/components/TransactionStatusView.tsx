@@ -5,10 +5,10 @@ import {
   useColorModeValue,
   chakra,
   IconProps,
+  PendingIcon,
+  ExpiredIcon,
 } from '@ironfish/ui-kit'
 import { TransactionStatus } from 'Types/Transaction'
-import PendingIcon from '@ironfish/ui-kit/dist/svgx/pending-icon'
-import ExpiredIcon from '@ironfish/ui-kit/dist/svgx/expired-icon'
 import IconSend from 'Svgx/send'
 import IconReceive from 'Svgx/receive'
 

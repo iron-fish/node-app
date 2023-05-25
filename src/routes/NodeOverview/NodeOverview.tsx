@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import {
   chakra,
   TabPanels,
@@ -11,14 +11,13 @@ import NodeStatus from './NodeStatus'
 import NodePeers from './NodePeers'
 import NodeSettings from './NodeSettings'
 import NodeResources from './NodeResources'
-import useNodeStatus from 'Hooks/node/useNodeStatus'
 
 const NodeOverview: FC = () => {
-  const { loaded, data, error } = useNodeStatus()
+  const [tabIndex, setTabIndex] = useState(0)
   return (
     <>
       <chakra.h2 mb="1rem">Your Node</chakra.h2>
-      <Tabs>
+      <Tabs onChange={index => setTabIndex(index)}>
         <TabList>
           <Tab>
             <h6>Node Overview</h6>
@@ -32,7 +31,7 @@ const NodeOverview: FC = () => {
         </TabList>
         <TabPanels>
           <TabPanel p="0" pt="2rem">
-            <NodeStatus mb="2rem" data={data} loaded={loaded} />
+            <NodeStatus mb="2rem" pauseTracking={tabIndex !== 0} />
             <chakra.h3>Connected Peers</chakra.h3>
             <NodePeers />
           </TabPanel>
@@ -40,7 +39,7 @@ const NodeOverview: FC = () => {
             <NodeSettings />
           </TabPanel>
           <TabPanel p="0" pt="2rem">
-            <NodeResources data={data} loaded={loaded} />
+            <NodeResources pauseTracking={tabIndex !== 2} />
           </TabPanel>
         </TabPanels>
       </Tabs>
