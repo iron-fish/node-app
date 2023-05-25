@@ -1,4 +1,4 @@
-import { FC, ReactNode, useMemo } from 'react'
+import { FC, ReactNode, useMemo, useState } from 'react'
 import { SelectField, Flex, Box, Tooltip } from '@ironfish/ui-kit'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 
@@ -26,6 +26,7 @@ const NodeWorkersSelect: FC<NodeWorkersSelectProps> = ({
   value,
   onSelectOption,
 }) => {
+  const [showTooltip, setShowTooltip] = useState(false)
   const selectOptions = useMemo(() => {
     let options = [...new Array(window.navigator.hardwareConcurrency || 0)]
     options = [
@@ -49,6 +50,7 @@ const NodeWorkersSelect: FC<NodeWorkersSelectProps> = ({
 
   return (
     <Tooltip
+      isOpen={showTooltip}
       label={
         'The number of CPU workers to use for long-running node operations, \
          like creating transactions and verifying blocks. 0 disables workers \
@@ -67,6 +69,8 @@ const NodeWorkersSelect: FC<NodeWorkersSelectProps> = ({
           label="Node workers"
           renderOption={option => <Option label={option.label} />}
           maxMenuHeight={220}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
         />
       </Box>
     </Tooltip>
