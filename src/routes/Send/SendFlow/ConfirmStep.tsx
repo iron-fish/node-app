@@ -92,12 +92,7 @@ const ConfirmStep: FC<StepProps> = ({
                       Add New Contact?
                     </chakra.h4>
                   )}
-                  <chakra.h5
-                    pl="1rem"
-                    // color={NAMED_COLORS.GREY}
-                    whiteSpace="nowrap"
-                    overflow="hidden"
-                  >
+                  <chakra.h5 pl="1rem" whiteSpace="nowrap" overflow="hidden">
                     {truncateHash(to.address, 2, 16)}
                   </chakra.h5>
                 </HStack>
