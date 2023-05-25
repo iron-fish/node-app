@@ -306,6 +306,7 @@ class AccountManager
         }
       : createParams
     const newAccount = await this.node.wallet.importAccount(create)
+    this.node.wallet.scanTransactions()
 
     return newAccount.serialize()
   }
