@@ -400,7 +400,6 @@ function AmountInput({
         </NumberInput>
         <InputRightAddon
           ref={assetLabelRef}
-          // bg="pink"
           border="none"
           color={NAMED_COLORS.GREY}
           fontSize="3rem"
