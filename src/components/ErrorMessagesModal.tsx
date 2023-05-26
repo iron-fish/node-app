@@ -16,7 +16,7 @@ import IronFishInitStatus from 'Types/IronfishInitStatus'
 interface NodeErrorMessagesModal {
   errors: Error[]
   nodeStatus: IronFishInitStatus
-  collectDump: () => Promise<string>
+  collectDump: (errors: Error[]) => Promise<string>
   processError: () => Promise<void>
 }
 
@@ -34,10 +34,11 @@ const NodeErrorMessagesModal: FC<NodeErrorMessagesModal> = ({
   useEffect(() => {
     if (
       nodeStatus >= IronFishInitStatus.INITIALIZED &&
-      collectedDump === undefined
+      collectedDump === undefined &&
+      errors?.length
     ) {
       setCollectingDump(true)
-      collectDump().then(collected => {
+      collectDump(errors).then(collected => {
         setCollectedDump(collected)
         setCollectingDump(false)
       })

@@ -20,9 +20,9 @@ class DemoErrorManager implements IErrorManager {
     return this.errors
   }
 
-  async processError(closeOnLastProcessed = false): Promise<Error[]> {
-    this.errors.pop()
-    return [...this.errors]
+  async processError(_closeOnLastProcessed = false): Promise<Error[]> {
+    this.errors = []
+    return this.errors
   }
 }
 

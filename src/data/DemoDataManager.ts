@@ -58,7 +58,7 @@ class DemoDataManager implements IIronfishManager {
     )
   }
 
-  async dump(): Promise<string> {
+  async dump(_errors: Error[]): Promise<string> {
     return ''
   }
 

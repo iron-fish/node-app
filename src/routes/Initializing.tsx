@@ -112,7 +112,8 @@ const Initializing: FC = () => {
   const handleProcessError = () =>
     window.ErrorManager.processError().then(setErrors)
 
-  const collectDump = () => window.IronfishManager.dump()
+  const collectDump = (dumpErrors: Error[]) =>
+    window.IronfishManager.dump(dumpErrors)
 
   if (
     initStatus >= IronFishInitStatus.INITIALIZED &&

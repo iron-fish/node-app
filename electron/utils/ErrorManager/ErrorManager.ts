@@ -26,8 +26,8 @@ class ErrorManager implements IErrorManager {
   }
 
   async processError(closeOnLastProcessed = true): Promise<Error[]> {
-    this.errors.pop()
-    if (closeOnLastProcessed && this.errors.length === 0) {
+    this.errors = []
+    if (closeOnLastProcessed) {
       app.quit()
     }
     return this.errors

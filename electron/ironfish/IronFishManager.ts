@@ -391,11 +391,21 @@ export class IronFishManager implements IIronfishManager {
     await this.node.syncer.peerNetwork.start()
   }
 
-  async dump(): Promise<string> {
+  async dump(errors: Error[]): Promise<string> {
     let logDump = `=====================================================
 =========== Iron Fish Node App Crash Dump ===========
 =====================================================
 `
+
+    if (errors.length) {
+      logDump += `
+Errors
+-----------------------------------------------------
+`
+      for (const error of errors) {
+        logDump += `* ${error.message}\n`
+      }
+    }
 
     if (this.node) {
       const nodeStatus = await this.nodeStatus()
