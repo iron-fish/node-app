@@ -162,51 +162,26 @@ const NodeSettings: FC = () => {
               }}
             />
           </Skeleton>
-        </Flex>
+        </Grid>
+        <br />
         <Flex gap="2rem">
           <Skeleton w="50%" my="1rem" variant="ironFish" isLoaded={!!data}>
-            <Flex
-              sx={{
-                h: '4.313rem',
-                px: '1.5rem',
-                py: '0.75rem',
-                borderRadius: '0.25rem',
-                bg: NAMED_COLORS.WHITE,
-                border: '0.063rem solid',
-                borderColor: NAMED_COLORS.LIGHT_GREY,
-                boxShadow: '0 0.25rem 0.688rem rgba(0, 0, 0, 0.04)',
-                _dark: {
-                  bg: NAMED_COLORS.DARKER_GREY,
-                  borderColor: NAMED_COLORS.DARK_GREY,
-                },
-                flexDirection: 'column',
-                justifyContent: 'center',
-              }}
-            >
-              <chakra.h6
-                color={NAMED_COLORS.GREY}
-                p="0.25rem"
-                _dark={{ color: NAMED_COLORS.PALE_GREY }}
-              >
-                Telemetry
-              </chakra.h6>
-              <FormControl display="flex" alignItems="center">
-                <SwitchToggle
-                  size="md"
-                  id="toggle-telemetry"
-                  isChecked={nodeSettings?.enableTelemetry}
-                  onChange={e =>
-                    updateSettingValue('enableTelemetry', e.target.checked)
-                  }
-                  mr="0.5rem"
-                />
-                <FormLabel htmlFor="toggle-telemetry" mb="0">
-                  {nodeSettings?.enableTelemetry
-                    ? 'Telemetry enabled'
-                    : 'Telemetry disabled'}
-                </FormLabel>
-              </FormControl>
-            </Flex>
+            <FormControl display="flex" alignItems="center">
+              <SwitchToggle
+                size="md"
+                id="toggle-telemetry"
+                isChecked={nodeSettings?.enableTelemetry}
+                onChange={e =>
+                  updateSettingValue('enableTelemetry', e.target.checked)
+                }
+                mr="0.5rem"
+              />
+              <FormLabel htmlFor="toggle-telemetry" mb="0">
+                {nodeSettings?.enableTelemetry
+                  ? 'Telemetry enabled'
+                  : 'Telemetry disabled'}
+              </FormLabel>
+            </FormControl>
           </Skeleton>
           <Flex w="50%" />
         </Flex>
