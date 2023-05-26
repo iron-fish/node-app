@@ -16,6 +16,7 @@ export const ROUTES = {
   UPDATES: '/updates',
   UPDATE: '/update',
   MINER: '/miner',
+  TELEMETRY: '/telemetry',
 }
 
 export default ROUTES
