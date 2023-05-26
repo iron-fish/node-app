@@ -9,6 +9,8 @@ import {
   Box,
   NAMED_COLORS,
   Grid,
+  FormControl,
+  FormLabel,
 } from '@ironfish/ui-kit'
 import useNodeSettings from 'Hooks/node/useNodeSettings'
 import { FC, useState, useEffect, memo, useMemo } from 'react'
@@ -16,6 +18,7 @@ import pick from 'lodash/pick'
 import DetailsPanel from 'Components/DetailsPanel'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 import NodeWorkersSelect from './NodeWorkersSelect'
+import SwitchToggle from 'Components/SwitchToggle'
 
 const Information: FC = memo(() => {
   return (
@@ -40,6 +43,7 @@ const SETTINGS_KEYS = [
   'minPeers',
   'maxPeers',
   'blocksPerMessage',
+  'enableTelemetry',
 ]
 
 const NodeSettings: FC = () => {
@@ -159,15 +163,38 @@ const NodeSettings: FC = () => {
             />
           </Skeleton>
         </Grid>
-        <Button
-          mt="2rem"
-          variant="primary"
-          size="large"
-          onClick={handleSaveSettings}
-          isDisabled={!loaded || hasNoChanges}
-        >
-          Save settings
-        </Button>
+        <br />
+        <Flex gap="2rem">
+          <Skeleton w="50%" my="1rem" variant="ironFish" isLoaded={!!data}>
+            <FormControl display="flex" alignItems="center">
+              <SwitchToggle
+                size="md"
+                id="toggle-telemetry"
+                isChecked={nodeSettings?.enableTelemetry}
+                onChange={e =>
+                  updateSettingValue('enableTelemetry', e.target.checked)
+                }
+                mr="0.5rem"
+              />
+              <FormLabel htmlFor="toggle-telemetry" mb="0">
+                {nodeSettings?.enableTelemetry
+                  ? 'Telemetry enabled'
+                  : 'Telemetry disabled'}
+              </FormLabel>
+            </FormControl>
+          </Skeleton>
+          <Flex w="50%" />
+        </Flex>
+        <Flex my="1rem" gap="32px">
+          <Button
+            variant="primary"
+            size="large"
+            onClick={handleSaveSettings}
+            isDisabled={!loaded || hasNoChanges}
+          >
+            Save settings
+          </Button>
+        </Flex>
       </Flex>
       <Box>
         <DetailsPanel>

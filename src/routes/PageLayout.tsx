@@ -21,6 +21,7 @@ import {
   LIGHT_COLORS,
 } from 'Components/Navbar/StatusBar/StatusItem'
 import ModalWindow from 'Components/ModalWindow'
+import FirstRunTelemetryModal from 'Components/FirstRunTelemetryModal'
 
 const DownloadSnapshotMessage: FC<{
   show: boolean
@@ -107,6 +108,7 @@ export const PageLayout: FC = () => {
   const location = useLocation()
   return (
     <>
+      <FirstRunTelemetryModal />
       <DownloadSnapshotMessage show={requiredSnapshot} data={data} />
       <Flex
         className="App"

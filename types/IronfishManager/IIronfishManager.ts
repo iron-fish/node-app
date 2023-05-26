@@ -15,6 +15,7 @@ export enum IronfishManagerAction {
   GET_NODE_CONFIG = 'getNodeConfig',
   HAS_ANY_ACCOUNT = 'hasAnyAccount',
   INITIALIZE = 'initialize',
+  IS_FIRST_RUN = 'isFirstRun',
   NODE_STATUS = 'nodeStatus',
   PEERS = 'peers',
   SAVE_NODE_CONFIG = 'saveNodeConfig',
@@ -37,6 +38,7 @@ export interface IIronfishManager {
   getNodeConfig: () => Promise<Partial<ConfigOptions>>
   hasAnyAccount: () => Promise<boolean>
   initialize: () => Promise<void>
+  isFirstRun: () => Promise<boolean>
   nodeStatus: () => Promise<NodeStatusResponse>
   peers: () => Promise<Peer[]>
   saveNodeConfig: (values: Partial<ConfigOptions>) => Promise<void>
