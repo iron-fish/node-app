@@ -69,6 +69,7 @@ const CreateStep: FC<StepProps> = ({
         visible={true}
         mb="1rem"
         wordsAmount={24}
+        showInfoIcon={false}
       />
       <Box>
         <Checkbox

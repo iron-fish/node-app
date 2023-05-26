@@ -88,6 +88,7 @@ const ValidateStep: FC<StepProps> = ({
           }
         }}
         wordsAmount={phrase.length}
+        showInfoIcon={false}
       />
       {error?.header && error?.message && (
         <Box mt="0.75rem">

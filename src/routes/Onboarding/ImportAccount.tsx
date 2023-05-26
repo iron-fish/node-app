@@ -179,6 +179,7 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
         visible={true}
         isReadOnly={false}
         onChange={newWords => setPhrase(newWords)}
+        showInfoIcon={false}
       />
       <Box>
         <Button

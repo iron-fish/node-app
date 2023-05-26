@@ -102,6 +102,7 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
           isReadOnly={true}
           mb="2rem"
           wordsAmount={24}
+          showInfoIcon={false}
         />
         <Flex alignItems={'center'} gap="2rem">
           <SelectField
