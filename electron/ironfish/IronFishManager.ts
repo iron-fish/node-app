@@ -403,7 +403,11 @@ Errors
 -----------------------------------------------------
 `
       for (const error of errors) {
-        logDump += `* ${error.message}\n`
+        if (error.stack) {
+          logDump += `* ${error.stack}\n`
+        } else {
+          logDump += `* ${error.message}\n`
+        }
       }
     }
 
