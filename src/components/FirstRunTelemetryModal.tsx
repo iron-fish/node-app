@@ -19,16 +19,16 @@ const FirstRunTelemetryModal = () => {
     actions: { saveSettings },
   } = useNodeSettings()
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
   useEffect(() => {
     window.IronfishManager.isFirstRun().then(
       isFirstRun => isFirstRun && onOpen()
     )
   }, [])
-  const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     setEnableTelemetry(data?.enableTelemetry)
-  }, [loaded])
+  }, [loaded, data?.enableTelemetry])
 
   return (
     <ModalWindow isOpen={isOpen} onClose={onClose}>
@@ -40,7 +40,7 @@ const FirstRunTelemetryModal = () => {
           color={NAMED_COLORS.LIGHT_BLUE}
           onClick={() => window.open('https://stats.ironfish.network/?orgId=1')}
         >
-          telemetry data
+          anonymous telemetry data
         </Button>{' '}
         in order to continually improve your experience. This data includes node
         performance, block information, and other health metrics. You can enable
