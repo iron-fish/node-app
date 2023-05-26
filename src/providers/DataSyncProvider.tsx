@@ -38,8 +38,7 @@ export interface DataSyncContextProps {
   }
 }
 
-const CHAIN_SYNC_PROGRESS_THRESHOLD = 0.7
-const SNAPSHOT_VALUABLE_PROGRESS = 0.3
+const SNAPSHOT_VALUABLE_PROGRESS = 20
 
 const DataSyncContext = createContext<DataSyncContextProps>({
   synced: false,
@@ -90,21 +89,13 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
       .catch(setError)
 
   const isSnapshotRequired = useMemo(() => {
-    if (status?.blockSyncer.syncing.progress > CHAIN_SYNC_PROGRESS_THRESHOLD) {
+    if (!manifest?.block_sequence) {
       return false
     }
-    if (
-      !status?.blockchain?.totalSequences ||
-      status?.blockchain?.totalSequences === '0' ||
-      !manifest?.block_sequence
-    ) {
-      return false
-    }
-    const total = Number(status?.blockchain?.totalSequences)
-    const headToSnapshot =
-      manifest.block_sequence - Number(status?.blockchain?.head)
-    const snapshotToTotal = headToSnapshot / total
-    return snapshotToTotal > SNAPSHOT_VALUABLE_PROGRESS
+    return (
+      Number(status?.blockchain?.head) < SNAPSHOT_VALUABLE_PROGRESS &&
+      snapshotStatus.status !== SnapshotProgressStatus.DECLINED
+    )
   }, [
     JSON.stringify(manifest),
     status?.blockSyncer.syncing.progress,

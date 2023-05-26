@@ -77,6 +77,9 @@ const SnapshotProvider: FC<{ children: ReactNode }> = ({ children }) => {
       window.IronfishManager.initialize()
       window.IronfishManager.snapshot.reset()
     }
+    if (status.status === SnapshotProgressStatus.DECLINED) {
+      window.IronfishManager.sync()
+    }
   }, [status?.status])
 
   return (

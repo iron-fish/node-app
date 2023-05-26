@@ -148,6 +148,12 @@ class SnapshotManager
       })
   }
 
+  async decline() {
+    this.onStatusChange({
+      status: SnapshotProgressStatus.DECLINED,
+    })
+  }
+
   async retry(): Promise<void> {
     if (this.progress.status === SnapshotProgressStatus.NOT_STARTED) {
       return Promise.reject('Nothing to retry.')

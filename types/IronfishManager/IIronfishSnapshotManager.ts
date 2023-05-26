@@ -8,6 +8,7 @@ export enum IronfishSnaphotManagerAction {
   RETRY = 'retry',
   STATUS = 'status',
   RESET = 'reset',
+  DECLINE = 'decline',
 }
 
 export enum SnapshotProgressStatus {
@@ -18,6 +19,7 @@ export enum SnapshotProgressStatus {
   UNARHIVING,
   CLEARING_TEMP_DATA,
   COMPLETED,
+  DECLINED,
 }
 
 export interface SnapshotProgressType {
@@ -50,4 +52,5 @@ export interface IIronfishSnapshotManager {
   manifest: () => Promise<SnapshotManifest>
   reset: () => Promise<void>
   status: () => Promise<Omit<SnapshotProgressType, 'statistic'>>
+  decline: () => Promise<void>
 }

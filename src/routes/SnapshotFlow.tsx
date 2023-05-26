@@ -14,6 +14,7 @@ enum STEPS {
   UPDATING_DB,
   CLEARING_TEMP,
   COMPLETED,
+  DECLINED,
 }
 
 const getActiveStep = (status: SnapshotProgressStatus): number => {
@@ -29,6 +30,8 @@ const getActiveStep = (status: SnapshotProgressStatus): number => {
       return STEPS.CLEARING_TEMP
     case SnapshotProgressStatus.COMPLETED:
       return STEPS.COMPLETED
+    case SnapshotProgressStatus.DECLINED:
+      return STEPS.DECLINED
     default:
       return STEPS.DOWNLOADING
   }
@@ -68,7 +71,8 @@ const StepProgress: FC<{
           !status ||
           !status.total ||
           status?.status === SnapshotProgressStatus.NOT_STARTED ||
-          status?.status === SnapshotProgressStatus.COMPLETED
+          status?.status === SnapshotProgressStatus.COMPLETED ||
+          status?.status === SnapshotProgressStatus.DECLINED
         }
       />
     </Box>
@@ -100,9 +104,10 @@ const steps = [
 ]
 
 const SnapshotFlow: FC = () => {
-  const [status, setStatus] = useState<Omit<SnapshotProgressType, 'statistic'> | null>(
-    null
-  )
+  const [status, setStatus] = useState<Omit<
+    SnapshotProgressType,
+    'statistic'
+  > | null>(null)
 
   useEffect(() => {
     window.IronfishManager.snapshot.status().then(setStatus)
@@ -110,7 +115,10 @@ const SnapshotFlow: FC = () => {
   }, [])
 
   useEffect(() => {
-    if (status?.status === SnapshotProgressStatus.COMPLETED) {
+    if (
+      status?.status === SnapshotProgressStatus.COMPLETED ||
+      status?.status === SnapshotProgressStatus.DECLINED
+    ) {
       window.IronfishManager.start()
     }
   }, [status?.status])

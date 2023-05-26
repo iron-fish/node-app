@@ -27,6 +27,12 @@ class SnapshotManagerContext implements IIronfishSnapshotManager {
       IronfishSnaphotManagerAction.APPLY
     )
   }
+  decline = () => {
+    return ipcRenderer.invoke(
+      'ironfish-manager-snapshot',
+      IronfishSnaphotManagerAction.DECLINE
+    )
+  }
   retry = () => {
     return ipcRenderer.invoke(
       'ironfish-manager-snapshot',
