@@ -27,8 +27,8 @@ import AbstractManager from './AbstractManager'
 import AssetManager from './AssetManager'
 import Asset from 'Types/Asset'
 import AccountCreateParams from 'Types/AccountCreateParams'
-import { BrowserWindow } from 'electron'
 import EventType from 'Types/EventType'
+import sendMessageToRender from '../utils/sendMessageToRender'
 
 class AccountManager
   extends AbstractManager
@@ -47,12 +47,10 @@ class AccountManager
   }
 
   private onAccountCountChange() {
-    BrowserWindow.getAllWindows().forEach(window => {
-      window.webContents.send(
-        EventType.ACCOUNTS_CHANGE,
-        this.node.wallet.listAccounts().length
-      )
-    })
+    sendMessageToRender(
+      EventType.ACCOUNTS_CHANGE,
+      this.node.wallet.listAccounts().length
+    )
   }
 
   async balance(

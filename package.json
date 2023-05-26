@@ -9,6 +9,7 @@
   "scripts": {
     "start": "nps start",
     "start:dev": "nps start.dev",
+    "start:dev-error": "nps start.dev-error",
     "start:demo": "nps start.demo",
     "start:production": "nps start.production",
     "lint": "nps lint",

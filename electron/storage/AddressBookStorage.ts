@@ -9,7 +9,7 @@ class AddressBookStorage extends AbstractStorage<Contact> {
   constructor() {
     super(
       {
-        filename: `${getAppHomeFolder()}/${ADDRESS_BOOK_STORAGE_NAME}`,
+        filename: getAppHomeFolder('/', ADDRESS_BOOK_STORAGE_NAME),
         autoload: true,
         timestampData: true,
       },

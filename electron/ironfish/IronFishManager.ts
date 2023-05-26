@@ -10,12 +10,13 @@ import {
   ConfigOptions,
   getPackageFrom,
   DatabaseVersionError,
+  Peer as SDKPeer,
+  GetWorkersStatusResponse,
 } from '@ironfish/sdk'
 import geoip from 'geoip-lite'
 import log from 'electron-log'
 import fsAsync from 'fs/promises'
 import dns from 'dns/promises'
-import { BrowserWindow } from 'electron'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
@@ -30,6 +31,8 @@ import SnapshotManager from './SnapshotManager'
 import { createAppLogger } from '../utils/AppLogger'
 import EventType from 'Types/EventType'
 import { ERROR_MESSAGES } from '../utils/constants'
+import sendMessageToRender from '../utils/sendMessageToRender'
+import { WorkerMessageType } from '@ironfish/sdk/build/src/workerPool/tasks/workerMessage'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -44,17 +47,13 @@ export class IronFishManager implements IIronfishManager {
   private changeInitStatus(initStatus: IronFishInitStatus) {
     if (this.initStatus !== initStatus) {
       this.initStatus = initStatus
-      BrowserWindow.getAllWindows().forEach(window => {
-        window.webContents.send(EventType.INIT_STATUS_CHANGE, initStatus)
-      })
+      sendMessageToRender(EventType.INIT_STATUS_CHANGE, initStatus)
     }
   }
 
   private initEventListeners() {
-    this.node.peerNetwork.peerManager.onConnectedPeersChanged.on(() => {
-      BrowserWindow.getAllWindows().forEach(async window => {
-        window.webContents.send(EventType.PEERS_CHANGE, await this.getPeers())
-      })
+    this.node.peerNetwork.peerManager.onConnectedPeersChanged.on(async () => {
+      sendMessageToRender(EventType.PEERS_CHANGE, await this.getPeers())
     })
 
     this.accounts.initEventListeners()
@@ -138,6 +137,8 @@ export class IronFishManager implements IIronfishManager {
     } catch (error) {
       if (error instanceof DatabaseVersionError) {
         this.sdk.config.setOverride('databaseMigrate', true)
+      } else {
+        log.error(error)
       }
     }
   }
@@ -198,6 +199,7 @@ export class IronFishManager implements IIronfishManager {
         await this.resetChain()
         await NodeUtils.waitForOpen(this.node)
       } else {
+        log.error(error)
         this.changeInitStatus(IronFishInitStatus.ERROR)
       }
     }
@@ -257,8 +259,8 @@ export class IronFishManager implements IIronfishManager {
       await this.initializeSdk()
       await this.initializeNode()
     } catch (e) {
-      this.changeInitStatus(IronFishInitStatus.ERROR)
       log.error(e)
+      this.changeInitStatus(IronFishInitStatus.ERROR)
     }
   }
 
@@ -427,5 +429,111 @@ export class IronFishManager implements IIronfishManager {
 
   async sync(): Promise<void> {
     await this.node.syncer.peerNetwork.start()
+  }
+
+  async dump(errors: Error[]): Promise<string> {
+    let logDump = `=====================================================
+=========== Iron Fish Node App Crash Dump ===========
+=====================================================
+`
+
+    if (errors.length) {
+      logDump += `
+Errors
+-----------------------------------------------------
+`
+      for (const error of errors) {
+        if (error.stack) {
+          logDump += `* ${error.stack}\n`
+        } else {
+          logDump += `* ${error.message}\n`
+        }
+      }
+    }
+
+    if (this.node) {
+      const nodeStatus = await this.nodeStatus()
+      const config = await this.getNodeConfig()
+
+      let jobs = ''
+      for (const type of this.node.workerPool.stats.keys()) {
+        if (
+          type === WorkerMessageType.JobAborted ||
+          type === WorkerMessageType.Sleep
+        ) {
+          continue
+        }
+
+        const job = this.node.workerPool.stats.get(type)
+
+        if (job) {
+          const name = WorkerMessageType[type]
+          jobs += `${name.padEnd(20)}(complete=${job.complete},error=${
+            job.error
+          },execute=${job.execute},queued=${job.queue})\n`
+        }
+      }
+
+      logDump += `
+Node
+-----------------------------------------------------
+Status:             ${nodeStatus?.node.status}
+
+CPU
+-----------------------------------------------------
+Cores:              ${nodeStatus?.cpu.cores}
+Current:            ${nodeStatus?.cpu.percentCurrent.toFixed(1)}%
+Rolling Avg:        ${nodeStatus?.cpu.percentRollingAvg.toFixed(1)}%
+
+Mempool
+-----------------------------------------------------
+Transactions:       ${this.node.memPool.count()}
+Size (bytes):       ${this.node.memPool.sizeBytes()}
+Max Size (bytes):   ${this.node.memPool.maxSizeBytes}
+Head Sequence:      ${this.node.memPool.head?.sequence || 0}
+Evictions:          ${this.node.metrics.memPoolEvictions.value}
+Recently Evicted:   ${this.node.memPool.recentlyEvictedCacheStats().size}
+
+Peer Network
+-----------------------------------------------------
+Peers:              ${nodeStatus?.peerNetwork.peers}
+Ready:              ${nodeStatus?.peerNetwork.isReady}
+Inbound Traffic:    ${nodeStatus?.peerNetwork.inboundTraffic.toFixed(1)}
+Outbound Traffic:   ${nodeStatus?.peerNetwork.outboundTraffic.toFixed(1)}
+
+Workers
+-----------------------------------------------------
+Started:            ${this.node.workerPool.started}
+Workers:            ${this.node.workerPool.workers.length}
+Executing:          ${this.node.workerPool.executing}
+Queued:             ${this.node.workerPool.queued}
+Capacity:           ${this.node.workerPool.capacity}
+Change:             ${MathUtils.round(
+        this.node.workerPool.change?.rate5s ?? 0,
+        2
+      )}
+Speed:              ${MathUtils.round(
+        this.node.workerPool.speed?.rate5s ?? 0,
+        2
+      )}
+
+Jobs
+-----------------------------------------------------
+${jobs}
+Config
+-----------------------------------------------------
+${JSON.stringify(config, null, 2)}
+`
+    } else {
+      logDump += 'Node was not initialized\n'
+    }
+
+    logDump += '============ Iron Fish Node App Dump End ============'
+
+    for (const line of logDump.split('\n')) {
+      log.error(line)
+    }
+
+    return logDump
   }
 }

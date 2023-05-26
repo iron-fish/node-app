@@ -7,6 +7,7 @@ module.exports = {
     start: {
       default: crossEnv('MODE=dev electron-forge start'),
       dev: crossEnv('MODE=dev electron-forge start'),
+      'dev-error': crossEnv('MODE=dev TEST_ERROR=1 electron-forge start'),
       demo: crossEnv('MODE=demo electron-forge start'),
       production: crossEnv('MODE=production electron-forge start'),
     },

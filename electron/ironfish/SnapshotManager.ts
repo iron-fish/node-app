@@ -13,8 +13,9 @@ import {
   SnapshotManifest,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import AbstractManager from './AbstractManager'
-import { BrowserWindow } from 'electron'
 import EventType from 'Types/EventType'
+import log from 'electron-log'
+import sendMessageToRender from '../utils/sendMessageToRender'
 
 const MANIFEST_URL = 'https://snapshots.ironfish.network/manifest.json'
 
@@ -43,15 +44,13 @@ class SnapshotManager
       ...this.progress,
       ...diff,
     }
-    BrowserWindow.getAllWindows().forEach(window => {
-      window.webContents.send(EventType.SNAPSHOT_STATUS_CHANGE, {
-        status: this.progress?.status,
-        current: this.progress?.current,
-        total: this.progress?.total,
-        estimate: this.progress?.estimate,
-        hasError: this.progress?.hasError,
-        error: this.progress?.error,
-      })
+    sendMessageToRender(EventType.SNAPSHOT_STATUS_CHANGE, {
+      status: this.progress?.status,
+      current: this.progress?.current,
+      total: this.progress?.total,
+      estimate: this.progress?.estimate,
+      hasError: this.progress?.hasError,
+      error: this.progress?.error,
     })
   }
 
@@ -79,6 +78,7 @@ class SnapshotManager
     try {
       await fs.promises.mkdir(savePath, { recursive: true })
     } catch (e) {
+      log.error(e)
       return {
         hasError: true,
         error:
@@ -144,6 +144,7 @@ class SnapshotManager
         })
       })
       .catch(e => {
+        log.error(e)
         throw e
       })
   }
@@ -330,6 +331,7 @@ class SnapshotManager
         },
       })
     } catch (e) {
+      log.error(e)
       this.onStatusChange({
         hasError: true,
         error:
@@ -377,6 +379,7 @@ class SnapshotManager
         force: true,
       })
     } catch (e) {
+      log.error(e)
       this.onStatusChange({
         hasError: true,
         error:
@@ -411,6 +414,7 @@ class SnapshotManager
         ),
       })
     } catch (e) {
+      log.error(e)
       this.onStatusChange({
         hasError: true,
         error:

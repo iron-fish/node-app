@@ -1,11 +1,11 @@
-import { Flex, Box, Steps, Step, chakra, Button } from '@ironfish/ui-kit'
+import { Flex, Box } from '@ironfish/ui-kit'
 import { FC, useEffect, useMemo, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import IronFishLogo from 'Svgx/IronFishLogo'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import ROUTES from './data'
 import EventType from 'Types/EventType'
-import ModalWindow from 'Components/ModalWindow'
+import NodeErrorMessagesModal from 'Components/ErrorMessagesModal'
 
 enum STEPS {
   INITIALIZATION,
@@ -50,7 +50,7 @@ const getInitializationStatusDesc = (
 const Initializing: FC = () => {
   const [initStatus, setInitStatus] = useState<IronFishInitStatus | null>(null)
   const [hasAnyAccount, setHasAnyAccount] = useState<boolean | null>(null)
-  const [errors, setErrors] = useState(null)
+  const [errors, setErrors] = useState<Error[]>([])
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -65,6 +65,7 @@ const Initializing: FC = () => {
     window.subscribeOn(EventType.ACCOUNTS_CHANGE, count =>
       setHasAnyAccount(count > 0)
     )
+    window.subscribeOn(EventType.CRITICAL_ERROR, setErrors)
   }
 
   useEffect(() => {
@@ -111,6 +112,9 @@ const Initializing: FC = () => {
   const handleProcessError = () =>
     window.ErrorManager.processError().then(setErrors)
 
+  const collectDump = (dumpErrors: Error[]) =>
+    window.IronfishManager.dump(dumpErrors)
+
   if (
     initStatus >= IronFishInitStatus.INITIALIZED &&
     hasAnyAccount === false &&
@@ -133,7 +137,6 @@ const Initializing: FC = () => {
   }
 
   // const currentStep = getActiveStep(initStatus)
-
   return (
     <>
       {!hasErrors &&
@@ -152,25 +155,12 @@ const Initializing: FC = () => {
           <Box mb="4rem">
             <IronFishLogo height="4rem" isAnimated={!hasErrors} />
           </Box>
-          {!!errors?.length && (
-            <ModalWindow
-              isOpen={!!errors?.length}
-              onClose={() => handleProcessError()}
-            >
-              <chakra.h2 mb="1rem">Error</chakra.h2>
-              <chakra.h4 mb="1.5rem">{errors.at(-1).message}</chakra.h4>
-              <Flex>
-                <Button
-                  variant="primary"
-                  size="medium"
-                  mr="1.5rem"
-                  onClick={() => handleProcessError()}
-                >
-                  Ok
-                </Button>
-              </Flex>
-            </ModalWindow>
-          )}
+          <NodeErrorMessagesModal
+            errors={errors}
+            nodeStatus={initStatus}
+            collectDump={collectDump}
+            processError={handleProcessError}
+          />
           {/* <Box w="100%" maxWidth="65.5rem">
             <Steps activeStep={currentStep}>
               <Step

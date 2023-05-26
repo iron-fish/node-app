@@ -117,6 +117,11 @@ class UpdateManager implements IUpdateManager {
         )
       ).data.data.map((note: ReleaseNote) => note.version)
     } catch (error) {
+      if (error.isAxiosError) {
+        log.error(error?.code, '|', error?.config?.url, '|', error?.message)
+      } else {
+        log.error(error)
+      }
       return []
     }
   }
