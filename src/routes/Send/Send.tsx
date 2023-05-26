@@ -1,4 +1,4 @@
-import { FC, memo, useState, useEffect, useMemo } from 'react'
+import { FC, memo, useState, useEffect, useMemo, useRef } from 'react'
 import {
   Box,
   Flex,
@@ -12,6 +12,7 @@ import {
   NumberInput,
   NumberInputField,
   Autocomplete,
+  useDimensions,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
@@ -54,7 +55,9 @@ const Information: FC = memo(() => {
   )
 })
 
-const getPrecision = (val: string) => {
+const getPrecision = (val: string | null) => {
+  if (!val) return 2
+
   let precision = 2
   const dotIndex = val.indexOf('.')
   if (dotIndex === -1) {
@@ -118,7 +121,7 @@ const HAS_PENDING_TRANSACTIONS =
 const Send: FC = () => {
   const location = useLocation()
   const state = location.state as LocationStateProps
-  const [amount, setAmount] = useState('0.00')
+  const [amount, setAmount] = useState<string | null>(null)
   const [account, setAccount] = useState<CutAccount>(null)
   const [contact, setContact] = useState<Contact>(null)
   const [balance, setBalance] = useState<AccountBalance>(null)
@@ -142,7 +145,7 @@ const Send: FC = () => {
   )
 
   useEffect(() => {
-    if (Number(amount) !== 0 && !selectedFee?.label) {
+    if (amount && Number(amount) !== 0 && !selectedFee?.label) {
       fees?.average &&
         setSelectedFee(getEstimatedFeeOption('average', fees?.average))
     }
@@ -209,60 +212,42 @@ const Send: FC = () => {
             ml="0"
           >
             <chakra.h4>I want to send</chakra.h4>
-            <InputGroup
-              width="auto"
-              fontSize="3rem"
-              alignItems="baseline"
-              my="1rem"
-              flexWrap="wrap"
-              justifyContent="center"
-            >
-              <NumberInput
-                value={amount}
-                step={0.00000001}
-                onChange={valueString => {
-                  try {
-                    const dotIndex = valueString.indexOf('.')
-                    if (
-                      dotIndex !== -1 &&
-                      valueString.substring(dotIndex + 1, valueString.length)
-                        .length > IRON_PRECISION
-                    ) {
-                      return
-                    }
-                    decodeIron(valueString)
-                    setAmount(valueString)
-                  } catch (err) {
+            <AmountInput
+              value={amount}
+              onChange={valueString => {
+                if (!valueString) {
+                  setAmount(null)
+                  return
+                }
+
+                if (valueString === '.') {
+                  setAmount('0.')
+                  return
+                }
+
+                try {
+                  const dotIndex = valueString.indexOf('.')
+                  if (
+                    dotIndex !== -1 &&
+                    valueString.substring(dotIndex + 1, valueString.length)
+                      .length > IRON_PRECISION
+                  ) {
                     return
                   }
-                }}
-                precision={getPrecision(amount)}
-                display="flex"
-              >
-                <NumberInputField
-                  fontSize="3rem"
-                  width={amount.length * 1.9 + 'rem'}
-                  minW="3rem"
-                  h="100%"
-                  p="0rem"
-                  textAlign="end"
-                  border="none"
-                  _focusVisible={{
-                    border: 'none',
-                  }}
-                />
-              </NumberInput>
-              <InputRightAddon
-                bg="transparent"
-                border="none"
-                color={NAMED_COLORS.GREY}
-                fontSize="3rem"
-                px="1rem"
-              >
-                {balance?.asset.name || '$IRON'}
-              </InputRightAddon>
-            </InputGroup>
-            {/* <chakra.h5 color={NAMED_COLORS.GREY}>USD $ --</chakra.h5> */}
+                  decodeIron(valueString)
+                  setAmount(valueString)
+                } catch (err) {
+                  return
+                }
+              }}
+              precision={getPrecision(amount)}
+              asset={balance?.asset.name || '$IRON'}
+            />
+            <chakra.h5>{`Account Balance: ${
+              balance?.confirmed
+                ? formatOreToTronWithLanguage(balance.confirmed)
+                : 0
+            }`}</chakra.h5>
           </Flex>
           <Box mr="-0.25rem">
             <WarningMessage
@@ -272,14 +257,25 @@ const Send: FC = () => {
               mt="-1rem"
               mb="1rem"
             />
-            <AccountsSelect
-              label="From Account"
-              mb="2rem"
-              accountId={account?.id || state?.accountId}
-              onSelectOption={setAccount}
-              showBalance={false}
-              watchBalance={true}
-            />
+            <Box
+              sx={{
+                '.select-field__value-text.select-field__value-text': {
+                  color: 'inherit',
+                },
+                '.option-text.option-text': {
+                  color: 'inherit',
+                },
+              }}
+            >
+              <AccountsSelect
+                label="From Account"
+                mb="2rem"
+                accountId={account?.id || state?.accountId}
+                onSelectOption={setAccount}
+                showBalance={false}
+                watchBalance={true}
+              />
+            </Box>
             <AccountAssetsSelect
               mb="2rem"
               label="Asset"
@@ -291,7 +287,7 @@ const Send: FC = () => {
               selected={balance || account?.balances.default}
               onSelectOption={assetBalance => {
                 setBalance(assetBalance)
-                setAmount('0.00')
+                setAmount(null)
               }}
             />
             <ContactsAutocomplete
@@ -336,7 +332,7 @@ const Send: FC = () => {
           setContact(null)
           setTxnMemo('')
           setSelectedFee(null)
-          setAmount('0.00')
+          setAmount(null)
         }}
         onClose={() => setStart(false)}
         amount={decodeIron(amount || 0)}
@@ -348,6 +344,71 @@ const Send: FC = () => {
         fee={selectedFee?.value}
       />
     </Flex>
+  )
+}
+
+function AmountInput({
+  onChange,
+  value,
+  precision,
+  asset,
+}: {
+  onChange: (value: string) => void
+  value: string | null
+  precision: number
+  asset: string
+}) {
+  const wrapperRef = useRef(null)
+  const wrapperWidth = useDimensions(wrapperRef, true)?.borderBox.width
+  const assetLabelRef = useRef(null)
+  const assetLabelWidth = useDimensions(assetLabelRef, true)?.borderBox.width
+  const inputMaxWidth = wrapperWidth - assetLabelWidth
+  return (
+    <Box w="100%" ref={wrapperRef} overflow="hidden">
+      <InputGroup
+        width="auto"
+        fontSize="3rem"
+        alignItems="baseline"
+        my="1rem"
+        justifyContent="center"
+        maxW="100%"
+      >
+        <NumberInput
+          value={value ?? ''}
+          step={0.00000001}
+          onChange={onChange}
+          precision={precision}
+          display="flex"
+        >
+          <NumberInputField
+            placeholder="0.00"
+            fontSize="3rem"
+            width={(value ? value.length : 4) * 1.9 + 'rem'}
+            minW="3rem"
+            h="100%"
+            p="0rem"
+            textAlign="end"
+            border="none"
+            _placeholder={{
+              color: NAMED_COLORS.GREY,
+            }}
+            maxW={inputMaxWidth ? `${inputMaxWidth}px` : 'auto'}
+            _focusVisible={{
+              border: 'none',
+            }}
+          />
+        </NumberInput>
+        <InputRightAddon
+          ref={assetLabelRef}
+          border="none"
+          color={NAMED_COLORS.GREY}
+          fontSize="3rem"
+          px="1rem"
+        >
+          {asset}
+        </InputRightAddon>
+      </InputGroup>
+    </Box>
   )
 }
 
