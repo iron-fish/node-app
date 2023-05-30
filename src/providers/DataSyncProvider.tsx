@@ -38,7 +38,7 @@ export interface DataSyncContextProps {
   }
 }
 
-const SNAPSHOT_VALUABLE_PROGRESS = 20
+const SNAPSHOT_VALUABLE_PROGRESS = 1000
 
 const DataSyncContext = createContext<DataSyncContextProps>({
   synced: false,
@@ -111,8 +111,10 @@ const DataSyncProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     if (!status) {
-      loadStatus()
-      return
+      const interval = setInterval(() => {
+        loadStatus()
+      }, 1000)
+      return () => clearInterval(interval)
     }
 
     if (Number(status?.blockchain?.totalSequences) > 0 && isSnapshotRequired) {

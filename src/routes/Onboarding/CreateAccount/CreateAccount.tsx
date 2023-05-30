@@ -1,4 +1,4 @@
-import { Flex, chakra, NAMED_COLORS, useIronToast } from '@ironfish/ui-kit'
+import { Flex, chakra, NAMED_COLORS } from '@ironfish/ui-kit'
 import { FC, useState } from 'react'
 import { ROUTES } from 'Routes/data'
 import BackButtonLink from 'Components/BackButtonLink'
@@ -27,17 +27,10 @@ const CreateAccount: FC<CreateAccountProps> = ({
     loaded,
     actions: { confirmAccountCreation },
   } = useCreateAccount()
-  const toast = useIronToast({
-    title: 'Account Created',
-    containerStyle: {
-      mb: '1rem',
-    },
-  })
 
   const handleCreateAccount = () =>
     confirmAccountCreation(accountName).then(() => {
       onCreate()
-      toast()
     })
 
   return (

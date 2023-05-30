@@ -23,6 +23,7 @@ import TransactionOverview from 'Routes/Transaction/TransactionOverview'
 import Updates from 'Routes/Updates/Updates'
 import Update from 'Routes/Updates/Update'
 import { ReleaseNotesProviderWrapper } from 'Providers/ReleaseNotesProvider'
+import Telemetry from 'Routes/Onboarding/Telemetry'
 
 const breakpoints = {
   xs: '46.875rem', //750px
@@ -48,6 +49,7 @@ function App() {
             <Route element={<Providers />}>
               <Route path={ROUTES.BASE} />
               <Route element={<CreateLayout />}>
+                <Route path={ROUTES.TELEMETRY} element={<Telemetry />} />
                 <Route path={ROUTES.ONBOARDING} element={<Action />} />
                 <Route path={ROUTES.CREATE} element={<CreateAccount />} />
                 <Route path={ROUTES.IMPORT} element={<ImportAccount />} />

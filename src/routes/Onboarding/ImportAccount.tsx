@@ -12,7 +12,6 @@ import {
   TabPanel,
   TextField,
   MnemonicView,
-  useIronToast,
   Textarea,
 } from '@ironfish/ui-kit'
 import { FC, useState, useCallback, useRef } from 'react'
@@ -205,17 +204,10 @@ const ImportAccount: FC<DesktopModeProps> = ({
   onImport = () => undefined,
 }) => {
   const navigate = useNavigate()
-  const toast = useIronToast({
-    title: 'Account Imported',
-    containerStyle: {
-      mb: '1rem',
-    },
-  })
 
   const handleOnImport = useCallback(() => {
     onImport()
-    desktopMode && navigate(ROUTES.ACCOUNTS)
-    toast()
+    desktopMode && navigate(ROUTES.TELEMETRY)
   }, [onImport])
 
   return (
