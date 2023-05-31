@@ -1,7 +1,7 @@
 import IStorage from 'Types/IStorage'
 import SortType from 'Types/SortType'
 import Entity from 'Types/Entity'
-import { ipcRenderer } from 'electron'
+import { invoke } from './util'
 
 class StorageContext implements IStorage<Entity> {
   name: string
@@ -11,22 +11,22 @@ class StorageContext implements IStorage<Entity> {
   }
 
   list = (searchTerm: string, sort: SortType) => {
-    return ipcRenderer.invoke(this.name + '-list', searchTerm, sort)
+    return invoke(this.name + '-list', searchTerm, sort)
   }
   get = (identity: string) => {
-    return ipcRenderer.invoke(this.name + '-get', identity)
+    return invoke(this.name + '-get', identity)
   }
   add = (entity: Omit<Entity, '_id'>) => {
-    return ipcRenderer.invoke(this.name + '-add', entity)
+    return invoke(this.name + '-add', entity)
   }
   update = (identity: string, fieldsToUpdate: Partial<Omit<Entity, '_id'>>) => {
-    return ipcRenderer.invoke(this.name + '-update', identity, fieldsToUpdate)
+    return invoke(this.name + '-update', identity, fieldsToUpdate)
   }
   delete = (identity: string) => {
-    return ipcRenderer.invoke(this.name + '-delete', identity)
+    return invoke(this.name + '-delete', identity)
   }
   find = (entity: Partial<Omit<Entity, '_id'>>) => {
-    return ipcRenderer.invoke(this.name + '-find', entity)
+    return invoke(this.name + '-find', entity)
   }
 }
 

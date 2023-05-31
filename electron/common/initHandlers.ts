@@ -24,18 +24,41 @@ async function shutdownNode() {
   return await ironfishManager.stop()
 }
 
+function handleError(error: unknown): {
+  error: true
+  message: string
+  name?: string
+  stack?: string
+} {
+  if (error.isAxiosError) {
+    log.error(error?.code, '|', error?.config?.url, '|', error?.message)
+  } else {
+    log.error(error)
+  }
+
+  if (error instanceof Error) {
+    return {
+      error: true,
+      message: error.message,
+      name: error.name,
+      stack: error.stack,
+    }
+  }
+
+  return {
+    error: true,
+    message: String(error),
+  }
+}
+
 ipcMain.handle(
   'ironfish-manager',
   async (e, action: IronfishManagerAction, ...args): Promise<any> => {
-    let result
     try {
-      result = await ironfishManager[action](...args)
+      return await ironfishManager[action](...args)
     } catch (error) {
-      // eslint-disable-next-line no-console
-      log.error(error)
+      return handleError(error)
     }
-
-    return result
   }
 )
 
@@ -44,28 +67,21 @@ ipcMain.handle(
   async (e, action: IronfishAssetManagerActions, ...args): Promise<any> => {
     let result
     try {
-      result = await ironfishManager.assets[action](...args)
+      return await ironfishManager.assets[action](...args)
     } catch (error) {
-      // eslint-disable-next-line no-console
-      log.error(error)
+      return handleError(error)
     }
-
-    return result
   }
 )
 
 ipcMain.handle(
   'ironfish-manager-accounts',
   async (e, action: IronfishAccountManagerAction, ...args): Promise<any> => {
-    let result
     try {
-      result = await ironfishManager.accounts[action](...args)
+      return await ironfishManager.accounts[action](...args)
     } catch (error) {
-      // eslint-disable-next-line no-console
-      log.error(error)
+      return handleError(error)
     }
-
-    return result
   }
 )
 
@@ -76,28 +92,21 @@ ipcMain.handle(
     action: IronfishTransactionManagerAction,
     ...args
   ): Promise<any> => {
-    let result
     try {
-      result = await ironfishManager.transactions[action](...args)
+      return await ironfishManager.transactions[action](...args)
     } catch (error) {
-      // eslint-disable-next-line no-console
-      log.error(error)
-      throw new Error(error.message)
+      return handleError(error)
     }
-
-    return result
   }
 )
 
 ipcMain.handle(
   'ironfish-manager-snapshot',
   async (e, action: IronfishSnaphotManagerAction, ...args): Promise<any> => {
-    let result
     try {
-      result = await ironfishManager.snapshot[action](...args)
+      return await ironfishManager.snapshot[action](...args)
     } catch (error) {
-      // eslint-disable-next-line no-console
-      log.error(error)
+      return handleError(error)
     }
 
     return result
@@ -107,18 +116,11 @@ ipcMain.handle(
 ipcMain.handle(
   'update-manager',
   async (e, action: UpdateManagerAction, ...args) => {
-    let result
     try {
-      result = await UpdateManager[action](...args)
+      return await UpdateManager[action](...args)
     } catch (error) {
-      if (error.isAxiosError) {
-        log.error(error?.code, '|', error?.config?.url, '|', error?.message)
-      } else {
-        log.error(error)
-      }
+      return handleError(error)
     }
-
-    return result
   }
 )
 
@@ -127,13 +129,10 @@ ipcMain.handle(
   async (e, action: ErrorManagerActions, ...args) => {
     let result
     try {
-      result = await errorManager[action](...args)
+      return await errorManager[action](...args)
     } catch (error) {
-      // eslint-disable-next-line no-console
-      log.error(error)
+      return handleError(error)
     }
-
-    return result
   }
 )
 

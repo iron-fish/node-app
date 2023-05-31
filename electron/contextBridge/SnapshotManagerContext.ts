@@ -1,13 +1,13 @@
-import { ipcRenderer } from 'electron'
 import {
   IIronfishSnapshotManager,
   IronfishSnaphotManagerAction,
   SnapshotManifest,
 } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import { invoke } from './util'
 
 class SnapshotManagerContext implements IIronfishSnapshotManager {
   checkPath = (manifest: SnapshotManifest, pathToSave?: string) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-snapshot',
       IronfishSnaphotManagerAction.CHECK_PATH,
       manifest,
@@ -15,44 +15,44 @@ class SnapshotManagerContext implements IIronfishSnapshotManager {
     )
   }
   start = (pathToSave?: string) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-snapshot',
       IronfishSnaphotManagerAction.START,
       pathToSave
     )
   }
   apply = () => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-snapshot',
       IronfishSnaphotManagerAction.APPLY
     )
   }
   decline = () => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-snapshot',
       IronfishSnaphotManagerAction.DECLINE
     )
   }
   retry = () => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-snapshot',
       IronfishSnaphotManagerAction.RETRY
     )
   }
   manifest = () => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-snapshot',
       IronfishSnaphotManagerAction.MANIFEST
     )
   }
   reset = () => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-snapshot',
       IronfishSnaphotManagerAction.RESET
     )
   }
   status = () => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-snapshot',
       IronfishSnaphotManagerAction.STATUS
     )

@@ -1,4 +1,3 @@
-import { ipcRenderer } from 'electron'
 import {
   IUpdateManager,
   ReleaseNote,
@@ -6,31 +5,23 @@ import {
   UpdateReleaseNotesResponse,
   UpdateStatus,
 } from 'Types/IUpdateManager'
+import { invoke } from './util'
 
 class UpdateManagerContext implements IUpdateManager {
   initialize: () => Promise<void> = () => {
-    return ipcRenderer.invoke('update-manager', UpdateManagerAction.INITIALIZE)
+    return invoke('update-manager', UpdateManagerAction.INITIALIZE)
   }
   checkUpdates: () => Promise<UpdateStatus> = () => {
-    return ipcRenderer.invoke(
-      'update-manager',
-      UpdateManagerAction.CHECK_UPDATES
-    )
+    return invoke('update-manager', UpdateManagerAction.CHECK_UPDATES)
   }
   ignoreUpdates: () => Promise<UpdateStatus> = () => {
-    return ipcRenderer.invoke(
-      'update-manager',
-      UpdateManagerAction.IGNORE_UPDATES
-    )
+    return invoke('update-manager', UpdateManagerAction.IGNORE_UPDATES)
   }
   resetError: () => Promise<UpdateStatus> = () => {
-    return ipcRenderer.invoke('update-manager', UpdateManagerAction.RESET_ERROR)
+    return invoke('update-manager', UpdateManagerAction.RESET_ERROR)
   }
   installUpdates: () => Promise<void> = () => {
-    return ipcRenderer.invoke(
-      'update-manager',
-      UpdateManagerAction.INSTALL_UPDATES
-    )
+    return invoke('update-manager', UpdateManagerAction.INSTALL_UPDATES)
   }
   notes: (
     after?: string,
@@ -39,25 +30,13 @@ class UpdateManagerContext implements IUpdateManager {
     after?: string,
     limit?: number
   ) => {
-    return ipcRenderer.invoke(
-      'update-manager',
-      UpdateManagerAction.NOTES,
-      after,
-      limit
-    )
+    return invoke('update-manager', UpdateManagerAction.NOTES, after, limit)
   }
   note: (version: string) => Promise<ReleaseNote> = (version: string) => {
-    return ipcRenderer.invoke(
-      'update-manager',
-      UpdateManagerAction.NOTE,
-      version
-    )
+    return invoke('update-manager', UpdateManagerAction.NOTE, version)
   }
   getNewVersions: () => Promise<string[]> = () => {
-    return ipcRenderer.invoke(
-      'update-manager',
-      UpdateManagerAction.GET_VERSIONS_BEFORE
-    )
+    return invoke('update-manager', UpdateManagerAction.GET_VERSIONS_BEFORE)
   }
 }
 

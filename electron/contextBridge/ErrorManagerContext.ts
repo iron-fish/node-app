@@ -1,15 +1,14 @@
-import { ipcRenderer } from 'electron'
 import IErrorManager, { ErrorManagerActions } from 'Types/ErrorManagerTypes'
+import { invoke } from './util'
 
 class ErrorManagerContext implements IErrorManager {
   addError = (error: Error) =>
-    ipcRenderer.invoke('error-manager', ErrorManagerActions.ADD_ERROR, error)
+    invoke('error-manager', ErrorManagerActions.ADD_ERROR, error)
 
-  getErrors = () =>
-    ipcRenderer.invoke('error-manager', ErrorManagerActions.GET_ERRORS)
+  getErrors = () => invoke('error-manager', ErrorManagerActions.GET_ERRORS)
 
   processError = (closeOnLastProcessed: boolean) =>
-    ipcRenderer.invoke(
+    invoke(
       'error-manager',
       ErrorManagerActions.PROCESS_ERROR,
       closeOnLastProcessed

@@ -1,21 +1,21 @@
 import { AccountValue } from '@ironfish/sdk'
-import { ipcRenderer } from 'electron'
 import {
   IIronfishAccountManager,
   IronfishAccountManagerAction,
 } from 'Types/IronfishManager/IIronfishAccountManager'
 import SortType from 'Types/SortType'
+import { invoke } from './util'
 
 class AccountManagerContext implements IIronfishAccountManager {
   importByEncodedKey = (data: string) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.IMPORT_BY_ENCODED_KEY,
       data
     )
   }
   importByMnemonic = (name: string, mnemonic: string) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.IMPORT_BY_MNEMONIC,
       name,
@@ -23,27 +23,27 @@ class AccountManagerContext implements IIronfishAccountManager {
     )
   }
   create = (name: string) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.CREATE,
       name
     )
   }
   prepareAccount = () => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.PREPARE_ACCOUNT
     )
   }
   submitAccount = (createParams: AccountValue) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.SUBMIT_ACCOUNT,
       createParams
     )
   }
   list = (search?: string, sort?: SortType) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.LIST,
       search,
@@ -51,35 +51,35 @@ class AccountManagerContext implements IIronfishAccountManager {
     )
   }
   get = (id: string) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.GET,
       id
     )
   }
   delete = (name: string) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.DELETE,
       name
     )
   }
   import = (account: Omit<AccountValue, 'rescan'>) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.IMPORT,
       account
     )
   }
   isValidPublicAddress = (address: string) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.IS_VALID_PUBLIC_ADDRESS,
       address
     )
   }
   export = (id: string, encode?: boolean, viewOnly?: boolean) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.EXPORT,
       id,
@@ -88,7 +88,7 @@ class AccountManagerContext implements IIronfishAccountManager {
     )
   }
   balance = (id: string, assetId?: string) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.BALANCE,
       id,
@@ -96,14 +96,14 @@ class AccountManagerContext implements IIronfishAccountManager {
     )
   }
   balances = (id: string) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.BALANCES,
       id
     )
   }
   getMnemonicPhrase = (id: string) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-accounts',
       IronfishAccountManagerAction.GET_MNEMONIC_PHRASE,
       id
