@@ -7,6 +7,7 @@ import {
   FormLabel,
   Flex,
   Box,
+  Switch,
 } from '@ironfish/ui-kit'
 import { useEffect, useState } from 'react'
 import { ROUTES } from 'Routes/data'
@@ -68,7 +69,7 @@ const Telemetry = () => {
           enable or disable this at any time in the node settings page.
         </chakra.h4>
         <FormControl mb="1.5rem" display="flex" alignItems="center">
-          <Toggle
+          <Switch
             id="toggle-telemetry"
             isChecked={enableTelemetry}
             onChange={() => setEnableTelemetry(prev => !prev)}
