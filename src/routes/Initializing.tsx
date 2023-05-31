@@ -10,6 +10,8 @@ import NodeErrorMessagesModal from 'Components/ErrorMessagesModal'
 const Initializing: FC = () => {
   const [initStatus, setInitStatus] = useState<IronFishInitStatus | null>(null)
   const [hasAnyAccount, setHasAnyAccount] = useState<boolean | null>(null)
+  const [needsTelemetry, setNeedsTelemetry] = useState<boolean>(false)
+
   const [errors, setErrors] = useState<Error[]>([])
   const location = useLocation()
   const navigate = useNavigate()
@@ -20,6 +22,13 @@ const Initializing: FC = () => {
   const loadAccountCount = () => {
     window.IronfishManager.hasAnyAccount().then(setHasAnyAccount)
   }
+
+  const loadNeedsTelemetry = () => {
+    window.IronfishManager.getInternalConfig('isFirstRun').then(
+      setNeedsTelemetry
+    )
+  }
+
   const subscribeOnEvents = () => {
     window.subscribeOn(EventType.INIT_STATUS_CHANGE, setInitStatus)
     window.subscribeOn(EventType.ACCOUNTS_CHANGE, count =>
@@ -61,6 +70,7 @@ const Initializing: FC = () => {
       hasAnyAccount === null
     ) {
       loadAccountCount()
+      loadNeedsTelemetry()
       return
     }
 
@@ -93,7 +103,11 @@ const Initializing: FC = () => {
       location.pathname === ROUTES.CREATE ||
       location.pathname === ROUTES.BASE)
   ) {
-    navigate(ROUTES.TELEMETRY)
+    if (needsTelemetry) {
+      navigate(ROUTES.TELEMETRY)
+    } else {
+      navigate(ROUTES.ACCOUNTS)
+    }
   }
 
   // const currentStep = getActiveStep(initStatus)

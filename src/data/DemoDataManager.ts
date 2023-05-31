@@ -1,4 +1,4 @@
-import { ConfigOptions } from '@ironfish/sdk'
+import { ConfigOptions, InternalOptions } from '@ironfish/sdk'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
 import Peer from 'Types/Peer'
@@ -65,6 +65,12 @@ class DemoDataManager implements IIronfishManager {
 
   async getNodeConfig(): Promise<Partial<ConfigOptions>> {
     return this.nodeSettings.getConfig()
+  }
+
+  async getInternalConfig<T extends keyof InternalOptions>(
+    option: T
+  ): Promise<InternalOptions[T]> {
+    return true as any
   }
 
   async hasAnyAccount(): Promise<boolean> {
