@@ -1,4 +1,4 @@
-import { ConfigOptions } from '@ironfish/sdk'
+import { ConfigOptions, InternalOptions } from '@ironfish/sdk'
 import IronFishInitStatus from '../IronfishInitStatus'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
 
@@ -20,6 +20,7 @@ export enum IronfishManagerAction {
   NODE_STATUS = 'nodeStatus',
   PEERS = 'peers',
   SAVE_NODE_CONFIG = 'saveNodeConfig',
+  GET_INTERNAL_CONFIG = 'getInternalConfig',
   START = 'start',
   STATUS = 'status',
   STOP = 'stop',
@@ -49,6 +50,9 @@ export interface IIronfishManager {
   stop: (changeStatus?: boolean) => Promise<void>
   stopSyncing: () => Promise<void>
   sync: () => Promise<void>
+  getInternalConfig<T extends keyof InternalOptions>(
+    option: T
+  ): Promise<InternalOptions[T]>
 }
 
 export default IIronfishManager

@@ -12,6 +12,7 @@ import {
   DatabaseVersionError,
   Peer as SDKPeer,
   GetWorkersStatusResponse,
+  InternalOptions,
 } from '@ironfish/sdk'
 import geoip from 'geoip-lite'
 import log from 'electron-log'
@@ -252,6 +253,12 @@ export class IronFishManager implements IIronfishManager {
 
   async hasAnyAccount(): Promise<boolean> {
     return Promise.resolve(this.node.wallet.listAccounts().length > 0)
+  }
+
+  async getInternalConfig<T extends keyof InternalOptions>(
+    option: T
+  ): Promise<InternalOptions[T]> {
+    return this.sdk.internal.get(option)
   }
 
   async initialize(): Promise<void> {

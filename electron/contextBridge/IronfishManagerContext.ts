@@ -1,4 +1,4 @@
-import { ConfigOptions } from '@ironfish/sdk'
+import { ConfigOptions, InternalOptions } from '@ironfish/sdk'
 import { ipcRenderer } from 'electron'
 import IIronfishManager, {
   IronfishManagerAction,
@@ -88,6 +88,15 @@ class IronfishManagerContext implements IIronfishManager {
       'ironfish-manager',
       IronfishManagerAction.SAVE_NODE_CONFIG,
       values
+    )
+  }
+  getInternalConfig = <T extends keyof InternalOptions>(
+    option: T
+  ): Promise<InternalOptions[T]> => {
+    return ipcRenderer.invoke(
+      'ironfish-manager',
+      IronfishManagerAction.GET_INTERNAL_CONFIG,
+      option
     )
   }
 }
