@@ -1,11 +1,11 @@
-import { ipcRenderer } from 'electron'
 import IIronfishAssetManager, {
   IronfishAssetManagerActions,
 } from 'Types/IronfishManager/IIronfishAssetManager'
+import { invoke } from './util'
 
 class AssetManagerContext implements IIronfishAssetManager {
   list = (search?: string, offset?: number, max?: number) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-assets',
       IronfishAssetManagerActions.LIST,
       search,
@@ -14,14 +14,14 @@ class AssetManagerContext implements IIronfishAssetManager {
     )
   }
   get = (id: string | Buffer) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-assets',
       IronfishAssetManagerActions.GET,
       id
     )
   }
   default = () => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-assets',
       IronfishAssetManagerActions.DEFAULT
     )

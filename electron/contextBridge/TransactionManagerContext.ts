@@ -1,14 +1,14 @@
-import { ipcRenderer } from 'electron'
 import {
   IIronfishTransactionManager,
   IronfishTransactionManagerAction,
 } from 'Types/IronfishManager/IIronfishTransactionManager'
 import SortType from 'Types/SortType'
 import { Payment } from 'Types/Transaction'
+import { invoke } from './util'
 
 class TransactionManagerContext implements IIronfishTransactionManager {
   estimateFeeWithPriority = (accountId: string, receive: Payment) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-transactions',
       IronfishTransactionManagerAction.ESTIMATE_FEE,
       accountId,
@@ -21,7 +21,7 @@ class TransactionManagerContext implements IIronfishTransactionManager {
     searchTerm?: string,
     sort?: SortType
   ) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-transactions',
       IronfishTransactionManagerAction.FIND_BY_ACCOUNT_ID,
       accountId,
@@ -31,7 +31,7 @@ class TransactionManagerContext implements IIronfishTransactionManager {
   }
 
   findByAddress = (address: string, searchTerm?: string, sort?: SortType) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-transactions',
       IronfishTransactionManagerAction.FIND_BY_ADDRESS,
       address,
@@ -41,7 +41,7 @@ class TransactionManagerContext implements IIronfishTransactionManager {
   }
 
   get = (hash: string, accountId: string) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-transactions',
       IronfishTransactionManagerAction.GET,
       hash,
@@ -50,7 +50,7 @@ class TransactionManagerContext implements IIronfishTransactionManager {
   }
 
   send = (accountId: string, payment: Payment, transactionFee?: bigint) => {
-    return ipcRenderer.invoke(
+    return invoke(
       'ironfish-manager-transactions',
       IronfishTransactionManagerAction.SEND,
       accountId,
