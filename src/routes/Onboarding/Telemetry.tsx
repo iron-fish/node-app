@@ -12,7 +12,6 @@ import { useEffect, useState } from 'react'
 import { ROUTES } from 'Routes/data'
 import useNodeSettings from 'Hooks/node/useNodeSettings'
 import { Link } from 'react-router-dom'
-import SwitchToggle from 'Components/SwitchToggle'
 import Logo from 'Svgx/Logo'
 
 const Telemetry = () => {
@@ -69,7 +68,7 @@ const Telemetry = () => {
           enable or disable this at any time in the node settings page.
         </chakra.h4>
         <FormControl mb="1.5rem" display="flex" alignItems="center">
-          <SwitchToggle
+          <Toggle
             id="toggle-telemetry"
             isChecked={enableTelemetry}
             onChange={() => setEnableTelemetry(prev => !prev)}
