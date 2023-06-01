@@ -1,4 +1,4 @@
-import { FC, useState, useMemo, useEffect } from 'react'
+import { FC, useState, useMemo, useEffect, useCallback } from 'react'
 import {
   Box,
   Button,
@@ -9,6 +9,7 @@ import {
   ButtonsGroup,
   Skeleton,
   IconAdd,
+  useDebounce,
 } from '@ironfish/ui-kit'
 import SearchSortField from 'Components/Search&Sort'
 import useAccounts from 'Hooks/accounts/useAccounts'
@@ -103,22 +104,20 @@ const ActionButtons: FC<ActionButtonsProps> = ({ reloadAccounts }) => {
 
 const Accounts = () => {
   const [$searchTerm, $setSearchTerm] = useState('')
+  const $search = useDebounce($searchTerm, 500)
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
   const [{ data: accounts, loaded }, reloadAccounts] = useAccounts(
-    $searchTerm,
+    $search,
     $sortOrder
   )
 
   useEffect(() => {
-    let timeout: NodeJS.Timer
     if (loaded) {
-      timeout = setInterval(reloadAccounts, 5000)
+      reloadAccounts()
     }
+  }, [$search, $sortOrder])
 
-    return () => timeout && clearInterval(timeout)
-  }, [loaded])
-
-  const isAccountsLoaded = accounts && accounts.length > 0
+  const isAccountsLoaded = loaded && accounts !== undefined
 
   return (
     <>
