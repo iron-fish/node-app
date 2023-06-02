@@ -1,5 +1,11 @@
 import { FC, useEffect, useState, useDeferredValue } from 'react'
-import { Box, chakra, useBreakpointValue, useIronToast } from '@ironfish/ui-kit'
+import {
+  Box,
+  chakra,
+  useBreakpointValue,
+  useDebounce,
+  useIronToast,
+} from '@ironfish/ui-kit'
 import SearchSortField from 'Components/Search&Sort'
 import useTransactions from 'Hooks/transactions/useAccountTransactions'
 import { useNavigate } from 'react-router-dom'
@@ -22,14 +28,14 @@ interface SearchTransactionsProps {
 const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
   const navigate = useNavigate()
   const [$searchTerm, $setSearchTerm] = useState('')
-  const deferredSearchTerm = useDeferredValue($searchTerm)
+  const $search = useDebounce($searchTerm, 500)
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
   const {
     data: transactions = undefined,
     loaded,
     actions: { reload },
-  } = useTransactions(address, deferredSearchTerm, $sortOrder)
-  const trxLoaded = useDeferredValue(loaded)
+  } = useTransactions(address, $search, $sortOrder)
+  const transactionsLoaded = loaded && transactions !== undefined
   const [, setTransactionsState] = useState([])
   const isCompactView = useBreakpointValue({ base: true, md: false })
   const toast = useIronToast({
@@ -39,13 +45,10 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
   })
 
   useEffect(() => {
-    let interval: NodeJS.Timer
-    if (trxLoaded) {
-      interval = setInterval(reload, 5000)
+    if (transactionsLoaded) {
+      reload()
     }
-
-    return () => interval && clearInterval(interval)
-  }, [trxLoaded])
+  }, [$search, $sortOrder])
 
   useEffect(() => {
     setTransactionsState(prevTransactions => {
@@ -96,11 +99,9 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
       }
       return transactions.map(({ hash, status }) => ({ hash, status }))
     })
-  }, [trxLoaded])
+  }, [transactionsLoaded])
 
-  return trxLoaded &&
-    transactions?.length === 0 &&
-    !deferredSearchTerm ? null : (
+  return transactionsLoaded && transactions?.length === 0 && !$search ? null : (
     <>
       <Box>
         <chakra.h3 pb="1rem">Transactions</chakra.h3>
