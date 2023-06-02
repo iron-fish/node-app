@@ -1,10 +1,8 @@
 import {
   Button,
-  CheckIcon,
   Flex,
   Spinner,
   chakra,
-  Input,
   Textarea,
   CopyValueToClipboard,
   NAMED_COLORS,

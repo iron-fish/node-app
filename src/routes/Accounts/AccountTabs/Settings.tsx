@@ -6,20 +6,19 @@ import {
   TextField,
   chakra,
   Link,
-  ModalProps,
   useIronToast,
   useDisclosure,
 } from '@ironfish/ui-kit'
 // import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 // import useAccountSettings from 'Hooks/accounts/useAccountSettings'
 import DetailsPanel from 'Components/DetailsPanel'
-import { FC, memo, useState, useEffect, ChangeEvent } from 'react'
+import { FC, memo, useState, useEffect } from 'react'
 import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import Account from 'Types/Account'
-import ModalWindow from 'Components/ModalWindow'
 import { formatOreToTronWithLanguage } from 'Utils/number'
+import ConfirmModal from 'Components/ConfirmModal'
 
 const Information: FC = memo(() => {
   return (
@@ -62,80 +61,6 @@ interface AccountSettingsProps {
 //   },
 // ]
 
-interface RemoveAccountModalProps extends Omit<ModalProps, 'children'> {
-  account: Account
-  onDelete: () => void
-}
-
-const RemoveAccountModal: FC<RemoveAccountModalProps> = ({
-  account,
-  onDelete,
-  ...modalProps
-}) => {
-  const [removePhrase, setRemovePhrase] = useState('')
-  return (
-    <ModalWindow
-      {...modalProps}
-      onClose={() => {
-        modalProps.onClose()
-      }}
-    >
-      <chakra.h2 mb="16px">Remove Account</chakra.h2>
-      {account?.balances?.default?.confirmed === BigInt(0) ? (
-        <>
-          <chakra.h4 mb="32px">
-            You’re about to remove “{account?.name}”. Please be sure to have
-            written down your mnemonic phrase if you plan to import it.
-          </chakra.h4>
-          <TextField
-            label="Type REMOVE"
-            mb="32px"
-            InputProps={{
-              maxLength: 6,
-            }}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setRemovePhrase(e.target.value)
-            }
-          />
-          <Flex>
-            <Button
-              variant="primary"
-              size="medium"
-              mr="1.5rem"
-              bgColor="#F15929"
-              isDisabled={removePhrase !== 'REMOVE'}
-              onClick={() => onDelete()}
-            >
-              Remove Account
-            </Button>
-            <Link
-              alignSelf="center"
-              onClick={() => {
-                modalProps.onClose()
-              }}
-            >
-              <h4>Cancel</h4>
-            </Link>
-          </Flex>
-        </>
-      ) : (
-        <>
-          <chakra.h4 mb="32px">
-            {`This account currently holds ${formatOreToTronWithLanguage(
-              account?.balances?.default?.confirmed || BigInt(0)
-            )} $IRON. Please send this $IRON to another account before removing.`}
-          </chakra.h4>
-          <Flex>
-            <Link alignSelf="center" onClick={() => modalProps.onClose()}>
-              <h4>Close</h4>
-            </Link>
-          </Flex>
-        </>
-      )}
-    </ModalWindow>
-  )
-}
-
 interface RemoveAccountButtonProps {
   account: Account
   onDelete: () => void
@@ -146,20 +71,30 @@ const RemoveAccountButton: FC<RemoveAccountButtonProps> = ({
   onDelete,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-
+  const balance = account?.balances?.default?.confirmed || BigInt(0)
+  const description = `This account currently holds ${formatOreToTronWithLanguage(
+    balance
+  )} $IRON. ${
+    balance
+      ? 'If you delete this account without exporting it first, YOU WILL LOSE THIS IRON.'
+      : ''
+  }`
   return (
     <>
       <Link alignSelf="center" onClick={onOpen}>
         <chakra.h4>Delete Account</chakra.h4>
       </Link>
-      <RemoveAccountModal
-        account={account}
-        onDelete={() => {
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={() => {
           onDelete()
           onClose()
         }}
-        isOpen={isOpen}
-        onClose={onClose}
+        title="Remove Account"
+        description={description}
+        validationText={account?.name}
+        buttonText="Remove Account"
       />
     </>
   )
