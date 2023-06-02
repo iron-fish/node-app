@@ -13,6 +13,7 @@ import {
   Peer as SDKPeer,
   GetWorkersStatusResponse,
   InternalOptions,
+  HOST_FILE_NAME,
 } from '@ironfish/sdk'
 import geoip from 'geoip-lite'
 import log from 'electron-log'
@@ -34,6 +35,7 @@ import EventType from 'Types/EventType'
 import { ERROR_MESSAGES } from '../utils/constants'
 import sendMessageToRender from '../utils/sendMessageToRender'
 import { WorkerMessageType } from '@ironfish/sdk/build/src/workerPool/tasks/workerMessage'
+import { app } from 'electron'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -159,6 +161,47 @@ export class IronFishManager implements IIronfishManager {
     await walletDb.db.close()
   }
 
+  // used to reset node if datadir exists but is incompatible with mainnet
+  async resetNode(): Promise<void> {
+    log.log(
+      '----------- resetting chain due to network incompatibility ----------------'
+    )
+    await this.node.shutdown()
+    await this.node.closeDB()
+    const hostFilePath: string = this.sdk.config.files.join(
+      this.sdk.config.dataDir,
+      HOST_FILE_NAME
+    )
+    await fsAsync.rm(hostFilePath, { recursive: true, force: true })
+    // Reset walletDb stores containing chain data
+    await this.resetChain()
+
+    // Reset the telemetry config to allow people to re-opt in
+    if (
+      this.sdk.config.isSet('enableTelemetry') &&
+      this.sdk.config.get('enableTelemetry')
+    ) {
+      this.sdk.config.clear('enableTelemetry')
+      await this.sdk.config.save()
+    }
+    if (this.node.config.isSet('networkId')) {
+      this.node.config.clear('networkId')
+      await this.node.config.save()
+    }
+
+    this.sdk.internal.set('networkId', 1)
+    this.sdk.internal.set('isFirstRun', true)
+    this.sdk.internal.set('telemetryNodeId', `node-app-${uuid()}`)
+    await this.sdk.internal.save()
+
+    this.sdk.config.setOverride('databaseMigrate', true)
+
+    this.node = await this.sdk.node({
+      privateIdentity: this.getPrivateIdentity(),
+      autoSeed: true,
+    })
+  }
+
   private async initializeSdk(): Promise<void> {
     //Initializing Iron Fish SDK
     this.changeInitStatus(IronFishInitStatus.INITIALIZING_SDK)
@@ -190,6 +233,14 @@ export class IronFishManager implements IIronfishManager {
     }
 
     await this.checkForMigrations()
+
+    if (
+      (this.sdk.internal.get('networkId') !== 1 ||
+        this.node.config.get('networkId') !== 1) &&
+      (app.isPackaged || process.env.ENABLE_RESET)
+    ) {
+      await this.resetNode()
+    }
 
     try {
       await NodeUtils.waitForOpen(this.node)
