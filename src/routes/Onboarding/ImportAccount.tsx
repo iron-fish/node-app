@@ -46,8 +46,11 @@ const EncodedKeyTab: FC<DesktopModeProps> = ({ onImport }) => {
         <Button
           variant="primary"
           isDisabled={!data}
-          onClick={() => {
-            importBySpendingKey(data).then(() => onImport())
+          onClick={async () => {
+            console.log('before')
+            const thinger = await importBySpendingKey(data)
+            console.log(thinger)
+            onImport()
           }}
           size="medium"
         >

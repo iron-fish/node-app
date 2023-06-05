@@ -10,8 +10,6 @@ import {
   ConfigOptions,
   getPackageFrom,
   DatabaseVersionError,
-  Peer as SDKPeer,
-  GetWorkersStatusResponse,
   InternalOptions,
 } from '@ironfish/sdk'
 import geoip from 'geoip-lite'

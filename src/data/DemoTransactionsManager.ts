@@ -413,6 +413,23 @@ class DemoTransactionsManager implements IIronfishTransactionManager {
     })
   }
 
+  getPaginatedTransactionsByAccountId(
+    accountId: string,
+    _count = 20,
+    _offset = 0
+  ): Promise<{
+    transactions: Transaction[]
+    hasNext: boolean
+  }> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const transactions = DEMO_TRANSACTIONS
+        transactions.sort((a, b) => a.created.getTime() - b.created.getTime())
+        resolve({ transactions, hasNext: false })
+      }, 500)
+    })
+  }
+
   get(hash: string, accountId: string): Promise<Transaction> {
     return new Promise(resolve => {
       setTimeout(() => {

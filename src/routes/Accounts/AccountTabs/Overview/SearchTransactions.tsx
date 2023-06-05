@@ -1,19 +1,35 @@
-import { FC, useEffect, useState, useDeferredValue } from 'react'
-import { Box, chakra, useBreakpointValue, useIronToast } from '@ironfish/ui-kit'
-import SearchSortField from 'Components/Search&Sort'
-import useTransactions from 'Hooks/transactions/useAccountTransactions'
+import { FC, useEffect, useState } from 'react'
+import {
+  Box,
+  Button,
+  chakra,
+  HStack,
+  Spinner,
+  useBreakpointValue,
+} from '@ironfish/ui-kit'
+import { usePaginatedAccountTransactions } from 'Hooks/transactions/useAccountTransactions'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import SortType from 'Types/SortType'
-import Transaction, { TransactionStatus } from 'Types/Transaction'
+import Transaction from 'Types/Transaction'
 import TransactionStatusView from 'Components/TransactionStatusView'
 import EmptyOverview from 'Components/EmptyOverview'
 import ContactsPreview from 'Components/ContactsPreview'
-import differenceBy from 'lodash/differenceBy'
-import intersectionBy from 'lodash/intersectionBy'
 import WalletCommonTable, { ACTIONS_COLUMN } from 'Components/WalletCommonTable'
 import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 import { formatDate } from 'Utils/formatDate'
+import SortSelect from 'Components/Search&Sort/SortSelect'
+
+const SORT_OPTIONS = [
+  {
+    label: 'Newest to oldest',
+    value: SortType.DESC,
+  },
+  {
+    label: 'Oldest to newest',
+    value: SortType.ASC,
+  },
+]
 
 interface SearchTransactionsProps {
   address: string
@@ -21,121 +37,68 @@ interface SearchTransactionsProps {
 
 const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
   const navigate = useNavigate()
-  const [$searchTerm, $setSearchTerm] = useState('')
-  const deferredSearchTerm = useDeferredValue($searchTerm)
   const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
-  const {
-    data: transactions = undefined,
-    loaded,
-    actions: { reload },
-  } = useTransactions(address, deferredSearchTerm, $sortOrder)
-  const trxLoaded = useDeferredValue(loaded)
-  const [, setTransactionsState] = useState([])
   const isCompactView = useBreakpointValue({ base: true, md: false })
-  const toast = useIronToast({
-    containerStyle: {
-      mb: '1rem',
-    },
-  })
+
+  const {
+    data,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = usePaginatedAccountTransactions(address)
+
+  const transactions = data?.pages.flatMap(item => item.transactions) ?? []
 
   useEffect(() => {
     let interval: NodeJS.Timer
-    if (trxLoaded) {
-      interval = setInterval(reload, 5000)
+    if (!isLoading) {
+      interval = setInterval(refetch, 5000)
     }
 
     return () => interval && clearInterval(interval)
-  }, [trxLoaded])
+  }, [isLoading])
 
-  useEffect(() => {
-    setTransactionsState(prevTransactions => {
-      if (!transactions) {
-        return []
-      }
+  if (isLoading) return null
 
-      const formattedTransactions = transactions.map(({ hash, status }) => ({
-        hash,
-        status,
-      }))
+  if (transactions.length === 0) {
+    return (
+      <EmptyOverview
+        header="You don't have any transactions"
+        description="When your account compiles transactions they will be listed here. To produce a transactions, eitherF send or receive $IRON."
+      />
+    )
+  }
 
-      // check only fetched transactions
-      let nextTransactions = intersectionBy(
-        prevTransactions,
-        formattedTransactions,
-        'hash'
-      )
+  transactions[0].hash
 
-      // if fetched more then was add missing
-      if (transactions.length > prevTransactions.length) {
-        nextTransactions = nextTransactions.concat(
-          differenceBy(formattedTransactions, prevTransactions, 'hash')
-        )
-      }
-
-      const pendingTransactions = formattedTransactions.filter(
-        t =>
-          t.status === TransactionStatus.PENDING ||
-          t.status === TransactionStatus.UNCONFIRMED ||
-          t.status === TransactionStatus.UNKNOWN
-      )
-
-      const prevPendingTransactions = nextTransactions.filter(
-        t =>
-          t.status === TransactionStatus.PENDING ||
-          t.status === TransactionStatus.UNCONFIRMED ||
-          t.status === TransactionStatus.UNKNOWN
-      )
-
-      const txnCount =
-        transactions.length > prevTransactions.length
-          ? differenceBy(pendingTransactions, prevPendingTransactions, 'hash')
-          : differenceBy(prevPendingTransactions, pendingTransactions, 'hash')
-
-      if (txnCount.length) {
-        toast({ title: 'Transaction Sent' })
-      }
-      return transactions.map(({ hash, status }) => ({ hash, status }))
-    })
-  }, [trxLoaded])
-
-  return trxLoaded &&
-    transactions?.length === 0 &&
-    !deferredSearchTerm ? null : (
+  return (
     <>
       <Box>
         <chakra.h3 pb="1rem">Transactions</chakra.h3>
-        <SearchSortField
-          SearchProps={{
-            value: $searchTerm,
-            onChange: e => $setSearchTerm(e.target.value),
-          }}
-          SortSelectProps={{
-            onSelectOption: ({ value }) => $setSortOrder(value),
-          }}
-          sortValue={$sortOrder}
-          options={[
-            {
-              label: 'Newest to oldest',
-              value: SortType.DESC,
-            },
-            {
-              label: 'Oldest to newest',
-              value: SortType.ASC,
-            },
-          ]}
-        />
+        {/* <HStack justifyContent="flex-end">
+          <SortSelect
+            options={SORT_OPTIONS}
+            onSelectOption={({ value }) => $setSortOrder(value)}
+            value={SORT_OPTIONS.find(({ value }) => value === $sortOrder)}
+          />
+        </HStack> */}
       </Box>
       {transactions?.length === 0 ? (
         <EmptyOverview
           header="0 Results"
-          description="There aren’t any transactions with details that match your search input. "
+          description="There aren't any transactions with details that match your search input. "
         />
       ) : (
         <WalletCommonTable
           data={!!transactions ? transactions : new Array(10).fill(null)}
-          onRowClick={(data: Transaction) =>
+          onRowClick={(transaction: Transaction) =>
             navigate(ROUTES.TRANSACTION, {
-              state: { accountId: data.accountId, hash: data.hash },
+              state: {
+                accountId: transaction.accountId,
+                hash: transaction.hash,
+              },
             })
           }
           columns={[
@@ -143,10 +106,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
               key: 'transaction-action-column',
               label: <chakra.h6>Action</chakra.h6>,
               render: transaction => (
-                <TransactionStatusView
-                  status={transaction.status}
-                  isSent={transaction.creator}
-                />
+                <TransactionStatusView transaction={transaction} />
               ),
             },
             {
@@ -203,6 +163,15 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
             ,
           ]}
         />
+      )}
+      {hasNextPage && (
+        <HStack justifyContent="center">
+          {isFetchingNextPage ? (
+            <Spinner />
+          ) : (
+            <Button onClick={() => fetchNextPage()}>Load More</Button>
+          )}
+        </HStack>
       )}
     </>
   )

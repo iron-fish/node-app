@@ -1,41 +1,22 @@
-import { useCallback, useEffect } from 'react'
-import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
-import Transaction from 'Types/Transaction'
-import SortType from 'Types/SortType'
+import { useInfiniteQuery } from 'react-query'
 
-const useAccountTransactions = (
-  accountId: string,
-  search?: string,
-  sort?: SortType
-) => {
-  const [result, promiseWrapper] = useAsyncDataWrapper<Transaction[]>()
-  const addContact = useCallback(
-    (name: string, contactAddress: string) =>
-      window.AddressBookStorage.add({ name, address: contactAddress }),
-    []
-  )
+const PAGE_SIZE = 20
 
-  const loadTransactions = () =>
-    accountId &&
-    promiseWrapper(
-      window.IronfishManager.transactions.findByAccountId(
+export function usePaginatedAccountTransactions(accountId: string) {
+  return useInfiniteQuery(
+    ['usePaginatedAccountTransactions', accountId],
+    ({ pageParam = 0 }) => {
+      return window.IronfishManager.transactions.getPaginatedTransactionsByAccountId(
         accountId,
-        search,
-        sort
+        PAGE_SIZE,
+        pageParam
       )
-    )
-
-  useEffect(() => {
-    accountId && loadTransactions()
-  }, [accountId, search, sort])
-
-  return {
-    ...result,
-    actions: {
-      addContact: addContact,
-      reload: loadTransactions,
     },
-  }
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        const nextOffset = allPages.flatMap(page => page.transactions).length
+        return lastPage.hasNext ? nextOffset : undefined
+      },
+    }
+  )
 }
-
-export default useAccountTransactions
