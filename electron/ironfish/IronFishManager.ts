@@ -15,7 +15,6 @@ import {
   InternalOptions,
   HOST_FILE_NAME,
 } from '@ironfish/sdk'
-import geoip from 'geoip-lite'
 import log from 'electron-log'
 import fsAsync from 'fs/promises'
 import dns from 'dns/promises'
@@ -116,7 +115,7 @@ export class IronFishManager implements IIronfishManager {
         agent: peer.agent,
         name: peer.name,
         address: peer.address,
-        country: geoip.lookup(address)?.country,
+        country: null,
         port: peer.port,
         error: peer.error !== null ? String(peer.error) : null,
         connections: connections,
