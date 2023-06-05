@@ -18,18 +18,18 @@ import ContactsPreview from 'Components/ContactsPreview'
 import WalletCommonTable, { ACTIONS_COLUMN } from 'Components/WalletCommonTable'
 import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 import { formatDate } from 'Utils/formatDate'
-import SortSelect from 'Components/Search&Sort/SortSelect'
+// import SortSelect from 'Components/Search&Sort/SortSelect'
 
-const SORT_OPTIONS = [
-  {
-    label: 'Newest to oldest',
-    value: SortType.DESC,
-  },
-  {
-    label: 'Oldest to newest',
-    value: SortType.ASC,
-  },
-]
+// const SORT_OPTIONS = [
+//   {
+//     label: 'Newest to oldest',
+//     value: SortType.DESC,
+//   },
+//   {
+//     label: 'Oldest to newest',
+//     value: SortType.ASC,
+//   },
+// ]
 
 interface SearchTransactionsProps {
   address: string
@@ -37,28 +37,14 @@ interface SearchTransactionsProps {
 
 const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
   const navigate = useNavigate()
-  const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
+  // @todo: Add sorting once it's supported by the SDK
+  // const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
   const isCompactView = useBreakpointValue({ base: true, md: false })
 
-  const {
-    data,
-    isLoading,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-    refetch,
-  } = usePaginatedAccountTransactions(address)
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    usePaginatedAccountTransactions(address)
 
   const transactions = data?.pages.flatMap(item => item.transactions) ?? []
-
-  useEffect(() => {
-    let interval: NodeJS.Timer
-    if (!isLoading) {
-      interval = setInterval(refetch, 5000)
-    }
-
-    return () => interval && clearInterval(interval)
-  }, [isLoading])
 
   if (isLoading) return null
 

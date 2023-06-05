@@ -280,48 +280,6 @@ class TransactionManager
       })
   }
 
-  async findByAccountIdAlt(
-    accountId: string,
-    sort?: SortType,
-    limit?: number
-  ): Promise<Transaction[]> {
-    const account = this.node.wallet.getAccount(accountId)
-
-    if (!account) {
-      throw new Error(`Account with id=${accountId} was not found.`)
-    }
-
-    const head = await account.getHead()
-    const transactions = []
-
-    const blah = account.getTransactionsByTime()
-    let counter = 0
-
-    while (counter < limit) {
-      const transaction = await blah.next()
-      if (transaction.done) {
-        break
-      }
-
-      transactions.push(
-        await this.resolveTransactionFields(
-          account,
-          head.sequence,
-          transaction.value
-        )
-      )
-      counter++
-    }
-
-    for await (const transaction of account.getTransactions()) {
-      transactions.push(
-        await this.resolveTransactionFields(account, head.sequence, transaction)
-      )
-    }
-
-    return transactions
-  }
-
   async findByAddress(address: string, searchTerm?: string, sort?: SortType) {
     const transactions: Transaction[] = []
     let accounts: Account[] = this.node.wallet.listAccounts()

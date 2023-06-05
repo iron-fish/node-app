@@ -203,8 +203,6 @@ class AccountManager
         }
       }
 
-      console.log({ decodedData, accountData })
-
       return this.import(accountData)
     }
   }
