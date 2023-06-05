@@ -126,11 +126,14 @@ const ENV_CONFIGS = {
   production: {
     packagerConfig: {
       osxSign: {},
-      osxNotarize: {
-        tool: 'notarytool',
-        appleId: process.env.APPLE_ID,
-        appleIdPassword: process.env.APPLE_PASSWORD,
-        teamId: process.env.APPLE_TEAM_ID,
+      packagerConfig: {
+        // ...
+        osxNotarize: {
+          tool: 'notarytool',
+          appleApiKey: process.env.APPLE_API_KEY,
+          appleApiKeyId: process.env.APPLE_API_KEY_ID,
+          appleApiIssuer: process.env.APPLE_API_ISSUER,
+        },
       },
     },
     plugins: [
