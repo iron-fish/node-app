@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { resolve } = require('path')
 const spawn = require('cross-spawn')
 require('dotenv').config()
 
@@ -7,7 +6,16 @@ const COMMON_CONFIG = {
   packagerConfig: {
     name: 'Iron Fish Node App',
     executableName: 'node-app',
-    icon: resolve('./electron/icons/icon'),
+    icon: 'electron/icons/icon',
+    osxSign: process.env.APPLE_API_KEY ? {} : undefined,
+    osxNotarize: process.env.APPLE_API_KEY
+      ? {
+          tool: 'notarytool',
+          appleApiKey: process.env.APPLE_API_KEY,
+          appleApiKeyId: process.env.APPLE_API_KEY_ID,
+          appleApiIssuer: process.env.APPLE_API_ISSUER,
+        }
+      : undefined,
   },
   makers: [
     {
@@ -16,7 +24,7 @@ const COMMON_CONFIG = {
         // An URL to an ICO file to use as the application icon (displayed in Control Panel > Programs and Features).
         iconUrl:
           'https://github.com/iron-fish/node-app/raw/master/electron/icons/icon.ico',
-        setupIcon: resolve('./electron/icons/icon.ico'),
+        setupIcon: './electron/icons/icon.ico',
       },
     },
     {
@@ -27,7 +35,7 @@ const COMMON_CONFIG = {
       name: '@electron-forge/maker-deb',
       config: {
         options: {
-          icon: resolve('./electron/icons/icon.png'),
+          icon: './electron/icons/icon.png',
         },
       },
     },
@@ -124,18 +132,6 @@ const ENV_CONFIGS = {
     ],
   },
   production: {
-    packagerConfig: {
-      osxSign: {},
-      packagerConfig: {
-        // ...
-        osxNotarize: {
-          tool: 'notarytool',
-          appleApiKey: process.env.APPLE_API_KEY,
-          appleApiKeyId: process.env.APPLE_API_KEY_ID,
-          appleApiIssuer: process.env.APPLE_API_ISSUER,
-        },
-      },
-    },
     plugins: [
       {
         name: '@electron-forge/plugin-webpack',
