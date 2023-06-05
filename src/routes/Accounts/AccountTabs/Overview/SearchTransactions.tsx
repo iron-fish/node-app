@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
 import {
   Box,
   Button,
@@ -10,7 +10,6 @@ import {
 import { usePaginatedAccountTransactions } from 'Hooks/transactions/useAccountTransactions'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
-import SortType from 'Types/SortType'
 import Transaction from 'Types/Transaction'
 import TransactionStatusView from 'Components/TransactionStatusView'
 import EmptyOverview from 'Components/EmptyOverview'
@@ -18,18 +17,6 @@ import ContactsPreview from 'Components/ContactsPreview'
 import WalletCommonTable, { ACTIONS_COLUMN } from 'Components/WalletCommonTable'
 import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 import { formatDate } from 'Utils/formatDate'
-// import SortSelect from 'Components/Search&Sort/SortSelect'
-
-// const SORT_OPTIONS = [
-//   {
-//     label: 'Newest to oldest',
-//     value: SortType.DESC,
-//   },
-//   {
-//     label: 'Oldest to newest',
-//     value: SortType.ASC,
-//   },
-// ]
 
 interface SearchTransactionsProps {
   address: string
@@ -37,8 +24,6 @@ interface SearchTransactionsProps {
 
 const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
   const navigate = useNavigate()
-  // @todo: Add sorting once it's supported by the SDK
-  // const [$sortOrder, $setSortOrder] = useState<SortType>(SortType.DESC)
   const isCompactView = useBreakpointValue({ base: true, md: false })
 
   const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
@@ -63,13 +48,6 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
     <>
       <Box>
         <chakra.h3 pb="1rem">Transactions</chakra.h3>
-        {/* <HStack justifyContent="flex-end">
-          <SortSelect
-            options={SORT_OPTIONS}
-            onSelectOption={({ value }) => $setSortOrder(value)}
-            value={SORT_OPTIONS.find(({ value }) => value === $sortOrder)}
-          />
-        </HStack> */}
       </Box>
       {transactions?.length === 0 ? (
         <EmptyOverview
