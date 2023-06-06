@@ -98,21 +98,30 @@ const getStatusParams = (
   return params
 }
 
+function getIsFinalized(status: TransactionStatus) {
+  return (
+    status === TransactionStatus.CONFIRMED ||
+    status === TransactionStatus.EXPIRED
+  )
+}
+
 function usePollTransactionStatus({
   hash,
   accountId,
+  isInitialFinalized,
 }: {
   accountId: string
   hash: string
+  isInitialFinalized: boolean
 }) {
-  const [isFinalized, setIsFinalized] = useState(false)
+  const [isFinalized, setIsFinalized] = useState(isInitialFinalized)
 
   const doFetch = useCallback(async () => {
+    if (isFinalized) return
+
     const tx = await window.IronfishManager.transactions.get(hash, accountId)
 
-    const nextIsFinalized =
-      tx.status === TransactionStatus.CONFIRMED ||
-      tx.status === TransactionStatus.EXPIRED
+    const nextIsFinalized = getIsFinalized(tx.status)
 
     if (isFinalized !== nextIsFinalized) {
       setIsFinalized(nextIsFinalized)
@@ -131,6 +140,7 @@ const TransactionStatusView: FC<TransactionStatusProps> = ({ transaction }) => {
   const txStatus = usePollTransactionStatus({
     hash: transaction.hash,
     accountId: transaction.accountId,
+    isInitialFinalized: getIsFinalized(transaction.status),
   })
 
   const { icon, iconColors, message } = getStatusParams(
