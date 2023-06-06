@@ -35,15 +35,18 @@ jobs:
         APPLE_IFLABS_SIGNING_CERT: ${{ secrets.APPLE_IFLABS_SIGNING_CERT }}
         APPLE_IFLABS_SIGNING_CERT_PASSWORD: ${{ secrets.APPLE_IFLABS_SIGNING_CERT_PASSWORD }}
         APPLE_PROVISIONING_PROFILE: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
+        APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
       run: |
         # create variables
         CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
         PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
         KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+        API_KEY_PATH=$RUNNER_TEMP/api_key.p8
 
         # import certificate and provisioning profile from secrets
         echo -n "$APPLE_IFLABS_SIGNING_CERT" | base64 --decode -o $CERTIFICATE_PATH
         echo -n "$APPLE_PROVISIONING_PROFILE" | base64 --decode -o $PP_PATH
+        echo -n "$APPLE_API_KEY" | base64 --decode -o $API_KEY_PATH
 
         # create temporary keychain
         security create-keychain -p "$APPLE_IFLABS_SIGNING_CERT_PASSWORD" $KEYCHAIN_PATH
@@ -57,13 +60,13 @@ jobs:
         # apply provisioning profile
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+        ls $RUNNER_TEMP
     - name: publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
         APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
-        APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
-      run: yarn publish:production
+      run: APPLE_API_KEY="$RUNNER_TEMP/api_key.p8" yarn publish:production
 
   publish_on_win:
     runs-on: windows-latest
