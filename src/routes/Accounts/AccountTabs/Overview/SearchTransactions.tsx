@@ -134,9 +134,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
       )}
       <OnScrollIntoView
         handler={() => {
-          console.log('VISIBLE')
           if (hasNextPage) {
-            console.log('FETCHING')
             fetchNextPage()
           }
         }}
