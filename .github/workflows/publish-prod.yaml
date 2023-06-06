@@ -30,9 +30,23 @@ jobs:
         node-version: 18.13
     - name: install dependencies
       run: yarn
+    - name: setup codesigning
+      env: 
+        APPLE_IFLABS_SIGNING_CERT: ${{ secrets.APPLE_IFLABS_SIGNING_CERT }}
+        APPLE_IFLABS_SIGNING_CERT_PASSWORD: ${{ secrets.APPLE_IFLABS_SIGNING_CERT_PASSWORD }}
+      run: |
+        echo $APPLE_IFLABS_SIGNING_CERT | base64 —decode > certificate.p12
+        security create-keychain -p $APPLE_IFLABS_SIGNING_CERT_PASSWORD build.keychain
+        security default-keychain -s build.keychain
+        security unlock-keychain -p $APPLE_IFLABS_SIGNING_CERT_PASSWORD build.keychain
+        security import certificate.p12 -k build.keychain -P $APPLE_IFLABS_SIGNING_CERT_PASSWORD -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $APPLE_IFLABS_SIGNING_CERT_PASSWORD build.keychain
     - name: publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+        APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+        APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
       run: yarn publish:production
 
   publish_on_win:
