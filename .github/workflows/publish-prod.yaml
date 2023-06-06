@@ -35,7 +35,7 @@ jobs:
         APPLE_IFLABS_SIGNING_CERT: ${{ secrets.APPLE_IFLABS_SIGNING_CERT }}
         APPLE_IFLABS_SIGNING_CERT_PASSWORD: ${{ secrets.APPLE_IFLABS_SIGNING_CERT_PASSWORD }}
       run: |
-        echo $APPLE_IFLABS_SIGNING_CERT | base64 —decode > certificate.p12
+        echo $APPLE_IFLABS_SIGNING_CERT | base64 -d -o certificate.p12
         security create-keychain -p $APPLE_IFLABS_SIGNING_CERT_PASSWORD build.keychain
         security default-keychain -s build.keychain
         security unlock-keychain -p $APPLE_IFLABS_SIGNING_CERT_PASSWORD build.keychain
