@@ -1,7 +1,6 @@
-import { FC } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import {
   Box,
-  Button,
   chakra,
   HStack,
   Spinner,
@@ -31,7 +30,12 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
 
   const transactions = data?.pages.flatMap(item => item.transactions) ?? []
 
-  if (isLoading) return null
+  if (isLoading)
+    return (
+      <HStack justifyContent="center">
+        <Spinner />
+      </HStack>
+    )
 
   if (transactions.length === 0) {
     return (
@@ -128,16 +132,51 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
           ]}
         />
       )}
-      {hasNextPage && (
+      <OnScrollIntoView
+        handler={() => {
+          console.log('VISIBLE')
+          if (hasNextPage) {
+            console.log('FETCHING')
+            fetchNextPage()
+          }
+        }}
+        loading={isFetchingNextPage}
+      />
+    </>
+  )
+}
+
+function OnScrollIntoView({
+  handler,
+  loading,
+}: {
+  handler: () => void
+  loading: boolean
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !loading) {
+        handler()
+      }
+    })
+
+    observer.observe(ref.current)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [ref])
+
+  return (
+    <Box ref={ref}>
+      {loading && (
         <HStack justifyContent="center">
-          {isFetchingNextPage ? (
-            <Spinner />
-          ) : (
-            <Button onClick={() => fetchNextPage()}>Load More</Button>
-          )}
+          <Spinner />
         </HStack>
       )}
-    </>
+    </Box>
   )
 }
 
