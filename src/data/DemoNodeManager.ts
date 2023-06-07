@@ -25,7 +25,7 @@ export const STATUS: NodeStatusResponse = {
   },
   blockchain: {
     synced: false,
-    head: '0',
+    head: '10',
     totalSequences: '23344',
     headTimestamp: new Date().getTime(),
     newBlockSpeed: Math.random() * 1000,
@@ -44,7 +44,20 @@ export const STATUS: NodeStatusResponse = {
     inboundTraffic: Math.random() * 100,
     outboundTraffic: Math.random() * 100,
   },
-  accounts: [{ sequence: '0' }],
+  accounts: [
+    {
+      id: 'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
+      sequence: '10',
+    },
+    {
+      id: 'H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6',
+      sequence: '9',
+    },
+    {
+      id: 'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
+      sequence: '8',
+    },
+  ],
 }
 
 const PEERS: Peer[] = Array(23)
