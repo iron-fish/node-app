@@ -15,6 +15,7 @@ import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTran
 import { IIronfishSnapshotManager } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { INodeSettingsManager } from 'Types/IronfishManager/INodeSettingsManager'
 import EventType from 'Types/EventType'
+import { app } from 'electron'
 
 class DemoDataManager implements IIronfishManager {
   private internalConfig = { isFirstRun: true }
@@ -151,6 +152,14 @@ class DemoDataManager implements IIronfishManager {
 
   async sync(): Promise<void> {
     return this.node.sync()
+  }
+
+  async resetNode(): Promise<void> {
+    return
+  }
+
+  async restartApp(): Promise<void> {
+    return
   }
 }
 

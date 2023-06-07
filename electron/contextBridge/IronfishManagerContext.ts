@@ -76,6 +76,12 @@ class IronfishManagerContext implements IIronfishManager {
       option
     )
   }
+  resetNode = () => {
+    return invoke('ironfish-manager', IronfishManagerAction.RESET_NODE)
+  }
+  restartApp = () => {
+    return invoke('ironfish-manager', IronfishManagerAction.RESTART_APP)
+  }
 }
 
 export default new IronfishManagerContext()
