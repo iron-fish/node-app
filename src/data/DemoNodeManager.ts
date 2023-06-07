@@ -25,7 +25,7 @@ export const STATUS: NodeStatusResponse = {
   },
   blockchain: {
     synced: false,
-    head: '10',
+    head: '0',
     totalSequences: '23344',
     headTimestamp: new Date().getTime(),
     newBlockSpeed: Math.random() * 1000,
@@ -47,15 +47,15 @@ export const STATUS: NodeStatusResponse = {
   accounts: [
     {
       id: 'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
-      sequence: '10',
+      sequence: '20000',
     },
     {
       id: 'H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6',
-      sequence: '9',
+      sequence: '23330',
     },
     {
       id: 'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
-      sequence: '8',
+      sequence: '23344',
     },
   ],
 }
