@@ -167,7 +167,6 @@ const Accounts = () => {
           onSelectOption: ({ value }) => $setSortOrder(value),
         }}
       />
-      <SyncWarningMessage mt="2rem" />
       <Flex mt="0.5rem" direction="column" width="100%">
         {isAccountsLoaded ? (
           accounts.length > 0 ? (

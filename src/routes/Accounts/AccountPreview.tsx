@@ -78,7 +78,7 @@ const AccountPreview: FC<CutAccount> = ({
         isVisible={synced && Number(accountHead) < Number(blockchainHead) - 2}
         message={`Account Syncing: ${syncedPercentage.toFixed(
           2
-        )}% | Your balance might not be accurate while you're syncing`}
+        )}% | Balance may be inaccurate during sync`}
         height="32px"
         m="12px 12px 0"
       />
