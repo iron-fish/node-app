@@ -89,10 +89,7 @@ const SearchAddressTransactions: FC<AddressTransactionsProps> = ({
               key: 'action',
               label: 'Action',
               render: (transaction: Transaction) => (
-                <TransactionStatusView
-                  status={transaction.status}
-                  isSent={transaction.creator}
-                />
+                <TransactionStatusView transaction={transaction} />
               ),
             },
             {

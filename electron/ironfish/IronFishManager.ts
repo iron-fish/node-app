@@ -10,8 +10,6 @@ import {
   ConfigOptions,
   getPackageFrom,
   DatabaseVersionError,
-  Peer as SDKPeer,
-  GetWorkersStatusResponse,
   InternalOptions,
   HOST_FILE_NAME,
 } from '@ironfish/sdk'

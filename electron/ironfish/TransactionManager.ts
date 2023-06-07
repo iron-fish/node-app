@@ -2,6 +2,7 @@ import { Asset } from '@ironfish/rust-nodejs'
 import { DecryptedNoteValue } from '@ironfish/sdk/build/src/wallet/walletdb/decryptedNoteValue'
 import {
   Account,
+  IDatabaseTransaction,
   IronfishNode,
   RawTransaction,
   TransactionType,
@@ -195,6 +196,45 @@ class TransactionManager
       slow: slow.fee,
       average: average.fee,
       fast: fast.fee,
+    }
+  }
+
+  async getPaginatedTransactionsByAccountId(
+    accountId: string,
+    count = 20,
+    offset = 0
+  ) {
+    const account = this.node.wallet.getAccount(accountId)
+
+    if (!account) {
+      throw new Error(`Account with id=${accountId} was not found.`)
+    }
+
+    const head = await account.getHead()
+    const transactions = []
+
+    let i = 0
+    let hasNext = false
+
+    for await (const transaction of account.getTransactionsByTime()) {
+      if (i <= offset) {
+        i++
+        continue
+      }
+
+      if (transactions.length >= count) {
+        hasNext = true
+        break
+      }
+
+      transactions.push(
+        await this.resolveTransactionFields(account, head.sequence, transaction)
+      )
+    }
+
+    return {
+      transactions,
+      hasNext,
     }
   }
 
