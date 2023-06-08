@@ -45,7 +45,7 @@ function Overview({
       observer.current.observe(wrapper.current)
     }
 
-    return () => observer.current.unobserve(wrapper.current)
+    return () => wrapper.current && observer.current?.unobserve(wrapper.current)
   }, [wrapper, observer])
 
   return (
