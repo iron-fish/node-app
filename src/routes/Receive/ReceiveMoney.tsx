@@ -128,6 +128,7 @@ const ReceiveMoney: FC = () => {
             accountId={account?.id || state?.accountId}
             onSelectOption={setAccount}
             mb="2rem"
+            includeViewOnly={true}
           />
           {/* Hide amount field while not clarified, should be removed or enabled when with API connection
            <TextField

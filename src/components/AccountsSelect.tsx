@@ -12,23 +12,27 @@ interface AccountsSelectProps extends FlexProps {
   onSelectOption?: (account: CutAccount) => void
   showBalance?: boolean
   watchBalance?: boolean
+  includeViewOnly?: boolean
 }
 
 const getAccountOptions = (
   accounts: CutAccount[] = [],
-  showBalance: boolean
+  showBalance: boolean,
+  includeViewOnly: boolean
 ): OptionType[] => {
-  return accounts.map(account => ({
-    label: account.name,
-    value: account,
-    helperText: showBalance
-      ? formatOreToTronWithLanguage(
-          account?.balances?.default?.confirmed || BigInt(0)
-        ) +
-          ' ' +
-          account?.balances?.default?.asset?.name || ''
-      : truncateHash(account.publicAddress, 2, 4),
-  }))
+  return accounts
+    .filter(account => includeViewOnly || !account.viewOnly)
+    .map(account => ({
+      label: account.name,
+      value: account,
+      helperText: showBalance
+        ? formatOreToTronWithLanguage(
+            account?.balances?.default?.confirmed || BigInt(0)
+          ) +
+            ' ' +
+            account?.balances?.default?.asset?.name || ''
+        : truncateHash(account.publicAddress, 2, 4),
+    }))
 }
 
 const AccountsSelect: FC<AccountsSelectProps> = ({
@@ -36,6 +40,7 @@ const AccountsSelect: FC<AccountsSelectProps> = ({
   onSelectOption,
   showBalance = true,
   watchBalance = false,
+  includeViewOnly = false,
   ...props
 }) => {
   const [{ data, loaded }, reloadAccounts] = useAccounts()
@@ -50,7 +55,7 @@ const AccountsSelect: FC<AccountsSelectProps> = ({
   }, [loaded])
 
   const options = useMemo(
-    () => getAccountOptions(data, showBalance),
+    () => getAccountOptions(data, showBalance, includeViewOnly),
     [
       JSON.stringify(data, (key, value) =>
         typeof value === 'bigint' ? value.toString() : value

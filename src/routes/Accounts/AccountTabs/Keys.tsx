@@ -84,26 +84,28 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
   return (
     <Flex mb="4rem">
       <Box w="37.25rem">
-        <MnemonicView
-          header={
-            <Flex gap="0.4375rem" mb="-0.4375rem" alignItems="center">
-              <h6>Mnemonic phrase</h6>
-              <CopyToClipboardButton
-                value={phrase?.join(' ')}
-                copyTooltipText="Copy to clipboard"
-                copiedTooltipText="Copied"
-              />
-            </Flex>
-          }
-          loaded={loaded}
-          value={phrase || []}
-          placeholder={''}
-          onChange={() => null}
-          isReadOnly={true}
-          mb="2rem"
-          wordsAmount={24}
-          showInfoIcon={false}
-        />
+        {phrase && (
+          <MnemonicView
+            header={
+              <Flex gap="0.4375rem" mb="-0.4375rem" alignItems="center">
+                <h6>Mnemonic phrase</h6>
+                <CopyToClipboardButton
+                  value={phrase?.join(' ')}
+                  copyTooltipText="Copy to clipboard"
+                  copiedTooltipText="Copied"
+                />
+              </Flex>
+            }
+            loaded={loaded}
+            value={phrase || []}
+            placeholder={''}
+            onChange={() => null}
+            isReadOnly={true}
+            mb="2rem"
+            wordsAmount={24}
+            showInfoIcon={false}
+          />
+        )}
         <Flex alignItems={'center'} gap="2rem">
           <SelectField
             label="Export format"

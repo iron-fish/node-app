@@ -161,19 +161,18 @@ class AccountManager
     const account: WalletAccount = accounts[accountIndex].serialize()
     account.balances = await this.balances(account.id)
     account.order = accountIndex
-    account.mnemonicPhrase = spendingKeyToWords(
-      account.spendingKey,
-      LanguageCode.English
-    ).split(' ')
-
+    account.mnemonicPhrase = account.spendingKey
+      ? spendingKeyToWords(account.spendingKey, LanguageCode.English).split(' ')
+      : null
+    account.viewOnly = !account.spendingKey
     return account
   }
 
-  async getMnemonicPhrase(id: string): Promise<string[]> {
+  async getMnemonicPhrase(id: string): Promise<string[] | null> {
     const account = this.node.wallet.getAccount(id)
-    return spendingKeyToWords(account.spendingKey, LanguageCode.English).split(
-      ' '
-    )
+    return account.spendingKey
+      ? spendingKeyToWords(account.spendingKey, LanguageCode.English).split(' ')
+      : null
   }
 
   async import(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
@@ -243,6 +242,7 @@ class AccountManager
         name: account.name,
         publicAddress: account.publicAddress,
         balances: await this.balances(account.id),
+        viewOnly: account.spendingKey === null,
         order: index,
       }))
     )

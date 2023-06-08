@@ -28,6 +28,7 @@ const AccountPreview: FC<CutAccount> = ({
   name,
   publicAddress,
   id,
+  viewOnly,
   balances,
 }) => {
   const navigate = useNavigate()
@@ -168,7 +169,7 @@ const AccountPreview: FC<CutAccount> = ({
                     <SendIcon />
                   </Icon>
                 }
-                isDisabled={!synced}
+                isDisabled={viewOnly || !synced}
               >
                 <h5>Send</h5>
               </Button>
