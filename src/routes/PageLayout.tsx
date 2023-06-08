@@ -118,18 +118,20 @@ export const PageLayout: FC = () => {
           height={requiredSnapshot ? 'calc(100vh - 3rem)' : '100vh'}
         />
         <Box w="100%">
-          <ScaleFade in={true} key={location.key}>
-            <Flex
-              width="100%"
-              height="100%"
-              justifyContent="center"
-              px="2rem"
-              py="2.5rem"
-            >
-              <Box width="100%" height="100%" maxWidth="65.5rem">
-                <Outlet />
-              </Box>
-            </Flex>
+          <ScaleFade
+            in={true}
+            key={location.key}
+            style={{
+              display: 'flex',
+              width: '100%',
+              height: '100%',
+              justifyContent: 'center',
+              padding: '2.5rem 2rem',
+            }}
+          >
+            <Box width="100%" height="100%" maxWidth="65.5rem" bg="red">
+              <Outlet />
+            </Box>
           </ScaleFade>
         </Box>
       </Flex>

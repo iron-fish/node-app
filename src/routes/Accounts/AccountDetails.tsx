@@ -30,68 +30,63 @@ const AccountDetails: FC = () => {
     actions: { exportAccount, updateAccount, deleteAccount },
   } = useAccount(accountId)
   return (
-    <Flex flexDirection="column" pb="0" bg="transparent" w="100%">
-      <Box>
-        <BackButtonLink
-          mb="1rem"
-          to={ROUTES.ACCOUNTS}
-          label={'Back to all accounts'}
-        />
-        {loaded && (
-          <>
-            <Flex alignItems="end" mb="0.5rem">
-              <chakra.h2 mr="1rem">{account.name}</chakra.h2>
-              <CopyValueToClipboard
-                label={truncateHash(account?.publicAddress, 3)}
-                labelProps={{
-                  as: 'h5',
-                }}
-                value={account.publicAddress}
-                copyTooltipText="Copy to clipboard"
-                copiedTooltipText="Copied"
-                containerProps={{
-                  pb: '0.45rem',
-                  color: NAMED_COLORS.GREY,
-                  _dark: {
-                    color: NAMED_COLORS.PALE_GREY,
-                  },
-                }}
-              />
-            </Flex>
-            <Tabs>
-              <TabList>
-                <Tab>
-                  <chakra.h6>Account Overview</chakra.h6>
-                </Tab>
-                <Tab>
-                  <chakra.h6>Keys</chakra.h6>
-                </Tab>
-                <Tab>
-                  <chakra.h6>Settings</chakra.h6>
-                </Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel p="0" pt="2rem">
-                  <AccountOverview account={account} />
-                </TabPanel>
-                <TabPanel p="0" pt="2rem">
-                  <AccountKeys
-                    account={account}
-                    exportAccount={exportAccount}
-                  />
-                </TabPanel>
-                <TabPanel p="0" pt="2rem">
-                  <AccountSettings
-                    account={account}
-                    updateAccount={updateAccount}
-                    deleteAccount={deleteAccount}
-                  />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </>
-        )}
-      </Box>
+    <Flex flexDirection="column" pb="0" bg="transparent" w="100%" h="100%">
+      <BackButtonLink
+        mb="1rem"
+        to={ROUTES.ACCOUNTS}
+        label={'Back to all accounts'}
+      />
+      {loaded && (
+        <>
+          <Flex alignItems="end" mb="0.5rem">
+            <chakra.h2 mr="1rem">{account.name}</chakra.h2>
+            <CopyValueToClipboard
+              label={truncateHash(account?.publicAddress, 3)}
+              labelProps={{
+                as: 'h5',
+              }}
+              value={account.publicAddress}
+              copyTooltipText="Copy to clipboard"
+              copiedTooltipText="Copied"
+              containerProps={{
+                pb: '0.45rem',
+                color: NAMED_COLORS.GREY,
+                _dark: {
+                  color: NAMED_COLORS.PALE_GREY,
+                },
+              }}
+            />
+          </Flex>
+          <Tabs flexGrow={1} display="flex" flexDirection="column">
+            <TabList>
+              <Tab>
+                <chakra.h6>Account Overview</chakra.h6>
+              </Tab>
+              <Tab>
+                <chakra.h6>Keys</chakra.h6>
+              </Tab>
+              <Tab>
+                <chakra.h6>Settings</chakra.h6>
+              </Tab>
+            </TabList>
+            <TabPanels flexGrow={1} display="flex" alignItems="stretch">
+              <TabPanel p="0" flexGrow={1} display="flex" alignItems="stretch">
+                <AccountOverview account={account} />
+              </TabPanel>
+              <TabPanel p="0" pt="2rem">
+                <AccountKeys account={account} exportAccount={exportAccount} />
+              </TabPanel>
+              <TabPanel p="0" pt="2rem">
+                <AccountSettings
+                  account={account}
+                  updateAccount={updateAccount}
+                  deleteAccount={deleteAccount}
+                />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </>
+      )}
     </Flex>
   )
 }

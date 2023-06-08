@@ -16,7 +16,7 @@ const SyncWarningMessage: FC<SyncWarningMessageProps> = ({
   return (
     <WarningMessage
       message={message}
-      isVisible={!synced || !accountsSynced}
+      isVisible={true || !synced || !accountsSynced}
       {...rest}
     />
   )
