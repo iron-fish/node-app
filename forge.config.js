@@ -177,6 +177,4 @@ const config = {
   ...ENV_CONFIGS[process.env['MODE'] || 'dev'],
 }
 
-console.log(JSON.stringify({ config }, null, 2))
-
 module.exports = config

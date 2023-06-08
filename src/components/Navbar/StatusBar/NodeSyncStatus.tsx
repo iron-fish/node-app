@@ -71,16 +71,6 @@ const renderTime = (time: number) => {
 }
 
 const NodeSyncStatus: FC<DataSyncContextProps> = ({ data, synced }) => {
-  const leastSyncedAccount =
-    data?.accounts?.length > 0
-      ? data.accounts.reduce((prev, current) =>
-          !Number.isNaN(+current.sequence) &&
-          Number(current.sequence) < Number(data?.blockchain.head) &&
-          current.sequence < prev.sequence
-            ? current
-            : prev
-        )
-      : undefined
   return (
     <>
       <chakra.h5 color="inherit">
@@ -110,20 +100,6 @@ const NodeSyncStatus: FC<DataSyncContextProps> = ({ data, synced }) => {
               {' / '}
               {`${data?.blockchain.totalSequences}`}
               {' blocks'}
-            </chakra.h5>
-          </>
-        )}
-      {synced &&
-        leastSyncedAccount &&
-        Number(leastSyncedAccount.sequence) <
-          Number(data?.blockchain.head) - 2 && (
-          <>
-            <chakra.h5 color="inherit">
-              {`Account ${leastSyncedAccount.name} syncing: ${(
-                ((Number(leastSyncedAccount.sequence) * 1.0) /
-                  Number(data?.blockchain.head)) *
-                100
-              ).toFixed(2)}%`}
             </chakra.h5>
           </>
         )}
