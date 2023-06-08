@@ -217,7 +217,7 @@ class TransactionManager
     let hasNext = false
 
     for await (const transaction of account.getTransactionsByTime()) {
-      if (i <= offset) {
+      if (i < offset) {
         i++
         continue
       }
