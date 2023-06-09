@@ -122,7 +122,8 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
                 <chakra.h5>
                   "
                   {transaction.outputs?.at(0)?.memo ||
-                    transaction.inputs?.at(0)?.memo}
+                    transaction.inputs?.at(0)?.memo ||
+                    transaction.outputs?.at(1)?.memo}
                   "
                 </chakra.h5>
               ),
