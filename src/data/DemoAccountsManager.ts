@@ -402,6 +402,7 @@ class DemoAccountsManager implements IIronfishAccountManager {
             default: ACCOUNT_BALANCES[account.id][0],
             assets: ACCOUNT_BALANCES[account.id].slice(1),
           },
+          viewOnly: false,
           order: index,
         })).filter(
           account =>

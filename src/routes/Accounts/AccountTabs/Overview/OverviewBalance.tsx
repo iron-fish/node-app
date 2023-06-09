@@ -67,8 +67,8 @@ const OverviewBalance: FC<OverviewBalanceProps> = ({ account }) => {
                     state: { accountId: account.id },
                   })
                 }
-                isDisabled={!synced}
-                disabled={!synced}
+                isDisabled={account.viewOnly || !synced}
+                disabled={account.viewOnly || !synced}
               >
                 <h5>Send</h5>
               </Button>
