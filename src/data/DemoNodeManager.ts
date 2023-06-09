@@ -44,7 +44,20 @@ export const STATUS: NodeStatusResponse = {
     inboundTraffic: Math.random() * 100,
     outboundTraffic: Math.random() * 100,
   },
-  accounts: [{ sequence: '0' }],
+  accounts: [
+    {
+      id: 'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
+      sequence: '20000',
+    },
+    {
+      id: 'H8BR9byjbep0VDnYhPI0PTKhBPAT84m0nTrNwQBXKxXVosryeyuAJnIwGX754Pi6',
+      sequence: '23330',
+    },
+    {
+      id: 'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
+      sequence: '23344',
+    },
+  ],
 }
 
 const PEERS: Peer[] = Array(23)

@@ -30,6 +30,20 @@ class TransactionManagerContext implements IIronfishTransactionManager {
     )
   }
 
+  getPaginatedTransactionsByAccountId = (
+    accountId: string,
+    count?: number,
+    offset?: number
+  ) => {
+    return invoke(
+      'ironfish-manager-transactions',
+      IronfishTransactionManagerAction.GET_PAGINATED_TRANSACTIONS_BY_ACCOUNT_ID,
+      accountId,
+      count,
+      offset
+    )
+  }
+
   findByAddress = (address: string, searchTerm?: string, sort?: SortType) => {
     return invoke(
       'ironfish-manager-transactions',

@@ -10,8 +10,6 @@ import {
   ConfigOptions,
   getPackageFrom,
   DatabaseVersionError,
-  Peer as SDKPeer,
-  GetWorkersStatusResponse,
   InternalOptions,
   HOST_FILE_NAME,
 } from '@ironfish/sdk'
@@ -162,9 +160,7 @@ export class IronFishManager implements IIronfishManager {
 
   // used to reset node if datadir exists but is incompatible with mainnet
   async resetNode(): Promise<void> {
-    log.log(
-      '----------- resetting chain due to network incompatibility ----------------'
-    )
+    log.log('Resetting node')
     await this.node.shutdown()
     await this.node.closeDB()
     const hostFilePath: string = this.sdk.config.files.join(
@@ -199,6 +195,12 @@ export class IronFishManager implements IIronfishManager {
       privateIdentity: this.getPrivateIdentity(),
       autoSeed: true,
     })
+    log.log('Node reset complete')
+  }
+
+  async restartApp(): Promise<void> {
+    app.relaunch()
+    app.exit()
   }
 
   private async initializeSdk(): Promise<void> {
@@ -238,6 +240,9 @@ export class IronFishManager implements IIronfishManager {
         this.node.config.get('networkId') !== 1) &&
       (app.isPackaged || process.env.ENABLE_RESET)
     ) {
+      log.log(
+        '----------- resetting chain due to network incompatibility ----------------'
+      )
       await this.resetNode()
     }
 

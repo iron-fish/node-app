@@ -4,6 +4,7 @@ import Transaction, { Payment } from '../Transaction'
 export enum IronfishTransactionManagerAction {
   ESTIMATE_FEE = 'estimateFeeWithPriority',
   FIND_BY_ACCOUNT_ID = 'findByAccountId',
+  GET_PAGINATED_TRANSACTIONS_BY_ACCOUNT_ID = 'getPaginatedTransactionsByAccountId',
   FIND_BY_ADDRESS = 'findByAddress',
   GET = 'get',
   SEND = 'send',
@@ -25,6 +26,14 @@ export interface IIronfishTransactionManager {
     searchTerm?: string,
     sort?: SortType
   ) => Promise<Transaction[]>
+  getPaginatedTransactionsByAccountId: (
+    accountId: string,
+    count?: number,
+    offset?: number
+  ) => Promise<{
+    transactions: Transaction[]
+    hasNext: boolean
+  }>
   findByAddress: (
     address: string,
     searchTerm?: string,

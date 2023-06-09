@@ -26,6 +26,8 @@ export enum IronfishManagerAction {
   STOP = 'stop',
   STOP_SYNCING = 'stopSyncing',
   SYNC = 'sync',
+  RESET_NODE = 'resetNode',
+  RESTART_APP = 'restartApp',
 }
 
 export interface IIronfishManager {
@@ -53,6 +55,8 @@ export interface IIronfishManager {
   getInternalConfig<T extends keyof InternalOptions>(
     option: T
   ): Promise<InternalOptions[T]>
+  resetNode: () => Promise<void>
+  restartApp: () => Promise<void>
 }
 
 export default IIronfishManager
