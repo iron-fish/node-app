@@ -116,6 +116,7 @@ const ConfirmStep: FC<StepProps> = ({
                           addContact(contactName, to.address).then(contact => {
                             setShowAddName(false)
                             setContactName('')
+                            setToContact(contact)
                             onCreateAccount(contact)
                           })
                         }}
