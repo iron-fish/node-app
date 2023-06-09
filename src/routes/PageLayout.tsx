@@ -21,6 +21,7 @@ import {
   LIGHT_COLORS,
 } from 'Components/Navbar/StatusBar/StatusItem'
 import ModalWindow from 'Components/ModalWindow'
+import { ROUTES } from '../routes'
 
 const DownloadSnapshotMessage: FC<{
   show: boolean
@@ -98,7 +99,7 @@ const DownloadSnapshotMessage: FC<{
   )
 }
 
-export const PageLayout: FC = () => {
+export function PageLayout() {
   const {
     data,
     requiredSnapshot,
@@ -129,7 +130,13 @@ export const PageLayout: FC = () => {
               padding: '2.5rem 2rem',
             }}
           >
-            <Box width="100%" height="100%" maxWidth="65.5rem" bg="red">
+            <Box
+              width="100%"
+              height="100%"
+              maxWidth={
+                location.pathname === ROUTES.ACCOUNT ? '100%' : '65.5rem'
+              }
+            >
               <Outlet />
             </Box>
           </ScaleFade>

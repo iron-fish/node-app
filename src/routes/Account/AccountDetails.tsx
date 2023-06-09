@@ -1,6 +1,5 @@
 import { FC } from 'react'
 import {
-  Box,
   Flex,
   chakra,
   CopyValueToClipboard,
@@ -15,11 +14,12 @@ import { useLocation } from 'react-router-dom'
 import { ROUTES } from '..'
 import { truncateHash } from 'Utils/hash'
 import LocationStateProps from 'Types/LocationState'
-import AccountOverview from './AccountTabs/Overview'
-import AccountKeys from './AccountTabs/Keys'
+import AccountOverview from './Overview/Overview'
+import AccountKeys from './Keys/Keys'
 import BackButtonLink from 'Components/BackButtonLink'
 import useAccount from 'Hooks/accounts/useAccount'
-import AccountSettings from './AccountTabs/Settings'
+import AccountSettings from './Settings/Settings'
+import { Container } from './Shared/Container'
 
 const AccountDetails: FC = () => {
   const location = useLocation()
@@ -31,14 +31,16 @@ const AccountDetails: FC = () => {
   } = useAccount(accountId)
   return (
     <Flex flexDirection="column" pb="0" bg="transparent" w="100%" h="100%">
-      <BackButtonLink
-        mb="1rem"
-        to={ROUTES.ACCOUNTS}
-        label={'Back to all accounts'}
-      />
+      <Container>
+        <BackButtonLink
+          mb="1rem"
+          to={ROUTES.ACCOUNTS}
+          label={'Back to all accounts'}
+        />
+      </Container>
       {loaded && (
         <>
-          <Flex alignItems="end" mb="0.5rem">
+          <Container display="flex" alignItems="end" mb="0.5rem">
             <chakra.h2 mr="1rem">{account.name}</chakra.h2>
             <CopyValueToClipboard
               label={truncateHash(account?.publicAddress, 3)}
@@ -56,9 +58,9 @@ const AccountDetails: FC = () => {
                 },
               }}
             />
-          </Flex>
+          </Container>
           <Tabs flexGrow={1} display="flex" flexDirection="column">
-            <TabList>
+            <TabList as={Container}>
               <Tab>
                 <chakra.h6>Account Overview</chakra.h6>
               </Tab>
@@ -73,10 +75,10 @@ const AccountDetails: FC = () => {
               <TabPanel p="0" flexGrow={1} display="flex" alignItems="stretch">
                 <AccountOverview account={account} />
               </TabPanel>
-              <TabPanel p="0" pt="2rem">
+              <TabPanel as={Container} p="0" pt="2rem">
                 <AccountKeys account={account} exportAccount={exportAccount} />
               </TabPanel>
-              <TabPanel p="0" pt="2rem">
+              <TabPanel as={Container} p="0" pt="2rem">
                 <AccountSettings
                   account={account}
                   updateAccount={updateAccount}

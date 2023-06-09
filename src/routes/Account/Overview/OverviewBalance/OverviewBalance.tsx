@@ -26,7 +26,7 @@ const OverviewBalance: FC<OverviewBalanceProps> = ({ account }) => {
     }
 
     return () => interval && clearInterval(interval)
-  }, [balanceLoaded])
+  }, [balanceLoaded, reloadBalance])
 
   const navigate = useNavigate()
   const { synced } = useDataSync()
