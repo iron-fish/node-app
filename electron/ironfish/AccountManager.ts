@@ -186,20 +186,15 @@ class AccountManager
     const [decoded, _] = Bech32m.decode(data)
     if (decoded) {
       const decodedData = JSONUtils.parse<AccountImport>(decoded)
-      let accountData: Omit<AccountValue, 'rescan'>
-
-      if (decodedData.spendingKey) {
-        accountData = {
-          id: uuid(),
-          ...decodedData,
-          createdAt: decodedData.createdAt
-            ? {
-                hash: Buffer.from(decodedData.createdAt.hash, 'utf-8'),
-                sequence: decodedData.createdAt.sequence,
-              }
-            : null,
-          ...generateKeyFromPrivateKey(decodedData.spendingKey),
-        }
+      const accountData: Omit<AccountValue, 'rescan'> = {
+        id: uuid(),
+        ...decodedData,
+        createdAt: decodedData.createdAt
+          ? {
+              hash: Buffer.from(decodedData.createdAt.hash, 'utf-8'),
+              sequence: decodedData.createdAt.sequence,
+            }
+          : null,
       }
 
       return this.import(accountData)
