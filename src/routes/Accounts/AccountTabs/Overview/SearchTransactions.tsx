@@ -41,7 +41,7 @@ const SearchTransactions: FC<SearchTransactionsProps> = ({ address }) => {
     return (
       <EmptyOverview
         header="You don't have any transactions"
-        description="When your account compiles transactions they will be listed here. To produce a transactions, eitherF send or receive $IRON."
+        description="When your account compiles transactions they will be listed here. To produce a transactions, either send or receive $IRON."
       />
     )
   }
