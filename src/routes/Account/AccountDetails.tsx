@@ -1,4 +1,3 @@
-import { FC } from 'react'
 import {
   Flex,
   chakra,
@@ -21,7 +20,7 @@ import useAccount from 'Hooks/accounts/useAccount'
 import AccountSettings from './Settings/Settings'
 import { Container } from './Shared/Container'
 
-const AccountDetails: FC = () => {
+export default function AccountDetails() {
   const location = useLocation()
   const { accountId } = location.state as LocationStateProps
   const {
@@ -92,5 +91,3 @@ const AccountDetails: FC = () => {
     </Flex>
   )
 }
-
-export default AccountDetails

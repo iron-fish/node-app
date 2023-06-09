@@ -75,7 +75,7 @@ export const ROW_SIZE = ROW_BODY_HEIGHT + ROW_MARGIN_BOTTOM
 const px = (n: number) => `${n}px`
 
 function Cell(props: GridItemProps) {
-  return <GridItem display="flex" alignItems="center" {...props} />
+  return <GridItem display="flex" px="0.5rem" alignItems="center" {...props} />
 }
 
 export function TransactionRow({
