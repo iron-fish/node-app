@@ -46,7 +46,7 @@ const Information: FC = memo(() => {
         color={NAMED_COLORS.GREY}
         _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
       >
-        You can change the fee amount you’d like to pay however that will
+        You can change the fee amount you’d like to pay. However, that will
         directly correlate the speed with which your transaction is picked up by
         the block chain.
       </chakra.h5>
