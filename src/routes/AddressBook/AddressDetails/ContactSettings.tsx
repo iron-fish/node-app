@@ -68,7 +68,7 @@ const RemoveContactButton: FC<RemoveContactButtonProps> = ({
               onClose()
             }}
           >
-            Remove Account
+            Remove Contact
           </Button>
           <Link alignSelf="center" onClick={() => onClose()}>
             <h4>Cancel</h4>
