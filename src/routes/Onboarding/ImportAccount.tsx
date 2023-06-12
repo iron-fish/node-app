@@ -32,7 +32,7 @@ interface DesktopModeProps {
 
 const EncodedKeyTab: FC<DesktopModeProps> = ({ onImport, onError }) => {
   const [data, setData] = useState('')
-  const [importBySpendingKey] = useImportAccount()
+  const [importAccountByData] = useImportAccount()
 
   return (
     <>
@@ -49,7 +49,7 @@ const EncodedKeyTab: FC<DesktopModeProps> = ({ onImport, onError }) => {
           variant="primary"
           isDisabled={!data}
           onClick={() => {
-            importBySpendingKey(data)
+            importAccountByData(data)
               .then(() => onImport())
               .catch(e => {
                 if (e.name && e.message) {
