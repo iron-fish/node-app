@@ -5,6 +5,7 @@ import {
   chakra,
   NAMED_COLORS,
   MnemonicView,
+  Link,
 } from '@ironfish/ui-kit'
 import { FC, useState, useEffect } from 'react'
 import StepProps from './StepProps'
@@ -99,17 +100,6 @@ const ValidateStep: FC<StepProps> = ({
         </Box>
       )}
       <Flex gap="1rem">
-        {!desktopMode && (
-          <Box mt="2rem">
-            <Button
-              variant="primary"
-              size={desktopMode ? 'large' : 'medium'}
-              onClick={onBack}
-            >
-              Back
-            </Button>
-          </Box>
-        )}
         <Box mt="2rem">
           <Button
             variant="primary"
@@ -119,6 +109,16 @@ const ValidateStep: FC<StepProps> = ({
           >
             Create Account
           </Button>
+          {!desktopMode && (
+            <Link
+              onClick={onBack}
+              size={desktopMode ? 'large' : 'medium'}
+              mt="2rem"
+              ml="2rem"
+            >
+              Back
+            </Link>
+          )}
         </Box>
       </Flex>
     </>

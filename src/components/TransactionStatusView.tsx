@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useCallback, useState } from 'react'
 import {
   Flex,
   NAMED_COLORS,
@@ -8,13 +8,13 @@ import {
   PendingIcon,
   ExpiredIcon,
 } from '@ironfish/ui-kit'
-import { TransactionStatus } from 'Types/Transaction'
+import { TransactionStatus, Transaction } from 'Types/Transaction'
 import IconSend from 'Svgx/send'
 import IconReceive from 'Svgx/receive'
+import { useQuery } from 'react-query'
 
 interface TransactionStatusProps {
-  status: TransactionStatus
-  isSent: boolean
+  transaction: Transaction
 }
 
 const LIGHT_MODE = {
@@ -98,12 +98,57 @@ const getStatusParams = (
   return params
 }
 
-const TransactionStatusView: FC<TransactionStatusProps> = ({
-  status,
-  isSent,
-}) => {
-  const { icon, iconColors, message } = getStatusParams(status, isSent)
+function getIsFinalized(status: TransactionStatus) {
+  return (
+    status === TransactionStatus.CONFIRMED ||
+    status === TransactionStatus.EXPIRED
+  )
+}
+
+function usePollTransactionStatus({
+  hash,
+  accountId,
+  isInitialFinalized,
+}: {
+  accountId: string
+  hash: string
+  isInitialFinalized: boolean
+}) {
+  const [isFinalized, setIsFinalized] = useState(isInitialFinalized)
+
+  const doFetch = useCallback(async () => {
+    if (isFinalized) return
+
+    const tx = await window.IronfishManager.transactions.get(hash, accountId)
+
+    const nextIsFinalized = getIsFinalized(tx.status)
+
+    if (isFinalized !== nextIsFinalized) {
+      setIsFinalized(nextIsFinalized)
+    }
+
+    return tx.status
+  }, [])
+
+  return useQuery(['usePollTransactionStatus', hash, accountId], doFetch, {
+    refetchInterval: 5000,
+    enabled: !isFinalized,
+  })
+}
+
+const TransactionStatusView: FC<TransactionStatusProps> = ({ transaction }) => {
+  const txStatus = usePollTransactionStatus({
+    hash: transaction.hash,
+    accountId: transaction.accountId,
+    isInitialFinalized: getIsFinalized(transaction.status),
+  })
+
+  const { icon, iconColors, message } = getStatusParams(
+    txStatus?.data || transaction.status,
+    !!transaction.creator
+  )
   const Icon = icon as FC<IconProps>
+
   return (
     <Flex alignItems="center" gap="0.75rem">
       <Flex
