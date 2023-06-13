@@ -9,6 +9,8 @@ import {
   NAMED_COLORS,
   HStack,
   Spinner,
+  useBreakpointValue,
+  Flex,
 } from '@ironfish/ui-kit'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
@@ -19,6 +21,7 @@ import ContactsPreview from 'Components/ContactsPreview'
 import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 import { formatDate } from 'Utils/formatDate'
 import { Container } from 'Routes/Account/Shared/Container'
+import Caret from 'Svgx/caret-icon'
 
 export const TRANSACTION_TITLE_HEIGHT = 60
 
@@ -39,11 +42,12 @@ export function TransactionsHeadings({
 }: {
   style: React.CSSProperties
 }) {
+  const isCompactView = useBreakpointValue({ base: true, md: false })
   return (
     <Box sx={style}>
       <Container>
         <Grid
-          templateColumns={`repeat(5, 1fr)`}
+          templateColumns={`repeat(${isCompactView ? 5 : 6}, 1fr)`}
           height={`${TRANSACTIONS_HEADINGS_HEIGHT}px`}
           opacity="0.8"
         >
@@ -87,6 +91,7 @@ export function TransactionRow({
 }) {
   const navigate = useNavigate()
   const isLightMode = useColorMode().colorMode === 'light'
+  const isCompactView = useBreakpointValue({ base: true, md: false })
 
   if (!transaction) return null
 
@@ -106,7 +111,7 @@ export function TransactionRow({
         }}
       >
         <Grid
-          templateColumns={`repeat(5, 1fr)`}
+          templateColumns={`repeat(${isCompactView ? 5 : 6}, 1fr)`}
           height={px(ROW_BODY_HEIGHT)}
           bg={isLightMode ? NAMED_COLORS.WHITE : NAMED_COLORS.DARKER_GREY}
           borderRadius="0.5rem"
@@ -114,7 +119,7 @@ export function TransactionRow({
             isLightMode ? NAMED_COLORS.LIGHT_GREY : NAMED_COLORS.DARK_GREY
           }`}
         >
-          <Cell pl="1rem">
+          <Cell pl="2rem">
             <TransactionStatusView transaction={transaction} />
           </Cell>
           <Cell>
@@ -143,12 +148,32 @@ export function TransactionRow({
           <Cell>
             <chakra.h5>{formatDate(transaction.created)}</chakra.h5>
           </Cell>
-          <Cell pr="1rem">
-            <chakra.h5>
-              {transaction.outputs?.at(0)?.memo ||
-                transaction.inputs?.at(0)?.memo}
-            </chakra.h5>
-          </Cell>
+          {isCompactView ? (
+            <Cell pr="2rem">
+              <chakra.h5>
+                {transaction.outputs?.at(0)?.memo ||
+                  transaction.inputs?.at(0)?.memo}
+              </chakra.h5>
+            </Cell>
+          ) : (
+            <>
+              <Cell>
+                <chakra.h5>
+                  {transaction.outputs?.at(0)?.memo ||
+                    transaction.inputs?.at(0)?.memo}
+                </chakra.h5>
+              </Cell>
+              <Cell pr="2rem">
+                <Flex w="100%">
+                  <Caret
+                    ml="auto"
+                    mr="-0.4375rem"
+                    aria-label="actions-column"
+                  />
+                </Flex>
+              </Cell>
+            </>
+          )}
         </Grid>
       </Container>
     </Box>
