@@ -183,7 +183,11 @@ class AccountManager
   }
 
   async importByEncodedKey(data: string): Promise<AccountValue> {
-    const [decoded, _] = Bech32m.decode(data)
+    const [decoded, error] = Bech32m.decode(data)
+    if (error) {
+      throw error
+    }
+
     if (decoded) {
       const decodedData = JSONUtils.parse<AccountImport>(decoded)
       const accountData: Omit<AccountValue, 'rescan'> = {
