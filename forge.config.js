@@ -1,6 +1,27 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const spawn = require('cross-spawn')
 require('dotenv').config()
+const { exec } = require('child_process')
+
+async function manuallySignExe(packagePath) {
+  return new Promise((resolve, reject) => {
+    const cmd = `AzureSignTool sign -kvu "${process.env.AZURE_KEY_VAULT_URI}" -kvi "${process.env.AZURE_CLIENT_ID}" -kvt "${process.env.AZURE_TENANT_ID}" -kvs "${process.env.AZURE_CLIENT_SECRET}" -kvc "${process.env.AZURE_CERT_NAME}" -tr http://timestamp.digicert.com -v "${packagePath}"`
+
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        console.log(`Manual Sign exe Error: ${error}`)
+        return reject(error)
+      }
+      if (stderr) {
+        console.log(`Manual Sign exe Stderr: ${stderr}`)
+        return reject(new Error(stderr))
+      }
+
+      console.log(`Manual Sign exe Stdout: ${stdout}`)
+      resolve(stdout)
+    })
+  })
+}
 
 const COMMON_CONFIG = {
   packagerConfig: {
@@ -52,6 +73,23 @@ const COMMON_CONFIG = {
         })
       }
       return packageJson
+    },
+    postMake: async (forgeConfig, makeResults) => {
+      // makeResults is an array of { artifacts: string[] }
+      for (const result of makeResults) {
+        for (const artifactPath of result.artifacts) {
+          console.log(artifactPath)
+          if (artifactPath.endsWith('.exe')) {
+            try {
+              await manuallySignExe(artifactPath)
+              console.log(`Successfully signed ${artifactPath}`)
+            } catch (error) {
+              console.error(`Failed to sign ${artifactPath}: ${error}`)
+              throw error // Rethrow the error to stop the process
+            }
+          }
+        }
+      }
     },
     packageAfterPrune: (forgeConfig, buildPath) => {
       try {
