@@ -19,13 +19,13 @@ const getNodeSyncStatus = (
     case 'stopped':
       return 'Stopped'
     case 'idle':
-      return 'Idle'
+      return 'Connected'
     case 'stopping':
       return 'Stopping'
     case 'syncing':
       return 'Syncing'
     default:
-      return 'Idle'
+      return 'Connected'
   }
 }
 
