@@ -29,8 +29,9 @@ const Information: FC = memo(() => {
         color={NAMED_COLORS.GREY}
         _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
       >
-        Changing your account name and preffered currency are a great way to
-        personalize your wallet experience.
+        You can delete and reimport your accounts as many times as you like, as
+        long as you have the account's keys. It's best practice to keep your
+        account keys safely backed up somewhere.
       </chakra.h5>
       <AccountSettingsImage />
     </Box>

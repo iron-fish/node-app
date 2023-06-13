@@ -13,6 +13,7 @@ import {
   TextField,
   MnemonicView,
   Textarea,
+  useIronToast,
 } from '@ironfish/ui-kit'
 import { FC, useState, useCallback, useRef } from 'react'
 import { ROUTES } from '..'
@@ -26,11 +27,12 @@ import { truncateHash } from 'Utils/hash'
 interface DesktopModeProps {
   desktopMode?: boolean
   onImport?: VoidFunction
+  onError?: (title: string, description?: string) => void
 }
 
-const EncodedKeyTab: FC<DesktopModeProps> = ({ onImport }) => {
+const EncodedKeyTab: FC<DesktopModeProps> = ({ onImport, onError }) => {
   const [data, setData] = useState('')
-  const [importBySpendingKey] = useImportAccount()
+  const [importAccountByData] = useImportAccount()
 
   return (
     <>
@@ -47,7 +49,15 @@ const EncodedKeyTab: FC<DesktopModeProps> = ({ onImport }) => {
           variant="primary"
           isDisabled={!data}
           onClick={() => {
-            importBySpendingKey(data).then(() => onImport())
+            importAccountByData(data)
+              .then(() => onImport())
+              .catch(e => {
+                if (e.name && e.message) {
+                  onError(e.name, e.message)
+                } else {
+                  onError('Account import failed')
+                }
+              })
           }}
           size="medium"
         >
@@ -58,7 +68,11 @@ const EncodedKeyTab: FC<DesktopModeProps> = ({ onImport }) => {
   )
 }
 
-const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
+const ImportFileTab: FC<DesktopModeProps> = ({
+  desktopMode,
+  onImport,
+  onError,
+}) => {
   const [file, setFile] = useState<File | null>(null)
   const [importAccountByData, , importByFile] = useImportAccount()
   const fileInput = useRef<HTMLInputElement>()
@@ -122,20 +136,28 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           size={desktopMode ? 'large' : 'medium'}
           onClick={() => {
             const reader = new FileReader()
-            reader.onload = e => {
-              const content = e.target.result
+            reader.onload = event => {
+              const content = event.target.result
               try {
                 const data = JSON.parse(content.toString())
                 importByFile(data)
                   .then(() => onImport())
-                  .catch(() => {
-                    // TODO: add toast
+                  .catch(e => {
+                    if (e.name && e.message) {
+                      onError(e.name, e.message)
+                    } else {
+                      onError('Account import failed')
+                    }
                   })
               } catch (error) {
                 importAccountByData(content.toString())
                   .then(() => onImport())
-                  .catch(() => {
-                    // TODO: add toast
+                  .catch(e => {
+                    if (e.name && e.message) {
+                      onError(e.name, e.message)
+                    } else {
+                      onError('Account import failed')
+                    }
                   })
               }
             }
@@ -149,7 +171,11 @@ const ImportFileTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
   )
 }
 
-const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
+const MnemonicPhraseTab: FC<DesktopModeProps> = ({
+  desktopMode,
+  onImport,
+  onError,
+}) => {
   const [phrase, setPhrase] = useState([''])
   const [name, setName] = useState('')
   const [, importByMnemonicPhrase] = useImportAccount()
@@ -185,9 +211,15 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({ desktopMode, onImport }) => {
           variant="primary"
           mt="2rem"
           onClick={() => {
-            importByMnemonicPhrase(name, phrase.join(' ')).then(() =>
-              onImport()
-            )
+            importByMnemonicPhrase(name, phrase.join(' '))
+              .then(() => onImport())
+              .catch(e => {
+                if (e.name && e.message) {
+                  onError(e.name, e.message)
+                } else {
+                  onError('Account import failed')
+                }
+              })
           }}
           isDisabled={!name || phrase.findIndex(word => !word) !== -1}
           size={desktopMode ? 'large' : 'medium'}
@@ -205,10 +237,22 @@ const ImportAccount: FC<DesktopModeProps> = ({
 }) => {
   const navigate = useNavigate()
 
+  const renderToast = useIronToast({
+    duration: 3000,
+    containerStyle: {
+      mb: '1rem',
+    },
+  })
+
   const handleOnImport = useCallback(() => {
     onImport()
     desktopMode && navigate(ROUTES.TELEMETRY)
+    renderToast({ title: 'Account imported!' })
   }, [onImport])
+
+  const handleOnError = useCallback((title: string, description?: string) => {
+    renderToast({ title, description, status: 'error' })
+  }, [])
 
   return (
     <Flex
@@ -240,18 +284,21 @@ const ImportAccount: FC<DesktopModeProps> = ({
             <EncodedKeyTab
               desktopMode={desktopMode}
               onImport={handleOnImport}
+              onError={handleOnError}
             />
           </TabPanel>
           <TabPanel w="100%" p={0}>
             <MnemonicPhraseTab
               desktopMode={desktopMode}
               onImport={handleOnImport}
+              onError={handleOnError}
             />
           </TabPanel>
           <TabPanel w="100%" p={0}>
             <ImportFileTab
               desktopMode={desktopMode}
               onImport={handleOnImport}
+              onError={handleOnError}
             />
           </TabPanel>
         </TabPanels>

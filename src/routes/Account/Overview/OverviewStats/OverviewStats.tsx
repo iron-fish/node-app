@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useMemo } from 'react'
 import { Box } from '@ironfish/ui-kit'
 import Account from 'Types/Account'
 import SyncWarningMessage from 'Components/SyncWarningMessage'
 import AccountAssetsView from '../AccountAssetsView/AccountAssetsView'
 import OverviewBalance from '../OverviewBalance/OverviewBalance'
 import { Container } from 'Routes/Account/Shared/Container'
+import { useDataSync } from 'Providers/DataSyncProvider'
 
 type Props = {
   account: Account
@@ -31,11 +32,20 @@ export function OverviewStats({ account, setSize }: Props) {
     return () => wrapperClosure && observerClosure.unobserve(wrapperClosure)
   }, [wrapper, observer])
 
+  const { synced, data: syncData } = useDataSync()
+  const showSyncWarning = useMemo(() => {
+    const blockchainHead = syncData?.blockchain.head
+    const accountHead = syncData?.accounts.find(
+      a => a.id === account?.id
+    )?.sequence
+    return synced && Number(accountHead) < Number(blockchainHead) - 2
+  }, [account?.id, syncData?.accounts, syncData?.blockchain.head, synced])
+
   return (
     <Box ref={wrapper}>
       <Box py="2rem">
         <Container>
-          <SyncWarningMessage mb="2rem" />
+          {showSyncWarning && <SyncWarningMessage mb="2rem" />}
           <OverviewBalance account={account} />
           <AccountAssetsView assets={account.balances.assets} />
         </Container>

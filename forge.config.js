@@ -28,7 +28,7 @@ const COMMON_CONFIG = {
       },
     },
     {
-      name: '@electron-forge/maker-zip',
+      name: '@electron-forge/maker-dmg',
       platforms: ['darwin'],
     },
     {
@@ -176,7 +176,5 @@ const config = {
   ...COMMON_CONFIG,
   ...ENV_CONFIGS[process.env['MODE'] || 'dev'],
 }
-
-console.log(JSON.stringify({ config }, null, 2))
 
 module.exports = config
