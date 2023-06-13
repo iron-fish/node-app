@@ -17,7 +17,7 @@ interface AccountAssetsViewProps {
 const AccountAssetsView: FC<AccountAssetsViewProps> = ({ assets }) => {
   return (
     !!assets?.length && (
-      <Accordion defaultIndex={0} allowToggle={true} pt="0.5rem" pb="2.5rem">
+      <Accordion defaultIndex={0} allowToggle={true} pt="0.5rem">
         <AccordionItem border="0rem">
           <AccordionButton p="0rem" _hover={{ background: 'none' }}>
             <h3>
