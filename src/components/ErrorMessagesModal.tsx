@@ -49,29 +49,31 @@ const NodeErrorMessagesModal: FC<NodeErrorMessagesModal> = ({
         <chakra.h2 mb="1rem">Node App Error</chakra.h2>
         <chakra.h4>The application encountered an exception:</chakra.h4>
         <chakra.h4 mb="2rem">{errors.at(-1).message}</chakra.h4>
-        <Flex mb="0.5rem">
-          <chakra.h5 mr="8px">Configuration and Crash Details</chakra.h5>
-          <CopyValueToClipboard
-            label=""
-            value={collectedDump}
-            copyTooltipText="Copy Crash Report to Clipboard"
-            copiedTooltipText="Copied"
-            iconButtonProps={{
-              color: NAMED_COLORS.GREY,
-            }}
-          />
-        </Flex>
         {collectingDump && <Spinner />}
         {!collectingDump && collectedDump !== undefined && (
-          <Textarea
-            isReadOnly
-            value={collectedDump}
-            size="sm"
-            resize="none"
-            mb="2rem"
-            height="120px"
-            fontFamily="monospace"
-          />
+          <>
+            <Flex mb="0.5rem">
+              <chakra.h5 mr="8px">Configuration and Crash Details</chakra.h5>
+              <CopyValueToClipboard
+                label=""
+                value={collectedDump}
+                copyTooltipText="Copy Crash Report to Clipboard"
+                copiedTooltipText="Copied"
+                iconButtonProps={{
+                  color: NAMED_COLORS.GREY,
+                }}
+              />
+            </Flex>
+            <Textarea
+              isReadOnly
+              value={collectedDump}
+              size="sm"
+              resize="none"
+              mb="2rem"
+              height="120px"
+              fontFamily="monospace"
+            />
+          </>
         )}
         <Button
           variant="primary"
