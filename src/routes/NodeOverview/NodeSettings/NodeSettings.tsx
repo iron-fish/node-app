@@ -13,17 +13,20 @@ import {
   FormLabel,
   Switch,
   Link,
+  useColorMode,
 } from '@ironfish/ui-kit'
 import { RepeatIcon } from '@chakra-ui/icons'
 import useNodeSettings from 'Hooks/node/useNodeSettings'
 import { FC, useState, useEffect, memo, useMemo } from 'react'
 import pick from 'lodash/pick'
 import DetailsPanel from 'Components/DetailsPanel'
-import AccountSettingsImage from 'Svgx/AccountSettingsImage'
+import AccountSettingsImageDark from 'Svgx/AccountSettingsImageDark'
 import NodeWorkersSelect from './NodeWorkersSelect'
 import ConfirmModal from 'Components/ConfirmModal'
+import AccountSettingsImageLight from 'Svgx/AccountSettingsImageLight'
 
 const Information: FC = memo(() => {
+  const isLightMode = useColorMode().colorMode === 'light'
   return (
     <Box maxWidth="21.5rem" mt="1rem">
       <chakra.h3 mb="1rem">Settings</chakra.h3>
@@ -34,7 +37,11 @@ const Information: FC = memo(() => {
       >
         Change your node settings to fit you needs
       </chakra.h5>
-      <AccountSettingsImage />
+      {isLightMode ? (
+        <AccountSettingsImageLight />
+      ) : (
+        <AccountSettingsImageDark />
+      )}
     </Box>
   )
 })

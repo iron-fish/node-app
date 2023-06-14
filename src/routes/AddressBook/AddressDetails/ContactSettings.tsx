@@ -9,17 +9,20 @@ import {
   Link,
   useIronToast,
   useDisclosure,
+  useColorMode,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
-import AccountSettingsImage from 'Svgx/AccountSettingsImage'
+import AccountSettingsImageDark from 'Svgx/AccountSettingsImageDark'
 import Contact from 'Types/Contact'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from 'Routes/data'
 import usePublicAddressValidator from 'Hooks/accounts/usePublicAddressValidator'
 import TextFieldErrorMessage from 'Components/TextFieldErrorMessage'
 import ModalWindow from 'Components/ModalWindow'
+import AccountSettingsImageLight from 'Svgx/AccountSettingsImageLight'
 
 const Information: FC = memo(() => {
+  const isLightMode = useColorMode().colorMode === 'light'
   return (
     <Box maxWidth="21.5rem">
       <chakra.h3 mb="1rem">Settings</chakra.h3>
@@ -31,7 +34,11 @@ const Information: FC = memo(() => {
         Changing your account name is a great way to personalize your wallet
         experience.
       </chakra.h5>
-      <AccountSettingsImage />
+      {isLightMode ? (
+        <AccountSettingsImageLight />
+      ) : (
+        <AccountSettingsImageDark />
+      )}
     </Box>
   )
 })

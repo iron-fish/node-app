@@ -8,19 +8,22 @@ import {
   Link,
   useIronToast,
   useDisclosure,
+  useColorMode,
 } from '@ironfish/ui-kit'
 // import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
 // import useAccountSettings from 'Hooks/accounts/useAccountSettings'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState, useEffect } from 'react'
-import AccountSettingsImage from 'Svgx/AccountSettingsImage'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import Account from 'Types/Account'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import ConfirmModal from 'Components/ConfirmModal'
+import AccountSettingsImageDark from 'Svgx/AccountSettingsImageDark'
+import AccountSettingsImageLight from 'Svgx/AccountSettingsImageLight'
 
 const Information: FC = memo(() => {
+  const isLightMode = useColorMode().colorMode === 'light'
   return (
     <Box maxWidth="21.5rem">
       <chakra.h3 mb="1rem">Settings</chakra.h3>
@@ -29,11 +32,16 @@ const Information: FC = memo(() => {
         color={NAMED_COLORS.GREY}
         _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
       >
-        You can delete and reimport your accounts as many times as you like, as
-        long as you have the account's keys. It's best practice to keep your
-        account keys safely backed up somewhere.
+        You can remove and reimport your accounts at your convenience, provided
+        that you possess the necessary account keys. To ensure a seamless
+        experience, it is highly recommended to maintain a backup of your
+        account keys in a secure location.
       </chakra.h5>
-      <AccountSettingsImage />
+      {isLightMode ? (
+        <AccountSettingsImageLight />
+      ) : (
+        <AccountSettingsImageDark />
+      )}
     </Box>
   )
 })
@@ -83,7 +91,7 @@ const RemoveAccountButton: FC<RemoveAccountButtonProps> = ({
   return (
     <>
       <Link alignSelf="center" onClick={onOpen}>
-        <chakra.h4>Delete Account</chakra.h4>
+        <chakra.h4>Remove Account</chakra.h4>
       </Link>
       <ConfirmModal
         isOpen={isOpen}
