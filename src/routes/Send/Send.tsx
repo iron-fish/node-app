@@ -381,9 +381,9 @@ function AmountInput({
           display="flex"
         >
           <NumberInputField
-            placeholder="0.00"
+            placeholder="0"
             fontSize="3rem"
-            width={(value ? value.length : 4) * 1.9 + 'rem'}
+            width={(value ? value.length : 1) * 1.9 + 'rem'}
             minW="3rem"
             h="100%"
             p="0rem"
