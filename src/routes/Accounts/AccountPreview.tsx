@@ -9,6 +9,7 @@ import {
   NAMED_COLORS,
   chakra,
   CopyValueToClipboard,
+  HStack,
 } from '@ironfish/ui-kit'
 import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
@@ -22,6 +23,7 @@ import { accountGradientByOrder } from 'Utils/accountGradientByOrder'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import AssetsBadge from 'Components/AssetsBadge'
 import WarningMessage from 'Components/WarningMessage'
+import { ViewOnlyChip } from 'Components/ViewOnlyChip/ViewOnlyChip'
 
 const AccountPreview: FC<CutAccount> = ({
   order = 0,
@@ -119,7 +121,10 @@ const AccountPreview: FC<CutAccount> = ({
           <HexFish style={{ height: '2rem' }} />
         </Flex>
         <Box>
-          <chakra.h5 pt="0.25rem">{name}</chakra.h5>
+          <HStack spacing="3">
+            <chakra.h5 pt="0.25rem">{name}</chakra.h5>
+            {viewOnly && <ViewOnlyChip />}
+          </HStack>
           <chakra.h3 p="0.25rem 0">
             {formatOreToTronWithLanguage(
               balances?.default?.confirmed || BigInt(0)

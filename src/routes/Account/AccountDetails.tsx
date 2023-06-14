@@ -19,6 +19,7 @@ import BackButtonLink from 'Components/BackButtonLink'
 import useAccount from 'Hooks/accounts/useAccount'
 import AccountSettings from './Settings/Settings'
 import { Container } from './Shared/Container'
+import { ViewOnlyChip } from 'Components/ViewOnlyChip/ViewOnlyChip'
 
 export default function AccountDetails() {
   const location = useLocation()
@@ -39,8 +40,9 @@ export default function AccountDetails() {
       </Container>
       {loaded && (
         <>
-          <Container display="flex" alignItems="end" mb="0.5rem">
-            <chakra.h2 mr="1rem">{account.name}</chakra.h2>
+          <Container display="flex" alignItems="center" mb="0.5rem" gap={3}>
+            <chakra.h2 pb="0.15rem">{account.name}</chakra.h2>
+            {account.viewOnly && <ViewOnlyChip />}
             <CopyValueToClipboard
               label={truncateHash(account?.publicAddress, 3)}
               labelProps={{
@@ -50,7 +52,6 @@ export default function AccountDetails() {
               copyTooltipText="Copy to clipboard"
               copiedTooltipText="Copied"
               containerProps={{
-                pb: '0.45rem',
                 color: NAMED_COLORS.GREY,
                 _dark: {
                   color: NAMED_COLORS.PALE_GREY,

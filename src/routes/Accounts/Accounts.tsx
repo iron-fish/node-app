@@ -1,4 +1,4 @@
-import { FC, useState, useMemo, useEffect, useCallback } from 'react'
+import { FC, useState, useMemo, useEffect } from 'react'
 import {
   Box,
   Button,
@@ -20,7 +20,6 @@ import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import SortType from 'Types/SortType'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import EmptyOverview from 'Components/EmptyOverview'
-import SyncWarningMessage from 'Components/SyncWarningMessage'
 
 interface ActionButtonsProps {
   reloadAccounts: () => void
