@@ -77,6 +77,8 @@ const ROW_BODY_HEIGHT = 86
 const ROW_MARGIN_BOTTOM = 16
 export const ROW_SIZE = ROW_BODY_HEIGHT + ROW_MARGIN_BOTTOM
 
+const TRANSITION_PARAMS = '300ms ease-in-out'
+
 const px = (n: number) => `${n}px`
 
 function Cell(props: GridItemProps) {
@@ -121,6 +123,26 @@ export function TransactionRow({
           border={`1px solid ${
             isLightMode ? NAMED_COLORS.LIGHT_GREY : NAMED_COLORS.DARK_GREY
           }`}
+          boxShadow={isLightMode ? '0px 4px 11px rgba(0, 0, 0, 0.04)' : null}
+          transition={`border-color ${TRANSITION_PARAMS}`}
+          sx={{
+            '.actions-column': {
+              color: NAMED_COLORS.PALE_GREY,
+              transition: `color ${TRANSITION_PARAMS}`,
+            },
+            _hover: {
+              borderColor: NAMED_COLORS.DEEP_BLUE,
+              _dark: {
+                borderColor: NAMED_COLORS.WHITE,
+              },
+              '.actions-column': {
+                color: NAMED_COLORS.DEEP_BLUE,
+                _dark: {
+                  color: NAMED_COLORS.WHITE,
+                },
+              },
+            },
+          }}
         >
           <Cell pl="2rem">
             <TransactionStatusView transaction={transaction} />
@@ -169,6 +191,7 @@ export function TransactionRow({
               base: 'none',
               md: 'flex',
             }}
+            className="actions-column"
           >
             <Flex w="100%">
               <Caret ml="auto" mr="-0.4375rem" aria-label="actions-column" />
