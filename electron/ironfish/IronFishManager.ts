@@ -12,6 +12,7 @@ import {
   DatabaseVersionError,
   InternalOptions,
   HOST_FILE_NAME,
+  DatabaseIsLockedError,
 } from '@ironfish/sdk'
 import log from 'electron-log'
 import fsAsync from 'fs/promises'
@@ -247,9 +248,15 @@ export class IronFishManager implements IIronfishManager {
     }
 
     try {
-      await NodeUtils.waitForOpen(this.node)
+      await this.node.openDB()
     } catch (error) {
-      if (error.message.includes(ERROR_MESSAGES.GENESIS_BLOCK)) {
+      if (error instanceof DatabaseIsLockedError) {
+        log.error(error)
+        this.changeInitStatus(IronFishInitStatus.ERROR)
+        throw new Error(
+          'Another node is using the database. Please close that node and restart.'
+        )
+      } else if (error.message.includes(ERROR_MESSAGES.GENESIS_BLOCK)) {
         log.log(ERROR_MESSAGES.GENESIS_BLOCK)
         log.log('----------- resetting chain ----------------')
         await this.resetChain()
@@ -323,6 +330,7 @@ export class IronFishManager implements IIronfishManager {
     } catch (e) {
       log.error(e)
       this.changeInitStatus(IronFishInitStatus.ERROR)
+      throw e
     }
   }
 

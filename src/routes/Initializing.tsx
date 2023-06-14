@@ -61,7 +61,9 @@ const Initializing: FC = () => {
     }
 
     if (initStatus === IronFishInitStatus.NOT_STARTED) {
-      window.IronfishManager.initialize()
+      window.IronfishManager.initialize().catch(e => {
+        window.ErrorManager.addError(e)
+      })
       return
     }
 
