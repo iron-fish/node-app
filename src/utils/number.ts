@@ -8,6 +8,7 @@ export const formatOreToTronWithLanguage = (
   fullPrecision = false,
   language?: string
 ): string => {
+  if (ore === BigInt(0)) return '0'
   const formattedIron = fullPrecision
     ? FixedNumberUtils.render(ore, IRON_PRECISION)
     : formatFixed(ore, IRON_PRECISION)

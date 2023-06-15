@@ -46,9 +46,9 @@ const Information: FC = memo(() => {
         color={NAMED_COLORS.GREY}
         _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
       >
-        You can change the fee amount you’d like to pay however that will
-        directly correlate the speed with which youe transaction is picked up by
-        the block chain.
+        You can change the fee amount you'd like to pay. However, that will
+        directly correlate with the speed with which your transaction is picked
+        up by the blockchain.
       </chakra.h5>
       <FeesImage mt="2rem" />
     </Box>
@@ -381,9 +381,9 @@ function AmountInput({
           display="flex"
         >
           <NumberInputField
-            placeholder="0.00"
+            placeholder="0"
             fontSize="3rem"
-            width={(value ? value.length : 4) * 1.9 + 'rem'}
+            width={(value ? value.length : 1) * 1.9 + 'rem'}
             minW="3rem"
             h="100%"
             p="0rem"

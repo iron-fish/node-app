@@ -9,7 +9,6 @@ import {
   NAMED_COLORS,
   HStack,
   Spinner,
-  useBreakpointValue,
   Flex,
 } from '@ironfish/ui-kit'
 import { useNavigate } from 'react-router-dom'
@@ -42,12 +41,14 @@ export function TransactionsHeadings({
 }: {
   style: React.CSSProperties
 }) {
-  const isCompactView = useBreakpointValue({ base: true, md: false })
   return (
     <Box sx={style}>
       <Container>
         <Grid
-          templateColumns={`repeat(${isCompactView ? 5 : 6}, 1fr)`}
+          templateColumns={{
+            base: `repeat(5, 1fr)`,
+            md: `repeat(5, 1fr) 55px`,
+          }}
           height={`${TRANSACTIONS_HEADINGS_HEIGHT}px`}
           opacity="0.8"
         >
@@ -91,7 +92,6 @@ export function TransactionRow({
 }) {
   const navigate = useNavigate()
   const isLightMode = useColorMode().colorMode === 'light'
-  const isCompactView = useBreakpointValue({ base: true, md: false })
 
   if (!transaction) return null
 
@@ -111,10 +111,13 @@ export function TransactionRow({
         }}
       >
         <Grid
-          templateColumns={`repeat(${isCompactView ? 5 : 6}, 1fr)`}
+          templateColumns={{
+            base: `repeat(5, 1fr)`,
+            md: `repeat(5, 1fr) 55px`,
+          }}
           height={px(ROW_BODY_HEIGHT)}
           bg={isLightMode ? NAMED_COLORS.WHITE : NAMED_COLORS.DARKER_GREY}
-          borderRadius="0.5rem"
+          borderRadius="0.25rem"
           border={`1px solid ${
             isLightMode ? NAMED_COLORS.LIGHT_GREY : NAMED_COLORS.DARK_GREY
           }`}
@@ -148,32 +151,29 @@ export function TransactionRow({
           <Cell>
             <chakra.h5>{formatDate(transaction.created)}</chakra.h5>
           </Cell>
-          {isCompactView ? (
-            <Cell pr="2rem">
-              <chakra.h5>
-                {transaction.outputs?.at(0)?.memo ||
-                  transaction.inputs?.at(0)?.memo}
-              </chakra.h5>
-            </Cell>
-          ) : (
-            <>
-              <Cell>
-                <chakra.h5>
-                  {transaction.outputs?.at(0)?.memo ||
-                    transaction.inputs?.at(0)?.memo}
-                </chakra.h5>
-              </Cell>
-              <Cell pr="2rem">
-                <Flex w="100%">
-                  <Caret
-                    ml="auto"
-                    mr="-0.4375rem"
-                    aria-label="actions-column"
-                  />
-                </Flex>
-              </Cell>
-            </>
-          )}
+          <Cell
+            pr={{
+              base: '2rem',
+              md: 0,
+            }}
+          >
+            <chakra.h5>
+              {transaction.outputs?.at(0)?.memo ||
+                transaction.inputs?.at(0)?.memo ||
+                '—'}
+            </chakra.h5>
+          </Cell>
+          <Cell
+            pr="2rem"
+            display={{
+              base: 'none',
+              md: 'flex',
+            }}
+          >
+            <Flex w="100%">
+              <Caret ml="auto" mr="-0.4375rem" aria-label="actions-column" />
+            </Flex>
+          </Cell>
         </Grid>
       </Container>
     </Box>

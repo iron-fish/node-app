@@ -9,14 +9,16 @@ import {
   CopyToClipboardButton,
   SelectField,
   DownloadIcon,
+  useColorMode,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
 import { FC, memo, useState } from 'react'
-import AccountKeysImage from 'Svgx/AccountKeysImage'
+import AccountKeysImageLight from 'Svgx/AccountKeysImageLight'
 import LinkLaunchIcon from 'Svgx/LinkLaunch'
 import Account from 'Types/Account'
 import useMnemonicPhrase from 'Hooks/accounts/useMnemonicPhrase'
 import { OptionType } from '@ironfish/ui-kit/dist/components/SelectField'
+import AccountKeysImageDark from 'Svgx/AccountKeysImageDark'
 
 interface AccountKeysProps {
   account: Account
@@ -24,6 +26,7 @@ interface AccountKeysProps {
 }
 
 const Information: FC = memo(() => {
+  const isLightMode = useColorMode().colorMode === 'light'
   return (
     <Box maxWidth="21.5rem">
       <chakra.h3 mb="1rem">Keys</chakra.h3>
@@ -32,14 +35,13 @@ const Information: FC = memo(() => {
         color={NAMED_COLORS.GREY}
         _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
       >
-        Keep your keys safe by only revealing their contents when you’re sure
+        Keep your keys safe by only revealing their contents when you're sure
         nobody is peering. These are used to access your accounts and are the
         primary security measure against non-solicited user access.
         <br />
         <br />
-        If you’re ever to import or recover your account, please do so by using
-        your spending key. So please, be sure to keep that safe somewhere else,
-        such as on a piece of paper.{' '}
+        Safeguarding your mnemonic phrase and encoded keys is essential to
+        maintain full ownership, control, and security over your digital assets.{' '}
         <Button
           variant="link"
           color={NAMED_COLORS.LIGHT_BLUE}
@@ -48,7 +50,7 @@ const Information: FC = memo(() => {
           <chakra.h5>Learn more here</chakra.h5>
         </Button>
       </chakra.h5>
-      <AccountKeysImage />
+      {isLightMode ? <AccountKeysImageLight /> : <AccountKeysImageDark />}
     </Box>
   )
 })

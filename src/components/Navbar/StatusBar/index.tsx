@@ -55,7 +55,7 @@ const ActiveStatus: FC<FlexProps> = props => {
       </StatusItem>
       <StatusItem
         display={requiredSnapshot || download ? 'none' : 'flex'}
-        style={synced && accountsSynced ? 'default' : 'warning'}
+        style={synced ? 'default' : 'warning'}
       >
         {isMinified =>
           isMinified ? (
