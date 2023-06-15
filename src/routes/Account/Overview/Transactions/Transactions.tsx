@@ -21,14 +21,36 @@ import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 import { formatDate } from 'Utils/formatDate'
 import { Container } from 'Routes/Account/Shared/Container'
 import Caret from 'Svgx/caret-icon'
+import SortSelect from 'Components/Search&Sort/SortSelect'
+import SortType from 'Types/SortType'
 
-export const TRANSACTION_TITLE_HEIGHT = 60
+const TRANSACTION_MARGIN_BOTTOM = 24
+export const TRANSACTION_TITLE_HEIGHT = 85 + TRANSACTION_MARGIN_BOTTOM
+
+const OPTIONS = [
+  {
+    label: 'Date - Descending',
+    value: SortType.DESC,
+  },
+  {
+    label: 'Date - Ascending',
+    value: SortType.ASC,
+  },
+]
 
 export function TransactionTitle({ style }: { style: React.CSSProperties }) {
   return (
-    <Box sx={style}>
-      <Container>
+    <Box sx={style} mb="1rem">
+      <Container
+        height={`${TRANSACTION_TITLE_HEIGHT - TRANSACTION_MARGIN_BOTTOM}px`}
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
+      >
         <chakra.h3>Transactions</chakra.h3>
+        <HStack>
+          <SortSelect options={OPTIONS} value={OPTIONS[0]} />
+        </HStack>
       </Container>
     </Box>
   )

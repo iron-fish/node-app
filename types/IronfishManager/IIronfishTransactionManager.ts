@@ -29,7 +29,8 @@ export interface IIronfishTransactionManager {
   getPaginatedTransactionsByAccountId: (
     accountId: string,
     count?: number,
-    offset?: number
+    offset?: number,
+    reverse?: boolean
   ) => Promise<{
     transactions: Transaction[]
     hasNext: boolean
