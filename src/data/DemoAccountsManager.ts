@@ -20,7 +20,11 @@ import { ACCOUNT_SETTINGS } from './DemoAccountSettingsManager'
 import uniqueId from 'lodash/uniqueId'
 import EventType from 'Types/EventType'
 
-export const DEMO_ACCOUNTS: AccountValue[] = [
+type DemoAccount = AccountValue & {
+  viewOnly?: boolean
+}
+
+export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: 'jwbdcLHnLgvnL5oZl554mRWiaiAxmhtWt0dN4djPKntVt5EV443wRMxYzSXX4nX8',
     name: 'Primary Account',
@@ -50,6 +54,7 @@ export const DEMO_ACCOUNTS: AccountValue[] = [
     version: 1,
     viewKey: nanoid(64),
     createdAt: null,
+    viewOnly: true,
   },
   {
     id: 'q1Pr8GLyskDXbBSUM3DMGOOlrNWv5RFloVr57YGxWrh98Afwz5nDCL1nbMIxfhA7',
