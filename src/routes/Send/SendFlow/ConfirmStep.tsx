@@ -165,15 +165,23 @@ const ConfirmStep: FC<StepProps> = ({
             title="Total:"
             value={
               <Flex direction="column">
-                <chakra.h4 textAlign="end">
-                  {formatOreToTronWithLanguage(amount)}
-                  &nbsp;{asset.name}
-                </chakra.h4>
-                {asset.id !== feeAsset.id && (
+                {asset.id === feeAsset.id && (
                   <chakra.h4 textAlign="end">
-                    {formatOreToTronWithLanguage(fee)}
-                    &nbsp;{feeAsset.name}
+                    {formatOreToTronWithLanguage(amount + fee)}
+                    &nbsp;{asset.name}
                   </chakra.h4>
+                )}
+                {asset.id !== feeAsset.id && (
+                  <>
+                    <chakra.h4 textAlign="end">
+                      {formatOreToTronWithLanguage(amount)}
+                      &nbsp;{asset.name}
+                    </chakra.h4>
+                    <chakra.h4 textAlign="end">
+                      {formatOreToTronWithLanguage(fee)}
+                      &nbsp;{feeAsset.name}
+                    </chakra.h4>
+                  </>
                 )}
               </Flex>
             }
