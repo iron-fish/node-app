@@ -90,8 +90,12 @@ const AddressDetails = () => {
       </Flex>
       <Tabs>
         <TabList>
-          <Tab>Transactions</Tab>
-          <Tab>Contact Settings</Tab>
+          <Tab>
+            <chakra.h6>Transactions</chakra.h6>
+          </Tab>
+          <Tab>
+            <chakra.h6>Contact Settings</chakra.h6>
+          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel pl="0rem">
