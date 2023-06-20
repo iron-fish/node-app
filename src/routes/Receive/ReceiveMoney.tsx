@@ -10,38 +10,33 @@ import {
   Tooltip,
   IconCopy,
   CheckIcon,
+  useColorMode,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import DetailsPanel from 'Components/DetailsPanel'
-import ReceiveIronImage from 'Svgx/ReceiveIronImage'
-import LinkLaunchIcon from 'Svgx/LinkLaunch'
+import ReceiveImageLight from 'Svgx/ReceiveImageLight'
+import ReceiveImageDark from 'Svgx/ReceiveImageDark'
 import LocationStateProps from 'Types/LocationState'
 import AccountsSelect from 'Components/AccountsSelect'
 import CutAccount from 'Types/CutAccount'
 
 const Information: FC = memo(() => {
+  const { colorMode } = useColorMode()
+  const isLightMode = colorMode === 'light'
   return (
     <Box maxWidth="21.5rem">
-      <chakra.h3 mb="1rem">Use our block explorer</chakra.h3>
+      <chakra.h3 mb="1rem">Transaction Details</chakra.h3>
       <chakra.h5
         mb="2rem"
         color={NAMED_COLORS.GREY}
         _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
       >
-        Want to ensure your recipient, or yourself, that a transaction has been
-        sent? Request a transaction link from the iron fish block explorer!
-        <br />
-        <br />
-        <Button
-          variant="link"
-          color={NAMED_COLORS.LIGHT_BLUE}
-          rightIcon={<LinkLaunchIcon h="0.875rem" w="0.875rem" />}
-          onClick={() => window.open('https://explorer.ironfish.network/')}
-        >
-          <chakra.h5>Check it out!</chakra.h5>
-        </Button>
+        You can share your public address with whomever you choose to receive
+        payments. Your account will remain completely private, and individuals
+        with this public address will not be able to see any of your other
+        transfers or balances.
       </chakra.h5>
-      <ReceiveIronImage />
+      {isLightMode ? <ReceiveImageLight /> : <ReceiveImageDark />}
     </Box>
   )
 })
