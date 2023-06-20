@@ -9,7 +9,9 @@ import {
   Skeleton,
   Grid,
   useIronToast,
+  Link,
 } from '@ironfish/ui-kit'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 import size from 'byte-size'
 import { ROUTES } from '..'
 import BackButtonLink from 'Components/BackButtonLink'
@@ -30,6 +32,7 @@ import WalletCommonTable from 'Components/WalletCommonTable'
 import InfoBadge from 'Components/InfoBadge'
 import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 import { formatDate } from 'Utils/formatDate'
+import { BLOCK_EXPLORER_URL } from 'Utils/constants'
 
 interface Card {
   render: (tx: Transaction) => ReactNode
@@ -82,15 +85,27 @@ const CARDS: Card[] = [
   {
     render: (tx: Transaction) =>
       tx?.blockHash ? (
-        <CopyValueToClipboard
-          label={truncateHash(tx?.blockHash || '', 2, 4)}
-          value={tx?.blockHash || ''}
-          iconButtonProps={{
-            color: NAMED_COLORS.GREY,
-          }}
-          copyTooltipText={'Copy block hash'}
-          copiedTooltipText={'Block hash copied'}
-        />
+        <>
+          <CopyValueToClipboard
+            label={truncateHash(tx?.blockHash || '', 2, 4)}
+            value={tx?.blockHash || ''}
+            iconButtonProps={{
+              color: NAMED_COLORS.GREY,
+            }}
+            copyTooltipText={'Copy block hash'}
+            copiedTooltipText={'Block hash copied'}
+          />
+          <Link
+            onClick={() =>
+              window.IronfishManager.openLink(
+                `${BLOCK_EXPLORER_URL}/blocks/${tx.blockHash}`
+              )
+            }
+            color={NAMED_COLORS.LIGHT_BLUE}
+          >
+            View Block Explorer <ExternalLinkIcon />
+          </Link>
+        </>
       ) : (
         'n/a'
       ),
@@ -99,15 +114,27 @@ const CARDS: Card[] = [
   },
   {
     render: (tx: Transaction) => (
-      <CopyValueToClipboard
-        label={truncateHash(tx?.hash || '', 2, 4)}
-        iconButtonProps={{
-          color: NAMED_COLORS.GREY,
-        }}
-        value={tx?.hash || ''}
-        copyTooltipText={'Copy Transaction hash'}
-        copiedTooltipText={'Transaction hash copied'}
-      />
+      <>
+        <CopyValueToClipboard
+          label={truncateHash(tx?.hash || '', 2, 4)}
+          iconButtonProps={{
+            color: NAMED_COLORS.GREY,
+          }}
+          value={tx?.hash || ''}
+          copyTooltipText={'Copy Transaction hash'}
+          copiedTooltipText={'Transaction hash copied'}
+        />
+        <Link
+          onClick={() =>
+            window.IronfishManager.openLink(
+              `${BLOCK_EXPLORER_URL}/transaction/${tx.hash}`
+            )
+          }
+          color={NAMED_COLORS.LIGHT_BLUE}
+        >
+          View Block Explorer <ExternalLinkIcon />
+        </Link>
+      </>
     ),
     label: 'Transaction Hash',
     icon: DifficultyIcon,

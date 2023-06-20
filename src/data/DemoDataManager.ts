@@ -161,6 +161,10 @@ class DemoDataManager implements IIronfishManager {
   async restartApp(): Promise<void> {
     return
   }
+
+  async openLink(url: string): Promise<void> {
+    return
+  }
 }
 
 export default DemoDataManager

@@ -33,7 +33,7 @@ import EventType from 'Types/EventType'
 import { ERROR_MESSAGES } from '../utils/constants'
 import sendMessageToRender from '../utils/sendMessageToRender'
 import { WorkerMessageType } from '@ironfish/sdk/build/src/workerPool/tasks/workerMessage'
-import { app } from 'electron'
+import { app, shell } from 'electron'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
@@ -440,6 +440,10 @@ export class IronFishManager implements IIronfishManager {
       accounts: accountsInfo,
     }
     return Promise.resolve(status)
+  }
+
+  async openLink(url: string): Promise<void> {
+    return Promise.resolve(shell.openExternal(url))
   }
 
   peers(): Promise<Peer[]> {
