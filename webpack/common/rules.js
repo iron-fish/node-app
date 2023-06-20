@@ -1,6 +1,6 @@
 module.exports = [
   {
-    test: /@ironfish\/sdk\/build\/src\/migrations\/data\/.*\.js$/,
+    test: /@ironfish[\\/]sdk[\\/]build[\\/]src[\\/]migrations[\\/]data[\\/].*\.js$/,
     loader: 'string-replace-loader',
     options: {
       search: '__filename',
@@ -10,7 +10,7 @@ module.exports = [
         // actual file.
         // After bundling, __filename will resolve to the webpack-bundled file's name,
         // something like index.js, so we can avoid this by replacing __filename with the original filename.
-        return `'${this.resource.toString()}'`
+        return `'${this.resource.toString().replaceAll('\\', '\\\\')}'`
       },
       flags: 'g',
     },
@@ -19,7 +19,7 @@ module.exports = [
   {
     // We're specifying native_modules in the test because the asset relocator loader generates a
     // "fake" .node file which is really a cjs file.
-    test: /native_modules\/.+\.node$/,
+    test: /native_modules[\\/].+\.node$/,
     use: 'node-loader',
   },
   {
