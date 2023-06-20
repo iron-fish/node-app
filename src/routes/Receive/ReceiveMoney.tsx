@@ -31,9 +31,10 @@ const Information: FC = memo(() => {
         color={NAMED_COLORS.GREY}
         _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
       >
-        The account overview not only presents a complete list of your
-        transactions but also offers a detailed view of your transaction
-        information, providing a comprehensive understanding of your activity.
+        You can share your public address with whomever you choose to receive
+        payments. Your account will remain completely private, and individuals
+        with this public address will not be able to see any of your other
+        transfers or balances.
       </chakra.h5>
       {isLightMode ? <ReceiveImageLight /> : <ReceiveImageDark />}
     </Box>
