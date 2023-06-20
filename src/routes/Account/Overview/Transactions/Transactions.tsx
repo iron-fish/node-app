@@ -24,8 +24,8 @@ import Caret from 'Svgx/caret-icon'
 import SortSelect from 'Components/Search&Sort/SortSelect'
 import SortType from 'Types/SortType'
 
-const TRANSACTION_MARGIN_BOTTOM = 24
-export const TRANSACTION_TITLE_HEIGHT = 85 + TRANSACTION_MARGIN_BOTTOM
+const TRANSACTIONS_TITLE_MARGIN_BOTTOM = 24
+export const TRANSACTIONS_TITLE_HEIGHT = 85 + TRANSACTIONS_TITLE_MARGIN_BOTTOM
 
 const OPTIONS = [
   {
@@ -38,18 +38,36 @@ const OPTIONS = [
   },
 ]
 
-export function TransactionTitle({ style }: { style: React.CSSProperties }) {
+export function TransactionsTitle({
+  style,
+  isReverseSort,
+  setIsReverseSort,
+}: {
+  style: React.CSSProperties
+  isReverseSort: boolean
+  setIsReverseSort: (value: boolean) => void
+}) {
   return (
     <Box sx={style} mb="1rem">
       <Container
-        height={`${TRANSACTION_TITLE_HEIGHT - TRANSACTION_MARGIN_BOTTOM}px`}
+        height={`${
+          TRANSACTIONS_TITLE_HEIGHT - TRANSACTIONS_TITLE_MARGIN_BOTTOM
+        }px`}
         display="flex"
         flexDirection="column"
         justifyContent="space-between"
+        cursor="pointer"
       >
         <chakra.h3>Transactions</chakra.h3>
         <HStack>
-          <SortSelect options={OPTIONS} value={OPTIONS[0]} />
+          <SortSelect
+            options={OPTIONS}
+            value={isReverseSort ? OPTIONS[0] : OPTIONS[1]}
+            onSelectOption={option => {
+              const isReverse = option.value === SortType.DESC
+              setIsReverseSort(isReverse)
+            }}
+          />
         </HStack>
       </Container>
     </Box>
