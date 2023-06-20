@@ -79,7 +79,7 @@ const ImportFileTab: FC<DesktopModeProps> = ({
   return (
     <>
       <chakra.h5 mb="1rem" mt="2rem" color={NAMED_COLORS.GREY}>
-        Upload your JSON file to import your account
+        Upload your JSON or bech32 file to import your account
       </chakra.h5>
       <Flex>
         <Button
@@ -103,7 +103,6 @@ const ImportFileTab: FC<DesktopModeProps> = ({
             left="0"
             opacity="0"
             aria-hidden="true"
-            accept="application/JSON"
             onChange={e => {
               setFile(e.target.files[0])
             }}
