@@ -178,7 +178,7 @@ const ConfirmStep: FC<StepProps> = ({
                       &nbsp;{asset.name}
                     </chakra.h4>
                     <chakra.h4 textAlign="end">
-                      {formatOreToTronWithLanguage(fee)}
+                      +{formatOreToTronWithLanguage(fee)}
                       &nbsp;{feeAsset.name}
                     </chakra.h4>
                   </>
