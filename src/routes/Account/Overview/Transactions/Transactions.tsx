@@ -10,6 +10,7 @@ import {
   HStack,
   Spinner,
   Flex,
+  SelectField,
 } from '@ironfish/ui-kit'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
@@ -21,7 +22,6 @@ import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 import { formatDate } from 'Utils/formatDate'
 import { Container } from 'Routes/Account/Shared/Container'
 import Caret from 'Svgx/caret-icon'
-import SortSelect from 'Components/Search&Sort/SortSelect'
 import SortType from 'Types/SortType'
 
 const TRANSACTIONS_TITLE_MARGIN_BOTTOM = 24
@@ -60,9 +60,12 @@ export function TransactionsTitle({
       >
         <chakra.h3>Transactions</chakra.h3>
         <HStack>
-          <SortSelect
+          <SelectField
+            label="Sort by"
+            whiteSpace="nowrap"
             options={OPTIONS}
             value={isReverseSort ? OPTIONS[0] : OPTIONS[1]}
+            size="small"
             onSelectOption={option => {
               const isReverse = option.value === SortType.DESC
               setIsReverseSort(isReverse)
