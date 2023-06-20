@@ -21,6 +21,7 @@ export function usePaginatedAccountTransactions(
         const nextOffset = allPages.flatMap(page => page.transactions).length
         return lastPage.hasNext ? nextOffset : undefined
       },
+      refetchOnWindowFocus: false,
     }
   )
 }
