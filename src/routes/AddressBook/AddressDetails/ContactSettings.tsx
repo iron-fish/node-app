@@ -12,33 +12,30 @@ import {
   useColorMode,
 } from '@ironfish/ui-kit'
 import DetailsPanel from 'Components/DetailsPanel'
-import AccountSettingsImageDark from 'Svgx/AccountSettingsImageDark'
 import Contact from 'Types/Contact'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from 'Routes/data'
 import usePublicAddressValidator from 'Hooks/accounts/usePublicAddressValidator'
 import TextFieldErrorMessage from 'Components/TextFieldErrorMessage'
 import ModalWindow from 'Components/ModalWindow'
-import AccountSettingsImageLight from 'Svgx/AccountSettingsImageLight'
+import ContactSettingsDark from 'Svgx/ContactSettingsDark'
+import ContactSettingsLight from 'Svgx/ContactSettingsLight'
 
 const Information: FC = memo(() => {
   const isLightMode = useColorMode().colorMode === 'light'
   return (
     <Box maxWidth="21.5rem">
-      <chakra.h3 mb="1rem">Settings</chakra.h3>
+      <chakra.h3 mb="1rem">Contact Settings</chakra.h3>
       <chakra.h5
         mb="2rem"
         color={NAMED_COLORS.GREY}
         _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
       >
-        Changing your account name is a great way to personalize your wallet
-        experience.
+        With contact names being associated with public addresses, you have the
+        freedom to customize how you identify your contacts without affecting
+        their underlying address.
       </chakra.h5>
-      {isLightMode ? (
-        <AccountSettingsImageLight />
-      ) : (
-        <AccountSettingsImageDark />
-      )}
+      {isLightMode ? <ContactSettingsLight /> : <ContactSettingsDark />}
     </Box>
   )
 })
