@@ -10,6 +10,7 @@ import {
   HStack,
   Spinner,
   Flex,
+  SelectField,
 } from '@ironfish/ui-kit'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
@@ -21,14 +22,56 @@ import AssetsAmountPreview from 'Components/AssetsAmountPreview'
 import { formatDate } from 'Utils/formatDate'
 import { Container } from 'Routes/Account/Shared/Container'
 import Caret from 'Svgx/caret-icon'
+import SortType from 'Types/SortType'
 
-export const TRANSACTION_TITLE_HEIGHT = 60
+const TRANSACTIONS_TITLE_MARGIN_BOTTOM = 24
+export const TRANSACTIONS_TITLE_HEIGHT = 85 + TRANSACTIONS_TITLE_MARGIN_BOTTOM
 
-export function TransactionTitle({ style }: { style: React.CSSProperties }) {
+const OPTIONS = [
+  {
+    label: 'Date - Descending',
+    value: SortType.DESC,
+  },
+  {
+    label: 'Date - Ascending',
+    value: SortType.ASC,
+  },
+]
+
+export function TransactionsTitle({
+  style,
+  isReverseSort,
+  setIsReverseSort,
+}: {
+  style: React.CSSProperties
+  isReverseSort: boolean
+  setIsReverseSort: (value: boolean) => void
+}) {
   return (
-    <Box sx={style}>
-      <Container>
+    <Box sx={style} mb="1rem">
+      <Container
+        height={`${
+          TRANSACTIONS_TITLE_HEIGHT - TRANSACTIONS_TITLE_MARGIN_BOTTOM
+        }px`}
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
+        cursor="pointer"
+      >
         <chakra.h3>Transactions</chakra.h3>
+        <HStack>
+          <SelectField
+            label="Sort by"
+            whiteSpace="nowrap"
+            options={OPTIONS}
+            value={isReverseSort ? OPTIONS[0] : OPTIONS[1]}
+            size="small"
+            onSelectOption={option => {
+              const isReverse = option.value === SortType.DESC
+              setIsReverseSort(isReverse)
+            }}
+          />
+        </HStack>
       </Container>
     </Box>
   )

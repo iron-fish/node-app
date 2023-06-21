@@ -202,7 +202,8 @@ class TransactionManager
   async getPaginatedTransactionsByAccountId(
     accountId: string,
     count = 20,
-    offset = 0
+    offset = 0,
+    reverse = true
   ) {
     const account = this.node.wallet.getAccount(accountId)
 
@@ -216,7 +217,9 @@ class TransactionManager
     let i = 0
     let hasNext = false
 
-    for await (const transaction of account.getTransactionsByTime()) {
+    for await (const transaction of account.getTransactionsByTime(undefined, {
+      reverse,
+    })) {
       if (i < offset) {
         i++
         continue

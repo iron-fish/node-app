@@ -1,11 +1,16 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 import { Box } from '@ironfish/ui-kit'
 import Account from 'Types/Account'
 import { usePaginatedAccountTransactions } from 'Hooks/transactions/usePaginatedAccountTransactions'
-import { useRowRenderer, useItemSize, useItemCount } from './listUtils'
+import {
+  useRowRenderer,
+  useItemSize,
+  useItemCount,
+  FIXED_ROW_COUNT,
+} from './listUtils'
 
 type Props = {
   account: Account
@@ -13,9 +18,10 @@ type Props = {
 
 export default function AccountOverview({ account }: Props) {
   const listRef = useRef<VariableSizeList>(null)
+  const [isReverseSort, setIsReverseSort] = useState(true)
 
   const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    usePaginatedAccountTransactions(account.id)
+    usePaginatedAccountTransactions(account.id, isReverseSort)
 
   const transactions = useMemo(() => {
     return data?.pages.flatMap(item => item.transactions) ?? []
@@ -42,6 +48,8 @@ export default function AccountOverview({ account }: Props) {
     isLoading,
     transactions,
     handleOverviewResize,
+    isReverseSort,
+    setIsReverseSort,
   })
 
   const itemCount = useItemCount({
@@ -57,13 +65,21 @@ export default function AccountOverview({ account }: Props) {
         {({ width, height }: { width: number; height: number }) => {
           return (
             <InfiniteLoader
-              isItemLoaded={index => transactions[index] !== undefined}
+              isItemLoaded={index => {
+                // If rendering a fixed row item, we can assume it's loaded.
+                if (index < FIXED_ROW_COUNT) {
+                  return true
+                }
+                // Otherwise, we need to check if we're rendering a transaction or the loading indicator.
+                return !!transactions[index - FIXED_ROW_COUNT]
+              }}
               itemCount={itemCount}
               loadMoreItems={() => {
                 if (hasNextPage && !isFetchingNextPage) {
                   fetchNextPage()
                 }
               }}
+              threshold={2}
             >
               {({ onItemsRendered, ref }) => (
                 <VariableSizeList

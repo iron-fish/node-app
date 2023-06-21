@@ -33,14 +33,16 @@ class TransactionManagerContext implements IIronfishTransactionManager {
   getPaginatedTransactionsByAccountId = (
     accountId: string,
     count?: number,
-    offset?: number
+    offset?: number,
+    reverse?: boolean
   ) => {
     return invoke(
       'ironfish-manager-transactions',
       IronfishTransactionManagerAction.GET_PAGINATED_TRANSACTIONS_BY_ACCOUNT_ID,
       accountId,
       count,
-      offset
+      offset,
+      reverse
     )
   }
 

@@ -8,10 +8,9 @@ import {
   TransactionRow,
   TransactionsHeadings,
   TRANSACTIONS_HEADINGS_HEIGHT,
-  TransactionTitle,
-  TRANSACTION_TITLE_HEIGHT,
+  TransactionsTitle,
+  TRANSACTIONS_TITLE_HEIGHT,
 } from './Transactions/Transactions'
-import { Container } from '../Shared/Container'
 import Transaction from 'Types/Transaction'
 
 type BaseRowRendererArgs = {
@@ -25,35 +24,58 @@ type AdditionalRowRendererArgs = {
   isLoading: boolean
   transactions: Transaction[]
   handleOverviewResize: (size: number) => void
+  isReverseSort: boolean
+  setIsReverseSort: (isReverseSort: boolean) => void
 }
 
-function fullRowRenderer({
-  index,
-  style,
-  account,
-  hasTransactions,
-  isLoading,
-  transactions,
-  handleOverviewResize,
-}: BaseRowRendererArgs & AdditionalRowRendererArgs) {
-  /**
-   * @todo: These magic indexes are pretty hacky. Update this so that
-   * the elements and their sizes can be calculated dynamically.
-   */
-  if (index === 0) {
-    return (
-      <Container>
-        <OverviewStats account={account} setSize={handleOverviewResize} />
-      </Container>
-    )
-  }
+type CombinedRowRendererArgs = BaseRowRendererArgs & AdditionalRowRendererArgs
 
-  if (index === 1) {
-    return hasTransactions ? <TransactionTitle style={style} /> : null
-  }
+const FIXED_ROWS: Array<{
+  render: (args: CombinedRowRendererArgs) => null | JSX.Element
+  getSize: (args: {
+    overviewHeightRef: React.MutableRefObject<number>
+    isEmptyState: boolean
+  }) => number
+}> = [
+  {
+    render({ account, handleOverviewResize }) {
+      return <OverviewStats account={account} setSize={handleOverviewResize} />
+    },
+    getSize({ overviewHeightRef }) {
+      return overviewHeightRef.current
+    },
+  },
+  {
+    render({ hasTransactions, style, isReverseSort, setIsReverseSort }) {
+      return hasTransactions ? (
+        <TransactionsTitle
+          style={style}
+          isReverseSort={isReverseSort}
+          setIsReverseSort={setIsReverseSort}
+        />
+      ) : null
+    },
+    getSize({ isEmptyState }) {
+      return isEmptyState ? 0 : TRANSACTIONS_TITLE_HEIGHT
+    },
+  },
+  {
+    render({ hasTransactions, style }) {
+      return hasTransactions ? <TransactionsHeadings style={style} /> : null
+    },
+    getSize({ isEmptyState }) {
+      return isEmptyState ? 0 : TRANSACTIONS_HEADINGS_HEIGHT
+    },
+  },
+]
 
-  if (index === 2) {
-    return hasTransactions ? <TransactionsHeadings style={style} /> : null
+export const FIXED_ROW_COUNT = FIXED_ROWS.length
+
+function fullRowRenderer(args: CombinedRowRendererArgs) {
+  const { index, style, hasTransactions, isLoading, transactions } = args
+
+  if (index < FIXED_ROWS.length) {
+    return FIXED_ROWS[index].render(args)
   }
 
   if (isLoading) {
@@ -79,6 +101,8 @@ export function useRowRenderer({
   isLoading,
   transactions,
   handleOverviewResize,
+  isReverseSort,
+  setIsReverseSort,
 }: AdditionalRowRendererArgs) {
   return useCallback(
     ({ index, style }: BaseRowRendererArgs) => {
@@ -90,9 +114,19 @@ export function useRowRenderer({
         isLoading,
         transactions,
         handleOverviewResize,
+        isReverseSort,
+        setIsReverseSort,
       })
     },
-    [account, handleOverviewResize, hasTransactions, isLoading, transactions]
+    [
+      account,
+      handleOverviewResize,
+      hasTransactions,
+      isLoading,
+      isReverseSort,
+      setIsReverseSort,
+      transactions,
+    ]
   )
 }
 
@@ -101,18 +135,13 @@ export function useItemSize(isEmptyState: boolean) {
 
   const getItemSize = useCallback(
     (index: number) => {
-      /**
-       * @todo: Clean up magic indices.
-       */
-      if (index === 0) {
-        return overviewHeightRef.current
+      if (index < FIXED_ROWS.length) {
+        return FIXED_ROWS[index].getSize({
+          overviewHeightRef,
+          isEmptyState,
+        })
       }
-      if (index === 1) {
-        return isEmptyState ? 0 : TRANSACTION_TITLE_HEIGHT
-      }
-      if (index === 2) {
-        return isEmptyState ? 0 : TRANSACTIONS_HEADINGS_HEIGHT
-      }
+
       return ROW_SIZE
     },
     [isEmptyState]
@@ -133,15 +162,13 @@ export function useItemCount({
   transactions: Transaction[]
 }) {
   return useMemo(() => {
-    /**
-     * @todo: Clean up magic number.
-     */
-    const nonTransactionRows = 3
+    // If initially loading or if no transactions, we need to render the loader or empty state.
+    if (isLoading || !hasTransactions) return FIXED_ROW_COUNT + 1
 
-    if (isLoading || !hasTransactions) return nonTransactionRows + 1
+    // If there are more transactions to load, we add an extra row for the loader.
+    if (hasNextPage) return transactions.length + FIXED_ROW_COUNT + 1
 
-    if (hasNextPage) return transactions.length + nonTransactionRows + 1
-
-    return transactions.length + nonTransactionRows
+    // Otherwise, the count is just the number of transactions plus the fixed rows.
+    return transactions.length + FIXED_ROW_COUNT
   }, [hasNextPage, isLoading, transactions.length, hasTransactions])
 }
