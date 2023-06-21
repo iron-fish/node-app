@@ -51,6 +51,17 @@ const COMMON_CONFIG = {
     {
       name: '@electron-forge/maker-dmg',
       platforms: ['darwin'],
+      config: {
+        icon: './electron/icons/icon.icns',
+        background: './electron/icons/background.png',
+        format: 'ULFO',
+        window: {
+          size: {
+            width: 645,
+            height: 493,
+          },
+        },
+      },
     },
     {
       name: '@electron-forge/maker-deb',
