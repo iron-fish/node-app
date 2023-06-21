@@ -20,28 +20,25 @@ import useNodeSettings from 'Hooks/node/useNodeSettings'
 import { FC, useState, useEffect, memo, useMemo } from 'react'
 import pick from 'lodash/pick'
 import DetailsPanel from 'Components/DetailsPanel'
-import AccountSettingsImageDark from 'Svgx/AccountSettingsImageDark'
 import NodeWorkersSelect from './NodeWorkersSelect'
 import ConfirmModal from 'Components/ConfirmModal'
-import AccountSettingsImageLight from 'Svgx/AccountSettingsImageLight'
+import NodeSettingsImageLight from 'Svgx/NodeSettingsImageLight'
+import NodeSettingsImageDark from 'Svgx/NodeSettingsImageDark'
 
 const Information: FC = memo(() => {
   const isLightMode = useColorMode().colorMode === 'light'
   return (
     <Box maxWidth="21.5rem" mt="1rem">
-      <chakra.h3 mb="1rem">Settings</chakra.h3>
+      <chakra.h3 mb="1rem">Node Settings</chakra.h3>
       <chakra.h5
         mb="2rem"
         color={NAMED_COLORS.GREY}
         _dark={{ color: NAMED_COLORS.LIGHT_GREY }}
       >
-        Change your node settings to fit you needs
+        Changing node settings can optimize performance, improve connectivity,
+        enhance security, and manage resources effectively.
       </chakra.h5>
-      {isLightMode ? (
-        <AccountSettingsImageLight />
-      ) : (
-        <AccountSettingsImageDark />
-      )}
+      {isLightMode ? <NodeSettingsImageLight /> : <NodeSettingsImageDark />}
     </Box>
   )
 })
