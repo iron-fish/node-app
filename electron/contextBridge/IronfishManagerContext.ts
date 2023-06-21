@@ -82,6 +82,10 @@ class IronfishManagerContext implements IIronfishManager {
   restartApp = () => {
     return invoke('ironfish-manager', IronfishManagerAction.RESTART_APP)
   }
+
+  openLink = (url: string) => {
+    return invoke('ironfish-manager', IronfishManagerAction.OPEN_LINK, url)
+  }
 }
 
 export default new IronfishManagerContext()

@@ -28,6 +28,7 @@ export enum IronfishManagerAction {
   SYNC = 'sync',
   RESET_NODE = 'resetNode',
   RESTART_APP = 'restartApp',
+  OPEN_LINK = 'openLink',
 }
 
 export interface IIronfishManager {
@@ -57,6 +58,7 @@ export interface IIronfishManager {
   ): Promise<InternalOptions[T]>
   resetNode: () => Promise<void>
   restartApp: () => Promise<void>
+  openLink: (url: string) => Promise<void>
 }
 
 export default IIronfishManager
