@@ -13,12 +13,14 @@ import {
   NumberInputField,
   Autocomplete,
   useDimensions,
+  useColorMode,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
 import DetailsPanel from 'Components/DetailsPanel'
 import useEstimatedFee from 'Hooks/transactions/useEstimatedFee'
-import FeesImage from 'Svgx/FeesImage'
+import FeesImageDark from 'Svgx/FeesImageDark'
+import FeesImageLight from 'Svgx/FeesImageLight'
 import SendIcon from 'Svgx/send'
 import SendFlow from './SendFlow/SendFlow'
 import Contact from 'Types/Contact'
@@ -39,6 +41,8 @@ import AccountBalance from 'Types/AccountBalance'
 import WarningMessage from 'Components/WarningMessage'
 
 const Information: FC = memo(() => {
+  const { colorMode } = useColorMode()
+  const isLightMode = colorMode === 'light'
   return (
     <Box maxWidth="21.5rem">
       <chakra.h3 mb="1rem">About Fees</chakra.h3>
@@ -50,7 +54,7 @@ const Information: FC = memo(() => {
         directly correlate with the speed with which your transaction is picked
         up by the blockchain.
       </chakra.h5>
-      <FeesImage mt="2rem" />
+      {isLightMode ? <FeesImageLight mt="2rem" /> : <FeesImageDark mt="2rem" />}
     </Box>
   )
 })
