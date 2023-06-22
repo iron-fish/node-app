@@ -237,8 +237,8 @@ export class IronFishManager implements IIronfishManager {
     await this.checkForMigrations()
 
     if (
-      (this.sdk.internal.get('networkId') !== 1 ||
-        this.node.config.get('networkId') !== 1) &&
+      (this.sdk.internal.get('networkId') === 0 ||
+        this.node.config.get('networkId') === 0) &&
       (app.isPackaged || process.env.ENABLE_RESET)
     ) {
       log.log(
