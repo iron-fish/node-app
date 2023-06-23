@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react'
 import { Box, Button, chakra, Flex, Icon, NAMED_COLORS } from '@ironfish/ui-kit'
 import SendIcon from 'Svgx/send'
 import Receive from 'Svgx/receive'
-import FeesImage from 'Svgx/FeesImage'
+import FeesImageDark from 'Svgx/FeesImageDark'
 import { useNavigate } from 'react-router-dom'
 import ROUTES from 'Routes/data'
 import { useDataSync } from 'Providers/DataSyncProvider'
@@ -94,7 +94,7 @@ const OverviewBalance: FC<OverviewBalanceProps> = ({ account }) => {
             </Flex>
           </Box>
           <Box display={{ base: 'none', md: 'inline-block' }} m="1rem">
-            <FeesImage width={180} height={133} />
+            <FeesImageDark width={180} height={133} />
           </Box>
         </Flex>
       </Box>
