@@ -78,6 +78,13 @@ class AddressBookStorage extends AbstractStorage<Contact> {
   }
 
   async add(entity: Omit<Contact, '_id' | 'order'>): Promise<Contact> {
+    const record = await this.find({ address: entity.address })
+    if (record) {
+      throw {
+        message: `Account with public address '${entity.address}' already exists`,
+      }
+    }
+
     const order = await this.getNextNumber()
     const contact = await super.add({ ...entity, order: order })
 

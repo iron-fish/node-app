@@ -50,7 +50,11 @@ const AddContactButton: FC<{
       </Button>
       <AddContactModal
         onAdd={(name, address) => {
-          onAdd(name, address).then(() => toast())
+          onAdd(name, address)
+            .then(() => toast())
+            .catch(e => {
+              toast({ title: 'Error Adding Contact', description: e.message })
+            })
           setOpenAddContactModal(false)
         }}
         isOpen={openAddContactModal}

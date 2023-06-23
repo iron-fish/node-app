@@ -12,18 +12,54 @@ const storages: Record<string, AbstractStorage<Entity>> = {
 
 function initStorageCallbacks(ipcMain: IpcMain) {
   Object.entries(storages).forEach(([storageName, storage]) => {
-    ipcMain.handle(storageName + '-list', (e, searchTerm, sort) =>
-      storage.list(searchTerm, sort)
+    ipcMain.handle(storageName + '-list', (_event, searchTerm, sort) =>
+      storage.list(searchTerm, sort).catch(e => {
+        if (e.message) {
+          throw new Error(e.message)
+        }
+        throw e
+      })
     )
-    ipcMain.handle(storageName + '-get', (e, identity) => storage.get(identity))
-    ipcMain.handle(storageName + '-add', (e, entity) => storage.add(entity))
-    ipcMain.handle(storageName + '-update', (e, identity, entity) =>
-      storage.update(identity, entity)
+    ipcMain.handle(storageName + '-get', (_event, identity) =>
+      storage.get(identity).catch(e => {
+        if (e.message) {
+          throw new Error(e.message)
+        }
+        throw e
+      })
     )
-    ipcMain.handle(storageName + '-delete', (e, identity) =>
-      storage.delete(identity)
+    ipcMain.handle(storageName + '-add', (_event, entity) =>
+      storage.add(entity).catch(e => {
+        if (e.message) {
+          throw new Error(e.message)
+        }
+        throw e
+      })
     )
-    ipcMain.handle(storageName + '-find', (e, fields) => storage.find(fields))
+    ipcMain.handle(storageName + '-update', (_event, identity, entity) =>
+      storage.update(identity, entity).catch(e => {
+        if (e.message) {
+          throw new Error(e.message)
+        }
+        throw e
+      })
+    )
+    ipcMain.handle(storageName + '-delete', (_event, identity) =>
+      storage.delete(identity).catch(e => {
+        if (e.message) {
+          throw new Error(e.message)
+        }
+        throw e
+      })
+    )
+    ipcMain.handle(storageName + '-find', (_event, fields) =>
+      storage.find(fields).catch(e => {
+        if (e.message) {
+          throw new Error(e.message)
+        }
+        throw e
+      })
+    )
   })
 }
 
