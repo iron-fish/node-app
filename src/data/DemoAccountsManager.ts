@@ -451,6 +451,9 @@ class DemoAccountsManager implements IIronfishAccountManager {
   async submitAccount(createParams: AccountValue): Promise<Account> {
     return this.create(createParams.name)
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async renameAccount(_id: string, _name: string): Promise<void> {}
 }
 
 export default DemoAccountsManager

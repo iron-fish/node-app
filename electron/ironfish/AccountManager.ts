@@ -309,6 +309,15 @@ class AccountManager
 
     return newAccount.serialize()
   }
+
+  async renameAccount(id: string, name: string): Promise<void> {
+    const account = this.node.wallet.getAccount(id)
+    if (!account) {
+      throw new Error(`Account with id=${id} was not found.`)
+    }
+
+    await account.setName(name)
+  }
 }
 
 export default AccountManager

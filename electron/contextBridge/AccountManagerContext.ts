@@ -109,6 +109,14 @@ class AccountManagerContext implements IIronfishAccountManager {
       id
     )
   }
+  renameAccount = (id: string, name: string) => {
+    return invoke(
+      'ironfish-manager-accounts',
+      IronfishAccountManagerAction.RENAME_ACCOUNT,
+      id,
+      name
+    )
+  }
 }
 
 export default new AccountManagerContext()

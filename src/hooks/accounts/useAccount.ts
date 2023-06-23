@@ -9,10 +9,9 @@ const useAccount = (id: string) => {
     promiseWrapper(window.IronfishManager.accounts.get(accountId))
 
   const updateAccount = useCallback((identity: string, name: string) => {
-    // Is not support by @ironfish/sdk
-    // window.DemoDataManager.updateAccount(identity, name).then(() =>
-    //   loadAccount(identity)
-    // )
+    window.IronfishManager.accounts
+      .renameAccount(identity, name)
+      .then(() => loadAccount(identity))
   }, [])
 
   const exportAccount = useCallback(
