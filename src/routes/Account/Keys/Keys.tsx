@@ -72,7 +72,9 @@ const AccountKeys: FC<AccountKeysProps> = ({ account, exportAccount }) => {
         const file = new Blob([exportedAccount], { type: 'text/plain' })
         const element = document.createElement('a')
         element.href = URL.createObjectURL(file)
-        element.download = account.name + '.json'
+        element.download = exportType.value
+          ? account.name
+          : `${account.name}.json`
         document.body.appendChild(element)
         element.click()
         document.removeChild(element)
