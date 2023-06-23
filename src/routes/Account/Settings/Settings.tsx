@@ -112,6 +112,7 @@ const RemoveAccountButton: FC<RemoveAccountButtonProps> = ({
 const AccountSettings: FC<AccountSettingsProps> = ({
   account,
   deleteAccount,
+  updateAccount,
 }) => {
   const navigate = useNavigate()
   const [name, setName] = useState<string>('')
@@ -140,7 +141,6 @@ const AccountSettings: FC<AccountSettingsProps> = ({
           label="Account Name"
           value={name}
           InputProps={{
-            isDisabled: true,
             onChange: e => setName(e.target.value),
           }}
         />
@@ -157,10 +157,10 @@ const AccountSettings: FC<AccountSettingsProps> = ({
             borderRadius="4.5rem"
             variant="primary"
             mr="2rem"
-            isDisabled={true}
+            isDisabled={name === account.name}
             onClick={() => {
               Promise.all([
-                // updateAccount(account.id, name),
+                updateAccount(account.id, name),
                 // updateSettings(account.id, currency.value),
               ]).then(() => toast({ title: 'Account Details Updated' }))
             }}

@@ -19,6 +19,7 @@ export enum IronfishAccountManagerAction {
   IS_VALID_PUBLIC_ADDRESS = 'isValidPublicAddress',
   LIST = 'list',
   PREPARE_ACCOUNT = 'prepareAccount',
+  RENAME_ACCOUNT = 'renameAccount',
   SUBMIT_ACCOUNT = 'submitAccount',
 }
 
@@ -39,5 +40,6 @@ export interface IIronfishAccountManager {
   isValidPublicAddress: (address: string) => Promise<boolean>
   list: (search?: string, sort?: SortType) => Promise<CutAccount[]>
   prepareAccount: () => Promise<AccountCreateParams>
+  renameAccount: (id: string, name: string) => Promise<void>
   submitAccount: (createParams: AccountValue) => Promise<Account>
 }
