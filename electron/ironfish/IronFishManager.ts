@@ -228,12 +228,6 @@ export class IronFishManager implements IIronfishManager {
       autoSeed: true,
     })
 
-    const isTelemetryEnabled = this.node.config.isSet('enableTelemetry')
-    if (!isTelemetryEnabled) {
-      this.node.config.set('enableTelemetry', true)
-      this.node.config.save()
-    }
-
     await this.checkForMigrations()
 
     if (
