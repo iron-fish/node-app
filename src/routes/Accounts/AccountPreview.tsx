@@ -196,7 +196,6 @@ const AccountPreview: FC<CutAccount> = ({
                     <Receive />
                   </Icon>
                 }
-                isDisabled={!synced}
               >
                 <h5>Receive</h5>
               </Button>
