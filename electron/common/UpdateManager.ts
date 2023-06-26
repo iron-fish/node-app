@@ -19,9 +19,15 @@ class UpdateManager implements IUpdateManager {
   }
 
   initialize: () => Promise<void> = () => {
-    this.url = `${this.serverUrl}/update/${
-      process.platform
-    }/${app.getVersion()}`
+    let platform: string = process.platform
+
+    if (platform === 'darwin') {
+      platform = process.arch === 'arm64' ? 'dmg_arm64' : 'dmg'
+    }
+
+    this.url = `${this.serverUrl}/update/${platform}/${app.getVersion()}`
+
+    log.log('is-packaged', app.isPackaged, this.url)
 
     if (app.isPackaged) {
       autoUpdater.setFeedURL({ url: this.url })
@@ -29,7 +35,7 @@ class UpdateManager implements IUpdateManager {
       autoUpdater.on(
         'update-downloaded',
         (e, releaseNotes, releaseName, releaseDate) => {
-          this.status = {
+          const nextStatus = {
             ...this.status,
             hasUpdates: true,
             update: {
@@ -38,8 +44,22 @@ class UpdateManager implements IUpdateManager {
               date: releaseDate,
             },
           }
+          log.log('update-downloaded', nextStatus)
+          this.status = nextStatus
         }
       )
+
+      autoUpdater.on('checking-for-update', (...args: any[]) => {
+        log.log('checking-for-update', args)
+      })
+
+      autoUpdater.on('update-available', (...args: any[]) => {
+        log.log('update-available', args)
+      })
+
+      autoUpdater.on('update-not-available', (...args: any[]) => {
+        log.log('update-not-available', args)
+      })
 
       autoUpdater.on('error', error => {
         log.error(error)

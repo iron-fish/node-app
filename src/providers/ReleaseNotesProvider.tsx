@@ -3,6 +3,7 @@ import { UpdateReleaseNotesResponse } from 'Types/IUpdateManager'
 import { FC, createContext, useContext, useEffect, ReactNode } from 'react'
 import { Outlet } from 'react-router-dom'
 import AsyncDataProps from 'Types/AsyncDataType'
+import log from 'electron-log'
 
 const isNewVersion = (current: string, version: string) => {
   if (!current || !version) {
@@ -39,13 +40,16 @@ const ReleaseNotesProvider: FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     promiseWrapper(
       window.UpdateManager.checkUpdates().then(status => {
-        return window.UpdateManager.notes(undefined, 100).then(response => ({
-          ...response,
-          data: response.data.map(note => ({
-            ...note,
-            isNew: isNewVersion(status.version, note.version),
-          })),
-        }))
+        return window.UpdateManager.notes(undefined, 100).then(response => {
+          log.log(response)
+          return {
+            ...response,
+            data: response.data.map(note => ({
+              ...note,
+              isNew: isNewVersion(status.version, note.version),
+            })),
+          }
+        })
       })
     )
   }, [])
