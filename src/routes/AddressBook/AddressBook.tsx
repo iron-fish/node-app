@@ -224,7 +224,7 @@ const AddressBook: FC = () => {
         {contacts?.length === 0 ? (
           <EmptyOverview
             header="You don’t have any contacts"
-            description="Your address book is where you can manage all of your contacts, their names, and their public addresses"
+            description="Your address book is where you can manage all of your contacts, their names, and their public addresses."
           />
         ) : (
           <ContactSearch contactsAmount={contacts?.length} />
