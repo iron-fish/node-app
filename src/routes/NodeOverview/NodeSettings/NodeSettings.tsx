@@ -234,7 +234,7 @@ const NodeSettings: FC = () => {
           setOpenConfirmReset(false)
         }}
         title="Reset Node"
-        description='By typing "RESET", you will lost any custom node settings and you will be prompted to resync the blockchain. Your account data will NOT be reset.'
+        description={`By typing "RESET", you'll lose any custom settings associated with your node and you'll be prompted to re-sync with the blockchain. Your account data will not be reset.`}
         validationText="RESET"
         buttonText="Reset Node"
       />
