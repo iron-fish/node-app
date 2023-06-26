@@ -12,11 +12,13 @@ import {
   StatNumber,
   VStack,
   LightMode,
+  CopyValueToClipboard,
 } from '@ironfish/ui-kit'
 import NodeOverviewImage from 'Svgx/NodeOverviewImage'
 import { FileUtils } from '@ironfish/sdk/build/src/utils/file'
 import NodeStatusResponse from 'Types/NodeStatusResponse'
 import useNodeStatus from 'Hooks/node/useNodeStatus'
+import { truncateHash } from 'Utils/hash'
 
 interface NodeStatProps {
   isLoaded: boolean
@@ -124,6 +126,45 @@ const NodeStatus: FC<NodeStatusProps> = ({ pauseTracking, ...props }) => {
                         )}
                       </chakra.span>
                       <chakra.span textTransform="lowercase">/s</chakra.span>
+                    </>
+                  }
+                />
+              </VStack>
+              <VStack spacing="1rem" align="flex-start">
+                <NodeStat
+                  isLoaded={loaded}
+                  label="Head Hash"
+                  value={
+                    <Flex>
+                      <chakra.span textTransform="lowercase">
+                        ...{truncateHash(data?.blockchain.headHash, 1)}
+                      </chakra.span>
+                      <CopyValueToClipboard
+                        label=""
+                        labelProps={{
+                          as: 'h5',
+                        }}
+                        value={data?.blockchain.headHash}
+                        copyTooltipText="Copy to clipboard"
+                        copiedTooltipText="Copied"
+                        containerProps={{
+                          color: NAMED_COLORS.GREY,
+                          _dark: {
+                            color: NAMED_COLORS.PALE_GREY,
+                          },
+                        }}
+                      />
+                    </Flex>
+                  }
+                />
+                <NodeStat
+                  isLoaded={loaded}
+                  label="Head Sequence"
+                  value={
+                    <>
+                      <chakra.span textTransform="lowercase">
+                        {data?.blockchain.head}
+                      </chakra.span>
                     </>
                   }
                 />

@@ -31,6 +31,7 @@ export type NodeStatusResponse = Partial<{
   blockchain: Partial<{
     synced: boolean
     head: string
+    headHash: string
     totalSequences: string
     headTimestamp: number
     newBlockSpeed: number
