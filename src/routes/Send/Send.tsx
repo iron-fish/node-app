@@ -131,7 +131,7 @@ const Send: FC = () => {
   const [balance, setBalance] = useState<AccountBalance>(null)
   const [txnMemo, setTxnMemo] = useState('')
   const [startSendFlow, setStart] = useState(false)
-  const [selectedFee, setSelectedFee] = useState<OptionType>()
+  const [selectedFee, setSelectedFee] = useState<OptionType | null>()
   const [error, setError] = useState('')
   const {
     data: fees,
@@ -149,7 +149,7 @@ const Send: FC = () => {
   )
 
   useEffect(() => {
-    if (amount && Number(amount) !== 0 && !selectedFee?.label) {
+    if (amount && Number(amount) !== 0 && !selectedFee) {
       fees?.average &&
         setSelectedFee(getEstimatedFeeOption('average', fees?.average))
     }
@@ -309,7 +309,7 @@ const Send: FC = () => {
                 value={selectedFee}
                 options={feeOptions}
                 onSelectOption={selected => setSelectedFee(selected)}
-                emptyOption="Select receiver or wait for pending transactions"
+                emptyOption="Select fee for transaction"
               />
               <TextField
                 w="50%"
