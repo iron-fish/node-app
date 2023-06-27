@@ -1,15 +1,10 @@
-# 🚧 The Iron Fish Node App is in development 🚧
+# Iron Fish Node App
 
-The Iron Fish Node App is still under active development, but has not been released yet.
-
-👉 Install the released [Iron Fish CLI](https://github.com/iron-fish/ironfish) by (which includes a wallet) by [getting started here](https://ironfish.network/use/get-started/installation).
-
-# Iron Fish Node application
-
-This repo is Electron-based application for running a Iron Fish full node, including a wallet in the Iron Fish network using [Iron Fish modules](https://github.com/iron-fish/ironfish).
+![Build](https://github.com/iron-fish/node-app/actions/workflows/build.yaml/badge.svg)
 
 # Installation
-🚧 Iron Fish Node App is not released yet and cannot be installed.
+
+👉 Install the released Iron Fish Node App by getting started [here](https://ironfish.network/use/node-app). Direct download links are available on [Github](https://github.com/iron-fish/node-app/releases/latest).
 
 # Contributing
 
