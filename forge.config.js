@@ -49,6 +49,10 @@ const COMMON_CONFIG = {
       },
     },
     {
+      name: '@electron-forge/maker-zip',
+      platforms: ['darwin'],
+    },
+    {
       name: '@electron-forge/maker-dmg',
       platforms: ['darwin'],
       config: {
