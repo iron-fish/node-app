@@ -92,7 +92,7 @@ const ReleaseNoteItem: FC<ReleaseNoteProps> = ({
             color={NAMED_COLORS.LIGHT_BLUE}
             _hover={{ opacity: '0.7' }}
             as="a"
-            href="https://www.google.com"
+            href={`https://github.com/iron-fish/node-app/releases/tag/${note.version}`}
             target="_blank"
           >
             View Download Options
