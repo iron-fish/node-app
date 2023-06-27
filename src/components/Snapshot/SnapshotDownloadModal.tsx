@@ -103,9 +103,7 @@ const SnapshotDownloadModal: FC<
             <Button
               variant="primary"
               size="medium"
-              disabled={loading}
               onClick={handleSyncing}
-              leftIcon={loading ? <Spinner /> : null}
             >
               Sync from Peers
             </Button>
