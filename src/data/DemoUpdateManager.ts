@@ -246,6 +246,22 @@ class DemoUpdateManager implements IUpdateManager {
       }, 500)
     )
   }
+
+  getVersion: () => Promise<string> = async () => {
+    return new Promise(resolve =>
+      setTimeout(() => {
+        resolve(this.status.version)
+      }, 500)
+    )
+  }
+
+  getDownloadLinkForPlatform: () => Promise<string> = async () => {
+    return new Promise(resolve =>
+      setTimeout(() => {
+        resolve('/')
+      }, 500)
+    )
+  }
 }
 
 export default DemoUpdateManager
