@@ -100,11 +100,7 @@ const SnapshotDownloadModal: FC<
             >
               Download Snapshot
             </Button>
-            <Button
-              variant="primary"
-              size="medium"
-              onClick={handleSyncing}
-            >
+            <Button variant="primary" size="medium" onClick={handleSyncing}>
               Sync from Peers
             </Button>
           </ModalFooter>
