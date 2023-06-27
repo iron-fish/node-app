@@ -21,6 +21,34 @@ interface ReleaseNoteProps {
   isLatest?: boolean
 }
 
+function useLatestVersionDownloadLink({
+  isLatest,
+  isNew,
+}: {
+  isLatest?: boolean
+  isNew?: boolean
+}) {
+  const [downloadLink, setDownloadLink] = useState(null)
+  const shouldFetch = isLatest && isNew
+
+  useEffect(() => {
+    const getDownloadLink = async () => {
+      if (!shouldFetch) return
+
+      const link = await window.UpdateManager.getDownloadLinkForPlatform()
+
+      // If there is no latest download, the server responds with "/".
+      // Adding !link to be extra safe...
+      if (!link || link.length <= 1) return
+
+      setDownloadLink(link)
+    }
+    getDownloadLink()
+  }, [shouldFetch])
+
+  return downloadLink
+}
+
 const ReleaseNoteItem: FC<ReleaseNoteProps> = ({
   note,
   setIntersectionId,
@@ -42,6 +70,11 @@ const ReleaseNoteItem: FC<ReleaseNoteProps> = ({
 
     return () => observer.disconnect()
   }, [])
+
+  const downloadLink = useLatestVersionDownloadLink({
+    isLatest,
+    isNew: note.isNew,
+  })
 
   return (
     <Box ref={ref} w="100%" my="2rem" id={note.version}>
@@ -87,15 +120,15 @@ const ReleaseNoteItem: FC<ReleaseNoteProps> = ({
         >
           Read more
         </Link>
-        {isLatest && note.isNew && (
+        {downloadLink && (
           <Link
             color={NAMED_COLORS.LIGHT_BLUE}
             _hover={{ opacity: '0.7' }}
             as="a"
-            href={`https://github.com/iron-fish/node-app/releases/tag/${note.version}`}
+            href={downloadLink}
             target="_blank"
           >
-            View Download Options
+            Download Latest Version
           </Link>
         )}
       </Flex>

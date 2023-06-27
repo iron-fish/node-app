@@ -41,6 +41,7 @@ export enum UpdateManagerAction {
   NOTE = 'note',
   GET_VERSIONS_BEFORE = 'getNewVersions',
   GET_VERSION = 'getVersion',
+  GET_DOWNLOAD_LINK_FOR_PLATFORM = 'getDownloadLinkForPlatform',
 }
 
 export interface IUpdateManager {
@@ -53,4 +54,5 @@ export interface IUpdateManager {
   note: (version: string) => Promise<ReleaseNote>
   getNewVersions: () => Promise<string[]>
   getVersion: () => Promise<string>
+  getDownloadLinkForPlatform: () => Promise<string>
 }

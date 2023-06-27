@@ -134,6 +134,20 @@ class UpdateManager implements IUpdateManager {
   getVersion: () => Promise<string> = async () => {
     return app.getVersion()
   }
+
+  getDownloadLinkForPlatform: () => Promise<string | null> = async () => {
+    let platform: string = process.platform
+
+    if (platform === 'darwin') {
+      platform = 'dmg'
+    }
+
+    if (process.arch === 'arm64') {
+      platform += '_arm64'
+    }
+
+    return `${this.serverUrl}/download/${platform}`
+  }
 }
 
 const instance = new UpdateManager()
