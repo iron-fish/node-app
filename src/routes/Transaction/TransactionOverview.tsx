@@ -165,6 +165,7 @@ const CARDS: Card[] = [
 const TransactionOverview: FC = () => {
   const { hash, accountId, contactId } = useLocation()?.state
   const { data: account, loaded: accountLoaded } = useAccount(accountId)
+  const [sender, setSender] = useState('')
   const {
     loaded: transactionLoaded,
     data: transaction,
@@ -192,6 +193,9 @@ const TransactionOverview: FC = () => {
   }, [transactionLoaded])
 
   useEffect(() => {
+    if (transactionLoaded && transaction?.outputs) {
+      setSender(transaction.outputs[transaction.outputs.length - 1].sender)
+    }
     setTransactionState(prev => {
       if (
         !prev &&
@@ -369,24 +373,9 @@ const TransactionOverview: FC = () => {
                       <Box mr="1rem">
                         <LargeArrowLeftDown h="1.125rem" w="1.125rem" />
                       </Box>
-                      <Box
-                        overflow="hidden"
-                        whiteSpace="nowrap"
-                        textOverflow="ellipsis"
-                      >
-                        <CopyValueToClipboard
-                          copiedTooltipText="Input address copied"
-                          copyTooltipText="Copy Input address"
-                          label={truncateHash(spend.nullifier, 2, 4)}
-                          value={spend.nullifier}
-                          iconButtonProps={{
-                            color: NAMED_COLORS.GREY,
-                          }}
-                          labelProps={{
-                            as: 'h5',
-                          }}
-                        />
-                      </Box>
+                      <chakra.h5>
+                        <ContactsPreview addresses={[sender]} />
+                      </chakra.h5>
                     </Flex>
                   ),
                 },
