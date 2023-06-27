@@ -136,8 +136,6 @@ const UpdateList: FC = () => {
     )
   }
 
-  console.log(data?.data)
-
   return (
     <Flex justifyContent="space-between">
       <Flex direction="column" w="calc(100% - 13rem)">
