@@ -41,14 +41,7 @@ const Information: FC = memo(() => {
         <br />
         <br />
         Safeguarding your mnemonic phrase and encoded keys is essential to
-        maintain full ownership, control, and security over your digital assets.{' '}
-        <Button
-          variant="link"
-          color={NAMED_COLORS.LIGHT_BLUE}
-          rightIcon={<LinkLaunchIcon h="0.875rem" w="0.875rem" />}
-        >
-          <chakra.h5>Learn more here</chakra.h5>
-        </Button>
+        maintain full ownership, control, and security over your digital assets.
       </chakra.h5>
       {isLightMode ? <AccountKeysImageLight /> : <AccountKeysImageDark />}
     </Box>
