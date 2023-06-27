@@ -18,9 +18,14 @@ import EmptyOverview from 'Components/EmptyOverview'
 interface ReleaseNoteProps {
   note: ReleaseNote
   setIntersectionId: (id: string) => void
+  isLatest?: boolean
 }
 
-const ReleaseNoteItem: FC<ReleaseNoteProps> = ({ note, setIntersectionId }) => {
+const ReleaseNoteItem: FC<ReleaseNoteProps> = ({
+  note,
+  setIntersectionId,
+  isLatest,
+}) => {
   const ref = useRef()
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -72,7 +77,7 @@ const ReleaseNoteItem: FC<ReleaseNoteProps> = ({ note, setIntersectionId }) => {
       <Box w="100%" maxH="3rem" h="min-content" overflow="hidden" mb="1rem">
         <ReactMarkdown>{note.notes}</ReactMarkdown>
       </Box>
-      <Box>
+      <Flex gap="2rem">
         <Link
           color={NAMED_COLORS.LIGHT_BLUE}
           _hover={{ opacity: '0.7' }}
@@ -82,7 +87,18 @@ const ReleaseNoteItem: FC<ReleaseNoteProps> = ({ note, setIntersectionId }) => {
         >
           Read more
         </Link>
-      </Box>
+        {isLatest && note.isNew && (
+          <Link
+            color={NAMED_COLORS.LIGHT_BLUE}
+            _hover={{ opacity: '0.7' }}
+            as="a"
+            href="https://www.google.com"
+            target="_blank"
+          >
+            View Download Options
+          </Link>
+        )}
+      </Flex>
     </Box>
   )
 }
@@ -120,6 +136,8 @@ const UpdateList: FC = () => {
     )
   }
 
+  console.log(data?.data)
+
   return (
     <Flex justifyContent="space-between">
       <Flex direction="column" w="calc(100% - 13rem)">
@@ -130,6 +148,7 @@ const UpdateList: FC = () => {
                 key={note.version}
                 note={note}
                 setIntersectionId={handleVisibleTagChange}
+                isLatest={index === 0}
               />
             ) : (
               <Skeleton

@@ -38,6 +38,9 @@ class UpdateManagerContext implements IUpdateManager {
   getNewVersions: () => Promise<string[]> = () => {
     return invoke('update-manager', UpdateManagerAction.GET_VERSIONS_BEFORE)
   }
+  getVersion: () => Promise<string> = () => {
+    return invoke('update-manager', UpdateManagerAction.GET_VERSION)
+  }
 }
 
 export default new UpdateManagerContext()

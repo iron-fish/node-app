@@ -19,9 +19,13 @@ class UpdateManager implements IUpdateManager {
   }
 
   initialize: () => Promise<void> = () => {
-    this.url = `${this.serverUrl}/update/${
-      process.platform
-    }/${app.getVersion()}`
+    let platform: string = process.platform
+
+    if (process.arch === 'arm64') {
+      platform += '_arm64'
+    }
+
+    this.url = `${this.serverUrl}/update/${platform}/${app.getVersion()}`
 
     if (app.isPackaged) {
       autoUpdater.setFeedURL({ url: this.url })
@@ -55,8 +59,9 @@ class UpdateManager implements IUpdateManager {
   }
 
   checkUpdates: () => Promise<UpdateStatus> = () => {
-    app.isPackaged && autoUpdater.checkForUpdates()
-    if (!app.isPackaged) {
+    if (app.isPackaged) {
+      autoUpdater.checkForUpdates()
+    } else {
       this.status.hasUpdates = false //set to true to check how modal window looks
     }
     return Promise.resolve(this.status)
@@ -124,6 +129,10 @@ class UpdateManager implements IUpdateManager {
       }
       return []
     }
+  }
+
+  getVersion: () => Promise<string> = async () => {
+    return app.getVersion()
   }
 }
 

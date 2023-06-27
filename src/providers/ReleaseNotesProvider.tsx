@@ -37,17 +37,18 @@ const ReleaseNotesProvider: FC<{ children: ReactNode }> = ({ children }) => {
     useAsyncDataWrapper<UpdateReleaseNotesResponse>()
 
   useEffect(() => {
-    promiseWrapper(
-      window.UpdateManager.checkUpdates().then(status => {
-        return window.UpdateManager.notes(undefined, 100).then(response => ({
-          ...response,
-          data: response.data.map(note => ({
-            ...note,
-            isNew: isNewVersion(status.version, note.version),
-          })),
-        }))
-      })
-    )
+    const doFetch = async () => {
+      const version = await window.UpdateManager.getVersion()
+      const notes = await window.UpdateManager.notes(undefined, 100)
+      return {
+        ...notes,
+        data: notes.data.map(note => ({
+          ...note,
+          isNew: isNewVersion(version, note.version),
+        })),
+      }
+    }
+    promiseWrapper(doFetch())
   }, [])
 
   const value = {
