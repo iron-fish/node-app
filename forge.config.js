@@ -28,6 +28,9 @@ const COMMON_CONFIG = {
     name: 'Iron Fish Node App',
     executableName: 'node-app',
     icon: 'electron/icons/icon',
+    asar: {
+      unpack: '*.{node,dll}',
+    },
     osxSign: process.env.APPLE_API_KEY ? {} : undefined,
     osxNotarize: process.env.APPLE_API_KEY
       ? {
