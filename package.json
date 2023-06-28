@@ -118,7 +118,7 @@
     "web-vitals": "^2.1.4"
   },
   "engines": {
-    "node": ">=18 <19"
+    "node": "16.x"
   },
   "packageManager": "yarn@1.22.19",
   "browserslist": {
