@@ -427,6 +427,7 @@ export class IronFishManager implements IIronfishManager {
       blockchain: {
         synced: this.node.chain.synced,
         head: this.node.chain.head.sequence.toString(),
+        headHash: this.node.chain.head.hash.toString('hex'),
         totalSequences: totalSequences.toString(),
         headTimestamp: this.node.chain.head.timestamp.getTime(),
         newBlockSpeed: this.node.metrics.chain_newBlock.avg,
