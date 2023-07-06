@@ -98,7 +98,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "3.127.0",
     "@ironfish/rust-nodejs": "1.2.0",
-    "@ironfish/sdk": "1.4.0",
+    "@ironfish/sdk": "1.5.0",
     "@ironfish/ui-kit": "1.1.12",
     "@types/nedb": "^1.8.12",
     "bech32": "^2.0.0",

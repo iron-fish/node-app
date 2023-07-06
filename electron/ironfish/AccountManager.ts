@@ -191,7 +191,14 @@ class AccountManager
     }
 
     if (decoded) {
-      const decodedData = JSONUtils.parse<AccountImport>(decoded)
+      const decodedData = JSONUtils.parse<
+        Omit<AccountImport, 'createdAt'> & {
+          createdAt: {
+            sequence: number
+            hash: string
+          }
+        }
+      >(decoded)
       const accountData: Omit<AccountValue, 'rescan'> = {
         id: uuid(),
         ...decodedData,
