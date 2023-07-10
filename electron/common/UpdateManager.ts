@@ -9,7 +9,7 @@ import axios from 'axios'
 import log from 'electron-log'
 
 class UpdateManager implements IUpdateManager {
-  private serverUrl = 'https://node-app-update-server.vercel.app'
+  private serverUrl = 'https://node-app-update-server-ironfish.vercel.app/'
   private url: string
   private status: UpdateStatus = {
     ignoreUpdates: false,
