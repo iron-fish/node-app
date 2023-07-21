@@ -15,6 +15,8 @@ jobs:
       run: yarn
     - name: package
       run: yarn package
+    - name: codesign
+      run: codesign --force --deep -s - ./out/Iron\ Fish\ Node\ App-darwin-x64/Iron\ Fish\ Node\ App.app
     - uses: actions/upload-artifact@v3
       with:
         name: my-artifact
