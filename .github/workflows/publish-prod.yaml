@@ -17,8 +17,10 @@ jobs:
       run: yarn package
     - name: codesign
       run: codesign --force --deep -s - ./out/Iron\ Fish\ Node\ App-darwin-x64/Iron\ Fish\ Node\ App.app
+    - name: zip
+      run: zip -r out.zip ./out/Iron\ Fish\ Node\ App-darwin-x64/Iron\ Fish\ Node\ App.app
     - uses: actions/upload-artifact@v3
       with:
         name: my-artifact
-        path: ./out
+        path: out.zip
     
