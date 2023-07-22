@@ -1,9 +1,6 @@
 name: Publish Production
 permissions: write-all
-on:
-  push:
-    tags:
-      - 'v*'
+on: push
 
 jobs:
 
