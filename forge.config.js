@@ -28,7 +28,19 @@ const COMMON_CONFIG = {
     name: 'Iron Fish Node App',
     executableName: 'node-app',
     icon: 'electron/icons/icon',
-    osxSign: process.env.APPLE_API_KEY ? {} : undefined,
+    osxSign: process.env.APPLE_API_KEY
+      ? {
+          optionsForFile: filePath => {
+            console.log('entitlements!', filePath)
+            // Here, we keep it simple and return a single entitlements.plist file.
+            // You can use this callback to map different sets of entitlements
+            // to specific files in your packaged app.
+            return {
+              entitlements: 'entitlements.plist',
+            }
+          },
+        }
+      : undefined,
     osxNotarize: process.env.APPLE_API_KEY
       ? {
           tool: 'notarytool',

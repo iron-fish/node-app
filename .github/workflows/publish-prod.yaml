@@ -4,19 +4,19 @@ on: push
 
 jobs:
 
-  publish_on_linux:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 18.13
-    - name: install dependencies
-      run: yarn
-    - name: publish
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: yarn publish:production
+  # publish_on_linux:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - uses: actions/setup-node@v3
+  #     with:
+  #       node-version: 18.13
+  #   - name: install dependencies
+  #     run: yarn
+  #   - name: publish
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     run: yarn publish:production
 
   publish_on_mac:
     runs-on: macos-latest
@@ -65,71 +65,71 @@ jobs:
         APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
       run: APPLE_API_KEY="$RUNNER_TEMP/api_key.p8" yarn publish:production
   
-  publish_on_mac_arm64:
-    runs-on: [self-hosted, macOS, ARM64]
-    steps:
-    - uses: actions/checkout@v3
-    - name: install dependencies
-      run: yarn
-    - name: setup codesigning
-      env: 
-        APPLE_IFLABS_SIGNING_CERT: ${{ secrets.APPLE_IFLABS_SIGNING_CERT }}
-        APPLE_IFLABS_SIGNING_CERT_PASSWORD: ${{ secrets.APPLE_IFLABS_SIGNING_CERT_PASSWORD }}
-        APPLE_PROVISIONING_PROFILE: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
-        APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
-      run: |
-        # create variables
-        CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-        PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
-        KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-        API_KEY_PATH=$RUNNER_TEMP/api_key.p8
+  # publish_on_mac_arm64:
+  #   runs-on: [self-hosted, macOS, ARM64]
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: install dependencies
+  #     run: yarn
+  #   - name: setup codesigning
+  #     env: 
+  #       APPLE_IFLABS_SIGNING_CERT: ${{ secrets.APPLE_IFLABS_SIGNING_CERT }}
+  #       APPLE_IFLABS_SIGNING_CERT_PASSWORD: ${{ secrets.APPLE_IFLABS_SIGNING_CERT_PASSWORD }}
+  #       APPLE_PROVISIONING_PROFILE: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
+  #       APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+  #     run: |
+  #       # create variables
+  #       CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+  #       PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+  #       KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+  #       API_KEY_PATH=$RUNNER_TEMP/api_key.p8
 
-        # import certificate and provisioning profile from secrets
-        echo -n "$APPLE_IFLABS_SIGNING_CERT" | base64 --decode -o $CERTIFICATE_PATH
-        echo -n "$APPLE_PROVISIONING_PROFILE" | base64 --decode -o $PP_PATH
-        echo -n "$APPLE_API_KEY" | base64 --decode -o $API_KEY_PATH
+  #       # import certificate and provisioning profile from secrets
+  #       echo -n "$APPLE_IFLABS_SIGNING_CERT" | base64 --decode -o $CERTIFICATE_PATH
+  #       echo -n "$APPLE_PROVISIONING_PROFILE" | base64 --decode -o $PP_PATH
+  #       echo -n "$APPLE_API_KEY" | base64 --decode -o $API_KEY_PATH
 
-        # create temporary keychain
-        security create-keychain -p "$APPLE_IFLABS_SIGNING_CERT_PASSWORD" $KEYCHAIN_PATH
-        security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-        security unlock-keychain -p "$APPLE_IFLABS_SIGNING_CERT_PASSWORD" $KEYCHAIN_PATH
+  #       # create temporary keychain
+  #       security create-keychain -p "$APPLE_IFLABS_SIGNING_CERT_PASSWORD" $KEYCHAIN_PATH
+  #       security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+  #       security unlock-keychain -p "$APPLE_IFLABS_SIGNING_CERT_PASSWORD" $KEYCHAIN_PATH
 
-        # import certificate to keychain
-        security import $CERTIFICATE_PATH -P "$APPLE_IFLABS_SIGNING_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-        security list-keychain -d user -s $KEYCHAIN_PATH
+  #       # import certificate to keychain
+  #       security import $CERTIFICATE_PATH -P "$APPLE_IFLABS_SIGNING_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+  #       security list-keychain -d user -s $KEYCHAIN_PATH
 
-        # apply provisioning profile
-        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
-        ls $RUNNER_TEMP
-    - name: publish
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
-        APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
-      run: APPLE_API_KEY="$RUNNER_TEMP/api_key.p8" yarn publish:production
-    - name: Clean up keychain and provisioning profile
-      if: ${{ always() }}
-      run: |
-        security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+  #       # apply provisioning profile
+  #       mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+  #       cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+  #       ls $RUNNER_TEMP
+  #   - name: publish
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+  #       APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+  #     run: APPLE_API_KEY="$RUNNER_TEMP/api_key.p8" yarn publish:production
+  #   - name: Clean up keychain and provisioning profile
+  #     if: ${{ always() }}
+  #     run: |
+  #       security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
 
-  publish_on_win:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 18.13
-    - name: install dependencies
-      run: yarn
-    - name: publish
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        AZURE_KEY_VAULT_URI: ${{ secrets.AZURE_KEY_VAULT_URI }}
-        AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-        AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        AZURE_CERT_NAME: ${{ secrets.AZURE_CERT_NAME }}
-      run: |
-        dotnet tool install --global AzureSignTool
-        yarn publish:production
+  # publish_on_win:
+  #   runs-on: windows-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - uses: actions/setup-node@v3
+  #     with:
+  #       node-version: 18.13
+  #   - name: install dependencies
+  #     run: yarn
+  #   - name: publish
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       AZURE_KEY_VAULT_URI: ${{ secrets.AZURE_KEY_VAULT_URI }}
+  #       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  #       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  #       AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+  #       AZURE_CERT_NAME: ${{ secrets.AZURE_CERT_NAME }}
+  #     run: |
+  #       dotnet tool install --global AzureSignTool
+  #       yarn publish:production
