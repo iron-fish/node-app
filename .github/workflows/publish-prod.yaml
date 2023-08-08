@@ -23,7 +23,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        repository: 'iron-fish/ironfish#testnodeapp'
+        repository: 'iron-fish/ironfish'
+        ref: 'testnodeapp'
         path: 'if'
     - uses: actions/checkout@v3
       with:
