@@ -22,12 +22,35 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        repository: 'iron-fish/ironfish#testnodeapp'
+        path: 'if'
+    - uses: actions/checkout@v3
+      with:
+        path: 'nodeapp'
     - uses: actions/setup-node@v3
       with:
         node-version: 18.13
-        cache: 'yarn'
-    - name: install dependencies
-      run: yarn
+    - name: install if dependencies
+      run: (cd if && yarn)
+    - name: build sdk
+      run: (cd if/ironfish && yarn build)
+    - name: build rust
+      run: (cd if/ironfish-rust-nodejs && yarn build)
+    - name: install nodeapp dependencies
+      run: cd nodeapp && yarn
+    - name: rm rust
+      run: rm nodeapp/node_modules/@ironfish/rust-nodejs-darwin-x64/ironfish-rust-nodejs.darwin-x64.node
+    - name: rm sdk
+      run: rm -rf nodeapp/node_modules/@ironfish/sdk
+    - name: rm libuvmonitor1
+      run: rm -rf nodeapp/node_modules/@mgeist
+    - name: rm libuvmonitor2
+      run: rm -rf nodeapp/node_modules/libuv-monitor
+    - name: mv sdk
+      run: mv if/ironfish nodeapp/node_modules/@ironfish/sdk
+    - name: mv rust
+      run: mv if/ironfish-rust-nodejs/ironfish-rust-nodejs.darwin-x64.node nodeapp/node_modules/@ironfish/rust-nodejs-darwin-x64/ironfish-rust-nodejs.darwin-x64.node
     - name: setup codesigning
       env: 
         APPLE_IFLABS_SIGNING_CERT: ${{ secrets.APPLE_IFLABS_SIGNING_CERT }}
@@ -64,6 +87,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
         APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+      working-directory: nodeapp
       run: APPLE_API_KEY="$RUNNER_TEMP/api_key.p8" yarn publish:production
   
   # publish_on_mac_arm64:
