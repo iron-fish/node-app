@@ -36,8 +36,6 @@ jobs:
       run: (cd if && yarn)
     - name: build sdk
       run: (cd if/ironfish && yarn build)
-    - name: build rust
-      run: (cd if/ironfish-rust-nodejs && yarn build)
     - name: install nodeapp dependencies
       run: cd nodeapp && yarn
     - name: rm rust
