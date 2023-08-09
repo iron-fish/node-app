@@ -32,22 +32,22 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 18.13
-    - name: install if dependencies
-      run: (cd if && yarn)
-    - name: build sdk
-      run: (cd if/ironfish && yarn build)
+    # - name: install if dependencies
+    #   run: (cd if && yarn)
+    # - name: build sdk
+    #   run: (cd if/ironfish && yarn build)
     - name: install nodeapp dependencies
       run: cd nodeapp && yarn
     # - name: rm rust
     #   run: rm nodeapp/node_modules/@ironfish/rust-nodejs-darwin-x64/ironfish-rust-nodejs.darwin-x64.node
-    - name: rm sdk
-      run: rm -rf nodeapp/node_modules/@ironfish/sdk
-    - name: rm libuvmonitor1
-      run: rm -rf nodeapp/node_modules/@mgeist
-    - name: rm libuvmonitor2
-      run: rm -rf nodeapp/node_modules/libuv-monitor
-    - name: mv sdk
-      run: mv if/ironfish nodeapp/node_modules/@ironfish/sdk
+    # - name: rm sdk
+    #   run: rm -rf nodeapp/node_modules/@ironfish/sdk
+    # - name: rm libuvmonitor1
+    #   run: rm -rf nodeapp/node_modules/@mgeist
+    # - name: rm libuvmonitor2
+    #   run: rm -rf nodeapp/node_modules/libuv-monitor
+    # - name: mv sdk
+    #   run: mv if/ironfish nodeapp/node_modules/@ironfish/sdk
     # - name: mv rust
     #   run: mv if/ironfish-rust-nodejs/ironfish-rust-nodejs.darwin-x64.node nodeapp/node_modules/@ironfish/rust-nodejs-darwin-x64/ironfish-rust-nodejs.darwin-x64.node
     - name: setup codesigning
