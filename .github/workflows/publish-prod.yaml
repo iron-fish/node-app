@@ -38,8 +38,8 @@ jobs:
       run: (cd if/ironfish && yarn build)
     - name: install nodeapp dependencies
       run: cd nodeapp && yarn
-    - name: rm rust
-      run: rm nodeapp/node_modules/@ironfish/rust-nodejs-darwin-x64/ironfish-rust-nodejs.darwin-x64.node
+    # - name: rm rust
+    #   run: rm nodeapp/node_modules/@ironfish/rust-nodejs-darwin-x64/ironfish-rust-nodejs.darwin-x64.node
     - name: rm sdk
       run: rm -rf nodeapp/node_modules/@ironfish/sdk
     - name: rm libuvmonitor1
@@ -48,8 +48,8 @@ jobs:
       run: rm -rf nodeapp/node_modules/libuv-monitor
     - name: mv sdk
       run: mv if/ironfish nodeapp/node_modules/@ironfish/sdk
-    - name: mv rust
-      run: mv if/ironfish-rust-nodejs/ironfish-rust-nodejs.darwin-x64.node nodeapp/node_modules/@ironfish/rust-nodejs-darwin-x64/ironfish-rust-nodejs.darwin-x64.node
+    # - name: mv rust
+    #   run: mv if/ironfish-rust-nodejs/ironfish-rust-nodejs.darwin-x64.node nodeapp/node_modules/@ironfish/rust-nodejs-darwin-x64/ironfish-rust-nodejs.darwin-x64.node
     - name: setup codesigning
       env: 
         APPLE_IFLABS_SIGNING_CERT: ${{ secrets.APPLE_IFLABS_SIGNING_CERT }}
