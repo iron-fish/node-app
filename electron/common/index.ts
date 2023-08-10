@@ -120,3 +120,9 @@ if (process.env.TEST_ERROR) {
     )
   }, 30000)
 }
+
+setTimeout(() => {
+  import('libuv-monitor').then(v => {
+    console.log('libuv!', v.isActive(), v.getActiveReqs())
+  })
+}, 5000)
