@@ -40,6 +40,9 @@ To test build use `yarn build`, there is also 3 mode for build `demo`, `dev`, `p
 # Create application
 
 Just run `yarn package` and executable files will be builded into `./out` folder.
+
+On macOS, the packaged .app file won't run without codesigning, but you can codesign it by running `codesign --force --deep -s - ./out/Iron Fish Node App.app`.
+
 By default `demo` mode is used for crating package use `production` mode to create release version (`yarn package:production`).
 
 # Releases
