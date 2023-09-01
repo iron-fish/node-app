@@ -2,8 +2,7 @@ import { Asset } from '@ironfish/rust-nodejs'
 import { DecryptedNoteValue } from '@ironfish/sdk/build/src/wallet/walletdb/decryptedNoteValue'
 import {
   Account,
-  IDatabaseTransaction,
-  IronfishNode,
+  FullNode,
   RawTransaction,
   TransactionType,
 } from '@ironfish/sdk'
@@ -30,7 +29,7 @@ class TransactionManager
 {
   private assetManager: AssetManager
 
-  constructor(node: IronfishNode, assetManager: AssetManager) {
+  constructor(node: FullNode, assetManager: AssetManager) {
     super(node)
     this.assetManager = assetManager
   }
@@ -58,7 +57,7 @@ class TransactionManager
     }
 
     const notes = await getAccountDecryptedNotes(
-      this.node,
+      this.node.workerPool,
       account,
       transaction
     )
@@ -376,12 +375,12 @@ class TransactionManager
     const account = this.node.wallet.getAccount(accountId)
     const head = await account.getHead()
 
-    const transaction = await this.node.wallet.send(
-      account,
-      [{ ...payment, assetId: Buffer.from(payment.assetId, 'hex') }],
-      transactionFee,
-      this.node.config.get('transactionExpirationDelta')
-    )
+    const transaction = await this.node.wallet.send({
+      account: account,
+      outputs: [{ ...payment, assetId: Buffer.from(payment.assetId, 'hex') }],
+      fee: transactionFee,
+      expirationDelta: this.node.config.get('transactionExpirationDelta'),
+    })
 
     const result = await this.resolveTransactionFields(
       account,

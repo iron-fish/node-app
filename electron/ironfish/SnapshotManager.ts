@@ -5,7 +5,7 @@ import fs from 'fs'
 import { deleteAsync } from 'del'
 import path from 'path'
 import tar from 'tar'
-import { IronfishNode, Meter, VERSION_DATABASE_CHAIN } from '@ironfish/sdk'
+import { FullNode, Meter, VERSION_DATABASE_CHAIN } from '@ironfish/sdk'
 import {
   IIronfishSnapshotManager,
   SnapshotProgressStatus,
@@ -27,7 +27,7 @@ class SnapshotManager
   private filePath: string
   private pathToSave: string
 
-  constructor(node: IronfishNode) {
+  constructor(node: FullNode) {
     super(node)
     this.onStatusChange({
       status: SnapshotProgressStatus.NOT_STARTED,

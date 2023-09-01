@@ -1,5 +1,5 @@
 import {
-  IronfishNode,
+  FullNode,
   setUnknownConfigValue,
   Config,
   ConfigOptions,
@@ -13,7 +13,7 @@ class NodeSettingsManager
 {
   private config: Config
 
-  constructor(node: IronfishNode) {
+  constructor(node: FullNode) {
     super(node)
     this.config = node.config
   }
