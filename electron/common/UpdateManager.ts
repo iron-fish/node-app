@@ -9,7 +9,7 @@ import axios from 'axios'
 import log from 'electron-log'
 
 class UpdateManager implements IUpdateManager {
-  private serverUrl = 'https://node-app-update-server-ironfish.vercel.app/'
+  private serverUrl = 'https://node-app-update-server-ironfish.vercel.app'
   private url: string
   private status: UpdateStatus = {
     ignoreUpdates: false,
@@ -25,7 +25,10 @@ class UpdateManager implements IUpdateManager {
       platform += '_arm64'
     }
 
-    this.url = `${this.serverUrl}/update/${platform}/${app.getVersion()}`
+    this.url = new URL(
+      `/update/${platform}/${app.getVersion()}`,
+      this.serverUrl
+    ).href
 
     if (app.isPackaged) {
       autoUpdater.setFeedURL({ url: this.url })
