@@ -19,7 +19,6 @@ class AssetManager extends AbstractManager implements IIronfishAssetManager {
 
   async list(search?: string, offset = 0, max = 100): Promise<Asset[]> {
     const assets: Asset[] = []
-
     const bufferedAssets = [this.DEFAULT_ASSET].concat(
       await this.node.chain.blockchainDb.assets.getAllValues()
     )
