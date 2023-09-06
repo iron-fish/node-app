@@ -31,7 +31,17 @@ class UpdateManager implements IUpdateManager {
     ).href
 
     if (app.isPackaged) {
-      autoUpdater.setFeedURL({ url: this.url })
+      autoUpdater.on('checking-for-update', () => {
+        log.log('Checking for updates')
+      })
+
+      autoUpdater.on('update-available', () => {
+        log.log('Update is available')
+      })
+
+      autoUpdater.on('update-not-available', () => {
+        log.log('No update is available')
+      })
 
       autoUpdater.on(
         'update-downloaded',
@@ -56,6 +66,8 @@ class UpdateManager implements IUpdateManager {
           error: error.message,
         }
       })
+
+      autoUpdater.setFeedURL({ url: this.url })
     }
 
     return Promise.resolve()
