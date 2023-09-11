@@ -1,6 +1,6 @@
 {
   "name": "node-app",
-  "version": "1.0.2",
+  "version": "1.0.1",
   "description": "Iron Fish Node App",
   "main": ".webpack/main",
   "repository": "https://github.com/iron-fish/node-app",
