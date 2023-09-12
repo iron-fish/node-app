@@ -6,6 +6,14 @@
 
 👉 Install the released Iron Fish Node App by getting started [here](https://ironfish.network/use/node-app). Direct download links are available on [Github](https://github.com/iron-fish/node-app/releases/latest).
 
+## Troubleshooting
+
+### Windows
+
+**Q: The app crashes on launch with `A JavaScript error occurred in the main process. Error: The specified module could not be found`**
+
+**A:** Install the Visual C++ Redistributable: https://aka.ms/vs/17/release/vc_redist.x64.exe
+
 # Contributing
 
 These instructions are for setting up the Node App in the case that you want to contribute to it.
