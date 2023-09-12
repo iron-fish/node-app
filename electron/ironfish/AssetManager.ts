@@ -12,6 +12,7 @@ class AssetManager extends AbstractManager implements IIronfishAssetManager {
     metadata: Buffer.from('Native asset of Iron Fish blockchain', 'utf8'),
     name: Buffer.from('$IRON', 'utf8'),
     owner: Buffer.from('Iron Fish', 'utf8'),
+    creator: Buffer.from('Iron Fish', 'utf8'),
     supply: BigInt(0),
     nonce: 0,
   }
@@ -19,7 +20,7 @@ class AssetManager extends AbstractManager implements IIronfishAssetManager {
   async list(search?: string, offset = 0, max = 100): Promise<Asset[]> {
     const assets: Asset[] = []
     const bufferedAssets = [this.DEFAULT_ASSET].concat(
-      await this.node.chain.assets.getAllValues()
+      await this.node.chain.blockchainDb.assets.getAllValues()
     )
     bufferedAssets.forEach((bufferedAsset: AssetValue) => {
       const asset = this.resolveAsset(bufferedAsset)

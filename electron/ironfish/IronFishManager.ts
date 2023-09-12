@@ -1,7 +1,7 @@
 import { BoxKeyPair } from '@ironfish/rust-nodejs'
 import { v4 as uuid } from 'uuid'
 import {
-  IronfishNode,
+  FullNode,
   IronfishSdk,
   NodeUtils,
   PrivateIdentity,
@@ -38,7 +38,7 @@ import { app, shell } from 'electron'
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   protected sdk: IronfishSdk
-  protected node: IronfishNode
+  protected node: FullNode
   accounts: AccountManager
   assets: AssetManager
   nodeSettings: NodeSettingsManager

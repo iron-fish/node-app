@@ -1,9 +1,9 @@
-import { IronfishNode } from '@ironfish/sdk'
+import { FullNode } from '@ironfish/sdk'
 
 abstract class AbstractManager {
-  protected node: IronfishNode
+  protected node: FullNode
 
-  constructor(node: IronfishNode) {
+  constructor(node: FullNode) {
     this.node = node
   }
 

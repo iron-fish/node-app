@@ -2,7 +2,7 @@ import {
   AccountValue,
   ACCOUNT_SCHEMA_VERSION,
   CurrencyUtils,
-  IronfishNode,
+  FullNode,
   Bech32m,
   JSONUtils,
   isValidPublicAddress,
@@ -36,7 +36,7 @@ class AccountManager
 {
   private assetManager: AssetManager
 
-  constructor(node: IronfishNode, assetManager: AssetManager) {
+  constructor(node: FullNode, assetManager: AssetManager) {
     super(node)
     this.assetManager = assetManager
   }
@@ -191,7 +191,14 @@ class AccountManager
     }
 
     if (decoded) {
-      const decodedData = JSONUtils.parse<AccountImport>(decoded)
+      const decodedData = JSONUtils.parse<
+        Omit<AccountImport, 'createdAt'> & {
+          createdAt: {
+            sequence: number
+            hash: string
+          }
+        }
+      >(decoded)
       const accountData: Omit<AccountValue, 'rescan'> = {
         id: uuid(),
         ...decodedData,

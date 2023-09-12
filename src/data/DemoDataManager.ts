@@ -15,7 +15,6 @@ import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTran
 import { IIronfishSnapshotManager } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { INodeSettingsManager } from 'Types/IronfishManager/INodeSettingsManager'
 import EventType from 'Types/EventType'
-import { app } from 'electron'
 
 class DemoDataManager implements IIronfishManager {
   private internalConfig = { isFirstRun: true }
