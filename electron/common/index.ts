@@ -10,6 +10,9 @@ import {
   dialog,
   crashReporter,
 } from 'electron'
+import installExtension, {
+  REACT_DEVELOPER_TOOLS,
+} from 'electron-extension-installer'
 import log from 'electron-log'
 import getAppHomeFolder from '../utils/getAppHomeFolder'
 
@@ -47,8 +50,16 @@ const createWindow = () => {
     mainWindow.maximize()
 
     if (process.env.MODE === 'dev') {
-      // Open the DevTools.
-      mainWindow.webContents.openDevTools()
+      // Install React DevTools.
+      app.whenReady().then(() => {
+        installExtension(REACT_DEVELOPER_TOOLS)
+          .then(name => {
+            log.log(`Added Extension:  ${name}`)
+            // Open the DevTools.
+            mainWindow.webContents.openDevTools()
+          })
+          .catch(err => log.log('An error occurred: ', err))
+      })
     }
 
     // and load the index.html of the app.
