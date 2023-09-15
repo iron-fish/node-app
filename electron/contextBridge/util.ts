@@ -6,7 +6,7 @@ export async function invoke(channel: string, ...args: any[]): Promise<any> {
     const response = await ipcRenderer.invoke(channel, ...args)
 
     if (typeof response?.error !== 'boolean') {
-      log.warn(`Expected 'error' field on IPC response.`)
+      log.warn(`Expected 'error' field on IPC response.`, channel, ...args)
     }
 
     if (response?.error) {

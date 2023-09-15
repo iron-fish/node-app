@@ -24,7 +24,7 @@ async function shutdownNode() {
   return await ironfishManager.stop()
 }
 
-function handleError(error: unknown): {
+export function handleError(error: unknown): {
   error: true
   message: string
   name?: string
