@@ -15,18 +15,17 @@ import {
 import { useSnapshotStatus } from 'Providers/SnapshotProvider'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { SnapshotManifest } from 'Types/IronfishManager/IIronfishSnapshotManager'
+import { log } from 'electron-log'
 
 const SnapshotDownloadModal: FC<
   Omit<ModalProps, 'children'> & {
     manifest: SnapshotManifest
-    size: string
-    estimateTime: string
     onConfirm: () => void
   }
-> = ({ size, estimateTime, onConfirm, manifest, ...props }) => {
+> = ({ onConfirm, manifest, ...props }) => {
   const { checkPath, start } = useSnapshotStatus()
   const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [byDefault, setByDefault] = useState(true)
 
   const handleDownload = useCallback(async () => {
@@ -62,11 +61,16 @@ const SnapshotDownloadModal: FC<
   }, [manifest, byDefault])
 
   useEffect(() => {
-    manifest &&
-      checkPath(manifest).then(result => {
-        setLoading(false)
-        setByDefault(!result.hasError)
-      })
+    if (!manifest) {
+      return
+    }
+
+    setLoading(true)
+    checkPath(manifest).then(result => {
+      setLoading(false)
+      setError(result.error)
+      setByDefault(!result.hasError)
+    })
   }, [manifest])
 
   return (
@@ -94,7 +98,7 @@ const SnapshotDownloadModal: FC<
               marginRight="16px"
               variant="primary"
               size="medium"
-              disabled={loading}
+              isDisabled={loading || error}
               onClick={handleDownload}
               leftIcon={loading ? <Spinner /> : null}
             >

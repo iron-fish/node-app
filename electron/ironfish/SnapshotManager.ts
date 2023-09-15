@@ -70,8 +70,7 @@ class SnapshotManager
     if (manifest.database_version > VERSION_DATABASE_CHAIN) {
       return {
         hasError: true,
-        error:
-          'Snapshot is used more actual database version. Please try to update application.',
+        error: `The snapshot's database version is not compatible with the app. Please try to update the app or sync from peers.`,
       }
     }
 

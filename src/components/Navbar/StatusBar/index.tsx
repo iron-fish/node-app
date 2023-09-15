@@ -16,7 +16,7 @@ import { StatusItem } from './StatusItem'
 import NodeSyncStatus from './NodeSyncStatus'
 
 const ActiveStatus: FC<FlexProps> = props => {
-  const { synced, accountsSynced, data, requiredSnapshot, sync } = useDataSync()
+  const { synced, data, requiredSnapshot, sync } = useDataSync()
   const { status } = useSnapshotStatus()
   const small = useBreakpointValue({ base: true, sm: false })
   const download = useMemo(
@@ -49,9 +49,7 @@ const ActiveStatus: FC<FlexProps> = props => {
         display={requiredSnapshot && !download ? 'flex' : 'none'}
         style="warning"
       >
-        {isMinified => (
-          <SnapshotRequirement isMinified={isMinified} data={data} />
-        )}
+        {isMinified => <SnapshotRequirement isMinified={isMinified} />}
       </StatusItem>
       <StatusItem
         display={requiredSnapshot || download ? 'none' : 'flex'}
