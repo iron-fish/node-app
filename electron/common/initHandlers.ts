@@ -24,7 +24,7 @@ async function shutdownNode() {
   return await ironfishManager.stop()
 }
 
-function handleError(error: unknown): {
+export function handleError(error: unknown): {
   error: true
   message: string
   name?: string
@@ -55,7 +55,7 @@ ipcMain.handle(
   'ironfish-manager',
   async (e, action: IronfishManagerAction, ...args): Promise<any> => {
     try {
-      return await ironfishManager[action](...args)
+      return { error: false, data: await ironfishManager[action](...args) }
     } catch (error) {
       return handleError(error)
     }
@@ -65,9 +65,11 @@ ipcMain.handle(
 ipcMain.handle(
   'ironfish-manager-assets',
   async (e, action: IronfishAssetManagerActions, ...args): Promise<any> => {
-    let result
     try {
-      return await ironfishManager.assets[action](...args)
+      return {
+        error: false,
+        data: await ironfishManager.assets[action](...args),
+      }
     } catch (error) {
       return handleError(error)
     }
@@ -78,7 +80,10 @@ ipcMain.handle(
   'ironfish-manager-accounts',
   async (e, action: IronfishAccountManagerAction, ...args): Promise<any> => {
     try {
-      return await ironfishManager.accounts[action](...args)
+      return {
+        error: false,
+        data: await ironfishManager.accounts[action](...args),
+      }
     } catch (error) {
       return handleError(error)
     }
@@ -93,7 +98,10 @@ ipcMain.handle(
     ...args
   ): Promise<any> => {
     try {
-      return await ironfishManager.transactions[action](...args)
+      return {
+        error: false,
+        data: await ironfishManager.transactions[action](...args),
+      }
     } catch (error) {
       return handleError(error)
     }
@@ -104,12 +112,13 @@ ipcMain.handle(
   'ironfish-manager-snapshot',
   async (e, action: IronfishSnaphotManagerAction, ...args): Promise<any> => {
     try {
-      return await ironfishManager.snapshot[action](...args)
+      return {
+        error: false,
+        data: await ironfishManager.snapshot[action](...args),
+      }
     } catch (error) {
       return handleError(error)
     }
-
-    return result
   }
 )
 
@@ -117,7 +126,7 @@ ipcMain.handle(
   'update-manager',
   async (e, action: UpdateManagerAction, ...args) => {
     try {
-      return await UpdateManager[action](...args)
+      return { error: false, data: await UpdateManager[action](...args) }
     } catch (error) {
       return handleError(error)
     }
@@ -127,9 +136,8 @@ ipcMain.handle(
 ipcMain.handle(
   'error-manager',
   async (e, action: ErrorManagerActions, ...args) => {
-    let result
     try {
-      return await errorManager[action](...args)
+      return { error: false, data: await errorManager[action](...args) }
     } catch (error) {
       return handleError(error)
     }
