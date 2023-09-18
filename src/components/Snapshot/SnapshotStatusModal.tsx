@@ -44,7 +44,7 @@ const getContent = (status: SnapshotProgressStatus) => {
       return {
         title: 'Downloading Snapshot',
         description:
-          'Downloading snapshot is the fastest way to update your chain database.',
+          'Downloading a snapshot is the fastest way to update your chain database.',
       }
     case SnapshotProgressStatus.CLEARING_CHAIN_DB:
     case SnapshotProgressStatus.CLEARING_TEMP_DATA:
@@ -52,7 +52,7 @@ const getContent = (status: SnapshotProgressStatus) => {
       return {
         title: 'Updating Chain Database',
         description:
-          "Since you’ve downloaded our snapshot, we need to clear and update your chain database. Please, don't close application.",
+          "Now that you’ve downloaded a snapshot, we need to replace your chain database. Please, don't close the application.",
       }
     default:
       return { title: '', description: '' }

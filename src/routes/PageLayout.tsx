@@ -10,11 +10,8 @@ import {
 import SnapshotDownloadModal from 'Components/Snapshot/SnapshotDownloadModal'
 import useSnapshotManifest from 'Hooks/snapshot/useSnapshotManifest'
 import { useDataSync } from 'Providers/DataSyncProvider'
-import { FC, useState } from 'react'
-import sizeFormat from 'byte-size'
+import { FC, useEffect, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
-import NodeStatusResponse from 'Types/NodeStatusResponse'
-import { formatRemainingTime } from 'Utils/remainingTimeFormat'
 import Navbar from '../components/Navbar'
 import {
   DARK_COLORS,
@@ -25,10 +22,16 @@ import { ROUTES } from '../routes'
 
 const DownloadSnapshotMessage: FC<{
   show: boolean
-  data: NodeStatusResponse
-}> = ({ show, data }) => {
+}> = ({ show }) => {
   const [open, setOpen] = useState(false)
   const [manifest] = useSnapshotManifest()
+
+  useEffect(() => {
+    if (show) {
+      setOpen(true)
+    }
+  }, [show])
+
   return (
     <Collapse
       in={show}
@@ -85,13 +88,6 @@ const DownloadSnapshotMessage: FC<{
           onConfirm={() => {
             setOpen(false)
           }}
-          size={sizeFormat(manifest?.file_size).toString()}
-          estimateTime={formatRemainingTime(
-            ((Number(manifest?.block_sequence || 0) -
-              Number(data?.blockchain?.head || 0)) *
-              1000) /
-              (data?.blockSyncer?.syncing?.speed || 1)
-          )}
           manifest={manifest}
         />
       </Flex>
@@ -101,14 +97,13 @@ const DownloadSnapshotMessage: FC<{
 
 export function PageLayout() {
   const {
-    data,
     requiredSnapshot,
     updates: { status, ignore, install },
   } = useDataSync()
   const location = useLocation()
   return (
     <>
-      <DownloadSnapshotMessage show={requiredSnapshot} data={data} />
+      <DownloadSnapshotMessage show={requiredSnapshot} />
       <Flex
         className="App"
         justifyContent="center"
