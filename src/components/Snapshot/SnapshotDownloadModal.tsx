@@ -100,7 +100,7 @@ const SnapshotDownloadModal: FC<
               marginRight="16px"
               variant="primary"
               size="medium"
-              isDisabled={loading || displayError}
+              isDisabled={loading}
               onClick={handleDownload}
               leftIcon={loading ? <Spinner /> : null}
             >
