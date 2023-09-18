@@ -14,8 +14,11 @@ import {
 } from '@ironfish/ui-kit'
 import { useSnapshotStatus } from 'Providers/SnapshotProvider'
 import { FC, useCallback, useEffect, useState } from 'react'
-import { SnapshotManifest } from 'Types/IronfishManager/IIronfishSnapshotManager'
-import { log } from 'electron-log'
+import {
+  SnapshotManifest,
+  SnapshotProgressStatus,
+} from 'Types/IronfishManager/IIronfishSnapshotManager'
+import log from 'electron-log'
 
 const SnapshotDownloadModal: FC<
   Omit<ModalProps, 'children'> & {
@@ -23,42 +26,33 @@ const SnapshotDownloadModal: FC<
     onConfirm: () => void
   }
 > = ({ onConfirm, manifest, ...props }) => {
-  const { checkPath, start } = useSnapshotStatus()
+  const { checkPath, start, status } = useSnapshotStatus()
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [byDefault, setByDefault] = useState(true)
+
+  const displayError = status?.error ?? error
 
   const handleDownload = useCallback(async () => {
     setLoading(true)
-    if (byDefault) {
+    try {
       await start()
-      onConfirm()
+    } catch (e) {
+      log.error(String(e))
+      setError(String(e))
+    } finally {
       setLoading(false)
-      return
     }
-
-    const path = await window.selectFolder()
-    if (!path) {
-      setLoading(false)
-      return
-    }
-
-    const check = await checkPath(manifest, path)
-    if (check.hasError) {
-      setLoading(false)
-      setError(check.error)
-      return
-    }
-
-    await start(path)
-    onConfirm()
-    setLoading(false)
-  }, [manifest, byDefault])
+  }, [manifest])
 
   const handleSyncing = useCallback(async () => {
     window.IronfishManager.snapshot.decline()
-    onConfirm()
-  }, [manifest, byDefault])
+  }, [manifest])
+
+  useEffect(() => {
+    if (status && status.status !== SnapshotProgressStatus.NOT_STARTED) {
+      onConfirm()
+    }
+  }, [status])
 
   useEffect(() => {
     if (!manifest) {
@@ -66,11 +60,17 @@ const SnapshotDownloadModal: FC<
     }
 
     setLoading(true)
-    checkPath(manifest).then(result => {
-      setLoading(false)
-      setError(result.error)
-      setByDefault(!result.hasError)
-    })
+    checkPath(manifest)
+      .then(result => {
+        setError(result.error)
+      })
+      .catch(e => {
+        log.error(String(e))
+        setError(String(e))
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [manifest])
 
   return (
@@ -91,14 +91,16 @@ const SnapshotDownloadModal: FC<
               from other users, contributing to network decentralization. While
               it may take longer, it strengthens the network's resilience.{' '}
             </chakra.h4>
-            {error && <chakra.h4 color={NAMED_COLORS.RED}>{error}</chakra.h4>}
+            {displayError && (
+              <chakra.h4 color={NAMED_COLORS.RED}>{displayError}</chakra.h4>
+            )}
           </ModalBody>
           <ModalFooter justifyContent="flex-start">
             <Button
               marginRight="16px"
               variant="primary"
               size="medium"
-              isDisabled={loading || error}
+              isDisabled={loading || displayError}
               onClick={handleDownload}
               leftIcon={loading ? <Spinner /> : null}
             >
