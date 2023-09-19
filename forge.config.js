@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const spawn = require('cross-spawn')
 require('dotenv').config()
 const { exec } = require('child_process')
 
@@ -104,17 +103,6 @@ const COMMON_CONFIG = {
             }
           }
         }
-      }
-    },
-    packageAfterPrune: (forgeConfig, buildPath) => {
-      try {
-        spawn.sync('npm', ['install'], {
-          cwd: buildPath,
-          stdio: 'inherit',
-        })
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e)
       }
     },
   },
