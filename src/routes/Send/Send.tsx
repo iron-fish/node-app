@@ -170,16 +170,29 @@ const Send: FC = () => {
     if (balance?.available === BigInt(0)) {
       return setError(HAS_PENDING_TRANSACTIONS)
     }
-    if (balance?.confirmed === BigInt(0)) {
-      return setError(NOT_ENOUGH_FUNDS)
-    }
+
+    const amountInIron = decodeIron(amount || 0)
     const fee = selectedFee?.value || BigInt(0)
-    const ironAmount = decodeIron(amount || 0)
-    if (balance?.confirmed < ironAmount + fee) {
+
+    const totalIron =
+      balance?.asset.id === account?.balances.default.asset.id
+        ? amountInIron + fee
+        : fee
+
+    if (
+      account?.balances.default.confirmed < totalIron ||
+      balance?.confirmed < amountInIron
+    ) {
       return setError(NOT_ENOUGH_FUNDS)
     }
     setError('')
-  }, [balance?.available, balance?.confirmed, amount, selectedFee?.value])
+  }, [
+    balance?.asset?.id,
+    balance?.available,
+    balance?.confirmed,
+    amount,
+    selectedFee?.value,
+  ])
 
   const hasInvalidData = useMemo(() => {
     return !(
