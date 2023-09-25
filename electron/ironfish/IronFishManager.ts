@@ -16,7 +16,6 @@ import {
 } from '@ironfish/sdk'
 import log from 'electron-log'
 import fsAsync from 'fs/promises'
-import dns from 'dns/promises'
 import { IIronfishManager } from 'Types/IronfishManager/IIronfishManager'
 import IronFishInitStatus from 'Types/IronfishInitStatus'
 import NodeStatusResponse, { NodeStatusType } from 'Types/NodeStatusResponse'
@@ -96,12 +95,6 @@ export class IronFishManager implements IIronfishManager {
       }
       if (connectionWebRTC !== '') {
         connections++
-      }
-
-      let address = peer.address
-      const ipRegexp = /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/
-      if (address && !ipRegexp.test(address)) {
-        address = (await dns.lookup(address)).address
       }
 
       result.push({
