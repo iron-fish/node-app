@@ -32,7 +32,7 @@ const CreateStep: FC<StepProps> = ({
         Internal Account Name
       </chakra.h3>
       <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
-        This account name is only known to you
+        This account name is only known to you.
       </chakra.h5>
       <TextField
         label="Account Name"

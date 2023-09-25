@@ -54,8 +54,7 @@ const ValidateStep: FC<StepProps> = ({
         Confirm Your Recovery Phase
       </chakra.h3>
       <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
-        Please keep this phrase stored somewhere safe. We will ask you to
-        re-enter this.
+        Please keep this phrase stored somewhere safe.
       </chakra.h5>
       <MnemonicView
         header={
