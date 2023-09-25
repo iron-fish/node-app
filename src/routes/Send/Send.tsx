@@ -14,6 +14,7 @@ import {
   Autocomplete,
   useDimensions,
   useColorMode,
+  Text,
 } from '@ironfish/ui-kit'
 import { useLocation } from 'react-router-dom'
 import AccountsSelect from 'Components/AccountsSelect'
@@ -260,7 +261,7 @@ const Send: FC = () => {
               precision={getPrecision(amount)}
               asset={balance?.asset.name || '$IRON'}
             />
-            <chakra.h5>{`Account Balance: ${
+            <chakra.h5 color={NAMED_COLORS.GREY}>{`Account Balance: ${
               balance?.confirmed
                 ? formatOreToTronWithLanguage(balance.confirmed)
                 : 0
@@ -375,18 +376,13 @@ function AmountInput({
   precision: number
   asset: string
 }) {
-  const wrapperRef = useRef(null)
-  const wrapperWidth = useDimensions(wrapperRef, true)?.borderBox.width
-  const assetLabelRef = useRef(null)
-  const assetLabelWidth = useDimensions(assetLabelRef, true)?.borderBox.width
-  const inputMaxWidth = wrapperWidth - assetLabelWidth
   return (
-    <Box w="100%" ref={wrapperRef} overflow="hidden">
+    <Box w="100%" overflow="hidden" mb={3}>
       <InputGroup
         width="auto"
         fontSize="3rem"
         alignItems="baseline"
-        my="1rem"
+        my={3}
         justifyContent="center"
         maxW="100%"
       >
@@ -400,31 +396,29 @@ function AmountInput({
           <NumberInputField
             placeholder="0"
             fontSize="3rem"
-            width={(value ? value.length : 1) * 1.9 + 'rem'}
             minW="3rem"
             h="100%"
             p="0rem"
-            textAlign="end"
             border="none"
+            textAlign="center"
+            maxW="100%"
             _placeholder={{
               color: NAMED_COLORS.GREY,
             }}
-            maxW={inputMaxWidth ? `${inputMaxWidth}px` : 'auto'}
             _focusVisible={{
               border: 'none',
+              '::placeholder': {
+                color: 'transparent',
+              },
             }}
           />
         </NumberInput>
-        <InputRightAddon
-          ref={assetLabelRef}
-          border="none"
-          color={NAMED_COLORS.GREY}
-          fontSize="3rem"
-          px="1rem"
-        >
-          {asset}
-        </InputRightAddon>
       </InputGroup>
+      <Flex justifyContent="center">
+        <Text border="none" fontSize="16px">
+          {asset}
+        </Text>
+      </Flex>
     </Box>
   )
 }
