@@ -38,7 +38,7 @@ const AddContactModal: FC<AddContactModalProps> = ({
     >
       <chakra.h3>Add Contact to Address Book</chakra.h3>
       <chakra.h5 color={NAMED_COLORS.GREY}>
-        This contact name is only known to you
+        This contact name is only known to you.
       </chakra.h5>
       <TextField
         label="Account Name"
