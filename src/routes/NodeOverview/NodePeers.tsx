@@ -5,7 +5,6 @@ import {
   useBreakpointValue,
 } from '@ironfish/ui-kit'
 import { FC } from 'react'
-import { FlagIcon } from 'react-flag-kit'
 import useNodePeers from 'Hooks/node/useNodePeers'
 import { truncateHash } from 'Utils/hash'
 import WalletCommonTable from 'Components/WalletCommonTable'
@@ -68,13 +67,8 @@ const NodePeers: FC = () => {
           WrapperProps: {
             w: '33%',
           },
-          render: ({ address, country }) => (
+          render: ({ address }) => (
             <Flex alignItems="center">
-              {country && (
-                <Box mr="1rem" w="1.5rem">
-                  <FlagIcon code={country} size={24} />
-                </Box>
-              )}
               <Box minW="6.875rem" wordBreak="break-word">
                 {address}
               </Box>
