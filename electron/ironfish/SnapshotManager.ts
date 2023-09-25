@@ -334,7 +334,7 @@ class SnapshotManager
       this.onStatusChange({
         hasError: true,
         error:
-          'Cannot unarchive snapshot. Please check that archive is not used by other applications.',
+          'We cannot unarchive the snapshot. Please check that the archive is not being used by other applications.',
       })
     }
 

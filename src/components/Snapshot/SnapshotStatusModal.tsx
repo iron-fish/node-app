@@ -52,7 +52,7 @@ const getContent = (status: SnapshotProgressStatus) => {
       return {
         title: 'Updating Chain Database',
         description:
-          "Now that you’ve downloaded a snapshot, we need to replace your chain database. Please, don't close the application.",
+          "Now that you’ve downloaded a snapshot, we need to replace your chain database. Please don't close the application.",
       }
     default:
       return { title: '', description: '' }
