@@ -85,7 +85,7 @@ const RemoveAccountButton: FC<RemoveAccountButtonProps> = ({
     balance
   )} $IRON. ${
     balance
-      ? 'If you delete this account without exporting it first, YOU WILL LOSE THIS IRON.'
+      ? 'If you remove this account without exporting it first, YOU WILL LOSE THIS $IRON.'
       : ''
   }`
   return (
