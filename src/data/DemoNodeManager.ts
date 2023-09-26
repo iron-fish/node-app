@@ -77,9 +77,6 @@ const PEERS: Peer[] = Array(23)
         .fill(null)
         .map(() => Math.floor((Math.random() * 1000) % 255))
         .join('.'),
-      country: ['US', 'CA', 'AR', 'BY', 'RU', 'AU', 'BE', 'GB', 'FR', 'ES'][
-        Math.floor(Math.random() * 10)
-      ],
       port: 8080,
       error: '',
       connections: 12,

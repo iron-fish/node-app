@@ -114,7 +114,6 @@ export class IronFishManager implements IIronfishManager {
         agent: peer.agent,
         name: peer.name,
         address: peer.address,
-        country: null,
         port: peer.port,
         error: peer.error !== null ? String(peer.error) : null,
         connections: connections,
