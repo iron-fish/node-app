@@ -79,7 +79,7 @@ const ImportFileTab: FC<DesktopModeProps> = ({
   return (
     <>
       <chakra.h5 mb="1rem" mt="2rem" color={NAMED_COLORS.GREY}>
-        Upload your JSON or bech32 file to import your account
+        Upload your JSON or bech32 file to import your account.
       </chakra.h5>
       <Flex>
         <Button
@@ -184,7 +184,7 @@ const MnemonicPhraseTab: FC<DesktopModeProps> = ({
         Mnemonic Phrase
       </chakra.h3>
       <chakra.h5 mb="1rem" color={NAMED_COLORS.GREY}>
-        Fill out your recovery phrase in the proper order
+        Fill out your recovery phrase in the proper order.
       </chakra.h5>
       <TextField
         label="Name"
