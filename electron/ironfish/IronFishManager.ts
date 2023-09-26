@@ -13,6 +13,9 @@ import {
   InternalOptions,
   HOST_FILE_NAME,
   DatabaseIsLockedError,
+  RpcClient,
+  RpcMemoryClient,
+  ALL_API_NAMESPACES,
 } from '@ironfish/sdk'
 import log from 'electron-log'
 import fsAsync from 'fs/promises'
@@ -39,6 +42,7 @@ export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   protected sdk: IronfishSdk
   protected node: FullNode
+  protected rpcClient: RpcClient
   accounts: AccountManager
   assets: AssetManager
   nodeSettings: NodeSettingsManager
@@ -195,6 +199,10 @@ export class IronFishManager implements IIronfishManager {
       privateIdentity: this.getPrivateIdentity(),
       autoSeed: true,
     })
+    this.rpcClient = new RpcMemoryClient(
+      this.node.logger,
+      this.node.rpc.getRouter(ALL_API_NAMESPACES)
+    )
     log.log('Node reset complete')
   }
 
@@ -226,6 +234,10 @@ export class IronFishManager implements IIronfishManager {
       privateIdentity: privateIdentity,
       autoSeed: true,
     })
+    this.rpcClient = new RpcMemoryClient(
+      this.node.logger,
+      this.node.rpc.getRouter(ALL_API_NAMESPACES)
+    )
 
     await this.checkForMigrations()
 
@@ -267,7 +279,7 @@ export class IronFishManager implements IIronfishManager {
     await this.node.internal.save()
 
     this.assets = new AssetManager(this.node)
-    this.accounts = new AccountManager(this.node, this.assets)
+    this.accounts = new AccountManager(this.node, this.assets, this.rpcClient)
     this.transactions = new TransactionManager(this.node, this.assets)
     this.nodeSettings = new NodeSettingsManager(this.node)
     this.snapshot = new SnapshotManager(this.node)

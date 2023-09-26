@@ -8,11 +8,14 @@ const useAccount = (id: string) => {
   const loadAccount = (accountId: string) =>
     promiseWrapper(window.IronfishManager.accounts.get(accountId))
 
-  const updateAccount = useCallback((identity: string, name: string) => {
-    window.IronfishManager.accounts
-      .renameAccount(identity, name)
-      .then(() => loadAccount(identity))
-  }, [])
+  const updateAccount = useCallback(
+    (identity: string, name: string, newName: string) => {
+      return window.IronfishManager.accounts
+        .renameAccount(name, newName)
+        .then(() => loadAccount(identity))
+    },
+    []
+  )
 
   const exportAccount = useCallback(
     (identity: string, encoded?: boolean) =>

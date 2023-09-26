@@ -48,7 +48,11 @@ const Information: FC = memo(() => {
 
 interface AccountSettingsProps {
   account: Account
-  updateAccount: (identity: string, name: string) => void
+  updateAccount: (
+    identity: string,
+    name: string,
+    newName: string
+  ) => Promise<void>
   deleteAccount: (identity: string) => Promise<void>
 }
 
@@ -159,10 +163,9 @@ const AccountSettings: FC<AccountSettingsProps> = ({
             mr="2rem"
             isDisabled={name === account.name}
             onClick={() => {
-              Promise.all([
-                updateAccount(account.id, name),
-                // updateSettings(account.id, currency.value),
-              ]).then(() => toast({ title: 'Account Details Updated' }))
+              updateAccount(account.id, account.name, name)
+                .then(() => toast({ title: 'Account Details Updated' }))
+                .catch((e: Error) => toast({ title: e.message }))
             }}
           >
             Save Changes

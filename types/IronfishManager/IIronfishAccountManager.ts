@@ -40,6 +40,6 @@ export interface IIronfishAccountManager {
   isValidPublicAddress: (address: string) => Promise<boolean>
   list: (search?: string, sort?: SortType) => Promise<CutAccount[]>
   prepareAccount: () => Promise<AccountCreateParams>
-  renameAccount: (id: string, name: string) => Promise<void>
+  renameAccount: (name: string, newName: string) => Promise<void>
   submitAccount: (createParams: AccountValue) => Promise<Account>
 }

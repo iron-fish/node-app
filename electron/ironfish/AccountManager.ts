@@ -6,6 +6,7 @@ import {
   Bech32m,
   JSONUtils,
   isValidPublicAddress,
+  RpcClient,
 } from '@ironfish/sdk'
 import { v4 as uuid } from 'uuid'
 import {
@@ -35,10 +36,16 @@ class AccountManager
   implements IIronfishAccountManager
 {
   private assetManager: AssetManager
+  private rpcClient: RpcClient
 
-  constructor(node: FullNode, assetManager: AssetManager) {
+  constructor(
+    node: FullNode,
+    assetManager: AssetManager,
+    rpcClient: RpcClient
+  ) {
     super(node)
     this.assetManager = assetManager
+    this.rpcClient = rpcClient
   }
 
   initEventListeners(): void {
@@ -317,13 +324,15 @@ class AccountManager
     return newAccount.serialize()
   }
 
-  async renameAccount(id: string, name: string): Promise<void> {
-    const account = this.node.wallet.getAccount(id)
-    if (!account) {
-      throw new Error(`Account with id=${id} was not found.`)
+  async renameAccount(name: string, newName: string): Promise<void> {
+    try {
+      await this.rpcClient.wallet.renameAccount({
+        account: name,
+        newName,
+      })
+    } catch (e) {
+      throw new Error(e.codeMessage || e.message)
     }
-
-    await account.setName(name)
   }
 }
 
