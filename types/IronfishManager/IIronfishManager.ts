@@ -8,6 +8,7 @@ import IIronfishAssetManager from './IIronfishAssetManager'
 import { INodeSettingsManager } from './INodeSettingsManager'
 import Peer from 'Types/Peer'
 import { IIronfishSnapshotManager } from './IIronfishSnapshotManager'
+import { UserSettings } from 'Types/UserSettings'
 
 export enum IronfishManagerAction {
   CHAIN_PROGRESS = 'chainProgress',
@@ -29,6 +30,8 @@ export enum IronfishManagerAction {
   RESET_NODE = 'resetNode',
   RESTART_APP = 'restartApp',
   OPEN_LINK = 'openLink',
+  GET_USER_SETTINGS = 'getUserSettings',
+  SAVE_USER_SETTINGS = 'saveUserSettings',
 }
 
 export interface IIronfishManager {
@@ -47,6 +50,8 @@ export interface IIronfishManager {
   isFirstRun: () => Promise<boolean>
   nodeStatus: () => Promise<NodeStatusResponse>
   peers: () => Promise<Peer[]>
+  getUserSettings(): Promise<UserSettings>
+  saveUserSettings(settings: Partial<UserSettings>): Promise<void>
   saveNodeConfig: (values: Partial<ConfigOptions>) => Promise<void>
   start: () => Promise<void>
   status: () => Promise<IronFishInitStatus>

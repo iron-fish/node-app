@@ -15,6 +15,7 @@ import { IIronfishTransactionManager } from 'Types/IronfishManager/IIronfishTran
 import { IIronfishSnapshotManager } from 'Types/IronfishManager/IIronfishSnapshotManager'
 import { INodeSettingsManager } from 'Types/IronfishManager/INodeSettingsManager'
 import EventType from 'Types/EventType'
+import { UserSettings } from 'Types/UserSettings'
 
 class DemoDataManager implements IIronfishManager {
   private internalConfig = { isFirstRun: true }
@@ -111,6 +112,14 @@ class DemoDataManager implements IIronfishManager {
 
   peers(): Promise<Peer[]> {
     return this.node.peers()
+  }
+
+  getUserSettings(): Promise<UserSettings> {
+    return Promise.resolve({ enabled: false, dataDir: '~/.ironfish' })
+  }
+
+  async saveUserSettings(settings: Partial<UserSettings>): Promise<void> {
+    return Promise.resolve()
   }
 
   async saveNodeConfig(values: Partial<ConfigOptions>): Promise<void> {

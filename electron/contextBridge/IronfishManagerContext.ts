@@ -8,6 +8,7 @@ import NodeSettingsManagerContext from './NodeSettingsManagerContext'
 import TransactionManagerContext from './TransactionManagerContext'
 import SnapshotManagerContext from './SnapshotManagerContext'
 import { invoke } from './util'
+import { UserSettings } from 'Types/UserSettings'
 
 class IronfishManagerContext implements IIronfishManager {
   accounts = AccountManagerContext
@@ -54,6 +55,19 @@ class IronfishManagerContext implements IIronfishManager {
   nodeStatus = () => {
     return invoke('ironfish-manager', IronfishManagerAction.NODE_STATUS)
   }
+
+  getUserSettings = () => {
+    return invoke('ironfish-manager', IronfishManagerAction.GET_USER_SETTINGS)
+  }
+
+  saveUserSettings = (settings: Partial<UserSettings>) => {
+    return invoke(
+      'ironfish-manager',
+      IronfishManagerAction.SAVE_USER_SETTINGS,
+      settings
+    )
+  }
+
   peers = () => {
     return invoke('ironfish-manager', IronfishManagerAction.PEERS)
   }
