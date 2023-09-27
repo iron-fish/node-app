@@ -81,10 +81,9 @@ const NodeSettings: FC = () => {
     saveSettings(nodeSettings).then(() => toast({ title: 'Settings saved' }))
   }
 
-  const handleResetNode = () => {
-    window.IronfishManager.resetNode().then(() => {
-      window.IronfishManager.restartApp()
-    })
+  const handleResetNode = async () => {
+    await window.IronfishManager.resetNode()
+    window.IronfishManager.restartApp()
   }
 
   const hasNoChanges = useMemo(

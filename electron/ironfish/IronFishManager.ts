@@ -158,6 +158,13 @@ export class IronFishManager implements IIronfishManager {
     await walletDb.db.close()
   }
 
+  private async resetAccounts(): Promise<void> {
+    await this.node.wallet.open()
+    for (const account of this.node.wallet.listAccounts()) {
+      await this.node.wallet.resetAccount(account)
+    }
+  }
+
   // used to reset node if datadir exists but is incompatible with mainnet
   async resetNode(): Promise<void> {
     log.log('Resetting node')
@@ -195,6 +202,7 @@ export class IronFishManager implements IIronfishManager {
       privateIdentity: this.getPrivateIdentity(),
       autoSeed: true,
     })
+    await this.resetAccounts()
     log.log('Node reset complete')
   }
 
