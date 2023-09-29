@@ -35,6 +35,8 @@ import sendMessageToRender from '../utils/sendMessageToRender'
 import { WorkerMessageType } from '@ironfish/sdk/build/src/workerPool/tasks/workerMessage'
 import { app, shell } from 'electron'
 
+export let ifNode: null | FullNode = null
+
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   protected sdk: IronfishSdk
@@ -202,6 +204,7 @@ export class IronFishManager implements IIronfishManager {
       privateIdentity: this.getPrivateIdentity(),
       autoSeed: true,
     })
+    ifNode = this.node
     await this.resetAccounts()
     log.log('Node reset complete')
   }
@@ -234,6 +237,7 @@ export class IronFishManager implements IIronfishManager {
       privateIdentity: privateIdentity,
       autoSeed: true,
     })
+    ifNode = this.node
 
     await this.checkForMigrations()
 

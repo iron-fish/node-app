@@ -11,7 +11,7 @@ import {
 import { TransactionStatus, Transaction } from 'Types/Transaction'
 import IconSend from 'Svgx/send'
 import IconReceive from 'Svgx/receive'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 interface TransactionStatusProps {
   transaction: Transaction

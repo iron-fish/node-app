@@ -7,6 +7,11 @@ import {
 import UpdateManagerContext from '../contextBridge/UpdateManagerContext'
 import ErrorManagerContext from '../contextBridge/ErrorManagerContext'
 import EventType from 'Types/EventType'
+import { exposeElectronTRPC } from 'electron-trpc/main'
+
+process.once('loaded', async () => {
+  exposeElectronTRPC()
+})
 
 contextBridge.exposeInMainWorld(
   'setElectronThemeMode',

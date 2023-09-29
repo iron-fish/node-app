@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from 'react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 
 const PAGE_SIZE = 20
 

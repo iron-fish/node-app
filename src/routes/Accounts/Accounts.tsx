@@ -20,6 +20,7 @@ import CreateAccount from 'Routes/Onboarding/CreateAccount'
 import SortType from 'Types/SortType'
 import { formatOreToTronWithLanguage } from 'Utils/number'
 import EmptyOverview from 'Components/EmptyOverview'
+import { TRPCDemo } from 'Components/TRPCDemo/TRPCDemo'
 
 interface ActionButtonsProps {
   reloadAccounts: () => void
@@ -166,6 +167,7 @@ const Accounts = () => {
           onSelectOption: ({ value }) => $setSortOrder(value),
         }}
       />
+      <TRPCDemo />
       <Flex mt="0.5rem" direction="column" width="100%">
         {isAccountsLoaded ? (
           accounts.length > 0 ? (
