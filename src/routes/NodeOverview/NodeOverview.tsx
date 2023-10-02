@@ -11,9 +11,18 @@ import NodeStatus from './NodeStatus'
 import NodePeers from './NodePeers'
 import NodeSettings from './NodeSettings'
 import NodeResources from './NodeResources'
+import UserSettings from './NodeSettings/UserSettings'
+import { useQuery } from 'react-query'
 
 const NodeOverview: FC = () => {
   const [tabIndex, setTabIndex] = useState(0)
+
+  const { data, isLoading } = useQuery('user-settings', () =>
+    window.IronfishManager.getUserSettings()
+  )
+
+  const showUserSettings = !isLoading && data.enabled
+
   return (
     <>
       <chakra.h2 mb="1rem">Your Node</chakra.h2>
@@ -28,6 +37,11 @@ const NodeOverview: FC = () => {
           <Tab>
             <h6>Node Resources</h6>
           </Tab>
+          {showUserSettings && (
+            <Tab>
+              <h6>User Settings</h6>
+            </Tab>
+          )}
         </TabList>
         <TabPanels>
           <TabPanel p="0" pt="2rem">
@@ -41,6 +55,11 @@ const NodeOverview: FC = () => {
           <TabPanel p="0" pt="2rem">
             <NodeResources pauseTracking={tabIndex !== 2} />
           </TabPanel>
+          {showUserSettings && (
+            <TabPanel p="0" pt="2rem">
+              <UserSettings />
+            </TabPanel>
+          )}
         </TabPanels>
       </Tabs>
     </>

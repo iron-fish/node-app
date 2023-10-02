@@ -13,6 +13,8 @@ import {
   InternalOptions,
   HOST_FILE_NAME,
   DatabaseIsLockedError,
+  NodeFileProvider,
+  DEFAULT_DATA_DIR,
 } from '@ironfish/sdk'
 import log from 'electron-log'
 import fsAsync from 'fs/promises'
@@ -33,10 +35,13 @@ import { ERROR_MESSAGES } from '../utils/constants'
 import sendMessageToRender from '../utils/sendMessageToRender'
 import { WorkerMessageType } from '@ironfish/sdk/build/src/workerPool/tasks/workerMessage'
 import { app, shell } from 'electron'
+import { UserSettingsStore } from '../storage/UserSettings'
+import { UserSettings } from 'Types/UserSettings'
 
 export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   protected sdk: IronfishSdk
+  protected userSettings: UserSettingsStore
   protected node: FullNode
   accounts: AccountManager
   assets: AssetManager
@@ -204,13 +209,33 @@ export class IronFishManager implements IIronfishManager {
     app.exit()
   }
 
+  private async loadUserSettings(): Promise<void> {
+    const fileSystem = new NodeFileProvider()
+    await fileSystem.init()
+
+    const userSettings = new UserSettingsStore({
+      fileSystem,
+      dataDir: app.getPath('userData'),
+      fileName: 'settings.json',
+      defaults: {
+        dataDir: fileSystem.resolve(DEFAULT_DATA_DIR),
+        enabled: false,
+      },
+    })
+    await userSettings.load()
+    this.userSettings = userSettings
+  }
+
   private async initializeSdk(): Promise<void> {
     //Initializing Iron Fish SDK
     this.changeInitStatus(IronFishInitStatus.INITIALIZING_SDK)
+
+    await this.loadUserSettings()
+
     this.sdk = await IronfishSdk.init({
       pkg: getPackageFrom(pkg),
       logger: createAppLogger(),
-      dataDir: process.env.IRONFISH_DATA_DIR || undefined,
+      dataDir: this.userSettings.get('dataDir'),
     })
 
     if (!this.sdk.internal.get('telemetryNodeId')) {
@@ -449,6 +474,19 @@ export class IronFishManager implements IIronfishManager {
     this.nodeSettings.setValues(values)
     await this.nodeSettings.save()
     await this.stop()
+  }
+
+  getUserSettings(): Promise<UserSettings> {
+    return Promise.resolve(this.userSettings.config)
+  }
+
+  async saveUserSettings(settings: Partial<UserSettings>): Promise<void> {
+    await this.userSettings.setAndSave(settings)
+    // TODO: being extra careful and restarting app if the data directory changes
+    // We could make this more robust in the future
+    if (settings.dataDir) {
+      await this.restartApp()
+    }
   }
 
   async start(): Promise<void> {
