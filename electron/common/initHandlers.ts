@@ -14,7 +14,9 @@ import UpdateManager from './UpdateManager'
 import errorManager from '../utils/ErrorManager/ErrorManager'
 import { ErrorManagerActions } from 'Types/ErrorManagerTypes'
 
-const ironfishManager = new IronFishManager()
+export const ironfishManager = new IronFishManager()
+export const getRpcNode = () => ironfishManager.getNode()
+
 UpdateManager.initialize()
 initStorageCallbacks(ipcMain)
 

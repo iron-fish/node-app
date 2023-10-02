@@ -2,7 +2,8 @@ import z from 'zod'
 import { initTRPC } from '@trpc/server'
 import { observable } from '@trpc/server/observable'
 import { EventEmitter } from 'events'
-import { ifNode } from '../ironfish/IronFishManager'
+import { getRpcNode } from '../common/initHandlers'
+import { RpcClient } from '@ironfish/sdk'
 
 const ee = new EventEmitter()
 const t = initTRPC.create({ isServer: true })
@@ -37,14 +38,17 @@ export const router = t.router({
     })
   }),
   getAccounts: t.procedure.query(async () => {
-    if (!ifNode) {
-      throw new Error('Node not foound')
+    const rpcNode = getRpcNode()
+
+    if (!rpcNode) {
+      throw new Error('Iron Fish not instantiated')
     }
 
-    const accounts = await ifNode.wallet.listAccounts()
+    const accountsStream = await rpcNode.wallet.getAccounts()
+    const accountsResponse = await accountsStream.waitForEnd()
 
-    return accounts.map(account => {
-      return account.publicAddress
+    return accountsResponse.content.accounts.map(account => {
+      return account.toUpperCase()
     })
   }),
 })
