@@ -265,7 +265,7 @@ export function EmptyState({ style }: { style: React.CSSProperties }) {
       <Container>
         <EmptyOverview
           header="You don't have any transactions"
-          description="When your account compiles transactions they will be listed here. To produce a transactions, either send or receive $IRON."
+          description="All your transactions, whether in $IRON or other custom assets, will be displayed in this section. To start a transaction, simply click on the 'Send' or 'Receive' tabs."
         />
       </Container>
     </Box>
