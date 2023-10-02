@@ -40,6 +40,7 @@ const createWindow = () => {
       icon: __dirname + '/icons/icon.png',
       title: 'Iron Fish Node App',
       webPreferences: {
+        sandbox: false,
         enableRemoteModule: true,
         contextIsolation: true,
         // nodeIntegrationInWorker: true,
@@ -65,9 +66,10 @@ const createWindow = () => {
     // and load the index.html of the app.
     mainWindow.loadURL(NODE_WEBPACK_ENTRY)
 
-    mainWindow.webContents.on('new-window', (e, url) => {
+    mainWindow.webContents.setWindowOpenHandler(details => {
       e.preventDefault()
-      shell.openExternal(url)
+      shell.openExternal(details.url)
+      return { action: 'deny' }
     })
   } else {
     mainWindow.show()
