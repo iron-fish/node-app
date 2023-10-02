@@ -25,6 +25,7 @@ import Updates from 'Routes/Updates/Updates'
 import Update from 'Routes/Updates/Update'
 import { ReleaseNotesProviderWrapper } from 'Providers/ReleaseNotesProvider'
 import Telemetry from 'Routes/Onboarding/Telemetry'
+import { RpcClientProvider } from 'Providers/RpcClientProvider'
 
 const breakpoints = {
   xs: '46.875rem', //750px
@@ -45,46 +46,51 @@ const queryClient = new QueryClient()
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <IronFishUIProvider theme={{ breakpoints }}>
-        <ElectronThemeChangeHandler />
-        <HashRouter>
-          <Routes>
-            <Route element={<Initializing />}>
-              <Route element={<Providers />}>
-                <Route path={ROUTES.BASE} />
-                <Route element={<CreateLayout />}>
-                  <Route path={ROUTES.TELEMETRY} element={<Telemetry />} />
-                  <Route path={ROUTES.ONBOARDING} element={<Action />} />
-                  <Route path={ROUTES.CREATE} element={<CreateAccount />} />
-                  <Route path={ROUTES.IMPORT} element={<ImportAccount />} />
-                </Route>
-                <Route element={<PageLayout />}>
-                  <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
-                  <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
-                  <Route path={ROUTES.RECEIVE} element={<ReceiveMoney />} />
-                  <Route path={ROUTES.SEND} element={<Send />} />
-                  <Route path={ROUTES.ADDRESS_BOOK} element={<AddressBook />} />
-                  <Route
-                    path={ROUTES.TRANSACTION}
-                    element={<TransactionOverview />}
-                  />
-                  <Route
-                    path={ROUTES.ADDRESS_BOOK_DETAILS}
-                    element={<AddressDetails />}
-                  />
-                  {/* <Route path={ROUTES.RESOURCES} element={null} /> */}
-                  <Route path={ROUTES.NODE} element={<NodeOverview />} />
-                  <Route element={<ReleaseNotesProviderWrapper />}>
-                    <Route path={ROUTES.UPDATE} element={<Update />} />
-                    <Route path={ROUTES.UPDATES} element={<Updates />} />
+      <RpcClientProvider>
+        <IronFishUIProvider theme={{ breakpoints }}>
+          <ElectronThemeChangeHandler />
+          <HashRouter>
+            <Routes>
+              <Route element={<Initializing />}>
+                <Route element={<Providers />}>
+                  <Route path={ROUTES.BASE} />
+                  <Route element={<CreateLayout />}>
+                    <Route path={ROUTES.TELEMETRY} element={<Telemetry />} />
+                    <Route path={ROUTES.ONBOARDING} element={<Action />} />
+                    <Route path={ROUTES.CREATE} element={<CreateAccount />} />
+                    <Route path={ROUTES.IMPORT} element={<ImportAccount />} />
                   </Route>
-                  {/* <Route path={ROUTES.MINER} element={<Miner />} /> */}
+                  <Route element={<PageLayout />}>
+                    <Route path={ROUTES.ACCOUNT} element={<AccountDetails />} />
+                    <Route path={ROUTES.ACCOUNTS} element={<Accounts />} />
+                    <Route path={ROUTES.RECEIVE} element={<ReceiveMoney />} />
+                    <Route path={ROUTES.SEND} element={<Send />} />
+                    <Route
+                      path={ROUTES.ADDRESS_BOOK}
+                      element={<AddressBook />}
+                    />
+                    <Route
+                      path={ROUTES.TRANSACTION}
+                      element={<TransactionOverview />}
+                    />
+                    <Route
+                      path={ROUTES.ADDRESS_BOOK_DETAILS}
+                      element={<AddressDetails />}
+                    />
+                    {/* <Route path={ROUTES.RESOURCES} element={null} /> */}
+                    <Route path={ROUTES.NODE} element={<NodeOverview />} />
+                    <Route element={<ReleaseNotesProviderWrapper />}>
+                      <Route path={ROUTES.UPDATE} element={<Update />} />
+                      <Route path={ROUTES.UPDATES} element={<Updates />} />
+                    </Route>
+                    {/* <Route path={ROUTES.MINER} element={<Miner />} /> */}
+                  </Route>
                 </Route>
               </Route>
-            </Route>
-          </Routes>
-        </HashRouter>
-      </IronFishUIProvider>
+            </Routes>
+          </HashRouter>
+        </IronFishUIProvider>
+      </RpcClientProvider>
     </QueryClientProvider>
   )
 }

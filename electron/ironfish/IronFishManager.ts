@@ -13,6 +13,9 @@ import {
   InternalOptions,
   HOST_FILE_NAME,
   DatabaseIsLockedError,
+  RpcClient,
+  RpcMemoryClient,
+  ALL_API_NAMESPACES,
 } from '@ironfish/sdk'
 import log from 'electron-log'
 import fsAsync from 'fs/promises'
@@ -39,6 +42,7 @@ export class IronFishManager implements IIronfishManager {
   protected initStatus: IronFishInitStatus = IronFishInitStatus.NOT_STARTED
   protected sdk: IronfishSdk
   protected node: FullNode
+  nodeClient: RpcClient
   accounts: AccountManager
   assets: AssetManager
   nodeSettings: NodeSettingsManager
@@ -279,6 +283,11 @@ export class IronFishManager implements IIronfishManager {
     this.transactions = new TransactionManager(this.node, this.assets)
     this.nodeSettings = new NodeSettingsManager(this.node)
     this.snapshot = new SnapshotManager(this.node)
+
+    this.nodeClient = new RpcMemoryClient(
+      this.node.logger,
+      this.node.rpc.getRouter(ALL_API_NAMESPACES)
+    )
 
     this.changeInitStatus(IronFishInitStatus.INITIALIZED)
     this.initEventListeners()

@@ -131,3 +131,5 @@ if (process.env.TEST_ERROR) {
 
 app.setPath('crashDumps', getAppHomeFolder('crashes'))
 crashReporter.start({ uploadToServer: false })
+
+export const getMainWindow = () => mainWindow

@@ -158,3 +158,5 @@ process.on('exit', shutdownNode)
 process.on('SIGINT', shutdownNode)
 process.on('SIGUSR1', shutdownNode)
 process.on('SIGUSR2', shutdownNode)
+
+export const getIronfishManager = () => ironfishManager
