@@ -13,49 +13,49 @@ const storages: Record<string, AbstractStorage<Entity>> = {
 
 function initStorageCallbacks(ipcMain: IpcMain) {
   Object.entries(storages).forEach(([storageName, storage]) => {
-    ipcMain.handle(storageName + '-list', (e, searchTerm, sort) => {
+    ipcMain.handle(storageName + '-list', async (e, searchTerm, sort) => {
       try {
-        return { error: false, data: storage.list(searchTerm, sort) }
+        return { error: false, data: await storage.list(searchTerm, sort) }
       } catch (error) {
         return handleError(error)
       }
     })
 
-    ipcMain.handle(storageName + '-get', (e, identity) => {
+    ipcMain.handle(storageName + '-get', async (e, identity) => {
       try {
-        return { error: false, data: storage.get(identity) }
+        return { error: false, data: await storage.get(identity) }
       } catch (error) {
         return handleError(error)
       }
     })
 
-    ipcMain.handle(storageName + '-add', (e, entity) => {
+    ipcMain.handle(storageName + '-add', async (e, entity) => {
       try {
-        return { error: false, data: storage.add(entity) }
+        return { error: false, data: await storage.add(entity) }
       } catch (error) {
         return handleError(error)
       }
     })
 
-    ipcMain.handle(storageName + '-update', (e, identity, entity) => {
+    ipcMain.handle(storageName + '-update', async (e, identity, entity) => {
       try {
-        return { error: false, data: storage.update(identity, entity) }
+        return { error: false, data: await storage.update(identity, entity) }
       } catch (error) {
         return handleError(error)
       }
     })
 
-    ipcMain.handle(storageName + '-delete', (e, identity) => {
+    ipcMain.handle(storageName + '-delete', async (e, identity) => {
       try {
-        return { error: false, data: storage.delete(identity) }
+        return { error: false, data: await storage.delete(identity) }
       } catch (error) {
         return handleError(error)
       }
     })
 
-    ipcMain.handle(storageName + '-find', (e, fields) => {
+    ipcMain.handle(storageName + '-find', async (e, fields) => {
       try {
-        return { error: false, data: storage.find(fields) }
+        return { error: false, data: await storage.find(fields) }
       } catch (error) {
         return handleError(error)
       }

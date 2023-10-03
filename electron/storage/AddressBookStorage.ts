@@ -57,7 +57,7 @@ class AddressBookStorage extends AbstractStorage<Contact> {
     })
   }
 
-  list(searchTerm: string, sort: SortType): Promise<Contact[]> {
+  async list(searchTerm: string, sort: SortType): Promise<Contact[]> {
     return new Promise((resolve, reject) => {
       this.storage
         .find({
