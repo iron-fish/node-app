@@ -4,8 +4,8 @@ import {
   CurrencyUtils,
   FullNode,
   Bech32m,
-  JSONUtils,
   isValidPublicAddress,
+  decodeAccount,
 } from '@ironfish/sdk'
 import { v4 as uuid } from 'uuid'
 import {
@@ -16,7 +16,6 @@ import {
   wordsToSpendingKey,
   generateKeyFromPrivateKey,
 } from '@ironfish/rust-nodejs'
-import { AccountImport } from '@ironfish/sdk/build/src/wallet/walletdb/accountValue'
 import log from 'electron-log'
 import { IIronfishAccountManager } from 'Types/IronfishManager/IIronfishAccountManager'
 import WalletAccount from 'Types/Account'
@@ -176,42 +175,19 @@ class AccountManager
   }
 
   async import(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
-    return this.node.wallet
-      .importAccount({ id: uuid(), ...account })
-      .then(data => {
-        this.node.wallet.scanTransactions()
-        return data.serialize()
-      })
+    const importedAccount = await this.node.wallet.importAccount(account)
+    this.node.wallet.scanTransactions()
+    return importedAccount.serialize()
   }
 
   async importByEncodedKey(data: string): Promise<AccountValue> {
-    const [decoded, error] = Bech32m.decode(data)
-    if (error) {
-      throw error
+    const decodedAccount = decodeAccount(data)
+    const formattedForImport = {
+      id: uuid(),
+      ...decodedAccount,
     }
 
-    if (decoded) {
-      const decodedData = JSONUtils.parse<
-        Omit<AccountImport, 'createdAt'> & {
-          createdAt: {
-            sequence: number
-            hash: string
-          }
-        }
-      >(decoded)
-      const accountData: Omit<AccountValue, 'rescan'> = {
-        id: uuid(),
-        ...decodedData,
-        createdAt: decodedData.createdAt
-          ? {
-              hash: Buffer.from(decodedData.createdAt.hash, 'utf-8'),
-              sequence: decodedData.createdAt.sequence,
-            }
-          : null,
-      }
-
-      return this.import(accountData)
-    }
+    return this.import(formattedForImport)
   }
 
   async importByMnemonic(
