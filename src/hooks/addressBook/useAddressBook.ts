@@ -3,21 +3,24 @@ import useAsyncDataWrapper from 'Hooks/useAsyncDataWrapper'
 import SortType from 'Types/SortType'
 import Contact from 'Types/Contact'
 
-const useAddressBook = (searchTerm?: string, sort?: SortType) => {
+const useAddressBook = (searchTerm?: string, sort: SortType = SortType.ASC) => {
   const [result, promiseWrapper] = useAsyncDataWrapper<Contact[]>()
+
   const addContact = useCallback(
-    (name: string, address: string): Promise<Contact> =>
-      window.AddressBookStorage.add({ name, address }).then(contact => {
+    (name: string, address: string): Promise<Contact> => {
+      return window.AddressBookStorage.add({ name, address }).then(contact => {
         loadAddressBook()
         return contact
-      }),
+      })
+    },
     []
   )
 
-  const reloadContacts = useCallback(() => loadAddressBook(), [])
+  const loadAddressBook = () => {
+    return promiseWrapper(window.AddressBookStorage.list(searchTerm, sort))
+  }
 
-  const loadAddressBook = () =>
-    promiseWrapper(window.AddressBookStorage.list(searchTerm, sort))
+  const reloadContacts = useCallback(() => loadAddressBook(), [])
 
   useEffect(() => {
     loadAddressBook()
