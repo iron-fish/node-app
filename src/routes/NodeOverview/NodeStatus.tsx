@@ -85,7 +85,9 @@ const NodeStatus: FC<NodeStatusProps> = ({ pauseTracking, ...props }) => {
               startColor="#F3C174"
               endColor="#F1B75E"
             >
-              <chakra.h3 mb="1rem">{data?.node.nodeName}</chakra.h3>
+              <chakra.h3 mb="1rem">
+                {data?.node.nodeName || 'Node Overview'}
+              </chakra.h3>
             </Skeleton>
             <HStack spacing="4rem">
               <VStack spacing="1rem" align="flex-start">
