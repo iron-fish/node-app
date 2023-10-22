@@ -34,33 +34,31 @@ The following steps should only be used to install if you are planning on contri
 
 1. Run `yarn install` from the root directory to install packages.
 
- #### Other platform might require additional actions see [Iron Fish Developer Install section](https://github.com/iron-fish/ironfish#developer-install)
+#### Other platforms might require additional actions: See [Iron Fish Developer Install section](https://github.com/iron-fish/ironfish#developer-install)
 
 ### Usage
 
-Once your environment is set up its possible to run app:
+Once your environment is set up it's possible to run the app:
 
 Use `yarn start` or `yarn start:<mode>` to run app.
 By default `dev` mode is used, also `demo` and `production` modes are available.
 
-To test build use `yarn build`, there is also 3 mode for build `demo`, `dev`, `production`, `dev` is default.
+To test build use `yarn build`, there are also 3 modes for build: `demo`, `dev`, and `production`. `dev` is the default mode.
 
 # Create application
 
-Just run `yarn package` and executable files will be builded into `./out` folder.
+Just run `yarn package` and executable files will be built and placed into the `./out` folder.
 
 On macOS, the packaged .app file won't run without codesigning, but you can codesign it by running `codesign --force --deep -s - ./out/Iron Fish Node App.app`.
 
-By default `demo` mode is used for crating package use `production` mode to create release version (`yarn package:production`).
+By default `demo` mode is used for creating the package. Use `production` mode to create a release version (`yarn package:production`).
 
 # Releases
 
-Releases are based on tags. In order to do a release:
+Releases are based on tags. In order to create a new release:,
 
-Update package.json version, submit a PR and merge it to the master.
+Update `package.json` version, submit a PR and merge it to the `master` branch.
 
-Run `git tag -a "vX.Y.Z" -m "vX.Y.Z"` where `X.Y.Z` is the major.minor.patch version.
-(for demo version release use `demo-v` prefix instead of `v`)
+Run `git tag -a "vX.Y.Z" -m "vX.Y.Z"` where `X.Y.Z` is the major.minor.patch version (for demo version release, use `demo-v` prefix instead of `v`).
 
 Run `git push --tags`
-
