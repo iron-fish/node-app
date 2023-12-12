@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: 18.13
+        node-version: 18
     - name: install dependencies
       run: yarn
     - name: publish
@@ -27,9 +27,11 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: 18.13
+        node-version: 18
     - name: install dependencies
       run: yarn
+    - name: Update Python setuptools for electron/rebuild
+      run: python -m pip install --upgrade setuptools
     - name: setup codesigning
       env: 
         APPLE_IFLABS_SIGNING_CERT: ${{ secrets.APPLE_IFLABS_SIGNING_CERT }}
@@ -122,7 +124,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: 18.13
+        node-version: 18
     - name: install dependencies
       run: yarn install --network-timeout 600000
     - name: publish
