@@ -27,6 +27,8 @@ jobs:
         node-version: 18
     - name: install dependencies
       run: yarn
+    - name: Update Python setuptools for electron/rebuild
+      run: python -m pip install --upgrade setuptools
     - name: setup codesigning
       env: 
         APPLE_IFLABS_SIGNING_CERT: ${{ secrets.APPLE_IFLABS_SIGNING_CERT }}
