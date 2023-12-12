@@ -175,7 +175,10 @@ class AccountManager
   }
 
   async import(account: Omit<AccountValue, 'rescan'>): Promise<AccountValue> {
-    const importedAccount = await this.node.wallet.importAccount(account)
+    const importedAccount = await this.node.wallet.importAccount({
+      id: account.id || uuid(),
+      ...account,
+    })
     this.node.wallet.scanTransactions()
     return importedAccount.serialize()
   }
