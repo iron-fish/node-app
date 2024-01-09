@@ -3,7 +3,7 @@ import { DataSyncContextProps } from 'Providers/DataSyncProvider'
 import { chakra } from '@ironfish/ui-kit'
 
 const getNodeSyncStatus = (
-  status: 'stopped' | 'idle' | 'stopping' | 'syncing',
+  status: 'stopped' | 'idle' | 'stopping' | 'syncing' | 'measuring',
   progress: number,
   peerNetworkConnected: boolean
 ) => {
@@ -24,6 +24,8 @@ const getNodeSyncStatus = (
       return 'Stopping'
     case 'syncing':
       return 'Syncing'
+    case 'measuring':
+      return 'Measuring'
     default:
       return 'Connected'
   }

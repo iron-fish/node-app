@@ -65,6 +65,7 @@ const PEERS: Peer[] = Array(23)
   .map(() => {
     const type = Math.random()
     return {
+      connectionDirection: 'Inbound',
       state: 'active',
       identity: nanoid(64),
       version: 1024,
