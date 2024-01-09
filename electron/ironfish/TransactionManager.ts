@@ -108,7 +108,7 @@ class TransactionManager
       inputs: await Promise.all(
         creatorNotes.map(async n => ({
           value: n.note.value(),
-          memo: n.note.memo(),
+          memo: n.note.memo().toString('utf8').split('\x00').join(''),
           sender: n.note.sender(),
           asset: await this.assetManager.get(n.note.assetId()),
           owner: n.note.owner(),

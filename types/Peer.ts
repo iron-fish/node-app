@@ -1,5 +1,5 @@
-import { PeerResponse } from '@ironfish/sdk'
+import { RpcPeerResponse } from '@ironfish/sdk'
 
-type Peer = Omit<PeerResponse, 'features'>
+type Peer = Omit<RpcPeerResponse, 'features'>
 
 export default Peer
