@@ -93,8 +93,6 @@ export const Navbar: FC<FlexProps> = props => {
   return (
     <Flex
       bg="inherit"
-      height="100%"
-      maxHeight="100vh"
       p="3rem 1rem 1rem"
       w={isOpen ? '16.4375rem' : '5.5rem'}
       transition="width 0.5s ease-in-out"

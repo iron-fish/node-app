@@ -104,15 +104,8 @@ export function PageLayout() {
   return (
     <>
       <DownloadSnapshotMessage show={requiredSnapshot} />
-      <Flex
-        className="App"
-        justifyContent="center"
-        minHeight={requiredSnapshot ? 'calc(100vh - 3rem)' : '100vh'}
-      >
-        <Navbar
-          top={requiredSnapshot ? '3rem' : '0'}
-          height={requiredSnapshot ? 'calc(100vh - 3rem)' : '100vh'}
-        />
+      <Flex className="App" justifyContent="center" flex={1} overflow="auto">
+        <Navbar />
         <Box w="100%">
           <ScaleFade
             in={true}
