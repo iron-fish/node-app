@@ -33,7 +33,9 @@ const Upgrade: FC = () => {
               bg: 'rgba(255, 255, 255, 0.75)',
             }}
             onClick={() =>
-              window.IronfishManager.openLink(`https://ironfish.network/use/node-app`)
+              window.IronfishManager.openLink(
+                `https://ironfish.network/use/node-app`
+              )
             }
           >
             Download
