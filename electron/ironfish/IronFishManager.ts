@@ -11,7 +11,7 @@ import {
   getPackageFrom,
   DatabaseVersionError,
   InternalOptions,
-  PEER_STORE_FILE_NAME,
+  HOST_FILE_NAME,
   DatabaseIsLockedError,
   NodeFileProvider,
   DEFAULT_DATA_DIR,
@@ -80,14 +80,12 @@ export class IronFishManager implements IIronfishManager {
       let connectionWebSocket: Connection['state']['type'] | '' = ''
       let connectionWebRTCError = ''
       let connectionWebSocketError = ''
-      let connectionDirection = ''
 
       if (peer.state.connections.webSocket) {
         connectionWebSocket = peer.state.connections.webSocket.state.type
         connectionWebSocketError = String(
           peer.state.connections.webSocket.error || ''
         )
-        connectionDirection = peer.state.connections.webSocket.direction
       }
 
       if (peer.state.connections.webRtc) {
@@ -95,7 +93,6 @@ export class IronFishManager implements IIronfishManager {
         connectionWebRTCError = String(
           peer.state.connections.webRtc.error || ''
         )
-        connectionDirection = peer.state.connections.webRtc.direction
       }
 
       if (connectionWebSocket !== '') {
@@ -106,7 +103,6 @@ export class IronFishManager implements IIronfishManager {
       }
 
       result.push({
-        connectionDirection,
         state: peer.state.type,
         identity: peer.state.identity,
         version: peer.version,
@@ -174,7 +170,7 @@ export class IronFishManager implements IIronfishManager {
     await this.node.closeDB()
     const hostFilePath: string = this.sdk.config.files.join(
       this.sdk.config.dataDir,
-      PEER_STORE_FILE_NAME
+      HOST_FILE_NAME
     )
     await fsAsync.rm(hostFilePath, { recursive: true, force: true })
     // Reset walletDb stores containing chain data

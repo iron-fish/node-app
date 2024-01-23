@@ -37,7 +37,7 @@ export type NodeStatusResponse = Partial<{
     newBlockSpeed: number
   }>
   blockSyncer: Partial<{
-    status: 'stopped' | 'idle' | 'stopping' | 'syncing' | 'measuring'
+    status: 'stopped' | 'idle' | 'stopping' | 'syncing'
     syncing: Partial<{
       blockSpeed: number
       speed: number
